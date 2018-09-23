@@ -1,0 +1,116 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of opd_model
+ *
+ * @author Shivaraj
+ */
+class opd_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function get_patients($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array(
+            'OpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'city', 'occupation', 'address'
+        );
+        $where_cond = " WHERE 1=1 ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->count_all('patientdata');
+        return $return;
+    }
+
+    function get_patient_by_opd($opd) {
+        $patient_data = $this->db->get_where('patientdata', array('OpdNo' => $opd));
+        return $patient_data->row_array();
+    }
+
+    public function store_treatment($action, $form_data, $opdNo = NULL) {
+        if ($action == "add") {
+            $status = $this->db->insert('treatmentdata', $form_data);
+        } else if ($action == "edit") {
+            $where = array('OpdNo' => $opdNo);
+            $status = $this->db->update('treatmentdata', $form_data, $where);
+        }
+        return $status;
+    }
+
+    function get_opd_patients($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'department', 't.AddedBy', 'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby');
+
+        $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        //$where_cond = " WHERE 1=1 ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .=($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+        $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo $where_cond ORDER BY CameOn ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
+
+}
