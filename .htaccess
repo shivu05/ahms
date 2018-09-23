@@ -1,0 +1,14 @@
+<IfModule mod_headers.c>
+Header add Cache-Control:"no-store,no-cache, must-revalidate"
+</IfModule>
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond $1 !^(index\.php|images|robots\.txt)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+#RewriteBase /
+RewriteCond %{REMOTE_HOST} !^127\.0\.0\.1
+#RewriteRule .* http://www.google.com [R=302,L]
+</IfModule>
