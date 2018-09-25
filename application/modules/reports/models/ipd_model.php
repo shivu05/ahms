@@ -40,7 +40,7 @@ class ipd_model extends CI_Model {
                         $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
                         break;
                     case 'department':
-                        $where_cond .=($val != 1) ? " AND t.department = '$val'" : '';
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
@@ -49,12 +49,32 @@ class ipd_model extends CI_Model {
         }
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT " . join(',', $columns) . " FROM inpatientdetails  $where_cond ORDER BY DoAdmission ASC";
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY DoAdmission ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM inpatientdetails')->num_rows();
         return $return;
+    }
+
+    function get_ipd_patients_count($conditions) {
+
+        if ($conditions['department'] == 1) {
+            $query = "SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
+			SUM(case when t.Gender='Female' then 1 else 0 end) Female 
+			FROM (`inpatientdetails` t) WHERE DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') >= '" . $conditions['start_date'] . "' 
+			AND DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') <= '" . $conditions['end_date'] . "' 
+			group by t.department";
+        } else {
+            $query = "SELECT department,Total,Male,Female from( SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
+			SUM(case when t.Gender='Female' then 1 else 0 end) Female 
+			FROM (`inpatientdetails` t) WHERE DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') >= '" . $conditions['start_date'] . "' 
+			AND DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') <= '" . $conditions['end_date'] . "' AND t.department='" . $conditions['department'] . "'
+			group by t.department
+			UNION ALL select department,0 Total,0 Male,0 Female from deptper ) A group by department;";
+        }
+        return $this->db->query($query)->result_array();
     }
 
 }

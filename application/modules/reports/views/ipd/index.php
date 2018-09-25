@@ -53,6 +53,9 @@
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
+        $('#search_form #export').on('click', '#export_to_pdf', function () {
+            $('#search_form').submit();
+        });
 
         var columns = [
             {
