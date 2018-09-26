@@ -1,4 +1,3 @@
-<?php pma(split_string()) ?>
 <div class="row">
     <div class="col-md-4 col-lg-4">
         <div class="widget-small primary "><i class="icon fa fa-male fa-3x"></i>
