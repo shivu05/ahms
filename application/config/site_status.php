@@ -33,7 +33,7 @@ switch (APP_ENV) {
         defined('SITE_DOWN_MSG') OR define('SITE_DOWN_MSG', 'SITEDOWN MESSAGE HERE...');
         defined('GLOBAL_NOTICE') OR define('GLOBAL_NOTICE', '');
         defined('APP_HOST') OR define('APP_HOST', $_SERVER['HTTP_HOST']);
-        defined('APP_DOC_ROOT') OR define('APP_DOC_ROOT', 'v3');
+        defined('APP_DOC_ROOT') OR define('APP_DOC_ROOT', 'ahms');
         defined('APP_REQEST_TYPE') OR define('APP_REQEST_TYPE', $_SERVER['REQUEST_SCHEME']); //http/https
         defined('APP_BASE') OR define('APP_BASE', APP_REQEST_TYPE . '://' . APP_HOST . '/' . APP_DOC_ROOT . '/');
         defined('DB_HOST') OR define('DB_HOST', 'localhost');
