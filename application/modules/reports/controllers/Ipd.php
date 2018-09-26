@@ -169,7 +169,7 @@ class Ipd extends SHV_Controller {
 
     public function bed_occupied_report() {
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "Bed occupancy report";
+        $this->layout->navTitle = "Bed occupied report";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -321,6 +321,18 @@ class Ipd extends SHV_Controller {
         $pdf->Ln();
         ob_end_clean();
         return $pdf->Output('bed_occupied_ipd_report.pdf', 'I');
+    }
+
+    function bed_occupancy_chart() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Bed occupancy report";
+        $this->layout->navDescr = "";
+        $this->layout->navIcon = 'fa fa-bed';
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
     }
 
 }
