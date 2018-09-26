@@ -83,8 +83,8 @@ class ipd_model extends CI_Model {
             'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
         //$where_cond = " WHERE 1 = 1 ";
-        $where_cond = " WHERE (DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
-OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin') ";
+        $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
+OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -105,7 +105,7 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin') "
                         $where_cond .= " AND CONCAT(FirstName, ' ', LastName) LIKE '%$val%'";
                         break;
                     case 'department':
-                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        $where_cond .= ($val != 1) ? " AND department = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
@@ -117,6 +117,7 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin') "
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
  (SELECT @a:=0) AS a $where_cond ORDER BY DoAdmission ASC";
         $result = $this->db->query($query . ' ' . $limit);
+        //echo $this->db->last_query();exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM inpatientdetails')->num_rows();
