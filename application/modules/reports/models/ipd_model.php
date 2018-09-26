@@ -134,4 +134,18 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) 
         }
     }
 
+    function get_departmentwise_bed_count() {
+        $query = $this->db->query("SELECT count(*) as sum,department from bed_details where department NOT IN ('Aatyayikachikitsa','Swasthavritta') group by department");
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
+    function get_monthwise_bed_occupancy($month, $dept) {
+        $query = $this->db->query("SELECT sum(nofDays) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month';");
+        return $query->result();
+    }
+
 }

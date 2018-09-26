@@ -330,7 +330,22 @@ class Ipd extends SHV_Controller {
         $this->layout->navIcon = 'fa fa-bed';
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
-        $data['dept_list'] = $this->get_department_list('array');
+        $data['departments'] = $this->get_department_list('array');
+
+        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
+        $months_arr = array(
+            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+        );
+        $data_bed = array();
+        foreach ($months_arr as $month) {
+            $dept_counts = array();
+            foreach ($data['departments'] as $dept) {
+                $result = $this->ipd_model->get_monthwise_bed_occupancy($month, $dept['department']);
+                array_push($dept_counts, array($dept['department'] => $result));
+            }
+            array_push($data_bed, array($month => $dept_counts));
+        }
+        $data['deptbed'] = $data_bed;
         $this->layout->data = $data;
         $this->layout->render();
     }
