@@ -33,4 +33,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 assets/
 tests/
 databases/
+database/
 user_guide/
