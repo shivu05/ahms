@@ -11,11 +11,11 @@ class Test extends SHV_Controller {
     public function __construct() {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
-        $this->layout->title = "Tests";
         $this->load->model('reports/nursing_model');
     }
 
-    function index() {
+    function xray() {
+        $this->layout->title = "X-Ray";
         $this->layout->navTitleFlag = true;
         $this->layout->navTitle = "X-Ray";
         $this->layout->navDescr = "";
@@ -24,6 +24,19 @@ class Test extends SHV_Controller {
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    function get_xray_patients_list() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->nursing_model->get_xray_data($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
     }
 
 }
