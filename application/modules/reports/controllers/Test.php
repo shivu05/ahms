@@ -39,4 +39,29 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function usg() {
+        $this->layout->title = "USG";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "USG";
+        $this->layout->navDescr = "";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_usg_patients_list() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->nursing_model->get_xray_data($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
 }
