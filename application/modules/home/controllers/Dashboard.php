@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class Dashboard extends CI_Controller {
+class Dashboard extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();

@@ -1,4 +1,3 @@
-
 <div class="row">
     <div class="col-12">
         <div class="tile">
@@ -69,27 +68,9 @@
                 }
             },
             {
-                title: "X-Ray No",
+                title: "Ref. Date",
                 data: function (item) {
-                    return item.xrayNo;
-                }
-            },
-            {
-                title: "Part of X-Ray",
-                data: function (item) {
-                    return item.partOfXray;
-                }
-            },
-            {
-                title: "Film size",
-                data: function (item) {
-                    return item.filmSize;
-                }
-            },
-            {
-                title: "Date",
-                data: function (item) {
-                    return item.xrayDate;
+                    return item.usgDate;
                 }
             }
 
@@ -115,7 +96,7 @@
                 'processing': true,
                 'serverSide': true,
                 'ajax': {
-                    'url': base_url + 'reports/Test/get_xray_patients_list',
+                    'url': base_url + 'reports/Test/get_usg_patients_list',
                     'type': 'POST',
                     'dataType': 'json',
                     'data': function (d) {

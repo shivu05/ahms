@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class Treatment extends CI_Controller {
+class Treatment extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();
