@@ -19,7 +19,7 @@ class nursing_model extends CI_Model {
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
             'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize');
 
-        $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.OpdNo=t.OpdNo AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -50,11 +50,11 @@ class nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM xrayregistery x,
-        (SELECT @a:= 0) AS a JOIN patientdata p $where_cond ORDER BY x.xrayDate ASC";
+        (SELECT @a:= 0) AS a JOIN patientdata p JOIN treatmentdata t $where_cond ORDER BY x.xrayDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM xrayregistery')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM xrayregistery x JOIN treatmentdata t WHERE x.OpdNo=t.OpdNo')->num_rows();
         return $return;
     }
 

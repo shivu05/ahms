@@ -60,7 +60,7 @@
 
         var columns = [
             {
-                title: "Sl. No",
+                title: "#",
                 class: "ipd_no",
                 data: function (item) {
                     return item.serial_number;
@@ -103,12 +103,12 @@
                     return item.dept;
                 }
             },
-            {
-                title: "X-Ray No",
-                data: function (item) {
-                    return item.xrayNo;
-                }
-            },
+            /*{
+             title: "X-Ray No",
+             data: function (item) {
+             return item.xrayNo;
+             }
+             },*/
             {
                 title: "Part of X-Ray",
                 data: function (item) {

@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class SHV_Controller extends CI_Controller {
+class SHV_Controller extends MX_Controller {
 
     public function __construct() {
         parent::__construct();

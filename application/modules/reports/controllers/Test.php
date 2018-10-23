@@ -46,6 +46,7 @@ class Test extends SHV_Controller {
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_usg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
