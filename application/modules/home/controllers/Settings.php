@@ -5,7 +5,7 @@
  *
  * @author Shivaraj
  */
-class Settings extends CI_Controller {
+class Settings extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();

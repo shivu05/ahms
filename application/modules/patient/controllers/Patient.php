@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class Patient extends CI_Controller {
+class Patient extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();
