@@ -1,13 +1,13 @@
 --
--- Dumping data for table `perm_master`
+-- Dumping data for table perm_master
 --
 
-INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) VALUES
+INSERT INTO perm_master (perm_id, perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_class, perm_url, perm_status, perm_attr, perm_icon, last_updated_id, last_updated_date) VALUES
 (11, 'IPD_REPORT', 'IPD Report', 2, 2, '8', '', 'reports/Ipd', 'Active', '', 'fa fa-book', 1, '2018-09-25 20:06:45'),
 (12, 'BED_OCC_REPORT', 'Bed occupied Report', 3, 3, '8', '', 'reports/Ipd/bed_occupied_report', 'Active', '', 'fa fa-book', 1, '2018-09-26 13:18:03'),
 (13, 'BED_OCC_CHART', 'Bed occupancy chart', 4, 4, '8', '', 'reports/Ipd/bed_occupancy_chart', 'Active', '', 'fa fa-book', 1, '2018-09-26 19:07:28');
 
-INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES
+INSERT INTO role_perm (role_perm_id, role_id, perm_id, status, last_updated_id, last_updated_date, access_perm) VALUES
 (11, 1, 11, 'Active', 1, '2018-09-25 20:07:16', 1),
 (12, 1, 12, 'Active', 1, '2018-09-26 13:18:28', 1),
 (13, 1, 12, 'Active', 1, '2018-09-26 13:18:28', 1);
@@ -15,8 +15,8 @@ INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_u
 
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS `get_bed_occupancy` $$
-CREATE  PROCEDURE `get_bed_occupancy`(`deptname` VARCHAR(50), `from_time` VARCHAR(50), `to_time` VARCHAR(50))
+DROP PROCEDURE IF EXISTS get_bed_occupancy $$
+CREATE  PROCEDURE get_bed_occupancy(deptname VARCHAR(50), from_time VARCHAR(50), to_time VARCHAR(50))
 BEGIN
 IF deptname=1 THEN
 SELECT department,total,Male,Female,discharged,onbed
@@ -63,3 +63,7 @@ END $$
 
 DELIMITER ;
 
+-- new menu
+INSERT INTO perm_master (perm_id, perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_class, perm_url, perm_status, perm_attr, perm_icon, last_updated_id, last_updated_date) VALUES 
+(NULL, 'BED_OCC_CHART', 'Bed occupancy chart', '4', '4', '8', '', 'reports/Ipd/bed_occupancy_chart', 'Active', '', 'fa fa-book', '1', CURRENT_TIMESTAMP);
+INSERT INTO role_perm (role_perm_id, role_id, perm_id, status, last_updated_id, last_updated_date, access_perm) VALUES (NULL, '1', '13', 'Active', '1', CURRENT_TIMESTAMP, '1');

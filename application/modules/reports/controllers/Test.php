@@ -92,4 +92,17 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function birth() {
+        $this->layout->title = "Birth";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Birth";
+        $this->layout->navDescr = "Birth register";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ecg_to_pdf');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
 }
