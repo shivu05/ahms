@@ -194,5 +194,94 @@ class nursing_model extends CI_Model {
         return $return;
     }
 
+    function get_diet_data($conditions, $export_flag = false) {
+
+        $return = array();
+        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', 'department');
+
+        $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
+
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND UPPER(replace(department,' ','_')) = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
+        (SELECT @a:= 0) AS a $where_cond ORDER BY DoAdmission ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM inpatientdetails')->num_rows();
+        return $return;
+    }
+
+    function get_ksharasutra_data($conditions, $to) {
+
+        $return = array();
+        $columns = array('k.OpdNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon', 'k.anaesthetic',
+            'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 't.diagnosis', 't.notes');
+
+        $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
+
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND UPPER(replace(t.department,' ','_')) = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k,
+        (SELECT @a:= 0) AS a  JOIN patientdata p JOIN treatmentdata t $where_cond ORDER BY k.ksharsDate ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM ksharsutraregistery JOIN treatmentdata t WHERE k.OpdNo=t.OpdNo')->num_rows();
+        return $return;
+    }
+
 //end of getUsgReports
 }
