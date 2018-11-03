@@ -238,11 +238,11 @@ class nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_ksharasutra_data($conditions, $to) {
+    function get_ksharasutra_data($conditions, $export_flag = false) {
 
         $return = array();
         $columns = array('k.OpdNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon', 'k.anaesthetic',
-            'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 't.diagnosis', 't.notes');
+            'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
 
@@ -279,7 +279,7 @@ class nursing_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM ksharsutraregistery JOIN treatmentdata t WHERE k.OpdNo=t.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM ksharsutraregistery k JOIN treatmentdata t WHERE k.OpdNo=t.OpdNo')->num_rows();
         return $return;
     }
 

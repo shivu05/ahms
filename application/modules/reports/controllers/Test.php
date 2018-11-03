@@ -138,7 +138,7 @@ class Test extends SHV_Controller {
         $this->layout->navDescr = "Ksharasutra register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -155,6 +155,93 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_ksharasutra_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function export_ksharasutra() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $data = array();
+        $input_array = array();
+        $head = array(
+            'serial_number' => array('name' => 'Sl. No', 'width' => 10, 'align' => 'C'),
+            'OpdNo' => array('name' => 'C.OPD', 'width' => 12),
+            'name' => array('name' => 'Patient', 'width' => 40),
+            'diagnosis' => array('name' => 'Diagnosis', 'width' => 30),
+            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => 43,'breakat' => 20),
+            'ksharsType' => array('name' => 'Type of Ksharasutra', 'width' => 42),
+            'surgeon' => array('name' => 'Surgeon', 'width' => 30,'breakat' => 12),
+            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => 30,'breakat' => 16),
+            'anaesthetic' => array('name' => 'Anesthetist', 'width' => 30,'breakat' => 12),
+            'ksharsDate' => array('name' => 'Date', 'width' => 20),
+        );
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_ksharasutra_data($input_array, true);
+        $patients = $result['data'];
+
+        $this->load->library('pdf');
+
+        $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
+        $rep_meta_data = array(
+            'report_title' => 'KSHARASUTRA REPORT',
+        );
+        $pdf->setData($rep_meta_data);
+
+        // set document information
+        $pdf->setPrintHeader(TRUE);
+        // set header and footer fonts
+        $pdf->SetFont('helveticaB', '', 9);
+// ---------------------------------------------------------
+        // add a page
+        // set some text to print
+        // print a block of text using Write()
+        $pdf->SetFillColor(140, 142, 145);
+        $pdf->SetTextColor(255);
+        $pdf->SetDrawColor(140, 142, 145);
+        $pdf->SetLineWidth(0.3);
+        $pdf->SetFont('', 'B');
+        $pdf->SetMargins(5, 32, 10, true);
+        $pdf->AddPage('L');
+        foreach ($head as $h) {
+            $pdf->cell($h['width'], 6, $h['name'], 1, 0, 'C', 1);
+        }
+        $pdf->Ln();
+        $pdf->SetFillColor(224, 235, 255);
+        $pdf->SetTextColor(0);
+        $pdf->SetFont('helveticaB', '', 8);
+        // Data
+        $fill = 0;
+        foreach ($patients as $patient) {
+            foreach ($head as $h => $v) {
+                if ($pdf->gety() == 176) {
+                    $pdf->AddPage();
+                }
+                $c_width = 20; // cell width 
+                $c_height = 12; // cell height 
+                $x_axis = $pdf->getx(); // now get current pdf x axis value
+                $breakat = NULL;
+                if (isset($v['breakat'])) {
+                    $breakat = $v['breakat'];
+                }
+                $align = 'L';
+                if (isset($v['align'])) {
+                    $align = $v['align'];
+                }
+                $text = $patient[$h];
+                if ($h == 'gender') {
+                    $text = get_short_gender($patient[$h]);
+                }
+                $pdf->vcell($v['width'], $c_height, $x_axis, $text, $breakat, $align);
+            }
+            $pdf->Ln();
+            $fill = !$fill;
+        }
+        $pdf->Ln();
+        ob_end_clean();
+        return $pdf->Output('opd_report.pdf', 'I');
     }
 
 }

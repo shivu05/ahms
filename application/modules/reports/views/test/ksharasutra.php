@@ -12,42 +12,54 @@
     </div>
 </div>
 </div>
+<style>
+    .patient{
+        width: 200px !important;
+    }
+
+    .sl_no{
+        width: 40px !important;
+        text-align: center;
+    }
+    .opd{
+        width: 50px !important;
+        text-align: center;
+    }
+    .place{
+        width: 120px !important;
+    }
+    .department{
+        width: 120px !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
-
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
         });
-
         var columns = [
             {
                 title: "Sl. No",
-                class: "ipd_no",
+                class: "sl_no",
                 data: function (item) {
                     return item.serial_number;
                 }
             },
             {
                 title: "C.OPD",
-                class: "opd_no",
+                class: "opd",
                 data: function (item) {
                     return item.OpdNo;
                 }
             },
             {
-                title: "C.IPD",
-                class: "opd_no",
+                title: "Patient",
+                class: "patient",
                 data: function (item) {
-                    return item.ID;
-                }
-            },
-            {
-                title: "Name",
-                data: function (item) {
-                    return item.FirstName + ' ' + item.LastName;
+                    return item.name;
                 }
             },
             {
@@ -63,26 +75,48 @@
                 }
             },
             {
-                title: "Place",
+                title: "Diagnosis",
                 data: function (item) {
-                    return item.address;
+                    return item.diagnosis;
                 }
             },
             {
-                title: "Department",
+                title: "Name of Ksharsutra",
                 data: function (item) {
-                    return item.dept;
+                    return item.ksharaname;
+                }
+            }
+            , {
+                title: "Type of Ksharsutra",
+                data: function (item) {
+                    return item.ksharsType;
+                }
+            }
+            , {
+                title: "Surgeon",
+                data: function (item) {
+                    return item.surgeon;
+                }
+            }
+            , {
+                title: "Asst. Surgeon",
+                data: function (item) {
+                    return item.asssurgeon;
+                }
+            }
+            , {
+                title: "Anesthetist",
+                data: function (item) {
+                    return item.anaesthetic;
                 }
             },
             {
                 title: "Ref. Date",
                 data: function (item) {
-                    return item.ecgDate;
+                    return item.ksharsDate;
                 }
             }
-
         ];
-
         function show_patients() {
             var patient_table = $('#patient_table').DataTable({
                 'columns': columns,
@@ -115,7 +149,10 @@
                 },
                 order: [[0, 'desc']],
                 info: true,
-                sScrollX: true
+                sScrollX: "100%",
+                sScrollXInner: "150%",
+                "bScrollCollapse": true
+
             });
         }
     });
