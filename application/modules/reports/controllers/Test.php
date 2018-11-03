@@ -167,11 +167,11 @@ class Test extends SHV_Controller {
             'OpdNo' => array('name' => 'C.OPD', 'width' => 12),
             'name' => array('name' => 'Patient', 'width' => 40),
             'diagnosis' => array('name' => 'Diagnosis', 'width' => 30),
-            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => 43,'breakat' => 20),
+            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => 43, 'breakat' => 20),
             'ksharsType' => array('name' => 'Type of Ksharasutra', 'width' => 42),
-            'surgeon' => array('name' => 'Surgeon', 'width' => 30,'breakat' => 12),
-            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => 30,'breakat' => 16),
-            'anaesthetic' => array('name' => 'Anesthetist', 'width' => 30,'breakat' => 12),
+            'surgeon' => array('name' => 'Surgeon', 'width' => 30, 'breakat' => 12),
+            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => 30, 'breakat' => 16),
+            'anaesthetic' => array('name' => 'Anesthetist', 'width' => 30, 'breakat' => 12),
             'ksharsDate' => array('name' => 'Date', 'width' => 20),
         );
 
@@ -243,5 +243,32 @@ class Test extends SHV_Controller {
         ob_end_clean();
         return $pdf->Output('opd_report.pdf', 'I');
     }
+
+    function surgery() {
+        $this->layout->title = "Surgery";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Surgery";
+        $this->layout->navDescr = "Surgery register";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+    
+    function get_surgery_report() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->nursing_model->get_surgery_data($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
 
 }
