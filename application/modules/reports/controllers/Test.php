@@ -256,7 +256,7 @@ class Test extends SHV_Controller {
         $this->layout->data = $data;
         $this->layout->render();
     }
-    
+
     function get_surgery_report() {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
@@ -270,5 +270,50 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function panchakarma() {
+        $this->layout->title = "Panchakarma";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Panchakarma";
+        $this->layout->navDescr = "Panchakarma register";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_panchakarma_report() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->nursing_model->get_panchakarma_data($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function panchakarma_proc_count() {
+        $this->layout->title = "Panchakarma procedures";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Panchakarma";
+        $this->layout->navDescr = "Panchakarma procedure count";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_panchakarma_procedure_count() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_panchakarma_procedure_count($input_array);
+        $data['pancha_proces'] = $this->get_panchakarma_procedures();
+        $this->load->view('reports/test/panchakarma_proc_count_ajax', $data);
+    }
 
 }

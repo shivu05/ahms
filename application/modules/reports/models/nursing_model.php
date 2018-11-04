@@ -327,5 +327,58 @@ class nursing_model extends CI_Model {
         return $return;
     }
 
-//end of getUsgReports
+    function get_panchakarma_data($conditions, $export_flag = false) {
+        $return = array();
+        $columns = array('l.opdno', 'p.deptOpdNo', 'i.IpNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+            'p.deptOpdNo', 'p.dept', 'l.disease', 'l.treatment', 'l.procedure', 'l.date', 't.notes', 'l.docname');
+
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND l.opdno=i.OpdNo AND l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "'";
+
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND UPPER(replace(t.department,' ','_')) = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
+        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID LEFT JOIN inpatientdetails i ON l.opdno=i.OpdNo,(SELECT @a:= 0) AS a $where_cond ORDER BY date ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID LEFT JOIN inpatientdetails i ON l.opdno=i.OpdNo')->num_rows();
+        return $return;
+    }
+
+    function get_panchakarma_procedure_count($conditions, $export_flag = false) {
+        $query = "SELECT * from panchaprocedure p WHERE p.date >='" . $conditions['start_date'] . "' AND p.date <= '" . $conditions['end_date'] . "'";
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
 }

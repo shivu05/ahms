@@ -34,4 +34,8 @@ class SHV_Controller extends MX_Controller {
         }
     }
 
+    function get_panchakarma_procedures() {
+        return $this->db->get('panchakarma_procedures')->result_array();
+    }
+
 }
