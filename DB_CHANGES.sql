@@ -34,6 +34,10 @@ INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_pare
  VALUES ('ECG', 'ECG', '2', '2', '14', 'ecg', 'Active', 'fa fa-book', '1');
 INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '18', 'Active', '1');
 
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('USG', 'USG', '3', '3', '14', 'usg', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '19', 'Active', '1');
+
 
 
 
