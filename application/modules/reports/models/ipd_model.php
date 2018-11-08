@@ -148,4 +148,42 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) 
         return $query->result();
     }
 
+    function get_month_wise_opd_ipd_report() {
+        $dept_res = $this->db->select('department')->get('deptper');
+        $dept_res = $dept_res->result_array();
+        $opd_ipd_arr = array();
+        if (!empty($dept_res)) {
+            $deptwise_opd_ipd_arr = array();
+            foreach ($dept_res as $dept) {
+                $dept_opd_ipd_res = $this->db->query("call get_monthly_opd_ipd_dept_wise('" . $dept['department'] . "');");
+                $deptwise_opd_ipd_arr[$dept['department']] = $dept_opd_ipd_res->result_array();
+                mysqli_next_result($this->db->conn_id); //imp
+                $dept_ipd_res = $this->db->query("call get_ipd_patient_count_dept_wise('" . $dept['department'] . "');");
+                $deptwise_ipd_arr[$dept['department']] = $dept_ipd_res->result_array();
+                mysqli_next_result($this->db->conn_id); //imp
+            }
+            $opd_ipd_arr['opd'] = $deptwise_opd_ipd_arr;
+            $opd_ipd_arr['ipd'] = $deptwise_ipd_arr;
+            return $opd_ipd_arr;
+        } else {
+            return false;
+        }
+    }
+
+    function get_month_wise_ipd_report() {
+        $dept_res = $this->db->select('department')->get('deptper');
+        $dept_res = $dept_res->result_array();
+        if (!empty($dept_res)) {
+            $deptwise_ipd_arr = array();
+            foreach ($dept_res as $dept) {
+                $dept_ipd_res = $this->db->query("call get_ipd_patient_count_dept_wise('" . $dept['department'] . "');");
+                $deptwise_ipd_arr[$dept['department']] = $dept_ipd_res->result_array();
+                mysqli_next_result($this->db->conn_id); //imp
+            }
+            return $deptwise_ipd_arr;
+        } else {
+            return false;
+        }
+    }
+
 }

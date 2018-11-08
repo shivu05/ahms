@@ -316,4 +316,61 @@ class Test extends SHV_Controller {
         $this->load->view('reports/test/panchakarma_proc_count_ajax', $data);
     }
 
+    function surgery_count() {
+        $this->layout->title = "Surgery";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Surgery";
+        $this->layout->navDescr = "Surgery count";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_surgery_count_data() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_surgery_count($input_array);
+        $this->load->view('reports/test/surgery_count_ajax', $data);
+    }
+
+    function lab() {
+        $this->layout->title = "Lab";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Lab";
+        $this->layout->navDescr = "Laboratory";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_lab_records() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_lab_report($input_array);
+        $this->load->view('reports/test/lab_report', $data);
+    }
+
+    function lab_count() {
+        $this->layout->title = "Lab";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Lab";
+        $this->layout->navDescr = "Laboratory test count";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+    
+    function get_lab_count(){
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_lab_report_count($input_array);
+        $this->load->view('reports/test/lab_report_count', $data);
+    }
+
 }

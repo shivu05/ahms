@@ -54,3 +54,11 @@ $route['default_controller'] = 'login';
 $route['dashboard'] = "home/Dashboard/index";
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['monthwise-ipd-report'] = "reports/Ipd/monthly_ipd_report";
+$route['monthwise-opd-ipd-report'] = "reports/Ipd/monthly_io_report";
+/* Test reports */
+$route['x-ray'] = "reports/Test/xray";
+$route['ecg'] = "reports/Test/ecg";
+$route['usg'] = "reports/Test/usg";
+

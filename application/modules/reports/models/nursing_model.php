@@ -381,4 +381,36 @@ class nursing_model extends CI_Model {
         }
     }
 
+    function get_surgery_count($conditions, $export_flag = false) {
+        $query = "SELECT surgeryname,count(surgeryname) as count,surgType from surgeryregistery WHERE surgDate >= '" . $conditions['start_date'] . "' 
+            AND surgDate <= '" . $conditions['end_date'] . "' AND surgeryname !='' group by surgeryname";
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
+    function get_lab_report($conditions, $export_flag = false) {
+        $query = "SELECT p.deptOpdNo,t.AddedBy,l.OpdNo,p.FirstName,p.MidName,p.LastName,p.Age,p.gender,p.address,p.deptOpdNo,p.dept,l.testName,l.testrange,l.testvalue,l.labdisease,l.testName,l.testDate,t.notes 
+            FROM labregistery l,patientdata p,treatmentdata t WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc";
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
+    function get_lab_report_count($conditions, $export_flag = false) {
+        $query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
 }

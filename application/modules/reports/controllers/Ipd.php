@@ -350,4 +350,32 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
+    function monthly_io_report() {
+        $this->layout->title = "OPD-IPD";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "OPD-IPD Report";
+        $this->layout->navDescr = "Monthly OPD-IPD report";
+        $this->layout->navIcon = 'fa fa-bed';
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function monthly_ipd_report() {
+        $this->layout->title = "IPD";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "IPD Report";
+        $this->layout->navDescr = "Monthly IPD report";
+        $this->layout->navIcon = 'fa fa-bed';
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
 }

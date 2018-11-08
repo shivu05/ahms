@@ -12,6 +12,31 @@ INSERT INTO role_perm (role_perm_id, role_id, perm_id, status, last_updated_id, 
 (12, 1, 12, 'Active', 1, '2018-09-26 13:18:28', 1),
 (13, 1, 12, 'Active', 1, '2018-09-26 13:18:28', 1);
 
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id) VALUES 
+('TEST_REPORTS', 'Test reports', '6', '1', '0', '#', 'Active', 'fa fa-book', '1');
+
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '14', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('XRAY', 'X-Ray', '1', '1', '14', 'x-ray', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '15', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id) 
+VALUES ('MONTHLY_IPD_REPORT', 'Monthly IPD report', '5', '5', '8', 'monthwise-ipd-report', 'Active', 'fa fa-book', '1');
+
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '16', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id) 
+VALUES ('MONTHLY_OPD_IPD_REPORT', 'Month wise OPD IPD report', '6', '6', '8', 'monthwise-opd-ipd-report', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '17', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('ECG', 'ECG', '2', '2', '14', 'ecg', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '18', 'Active', '1');
+
+
+
+
 
 DELIMITER $$
 
