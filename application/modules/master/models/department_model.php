@@ -34,4 +34,17 @@ class department_model extends CI_Model {
         return $this->db->get_where('doctors', array('doctortype' => $dept))->result_array();
     }
 
+    function get_doctors_info($doc_id = NULL) {
+        if ($doc_id != NULL) {
+            $this->db->where('d.id', $doc_id);
+        }
+        $this->db->select('d.id as doc_id,d.doctortype,d.doctorname,dt.doc_id,dt.day,dt.added_date,w.*');
+        $this->db->from('doctors d');
+        $this->db->join('doctorsduty dt', 'd.id=dt.doc_id');
+        $this->db->join('week_days w', 'w.week_id=dt.day');
+        $this->db->order_by('d.doctortype,dt.day', 'asc');
+        $result = $this->db->get();
+        return $result->result_array();
+    }
+
 }

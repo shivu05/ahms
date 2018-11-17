@@ -68,4 +68,7 @@ $route['panchakarma'] = "reports/Test/panchakarma";
 $route['panchakarma-procedure-stats'] = "reports/Test/panchakarma_proc_count";
 $route['lab'] = "reports/Test/lab";
 $route['lab-count'] = "reports/Test/lab_count";
+$route['department-list'] = "master/department";
+$route['users-list'] = "master/users";
+$route['add-user'] = "master/users/add";
 

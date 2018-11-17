@@ -66,6 +66,10 @@ INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_pare
  VALUES ('LAB_COUNT', 'Laboratory count', '10', '10', '14', 'lab-count', 'Active', 'fa fa-book', '1');
 INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '26', 'Active', '1');
 
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('DEPARTMENT_LIST', 'Department list', '2', '2', '2', 'department-list', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '27', 'Active', '1');
+
 
 
 

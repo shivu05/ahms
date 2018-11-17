@@ -15,7 +15,20 @@ class Department extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();
+        if (!$this->rbac->is_login()) {
+            redirect('Login');
+        }
+        $this->layout->title = 'Department';
         $this->load->model('master/department_model');
+    }
+
+    function index() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Department list";
+        $data = array();
+        $data['depts'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
     }
 
     function get_department_list($response_type = 'json') {
