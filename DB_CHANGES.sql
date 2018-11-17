@@ -38,6 +38,36 @@ INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_pare
  VALUES ('USG', 'USG', '3', '3', '14', 'usg', 'Active', 'fa fa-book', '1');
 INSERT INTO role_perm (role_id, perm_id, status, last_updated_id) VALUES ('1', '19', 'Active', '1');
 
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('KSHARASUTRA', 'Ksharasutra', '4', '4', '14', 'ksharasutra', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '20', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('SURGERY', 'Surgery', '5', '5', '14', 'surgery', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '21', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('SURGERY_COUNT', 'Surgery count', '6', '6', '14', 'surgery-count', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '22', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('PANCHAKARMA', 'Panchakarma', '7', '7', '14', 'panchakarma', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '23', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('PANCHAKARMA_PROC_COUNT', 'Panchakarma count', '8', '8', '14', 'panchakarma-procedure-stats', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '24', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('LAB', 'Laboratory', '9', '9', '14', 'lab', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '25', 'Active', '1');
+
+INSERT INTO perm_master (perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_url, perm_status, perm_icon, last_updated_id)
+ VALUES ('LAB_COUNT', 'Laboratory count', '10', '10', '14', 'lab-count', 'Active', 'fa fa-book', '1');
+INSERT INTO role_perm (role_id, perm_id, STATUS, last_updated_id) VALUES ('1', '26', 'Active', '1');
+
+
+
 
 
 

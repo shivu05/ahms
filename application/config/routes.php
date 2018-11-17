@@ -61,4 +61,11 @@ $route['monthwise-opd-ipd-report'] = "reports/Ipd/monthly_io_report";
 $route['x-ray'] = "reports/Test/xray";
 $route['ecg'] = "reports/Test/ecg";
 $route['usg'] = "reports/Test/usg";
+$route['ksharasutra'] = "reports/Test/ksharasutra";
+$route['surgery'] = "reports/Test/surgery";
+$route['surgery-count'] = "reports/Test/surgery_count";
+$route['panchakarma'] = "reports/Test/panchakarma";
+$route['panchakarma-procedure-stats'] = "reports/Test/panchakarma_proc_count";
+$route['lab'] = "reports/Test/lab";
+$route['lab-count'] = "reports/Test/lab_count";
 
