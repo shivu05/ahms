@@ -126,6 +126,29 @@ END $$
 
 DELIMITER ;
 
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `get_patient_count` $$
+CREATE PROCEDURE `get_patient_count`()
+BEGIN
+
+SELECT department,OLD,NEW,Total,Male,Female from(
+SELECT p.dept department,
+SUM(case when t.PatType='O' then 1 else 0 end) OLD,
+SUM(case when t.PatType='N' then 1 else 0 end) NEW,
+Count(*) Total,
+SUM(case when p.gender='Male' then 1 else 0 end) Male,
+SUM(case when p.gender='Female' then 1 else 0 end) Female
+from patientdata p,treatmentdata t,deptper d WHERE t.OpdNo = p.OpdNo and p.dept=d.department
+group by p.dept
+UNION ALL
+select department,0 OLD,0 NEW,0 Total,0 Male,0 Female from deptper
+) A group by department;
+
+END $$
+
+DELIMITER ;
+
 -- new menu
 INSERT INTO perm_master (perm_id, perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_class, perm_url, perm_status, perm_attr, perm_icon, last_updated_id, last_updated_date) VALUES 
 (NULL, 'BED_OCC_CHART', 'Bed occupancy chart', '4', '4', '8', '', 'reports/Ipd/bed_occupancy_chart', 'Active', '', 'fa fa-book', '1', CURRENT_TIMESTAMP);
