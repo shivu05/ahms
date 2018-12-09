@@ -34,10 +34,14 @@ class Scripts_include {
             '/assets/plugins/datatables/jquery.dataTables.min.js',
             '/assets/plugins/datatables/dataTables.bootstrap4.min.js'
         ),
+        'jq_validation' => array(
+            '/assets/plugins/jq_validation/jquery.validate.js'
+        )
     );
     private $__cssFiles = array(
         'common' => array(
             '/assets/plugins/theme/css/main.css',
+            '/assets/font-awesome-4.7.0/css/font-awesome.css'
         ),
         'datatables' => array(
             '/assets/plugins/datatables/dataTables.bootstrap4.min.css'
@@ -65,7 +69,7 @@ class Scripts_include {
             foreach ($this->cssFile as $pluginName) {
                 if (array_key_exists($pluginName, $this->__cssFiles)) {
                     foreach ($this->__cssFiles[$pluginName] as $files) {
-                        $str.='<link rel="stylesheet" href="' . base_url($files) . '" />';
+                        $str .= '<link rel="stylesheet" href="' . base_url($files) . '" />';
                     }
                 }
             }
@@ -82,10 +86,10 @@ class Scripts_include {
                     foreach ($this->__jsFiles[$pluginName] as $key => $files) {
                         if (is_array($files)) {
                             foreach ($files as $scripts) {
-                                $str.=$scripts;
+                                $str .= $scripts;
                             }
                         } else {
-                            $str.='<script src="' . base_url($files) . '" ></script>';
+                            $str .= '<script src="' . base_url($files) . '" ></script>';
                         }
                     }
                 }
@@ -97,7 +101,7 @@ class Scripts_include {
     public function preJs() {
         $str = '';
         foreach ($this->__jsFiles['top'] as $files) {
-            $str.='<script src="' . base_url($files) . '" ></script>';
+            $str .= '<script src="' . base_url($files) . '" ></script>';
         }
         return $str;
         ;

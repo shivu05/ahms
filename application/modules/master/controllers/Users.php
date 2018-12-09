@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class Users extends SHV_Controller {
 
     public function __construct() {
@@ -43,9 +37,33 @@ class Users extends SHV_Controller {
         $this->layout->navTitleFlag = true;
         $this->layout->navIcon = "fa fa-users";
         $this->layout->navTitle = "Users";
+        $this->layout->navDescr = "Register new user";
+        $this->scripts_include->includePlugins(array('jq_validation', 'js'));
         $data = array();
+        $data['department_list'] = $this->get_department_list('array');
+        $data['roles'] = $this->get_roles();
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    function save() {
+        $is_inserted = $this->users_model->save_user_details($this->input->post());
+        if ($is_inserted) {
+            $this->session->set_flashdata('noty_msg', '<p class="text-success">User added successfully</p>');
+        } else {
+            $this->session->set_flashdata('noty_msg', '<p class="text-danger">Failed to add user</p>');
+        }
+        redirect('add-user');
+    }
+
+    function check_for_duplicate_email() {
+        $email = $this->input->get('email');
+        $count = $this->users_model->check_for_dup_email($email);
+        if ($count > 0) {
+            echo 'false';
+        } else {
+            echo 'true';
+        }
     }
 
 }

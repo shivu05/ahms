@@ -20,6 +20,17 @@ class Patient extends SHV_Controller {
         $this->layout->title = "OPD";
     }
 
+    function index() {
+        $this->scripts_include->includePlugins(array('jq_validation', 'js'));
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "OPD patients";
+        $this->layout->navDescr = "Add new patient";
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
     function opd_list() {
         $this->layout->navTitleFlag = true;
         $this->layout->navTitle = "OPD patients";
@@ -29,6 +40,12 @@ class Patient extends SHV_Controller {
         $this->layout->data = $data;
         $this->layout->render();
     }
+
+    function sub_dept() {
+        return $this->get_sub_department();
+    }
+
+    
 
     function get_patients_list() {
         $input_array = array();

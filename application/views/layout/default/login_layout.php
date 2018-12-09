@@ -19,16 +19,22 @@
                 <h1><?php echo $app_settings['college_name']; ?></h1>
             </div>
             <div class="login-box">
-                <?php echo validation_errors(); ?>
-                <form class="login-form" action="<?php echo base_url('Login/validate'); ?>" method="post">
+                <form class="login-form" action="<?php echo base_url('login/validate'); ?>" method="post">
                     <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>SIGN IN</h3>
+                    <p class="text-danger"><?php
+                        if ($this->session->flashdata('noty_msg') != '') {
+                            echo $this->session->flashdata('noty_msg');
+                        }
+                        ?></p>
                     <div class="form-group">
                         <label class="control-label">USERNAME</label>
-                        <input class="form-control" type="text" placeholder="Email" autofocus name="loginname" id="loginname">
+                        <input class="form-control" type="text" placeholder="Email" autofocus name="loginname" id="loginname" autocomplete="off">
+                        <div class="form-control-feedback text-danger"><?php echo form_error('loginname'); ?></div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">PASSWORD</label>
                         <input class="form-control" type="password" placeholder="Password" name="password" id="password">
+                        <div class="form-control-feedback text-danger"><?php echo form_error('password'); ?></div>
                     </div>
                     <div class="form-group">
                         <div class="utility">

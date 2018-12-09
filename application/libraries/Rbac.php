@@ -17,8 +17,8 @@ class Rbac {
     }
 
     public function is_login() {
-        if (isset($this->_session['user_data']['id'])) {
-            return $this->_session['user_data']['id'];
+        if (isset($this->_session['user_data']['ID'])) {
+            return $this->_session['user_data']['ID'];
         }
         return 0;
     }

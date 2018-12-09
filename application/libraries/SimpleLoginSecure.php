@@ -1,5 +1,6 @@
 <?php
 
+date_default_timezone_set('Asia/Kolkata');
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -89,10 +90,9 @@ class SimpleLoginSecure {
         return true;
     }
 
-    function create_user($user_email = '', $user_pass = '', $user_fname = '', $country = '', $user_mobile = '', $user_state = '', $user_department = '', $auto_login = false) {
+    function create_user($user_email = '', $user_pass = '', $user_fname = '', $user_mobile = '', $user_type = '', $user_department = '', $auto_login = false) {
+
         $this->CI = & get_instance();
-
-
 
         //Make sure account info was sent
         if ($user_email == '' OR $user_pass == '') {
@@ -114,20 +114,30 @@ class SimpleLoginSecure {
         $data = array(
             'user_email' => $user_email,
             'user_name' => $user_fname,
-            'user_country' => $country,
+            'user_country' => '',
             'user_mobile' => $user_mobile,
-            'user_state' => $user_state,
-            'user_type' => 'normal',
+            'user_state' => '',
+            'user_type' => $user_type,
             'user_department' => $user_department,
             'user_password' => $user_pass_hashed,
             'user_date' => date('c'),
             'user_modified' => date('c'),
+            'active' => 1
         );
 
         $this->CI->db->set($data);
 
-        if (!$this->CI->db->insert($this->user_table)) //There was a problem! 
+        if (!$this->CI->db->insert($this->user_table)) { //There was a problem! 
             return false;
+        } else {
+            $last_id = $this->CI->db->insert_id();
+            $form_data = array(
+                'user_id' => $last_id,
+                'role_id' => $user_type
+            );
+            //$this->CI->db->set($form_data);
+            return $this->CI->db->insert('i_user_roles', $form_data);
+        }
 
         if ($auto_login)
             $this->login($user_email, $user_pass);
@@ -209,7 +219,7 @@ class SimpleLoginSecure {
         $this->CI->db->join('user_roles ur', 'ur.user_id=u.ID');
         $this->CI->db->join('role_master rm', 'rm.role_id=ur.role_id');
         $this->CI->db->where('u.user_email', $user_email);
-        $this->CI->db->where('u.active', 0);
+        $this->CI->db->where('u.active', 1);
         $query = $this->CI->db->get();
 
         if ($query->num_rows() > 0) {

@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Login
  *
@@ -31,14 +25,16 @@ class Login extends SHV_Controller {
         $this->form_validation->set_rules('loginname', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
+            $data['app_settings'] = $this->application_settings(array('college_name'));
+            $this->layout->data = $data;
             $this->layout->render(array('view' => 'login/index'));
         } else {
             //if ($this->simpleloginsecure->check_license() == 1) {
             if ($this->simpleloginsecure->login($this->input->post('loginname'), $this->input->post('password'))) {
                 redirect('dashboard');
             } else {
-                $data["invalid"] = "Invalid credentials";
-                echo 'invalid';
+                $this->session->set_flashdata('noty_msg', 'Wrong username / password ');
+                redirect('login');
             }
             /* } else {
               $data["invalid"] = "License Expired please contact admin";
