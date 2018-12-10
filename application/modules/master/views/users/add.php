@@ -4,6 +4,7 @@
             <div class="tile-title">Add new user:</div>
             <div class="tile-body">
                 <div class="col-4">
+                    <p><?php if ($this->session->flashdata('noty_msg') != '') echo $this->session->flashdata('noty_msg'); ?></p>
                     <form class="form-horizontal" id="user_form" name="user_form" action="<?php echo base_url('master/users/save'); ?>" method="POST">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Name:<span class="form_astrisk">*</span> </label>

@@ -5,8 +5,8 @@
             <div class="tile-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
-                        <label class="control-label">OPD</label>
-                        <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
+                        <label class="control-label">Email:</label>
+                        <input class="form-control" type="text" placeholder="Enter OPD number" name="email" id="email" autocomplete="off">
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label">Name</label>
@@ -71,6 +71,13 @@
                 class: "mobile",
                 data: function (item) {
                     return item.role_name;
+                }
+            },
+            {
+                title: "Department",
+                class: "department",
+                data: function (item) {
+                    return item.user_department;
                 }
             },
             {

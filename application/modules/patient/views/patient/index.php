@@ -46,7 +46,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleSelect1">Doctor:</label>
-                                <select class="form-control" id="department" name="department">
+                                <select class="form-control" id="doctor" name="doctor" disabled="disabled">
                                     <option value="">Choose doctor</option>
 
                                 </select>
@@ -63,17 +63,17 @@
                                 <label class="control-label">Gender:</label><br/>
                                 <div class="form-check-inline">
                                     <label class="form-check-label inline">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender">Male
+                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Male">Male
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender">Female
+                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="Female">Female
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
                                     <label class="form-check-label">
-                                        <input class="form-check-input" type="radio" name="gender" id="gender">Female
+                                        <input class="form-check-input" type="radio" name="gender" id="gender" value="others">Others
                                     </label>
                                 </div>
                             </div>
@@ -128,10 +128,11 @@
                 dataType: 'json',
                 type: 'POST',
                 success: function (response) {
-                    if (response.length > 0) {
+                    console.log(response.doctors)
+                    if (response.sub_dept.length > 0) {
                         var option = '<option value="">Choose sub department</option>';
                         $.each(response, function (i) {
-                            option += '<option value="' + response[i].sub_dept_name + '">' + response[i].sub_dept_name + '</option>';
+                            option += '<option value="' + response.sub_dept[i].sub_dept_name + '">' + response.sub_dept[i].sub_dept_name + '</option>';
                         });
                         $('#sub_department').html(option);
                         $('#sub_department').attr('disabled', false);
@@ -139,6 +140,19 @@
                         var option = '<option value="">Choose sub department</option>';
                         $('#sub_department').html(option);
                         $('#sub_department').attr('disabled', true);
+                    }
+
+                    if (response.doctors.length > 0) {
+                        var option = '<option value="">Choose doctor</option>';
+                        $.each(response.doctors, function (i) {
+                            option += '<option value="' + response.doctors[i].user_name + '">' + response.doctors[i].user_name + '</option>';
+                        });
+                        $('#doctor').html(option);
+                        $('#doctor').attr('disabled', false);
+                    } else {
+                        var option = '<option value="">Choose doctor</option>';
+                        $('#doctor').html(option);
+                        $('#doctor').attr('disabled', true);
                     }
                 }
 

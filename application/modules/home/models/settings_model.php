@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class settings_model extends CI_Model {
+class Settings_model extends CI_Model {
 
     public function get_configuration_settings($column = NULL) {
         if ($column) {
@@ -29,6 +29,11 @@ class settings_model extends CI_Model {
             $this->db->where('ID', $id);
         }
         return $this->db->get('users')->result_array();
+    }
+
+    function get_doctors_by_dept($dept) {
+        $query = "SELECT * FROM users u where LOWER(user_department)=LOWER('$dept')";
+        return $this->db->query($query)->result_array();
     }
 
 }

@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class nursing_model extends CI_Model {
+class Nursing_model extends CI_Model {
 
     function get_xray_data($conditions, $export_flag = false) {
 

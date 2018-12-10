@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class doctots_model extends CI_Model {
+class Doctots_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();

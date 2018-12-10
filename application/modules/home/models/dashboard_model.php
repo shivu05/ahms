@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class dashboard_model extends CI_Model {
+class Dashboard_model extends CI_Model {
 
     function get_gender_wise_patients() {
         $query = "SELECT SUM(case when p.gender='Male' then 1 else 0 end) males,SUM(case when p.gender='Female' then 1 else 0 end) females,

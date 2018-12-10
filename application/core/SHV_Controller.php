@@ -41,8 +41,14 @@ class SHV_Controller extends MX_Controller {
     function get_sub_department() {
         $this->load->model('master/department_model');
         $dept_id = $this->input->post('dept_id');
-        $sub_depts = $this->department_model->get_sub_departments($dept_id);
-        echo json_encode($sub_depts);
+        $return['sub_dept'] = $this->department_model->get_sub_departments($dept_id);
+        $return['doctors'] = $this->get_doctors();
+        echo json_encode($return);
+    }
+
+    function get_doctors() {
+        $dept = $this->input->post('dept_id');
+        return $this->settings_model->get_doctors_by_dept($dept);
     }
 
     function get_roles() {

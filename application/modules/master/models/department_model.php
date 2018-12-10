@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class department_model extends CI_Model {
+class Department_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();

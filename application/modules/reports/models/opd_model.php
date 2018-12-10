@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class opd_model extends CI_Model {
+class Opd_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();

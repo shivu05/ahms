@@ -20,7 +20,7 @@ class Users_model extends CI_Model {
     function save_user_details($post_values) {
 
         $user_dept = (isset($post_values['user_dept'])) ? $post_values['user_dept'] : '';
-        $is_inserted = $this->simpleloginsecure->create_user($post_values['email'], $post_values['user_pass'], $post_values['name'], $post_values['mobile'], $post_values['user_role'], $user_dept);
+        $is_inserted = $this->simpleloginsecure->create_user(trim($post_values['email']), $post_values['user_pass'], trim($post_values['name']), trim($post_values['mobile']), $post_values['user_role'], $user_dept);
 
         if ($is_inserted) {
             return true;
@@ -66,7 +66,7 @@ class Users_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM users u JOIN user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
         (SELECT @a:= 0) AS a   $where_cond ORDER BY u.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();

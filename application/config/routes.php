@@ -72,3 +72,4 @@ $route['department-list'] = "master/department";
 $route['users-list'] = "master/users";
 $route['add-user'] = "master/users/add";
 
+

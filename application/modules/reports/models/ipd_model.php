@@ -11,7 +11,7 @@
  *
  * @author Shivaraj
  */
-class ipd_model extends CI_Model {
+class Ipd_model extends CI_Model {
 
     function get_ipd_patients($conditions, $export_flag = FALSE) {
         $return = array();
