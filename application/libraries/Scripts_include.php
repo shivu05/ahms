@@ -35,7 +35,11 @@ class Scripts_include {
             '/assets/plugins/datatables/dataTables.bootstrap4.min.js'
         ),
         'jq_validation' => array(
-            '/assets/plugins/jq_validation/jquery.validate.js'
+            '/assets/plugins/jq_validation/jquery.validate.js',
+            '/assets/plugins/jq_validation/formValidation.js',
+        ),
+        'chosen' => array(
+            '/assets/plugins/chosen/chosen.jquery.js',
         )
     );
     private $__cssFiles = array(
@@ -46,6 +50,9 @@ class Scripts_include {
         'datatables' => array(
             '/assets/plugins/datatables/dataTables.bootstrap4.min.css'
         ),
+        'chosen' => array(
+            '/assets/plugins/chosen/bootstrap-chosen.css',
+        )
     );
 
     function __construct() {

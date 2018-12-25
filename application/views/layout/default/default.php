@@ -26,7 +26,7 @@
             var base_url = '<?= APP_BASE ?>';
         </script>
     </head>
-    <body class="app sidebar-mini rtl sidenav-toggled">
+    <body class="app sidebar-mini rtl">
         <?php
         if ($this->layout->headerFlag) :
             $this->load->view($this->layout->layoutsFolder . '/header');

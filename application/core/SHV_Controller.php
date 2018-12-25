@@ -56,4 +56,10 @@ class SHV_Controller extends MX_Controller {
         return $this->db->get('role_master')->result_array();
     }
 
+    function get_next_dept_opd($dept) {
+        $dept_max_id = $this->db->select_max('deptOpdNo')->where('dept', $dept)->get('patientdata');
+        return $dept_max_id->row()->deptOpdNo;
+    }
+
+    
 }

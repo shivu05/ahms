@@ -13,6 +13,37 @@
  */
 class treatment_model extends CI_Model {
 
+    function add_patient_for_treatment($post_values) {
+        $user_id = $this->rbac->get_uid();
+        $this->db->trans_start();
+        $form_data = array(
+            'FirstName' => $post_values['first_name'],
+            'LastName' => $post_values['last_name'],
+            'Age' => $post_values['age'],
+            'gender' => $post_values['gender'],
+            'occupation' => $post_values['occupation'],
+            'address' => $post_values['address'],
+            'city' => $post_values['place'],
+            'AddedBy' => $user_id,
+            'entrydate' => $post_values['consultation_date'],
+            'mob' => $post_values['mobile']
+        );
+        $this->db->insert('patientdata', $form_data);
+        $last_id = $this->db->insert_id();
+        $dept_max_id = $this->db->select_max('deptOpdNo')->where('department', $post_values['department'])->get('treatmentdata')->row()->deptOpdNo;
+        $dept_opd_count = ($dept_max_id == NULL) ? 1 : $dept_max_id + 1;
+        $treat_data = array(
+            'OpdNo' => $last_id,
+            'deptOpdNo' => $dept_opd_count,
+            'PatType' => 'N',
+            'department' => $post_values['department'],
+            'AddedBy' => $post_values['doctor'],
+            'CameOn' => $post_values['consultation_date'],
+        );
+        $this->db->insert('treatmentdata', $treat_data);
+        $this->db->trans_complete();
+    }
+
     function get_patients($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array(

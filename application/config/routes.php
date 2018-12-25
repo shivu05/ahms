@@ -72,4 +72,13 @@ $route['department-list'] = "master/department";
 $route['users-list'] = "master/users";
 $route['add-user'] = "master/users/add";
 
+// Purchase
+$route['show-purchase-type'] = "pharmacy/purchase/purchase_items";
+$route['add-purchase-type'] = "pharmacy/purchase/save_purchase_master_type";
+
+$route['add-product'] = "pharmacy/purchase/add_product";
+$route['save-product'] = "pharmacy/purchase/save_product";
+
+$route['purchase-return'] = "pharmacy/purchase/purchase_return";
+
 

@@ -45,8 +45,6 @@ class Patient extends SHV_Controller {
         return $this->get_sub_department();
     }
 
-    
-
     function get_patients_list() {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
@@ -87,6 +85,20 @@ class Patient extends SHV_Controller {
         $worksheet_name = 'Patients';
         download_to_excel($export_array, $file_name, $headings, $worksheet_name, null, $search_criteria, TRUE);
         ob_end_flush();
+    }
+
+    function save() {
+        $this->load->model('patient/treatment_model');
+        $max = $this->get_next_dept_opd($this->input->post('department'));
+        if ($max != NULL) {
+            $dept_opd_count = $max + 1;
+        } else {
+            $dept_opd_count = 1;
+        }
+
+        $user_id = $this->rbac->get_uid();
+        $this->treatment_model->add_patient_for_treatment($this->input->post());
+        pma($user_id, 1);
     }
 
     function export_pdf() {
