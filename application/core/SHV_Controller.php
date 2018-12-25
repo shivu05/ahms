@@ -61,5 +61,12 @@ class SHV_Controller extends MX_Controller {
         return $dept_max_id->row()->deptOpdNo;
     }
 
-    
+    function get_packaging_types() {
+        return $this->settings_model->get_packaging_types();
+    }
+
+    function get_uuid() {
+        return $this->uuid->v4();
+    }
+
 }

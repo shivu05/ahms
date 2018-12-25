@@ -78,6 +78,8 @@ $route['add-purchase-type'] = "pharmacy/purchase/save_purchase_master_type";
 
 $route['add-product'] = "pharmacy/purchase/add_product";
 $route['save-product'] = "pharmacy/purchase/save_product";
+$route['product-list'] = "pharmacy/purchase/product_list";
+$route['export-product-list'] = "pharmacy/purchase/export_product_list";
 
 $route['purchase-return'] = "pharmacy/purchase/purchase_return";
 

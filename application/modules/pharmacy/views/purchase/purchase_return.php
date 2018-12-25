@@ -106,31 +106,31 @@
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="Inputsupplier">Quantity:</label>
-                                        <input type="text" name="qty" id="qty" placeholder="QTY" class="form-control required" />
+                                        <input type="text" name="qty" id="qty" placeholder="QTY" onblur="getVal()" class="form-control required" />
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="Inputsupplier">Purchase rate:</label>
-                                        <input type="text" name="p_rate" id="p_rate" placeholder="Purchase rate" class="form-control required" />
+                                        <input type="text" name="p_rate" id="p_rate" placeholder="Purchase rate" onblur="getVal()" class="form-control required" />
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="Inputdiscount">MRP:</label>
-                                        <input type="text" name="mrp" id="mrp" placeholder="MRP" class="form-control required" />
+                                        <input type="text" name="mrp" id="mrp" placeholder="MRP" onblur="getVal()" class="form-control required" />
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="Inputdiscount">Discount:</label>
-                                        <input type="text" name="discount" id="discount" placeholder="Discount" class="form-control required" />
+                                        <input type="text" name="discount" id="discount" placeholder="Discount" onblur="getVal()" class="form-control required" />
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="InputVAT">VAT:</label>
-                                        <input type="text" name="vat" id="vat" placeholder="VAT" class="form-control required" />
+                                        <input type="text" name="vat" id="vat" placeholder="VAT" onblur="getVal()" class="form-control required" />
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
@@ -140,6 +140,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <button class="card-link btn btn-primary" type="button" id="add_product_to_list" name="add_product_to_list"><i class="fa fa-plus" ></i> Add product</button>
                         </div><!-- row -->
                     </div>
                 </div>
@@ -222,7 +223,7 @@
                         $('#product').html(option);
                     }
                     if (response.batch.length > 0) {
-                        var option_batch = '<option value="">Choose product</option>';
+                        var option_batch = '<option value="">Choose batch</option>';
                         $.each(response.batch, function (item) {
                             option_batch += '<option value="' + response.batch[item].batch + '">' + response.batch[item].batch + '</option>';
                         });
@@ -246,7 +247,13 @@
                 dataType: 'json',
                 data: {product_id: product_id, batch: batch},
                 success: function (response) {
+                    $('#mrp').val(response.product_info[0].mrp);
+                    $('#p_rate').val(response.product_info[0].p_rate);
+                    $('#p_rate').val(response.product_info[0].p_rate);
+                    $('#discount').val(response.product_info[0].discount);
+                    $('#vat').val(response.product_info[0].vat);
                     console.log(response);
+
                 },
                 error: function (error) {
                     console.log(error);
@@ -254,6 +261,7 @@
 
             });
         });
+
     });
 
     function getVal() {

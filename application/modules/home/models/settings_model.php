@@ -36,4 +36,8 @@ class Settings_model extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
+    function get_packaging_types() {
+        return $this->db->get_where('packagin_type', array('status' => 'ACTIVE'))->result_array();
+    }
+
 }

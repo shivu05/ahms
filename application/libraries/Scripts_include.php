@@ -48,7 +48,9 @@ class Scripts_include {
             '/assets/font-awesome-4.7.0/css/font-awesome.css'
         ),
         'datatables' => array(
-            '/assets/plugins/datatables/dataTables.bootstrap4.min.css'
+            '/assets/plugins/datatables/dataTables.bootstrap4.min.css',
+            '/assets/plugins/datatables/responsive.bootstrap.min.css',
+            '/assets/plugins/datatables/fixedHeader.bootstrap.min.css'
         ),
         'chosen' => array(
             '/assets/plugins/chosen/bootstrap-chosen.css',

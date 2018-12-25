@@ -58,7 +58,50 @@ class Purchase_model extends CI_Model {
     }
 
     function save_product($post_values) {
-        return $this->db->insert('product_details', $post_values);
+        return $this->db->insert('product_master', $post_values);
+    }
+
+    function get_product_list($conditions, $export_flag = false) {
+        $return = array();
+        $columns = array('product_id', 'product_unique_id', 'product_master_id', 'product_batch', 'supplier_id', 'packing_name', 'product_mfg', 'product_type', 'manifacture_date', 'exp_date', 'quantity', 'purchase_rate',
+            'mrp', 'sale_rate', 'vat', 'no_of_items_in_pack', 'pack_type', 'item_unit_cost', 'no_of_sub_items', 'sub_item_pack_type', 'sub_item_unit_cost', 'no_of_sub_items_in_pack', 'discount', 'reorder_point',
+            'weight', 'rack', 'pv1.name as product_name', 'pv2.name as supplier_name');
+        $where_cond = " WHERE product_master_id is NOT NULL ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'type':
+                        $where_cond .= " AND LOWER(type)=LOWER('$val')";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND name LIKE '%$val%'";
+                /* default:
+                  $where_cond .= " AND $col = '$val'"; */
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM product_master p
+            join purchase_variables pv1 on p.product_master_id=pv1.id
+            join purchase_variables pv2 on p.supplier_id=pv2.id
+            ,(SELECT @a:= 0) AS a $where_cond";
+
+
+        $result = $this->db->query($query . ' ' . $limit);
+
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query("SELECT * FROM purchase_variables")->num_rows();
+        return $return;
     }
 
     function get_temp_products_return_data($conditions, $export_flag = false) {
@@ -124,6 +167,7 @@ class Purchase_model extends CI_Model {
     function get_product_info($product_id, $batch) {
         $this->db->where('product_id', $product_id);
         $this->db->where('batch', $batch);
+        $this->db->limit(1);
         return $this->db->get('product_details')->result_array();
     }
 
