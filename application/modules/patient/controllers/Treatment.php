@@ -44,6 +44,8 @@ class Treatment extends SHV_Controller {
     }
 
     function add_treatment($opd = NULL, $treat_id = NULL) {
+        $this->scripts_include->includePlugins(array('chosen'), 'js');
+        $this->scripts_include->includePlugins(array('chosen'), 'css');
         $data = array();
         $data['opd'] = $opd;
         $data['treat_id'] = $treat_id;
@@ -51,6 +53,8 @@ class Treatment extends SHV_Controller {
         $data['treatment_details'] = $this->treatment_model->get_treatment_history($opd);
         $data['wards'] = $this->treatment_model->getBedno();
         $treatment_details = $this->treatment_model->get_current_treatment_info($opd, $treat_id);
+        $data['med_freqs'] = $this->get_medicine_frequency();
+        $data['medicines'] = $this->get_product_list();
         $data['current_treatment'] = $treatment_details['treatment_data'];
         $data['doctors'] = $treatment_details['doctors'];
         $this->layout->data = $data;

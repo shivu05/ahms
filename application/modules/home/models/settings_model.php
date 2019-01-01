@@ -40,4 +40,13 @@ class Settings_model extends CI_Model {
         return $this->db->get_where('packagin_type', array('status' => 'ACTIVE'))->result_array();
     }
 
+    function get_medicine_frequency() {
+        return $this->db->get('medicine_frequency')->result_array();
+    }
+
+    function get_medicine_list() {
+        $query = "SELECT name,product_master_id as id FROM product_master p JOIN purchase_variables pv where p.product_master_id=pv.id";
+        return $this->db->query($query)->result_array();
+    }
+
 }

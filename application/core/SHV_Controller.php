@@ -69,4 +69,12 @@ class SHV_Controller extends MX_Controller {
         return $this->uuid->v4();
     }
 
+    function get_medicine_frequency() {
+        return $this->settings_model->get_medicine_frequency();
+    }
+
+    function get_product_list() {
+        return $this->settings_model->get_medicine_list();
+    }
+
 }

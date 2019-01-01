@@ -1,6 +1,6 @@
 <!-- Navbar-->
 <header class="app-header">
-    <a class="app-header__logo" href="<?php echo base_url('dashboard'); ?>">AHMS</a>
+    <a class="app-header__logo" href="<?php echo base_url('dashboard'); ?>">AYUSH</a>
     <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
     <!-- Navbar Right Menu-->
     <ul class="app-nav">

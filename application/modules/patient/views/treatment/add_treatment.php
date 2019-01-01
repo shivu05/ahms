@@ -58,6 +58,44 @@
                     </div>
                     <hr/>
                     <div class="row">
+                        <div class="col-md-4">
+                            <label>Medicine name: <span class="text-danger">*</span></label>
+                            <select name="medicine" id="medicine" class="form-control  required chosen-select">
+                                <option>Choose medicine</option>
+
+                                <?php
+                                if (!empty($medicines)) {
+                                    foreach ($medicines as $medicine) {
+                                        echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label>When to take: <span class="text-danger">*</span></label>
+                            <select name="med_freq" id="med_freq" class="form-control  required chosen-select">
+                                <option>Choose frequency</option>
+                                <?php
+                                if (!empty($med_freqs)) {
+                                    foreach ($med_freqs as $frq) {
+                                        echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Days: <span class="text-danger">*</span></label>
+                            <input type="text" name="days" id="days" class="form-control required numbers-only" placeholder="Days" />
+                        </div>
+                        <div class="col-md-2">
+                            <label>Before food: <span class="text-danger">*</span></label>
+                            <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label>Notes: <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="notes" id="notes"></textarea>
@@ -310,7 +348,7 @@
                                 $beds = explode(',', $ward['beds']);
                                 if (!empty($beds)) {
                                     foreach ($beds as $bed) {
-                                        $bed_select .='<option value="' . $bed . '">' . $bed . '</option>';
+                                        $bed_select .= '<option value="' . $bed . '">' . $bed . '</option>';
                                     }
                                 }
                             }
@@ -346,6 +384,10 @@
     </div><!-- col-9 -->
 </div>
 <script type="text/javascript">
+    $(function () {
+        $('.chosen-select').chosen();
+        $('.chosen-select-deselect').chosen({allow_single_deselect: true});
+    });
     var procedure_div_ids = ['ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
