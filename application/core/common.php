@@ -133,4 +133,65 @@ if (!function_exists('array_column')) {
     }
 
 }
-    
+
+if (!function_exists('generate_table_pdf')) {
+
+    function generate_table_pdf($headers, $data = null) {
+        $table = '';
+        if ($headers) {
+            $table .= '<table width="100%" class="table table-bordered">';
+            if (!empty($headers)) {
+                $table .= '<thead>';
+                $table .= '<tr>';
+                foreach ($headers as $head) {
+                    $table .= '<th>' . $head['name'] . '</th>';
+                }
+                $table .= '</tr>';
+                $table .= '</thead>';
+                $table .= '<tbody>';
+                if (!empty($data)) {
+                    foreach ($data as $row) {
+                        $table .= '<tr>';
+                        foreach ($headers as $k => $v) {
+                            $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
+                            $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
+
+                            $table .= '<td ' . $width . ' ' . $align . '>' . $row[$k] . '</th>';
+                        }
+                        $table .= '</tr>';
+                    }
+                } else {
+                    $table .= '<tr><td>No data found</td></tr>';
+                }
+                $table .= '</tbody>';
+            }
+            $table .= '</table>';
+        }
+        return $table;
+    }
+
+}
+
+if (!function_exists('patient_type')) {
+
+    function patient_type($type = '') {
+        if ($type = 'New Patient') {
+            return 'New';
+        } else {
+            return 'Old';
+        }
+    }
+
+}
+
+if (!function_exists('format_date')) {
+
+    function format_date($date = '') {
+        if ($date && $date != '--') {
+            return date("d-m-Y", strtotime($date));
+        } else {
+            return NULL;
+        }
+    }
+
+}

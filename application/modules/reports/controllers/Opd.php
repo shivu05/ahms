@@ -62,11 +62,66 @@ class Opd extends SHV_Controller {
         echo json_encode(array('statistics' => $return));
     }
 
+    function export_to_pdf() {
+
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->opd_model->get_opd_patients($input_array, true);
+        $patients = $result['data'];
+
+        $headers['serial_number'] = array('name' => 'Sl. No', 'align' => 'C', 'width' => '5');
+        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '5');
+        if ($input_array['department'] != 1) {
+            $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
+        }
+        $headers['PatType'] = array('name' => 'Type', 'width' => '5');
+        $headers['name'] = array('name' => 'Name', 'width' => '20');
+        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '3');
+        $headers['gender'] = array('name' => 'Gender', 'width' => '5');
+        $headers['city'] = array('name' => 'Place', 'width' => '10');
+        if ($input_array['department'] != 1) {
+            $headers['diagnosis'] = array('name' => 'Diagnosis', 'width' => '10');
+            $headers['Trtment'] = array('name' => 'Treatment', 'width' => '27');
+            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '12');
+        } else {
+            $headers['diagnosis'] = array('name' => 'Complaints', 'width' => '17');
+        }
+        $headers['department'] = array('name' => 'Department', 'width' => '13');
+        //$headers['ref_room'] = array('name' => 'Ref. room', 'align' => 'C', 'width' => '3');
+        $headers['CameOn'] = array('name' => 'Date', 'width' => '7');
+
+
+        $html = generate_table_pdf($headers, $patients);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+        $table = "";
+        $table .= '<table width="100%" style="border: none;">';
+        $table .= '<tr>';
+        $table .= '<td width="33%"><b>DEPARTMENT</b>:' . $print_dept . '</td><td width="33%" text-align:"center"; align="center"><h2>OPD REGISTER</h2></td><td width="33%" style="text-align:center;"><b>FROM:</b>' . $input_array['start_date'] .
+                '&nbsp; <b>TO: </b>' . $input_array['end_date'] . '</td>';
+        $table .= '</tr>';
+        $table .= '</table>';
+        $title = array(
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
     /*
      * OPD EXPORT PDF
      */
 
-    function export_to_pdf() {
+    function export_to_pdf_old() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $data = array();
@@ -217,20 +272,20 @@ class Opd extends SHV_Controller {
         $content .= '<tbody>';
         $i = 1;
         foreach ($patients as $patient) {
-            $content .='<tr>';
-            $content .='<td>' . $i . '</td>';
-            $content .='<td>' . $patient['OpdNo'] . '</td>';
-            $content .='<td>' . $patient['PatType'] . '</td>';
-            $content .='<td>' . $patient['FirstName'] . ' ' . $patient['LastName'] . '</td>';
-            $content .='<td>' . $patient['Age'] . '</td>';
-            $content .='<td>' . $patient['gender'] . '</td>';
-            $content .='<td>' . $patient['city'] . '</td>';
-            $content .='<td>' . $patient['diagnosis'] . '</td>';
-            $content .='<td>' . $patient['Trtment'] . '</td>';
-            $content .='<td>' . $patient['attndedby'] . '</td>';
-            $content .='<td>' . $patient['department'] . '</td>';
+            $content .= '<tr>';
+            $content .= '<td>' . $i . '</td>';
+            $content .= '<td>' . $patient['OpdNo'] . '</td>';
+            $content .= '<td>' . $patient['PatType'] . '</td>';
+            $content .= '<td>' . $patient['FirstName'] . ' ' . $patient['LastName'] . '</td>';
+            $content .= '<td>' . $patient['Age'] . '</td>';
+            $content .= '<td>' . $patient['gender'] . '</td>';
+            $content .= '<td>' . $patient['city'] . '</td>';
+            $content .= '<td>' . $patient['diagnosis'] . '</td>';
+            $content .= '<td>' . $patient['Trtment'] . '</td>';
+            $content .= '<td>' . $patient['attndedby'] . '</td>';
+            $content .= '<td>' . $patient['department'] . '</td>';
             //$content .='<td>' . $patient['CameOn'] . '</td>';
-            $content .='</tr>';
+            $content .= '</tr>';
             $i++;
         }
         $content .= '</tbody>';

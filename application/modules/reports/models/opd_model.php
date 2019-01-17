@@ -23,7 +23,7 @@ class Opd_model extends CI_Model {
             'OpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'city', 'occupation', 'address'
         );
         $where_cond = " WHERE 1=1 ";
-        $limit = '';
+        $limit = ' LIMIT 100';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
@@ -72,9 +72,10 @@ class Opd_model extends CI_Model {
 
     function get_opd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'department', 't.AddedBy', 'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby');
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'Age', 'gender', 't.department', 't.AddedBy',
+            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby');
 
-        $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";
         $limit = '';
         if (!$export_flag) {
@@ -96,7 +97,7 @@ class Opd_model extends CI_Model {
                         $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
                         break;
                     case 'department':
-                        $where_cond .=($val != 1) ? " AND t.department = '$val'" : '';
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
@@ -105,9 +106,10 @@ class Opd_model extends CI_Model {
         }
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo $where_cond ORDER BY CameOn ASC";
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM treatmentdata t, (SELECT @a:= 0) AS a JOIN patientdata p $where_cond ORDER BY CameOn ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
+
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         return $return;

@@ -121,6 +121,71 @@ class Patient extends SHV_Controller {
     }
 
     function export_patients_list_pdf() {
+
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $this->load->helper('pdf');
+        $search_criteria = NULL;
+        $input_array = array();
+
+        /* foreach ($this->input->post('search_form') as $search_data) {
+          //$input_array[$search_data] = $val;
+          $input_array[$search_data['name']] = $search_data['value'];
+          } */
+        $result = $this->opd_model->get_patients($input_array, true);
+
+        $headers = array(
+            'OpdNo' => 'OPD No',
+            'FirstName' => 'First name',
+            'LastName' => 'Last name',
+            'Age' => 'Age',
+            'gender' => 'Gender',
+            'city' => 'City',
+            'occupation' => 'Ocuupation',
+            'address' => 'Address'
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+//        $table = '';
+//
+//        $table .= '<table autosize="1" style="overflow: wrap" width="100%" class="table table-bordered">';
+//        $table .= '<thead><tr><td>OPD</td><td>Name</td><td>Age</td><td>Sex</td><td>City</td><td>Occupation</td><td>Address</td></tr></thead>';
+//        $table .= '<tbody>';
+//        $i = 0;
+//        foreach ($result['data'] as $data) {
+//            $i++;
+//            $table .= '<tr>';
+//            $table .= '<td>' . $data['OpdNo'] . '</td>';
+//            $table .= '<td>' . $data['FirstName'] . ' ' . $data['LastName'] . '</td>';
+//            $table .= '<td>' . $data['Age'] . '</td>';
+//            $table .= '<td>' . $data['gender'] . '</td>';
+//            $table .= '<td>' . $data['city'] . '</td>';
+//            $table .= '<td>' . $data['occupation'] . '</td>';
+//            $table .= '<td>' . $data['address'] . '</td>';
+//            $table .= '</tr>';
+//            if ($i == 100)
+//                break;
+//        }
+//        $table .= '</tbody>';
+//        $table .= '</table>';
+
+
+        /* $mpdf = new \mPDF('utf-8', 'A4', '');
+          $mpdf->useSubstitutions = false;
+          $mpdf->simpleTables = true;
+          $mpdf->shrink_tables_to_fit = 1;
+          $mpdf->WriteHTML($table);
+          $mpdf->Output(); */
+        
+        $title = "";
+        $title .= '<table width="100%" style="border: none;">';
+        $title .= '<tr>';
+        $title .= '<td width="33%"><b>DEPARTMENT</b>:KAYACHIKISTA <br/>' . '</td><td width="33%" text-align:"center"; align="center"><h2>OPD REGISTER</h2></td><td width="33%" style="text-align:center;"><b>FROM:</b> 14-01-2019 &nbsp; <b>TO: </b>14-01-2019 </td>';
+        $title .= '</tr>';
+        $title .= '</table>';
+        pdf_create($title, $html);
+
+        exit;
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $data = array();
