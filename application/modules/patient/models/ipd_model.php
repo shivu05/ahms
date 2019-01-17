@@ -58,4 +58,47 @@ class Ipd_model extends CI_Model {
         return $return;
     }
 
+    public function get_indent_patients($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array(
+            'IpNo', 'ip.OpdNo', 'FName', 'p.Age', 'p.Gender', 'ip.department', 't.diagnosis', 't.ID', 'ip.DoAdmission', 'ip.Doctor'
+        );
+
+        $where_cond = " WHERE t.ipdno = ip.IpNo AND ip.OpdNo = p.OpdNo AND t.status ='nottreated'";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND ip.OpdNo='$val'";
+                        break;
+                    case 'IpNo':
+                        $where_cond .= " AND IpNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND FName LIKE '%$val%'";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM inpatientdetails  ip 
+                JOIN ipdtreatment t JOIN patientdata p $where_cond order by IpNo desc";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->count_all('inpatientdetails');
+        return $return;
+    }
+
 }

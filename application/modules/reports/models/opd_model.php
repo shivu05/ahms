@@ -72,8 +72,8 @@ class Opd_model extends CI_Model {
 
     function get_opd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'Age', 'gender', 't.department', 't.AddedBy',
-            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby');
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'Age', 'gender', 't.AddedBy',
+            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby', 'get_department_name(t.department) as department');
 
         $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";

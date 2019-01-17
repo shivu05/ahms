@@ -176,7 +176,7 @@ class Patient extends SHV_Controller {
           $mpdf->shrink_tables_to_fit = 1;
           $mpdf->WriteHTML($table);
           $mpdf->Output(); */
-        
+
         $title = "";
         $title .= '<table width="100%" style="border: none;">';
         $title .= '<tr>';
@@ -344,12 +344,88 @@ class Patient extends SHV_Controller {
         $opd_data = $this->treatment_model->get_opd_by_ipd($ipd);
         $this->treatment_model->update_bed_details($opd_data['OpdNo']);
         $is_updated = $this->treatment_model->discharge_patient($ipd, $discharge_arr);
-        //$this->add_nursing_indent($ipd);
+        $this->add_nursing_indent($ipd);
         if ($is_updated) {
             echo 1;
         } else {
             echo 0;
         }
+    }
+
+    function add_nursing_indent($ipd) {
+        $this->db->from('ipdtreatment it');
+        $this->db->join('inpatientdetails ip', 'it.ipdno=ip.IpNo');
+        $this->db->where('it.ipdno', $ipd);
+        $treat_data = $this->db->get()->result_array();
+
+        foreach ($treat_data as $treat) {
+            $products = explode(',', $treat['Trtment']);
+            $days = $treat['NofDays'];
+            $doa = $treat['DoAdmission'];
+            foreach ($products as $product) {
+                if (strpos($product, 'BD')) {
+                    $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
+                    for ($i = 0; $i < $days; $i++) {
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i) . ' days'));
+                        $form_data = array(
+                            'indentdate' => $doi,
+                            'ipdno' => $treat['IpNo'],
+                            'opdno' => $treat['OpdNo'],
+                            'product' => $product,
+                            'morning' => $int,
+                            'afternoon' => 0,
+                            'night' => $int,
+                            'totalqty' => 2,
+                            'treatid' => $treat['ID'],
+                        );
+                        $this->db->insert('indent', $form_data);
+                    }
+                } else if (strpos($product, 'TD')) {
+                    $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
+                    for ($i = 0; $i < $days; $i++) {
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i + 1) . ' days'));
+                        $form_data = array(
+                            'indentdate' => $doi,
+                            'ipdno' => $treat['IpNo'],
+                            'opdno' => $treat['OpdNo'],
+                            'product' => $product,
+                            'morning' => $int,
+                            'afternoon' => $int,
+                            'night' => $int,
+                            'totalqty' => 3,
+                            'treatid' => $treat['ID'],
+                        );
+                        $this->db->insert('indent', $form_data);
+                    }
+                }
+            }
+            $this->db->where('ID', $treat['IpNo']);
+            $this->db->update('ipdtreatment', array('status' => 'Treated'));
+        }
+    }
+
+    function indent_list() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "IPD patients";
+        $this->layout->navDescr = "In Patient Department";
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $data = array();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_indent_patients() {
+        $this->load->model('patient/ipd_model');
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->ipd_model->get_indent_patients($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
     }
 
 }

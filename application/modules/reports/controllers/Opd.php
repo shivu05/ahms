@@ -14,8 +14,6 @@
 ini_set("memory_limit", "-1");
 set_time_limit(0);
 
-//require_once './vendor/autoload.php';
-
 class Opd extends SHV_Controller {
 
     public function __construct() {
@@ -63,7 +61,7 @@ class Opd extends SHV_Controller {
     }
 
     function export_to_pdf() {
-
+        $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -80,7 +78,7 @@ class Opd extends SHV_Controller {
         if ($input_array['department'] != 1) {
             $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
         }
-        $headers['PatType'] = array('name' => 'Type', 'width' => '5');
+        $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
         $headers['name'] = array('name' => 'Name', 'width' => '20');
         $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '3');
         $headers['gender'] = array('name' => 'Gender', 'width' => '5');
@@ -98,22 +96,30 @@ class Opd extends SHV_Controller {
 
 
         $html = generate_table_pdf($headers, $patients);
+        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        mysqli_next_result($this->db->conn_id); //imp
+        $stats_headers = array(
+            'department' => array('name' => 'Department', 'width' => '15'),
+            'OLD' => array('name' => 'OLD', 'align' => 'C', 'width' => '7'),
+            'NEW' => array('name' => 'NEW', 'align' => 'C', 'width' => '7'),
+            'Total' => array('name' => 'Total', 'align' => 'C', 'width' => '7'),
+            'Male' => array('name' => 'Male', 'align' => 'C', 'width' => '7'),
+            'Female' => array('name' => 'Female', 'align' => 'C', 'width' => '7'),
+            'NRV' => array('name' => 'Netra-Roga Vibhaga', 'align' => 'C', 'width' => '7'),
+            'KNMDV' => array('name' => 'karna-Nasa-Mukha & Danta Vibhaga', 'align' => 'C', 'width' => '7'),
+        );
+        $stats_html = generate_table_pdf($stats_headers, $return);
 
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-        $table = "";
-        $table .= '<table width="100%" style="border: none;">';
-        $table .= '<tr>';
-        $table .= '<td width="33%"><b>DEPARTMENT</b>:' . $print_dept . '</td><td width="33%" text-align:"center"; align="center"><h2>OPD REGISTER</h2></td><td width="33%" style="text-align:center;"><b>FROM:</b>' . $input_array['start_date'] .
-                '&nbsp; <b>TO: </b>' . $input_array['end_date'] . '</td>';
-        $table .= '</tr>';
-        $table .= '</table>';
+
         $title = array(
+            'report_title' => 'OPD REGISTER',
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-
-        pdf_create($title, $html);
+        $content = $html . '<br/>' . $stats_html;
+        pdf_create($title, $content);
         exit;
     }
 
