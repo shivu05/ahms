@@ -64,7 +64,7 @@
             {
                 title: "Department",
                 data: function (item) {
-                    return item.dept;
+                    return item.department;
                 }
             },
             {

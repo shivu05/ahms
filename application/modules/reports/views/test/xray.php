@@ -31,10 +31,17 @@
                 }
             },
             {
-                title: "OPD",
+                title: "C.OPD",
                 class: "opd_no",
                 data: function (item) {
                     return item.OpdNo;
+                }
+            },
+            {
+                title: "D.OPD",
+                class: "opd_no",
+                data: function (item) {
+                    return item.deptOpdNo;
                 }
             },
             {
@@ -64,7 +71,7 @@
             {
                 title: "Department",
                 data: function (item) {
-                    return item.dept;
+                    return item.department;
                 }
             },
             /*{

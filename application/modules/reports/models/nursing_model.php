@@ -16,8 +16,8 @@ class Nursing_model extends CI_Model {
     function get_xray_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize');
+        $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
+            'p.gender', 'p.address', 'p.deptOpdNo', 'get_department_name(t.department) as department', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.OpdNo=t.OpdNo AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -61,8 +61,8 @@ class Nursing_model extends CI_Model {
     function get_usg_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 'u.usgDate');
+        $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
+            'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', 'get_department_name(t.department) as department');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.OpdNo=t.OpdNo AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -106,8 +106,8 @@ class Nursing_model extends CI_Model {
     function get_ecg_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 'e.ecgDate');
+        $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
+            'p.gender', 'p.address', 'p.deptOpdNo', 't.CameOn as entrydate', 'e.ecgDate', 'get_department_name(t.department) as department');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.OpdNo=t.OpdNo AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 

@@ -43,7 +43,7 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     if (!empty($title)) {
         $top_heading .= '<table width="100%" style="border: none;">';
         $top_heading .= '<tr>';
-        $top_heading .= '<td width="33%"><b>DEPARTMENT</b>:' . $title['department'] . '</td><td width="33%" text-align:"center"; align="center"><h2>OPD REGISTER</h2></td><td width="33%" style="text-align:center;">
+        $top_heading .= '<td width="33%"><b>DEPARTMENT</b>:' . $title['department'] . '</td><td width="33%" text-align:"center"; align="center"><h2>' . $title['report_title'] . '</h2></td><td width="33%" style="text-align:center;">
             <b>FROM:</b>' . $title['start_date'] .
                 '&nbsp; <b>TO: </b>' . $title['end_date'] . '</td>';
         $top_heading .= '</tr>';

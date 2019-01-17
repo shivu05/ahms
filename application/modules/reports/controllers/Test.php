@@ -40,6 +40,46 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function export_xray_to_pdf() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_xray_data($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '8'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
+            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Gender', 'width' => '5'),
+            'address' => array('name' => 'Place', 'width' => '10'),
+            'department' => array('name' => 'Department', 'width' => '15'),
+            'ID' => array('name' => 'X-Ray No', 'align' => 'C', 'width' => '7'),
+            'partOfXray' => array('name' => 'Part', 'width' => '26'),
+            'filmSize' => array('name' => 'Film size', 'width' => '15'),
+            'xrayDate' => array('name' => 'Date', 'width' => '8'),
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'X-Ray REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
     function usg() {
         $this->layout->title = "USG";
         $this->layout->navTitleFlag = true;
@@ -66,6 +106,45 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function export_usg_to_pdf() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_usg_data($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
+            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Gender', 'width' => '5'),
+            'address' => array('name' => 'Place', 'width' => '10'),
+            'department' => array('name' => 'Department', 'width' => '12'),
+            'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
+            'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'usgDate' => array('name' => 'USG date', 'align' => 'C', 'width' => '6'),
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'USG REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
     function ecg() {
         $this->layout->title = "ECG";
         $this->layout->navTitleFlag = true;
@@ -90,6 +169,45 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_ecg_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function export_ecg_to_pdf() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_ecg_data($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
+            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Gender', 'width' => '5'),
+            'address' => array('name' => 'Place', 'width' => '10'),
+            'department' => array('name' => 'Department', 'width' => '12'),
+            'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
+            'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'ecgDate' => array('name' => 'ECG date', 'align' => 'C', 'width' => '6'),
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'ECG REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
     }
 
     function birth() {
@@ -366,8 +484,8 @@ class Test extends SHV_Controller {
         $this->layout->data = $data;
         $this->layout->render();
     }
-    
-    function get_lab_count(){
+
+    function get_lab_count() {
         $input_array = $this->input->post();
         $data["patient"] = $this->nursing_model->get_lab_report_count($input_array);
         $this->load->view('reports/test/lab_report_count', $data);
