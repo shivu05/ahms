@@ -1,16 +1,29 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Doctors list:</div>
+            <div class="tile-title">Users list:</div>
             <div class="tile-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label class="control-label">Email:</label>
-                        <input class="form-control" type="text" placeholder="Enter OPD number" name="email" id="email" autocomplete="off">
+                        <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email" autocomplete="off">
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label class="control-label">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label">Role</label>
+                        <select name="role" id="role" class="form-control">
+                            <option value="">Choose</option>
+                            <?php
+                            if (!empty($roles)) {
+                                foreach ($roles as $role) {
+                                    echo '<option value="' . $role['role_id'] . '">' . $role['role_name'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group col-md-4 align-self-end">
                         <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
@@ -43,9 +56,18 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
-
+        $('#search_form').on('click', '#search', function () {
+            user_table.clear();
+            user_table.draw();
+        });
         var columns = [
             {
+                title: "Sl.No",
+                class: "name",
+                data: function (item) {
+                    return item.serial_number;
+                }
+            }, {
                 title: "Name",
                 class: "name",
                 data: function (item) {
@@ -92,10 +114,10 @@
                 }
             },
             {
-                title: "Edit",
+                title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square" style="font-size:20px" aria-hidden="true"></i>';
+                    return '<i class="fa fa-pencil-square-o text-primary" style="font-size:16px" aria-hidden="true"></i>';
                 }
             }
         ];
@@ -107,8 +129,8 @@
                 {className: "", "targets": [2]}
             ],
             language: {
-                sZeroRecords: "<div class='no_records'>No patients found</div>",
-                sEmptyTable: "<div class='no_records'>No patients found</div>",
+                sZeroRecords: "<div class='no_records'>No users found</div>",
+                sEmptyTable: "<div class='no_records'>No users found</div>",
                 sProcessing: "<div class='no_records'>Loading</div>",
             },
             'searching': false,

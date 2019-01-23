@@ -216,7 +216,7 @@ class SimpleLoginSecure {
 
         //Check against user table
         $this->CI->db->from($this->user_table . ' u');
-        $this->CI->db->join('user_roles ur', 'ur.user_id=u.ID');
+        $this->CI->db->join('i_user_roles ur', 'ur.user_id=u.ID');
         $this->CI->db->join('role_master rm', 'rm.role_id=ur.role_id');
         $this->CI->db->where('u.user_email', $user_email);
         $this->CI->db->where('u.active', 1);

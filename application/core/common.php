@@ -195,3 +195,10 @@ if (!function_exists('format_date')) {
     }
 
 }
+if (!function_exists('display_department')) {
+
+    function display_department($dept) {
+        return ucfirst(str_replace('_', ' ', $dept));
+    }
+
+}

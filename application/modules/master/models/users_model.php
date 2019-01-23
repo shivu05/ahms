@@ -12,6 +12,11 @@ class Users_model extends CI_Model {
         parent::__construct();
     }
 
+    function get_roles() {
+        $this->db->where('role_code <>', 'ADMIN');
+        return $this->db->get('role_master')->result_array();
+    }
+
     function check_for_dup_email($email) {
         $this->db->where('user_email', $email);
         return $this->db->get('users')->num_rows();
@@ -32,7 +37,7 @@ class Users_model extends CI_Model {
     function get_users_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile', 'u.user_type', 'u.user_department', 'u.user_date', 'u.user_modified',
+        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile', 'u.user_type', 'get_department_name(u.user_department) as user_department', 'u.user_date', 'u.user_modified',
             'u.active', 'rm.role_name'
         );
 
@@ -51,11 +56,11 @@ class Users_model extends CI_Model {
             $val = trim($val);
             if ($val !== '') {
                 switch ($col):
-                    case 'OpdNo':
-                        $where_cond .= " AND OpdNo='$val'";
+                    case 'role':
+                        $where_cond .= " AND ur.role_id='$val'";
                         break;
                     case 'name':
-                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        $where_cond .= " AND user_name LIKE '%$val%'";
                         break;
                     case 'department':
                         $where_cond .= ($val != 1) ? " AND UPPER(replace(t.department,' ','_')) = '$val'" : '';
@@ -67,11 +72,11 @@ class Users_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
-        (SELECT @a:= 0) AS a   $where_cond ORDER BY u.ID ASC";
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY u.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM users u JOIN user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id WHERE u.ID !=1')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id WHERE u.ID !=1')->num_rows();
 
         return $return;
     }

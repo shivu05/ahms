@@ -15,6 +15,7 @@ class Users extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
+        $data['roles'] = $this->users_model->get_roles();
         $this->layout->data = $data;
         $this->layout->render();
     }
