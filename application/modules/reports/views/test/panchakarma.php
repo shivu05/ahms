@@ -56,13 +56,6 @@
                 }
             },
             {
-                title: "C.IPD",
-                class: "opd",
-                data: function (item) {
-                    return item.IpNo;
-                }
-            },
-            {
                 title: "Patient",
                 class: "patient",
                 data: function (item) {
@@ -150,5 +143,6 @@
 
             });
         }
-    });
+    }
+    );
 </script>

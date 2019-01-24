@@ -16,7 +16,7 @@
         </section>
         <section class="login-content">
             <div class="logo">
-                <h1><?php echo $app_settings['college_name']; ?></h1>
+                <h4 style='font-family: Palatino, "Palatino Linotype", "Palatino LT STD"'><?php echo $app_settings['college_name']; ?></h4>
             </div>
             <div class="login-box">
                 <form class="login-form" action="<?php echo base_url('login/validate'); ?>" method="post">

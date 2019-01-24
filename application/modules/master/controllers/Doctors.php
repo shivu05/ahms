@@ -61,4 +61,31 @@ class Doctors extends SHV_Controller {
         }
     }
 
+    function export_duty_chart_pdf() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->doctors_model->get_doctos_duty_list($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'user_name' => array('name' => 'Name'),
+            'user_department' => array('name' => 'Department'),
+            'week_day' => array('name' => 'Day')
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+        $title = array(
+            'report_title' => 'DOCTORS DUTY CHART',
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
 }

@@ -9,6 +9,7 @@
  */
 
 update treatmentdata set department=UPPER(replace(department,' ','_'));
+ALTER TABLE `config` ADD COLUMN `admin_email` VARCHAR(45) AFTER `edit_flag`;
 
 CREATE TABLE `i_user_roles` (
   `user_role_id` int(11) NOT NULL AUTO_INCREMENT,

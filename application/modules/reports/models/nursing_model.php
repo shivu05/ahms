@@ -17,7 +17,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'get_department_name(t.department) as department', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
+            'p.gender', 'p.address', 'p.deptOpdNo', '(t.department) as department', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.OpdNo=t.OpdNo AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -62,7 +62,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', 'get_department_name(t.department) as department');
+            'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', '(t.department) as department');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.OpdNo=t.OpdNo AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -107,7 +107,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 't.CameOn as entrydate', 'e.ecgDate', 'get_department_name(t.department) as department');
+            'p.gender', 'p.address', 'p.deptOpdNo', 't.CameOn as entrydate', 'e.ecgDate', '(t.department) as department');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.OpdNo=t.OpdNo AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
@@ -329,10 +329,10 @@ class Nursing_model extends CI_Model {
 
     function get_panchakarma_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('l.opdno', 'p.deptOpdNo', 'i.IpNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+        $columns = array('l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
             'p.deptOpdNo', 'p.dept', 'l.disease', 'l.treatment', 'l.procedure', 'l.date', 't.notes', 'l.docname');
 
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND l.opdno=i.OpdNo AND l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -363,11 +363,11 @@ class Nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
-        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID LEFT JOIN inpatientdetails i ON l.opdno=i.OpdNo,(SELECT @a:= 0) AS a $where_cond ORDER BY date ASC";
+        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond ORDER BY date ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID LEFT JOIN inpatientdetails i ON l.opdno=i.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID')->num_rows();
         return $return;
     }
 

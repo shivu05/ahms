@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Users list:</div>
+            <div class="tile-title">Doctors duty chart:</div>
             <div class="tile-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
+                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('master/doctors/export_duty_chart_pdf'); ?>">
                     <div class="form-group col-md-2">
                         <label class="control-label">Email:</label>
                         <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email" autocomplete="off">
@@ -116,6 +116,11 @@
             user_table.clear();
             user_table.draw();
         });
+
+        $('#search_form #export').on('click', '#export_to_pdf', function () {
+            $('#search_form').submit();
+        });
+
 
         $('#search_form').on('click', '#add', function () {
             $('#add_duty_modal_box').modal('show');

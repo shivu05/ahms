@@ -13,7 +13,7 @@ class Rbac {
     public function __construct() {
         $this->_ci = & get_instance();
         $this->_session = $this->_ci->session->userdata();
-        //pma($this->_session['user_data'],1);
+        //pma($this->_session['user_data'], 1);
     }
 
     public function is_login() {
@@ -64,6 +64,16 @@ class Rbac {
         return 0;
     }
 
+    public function is_doctor() {
+        if ($this->is_login()) {
+            //if (in_array('ADMIN', $this->_session['user_data']['role_code'])) {
+            if ('DOCTOR' == $this->_session['user_data']['role_code']) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     public function has_role($role_code) {
 
         if (isset($this->_session['user_data']['role_code']) && $this->_session['user_data']['role_code'] == $role_code) {
@@ -74,7 +84,7 @@ class Rbac {
 
     public function get_role_ids() {
         if ($this->is_login()) {
-            $role_ids = array_column($this->_session['user_data']['user_roles'], 'role_id');
+            $role_ids = array_column($this->_session['user_data']['role_code'], 'role_id');
             return $role_ids;
         }
         return 0;

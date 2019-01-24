@@ -5,8 +5,10 @@
     <!-- Navbar Right Menu-->
     <ul class="app-nav">
         <li class="app-search">
-            <input class="app-search__input" type="search" placeholder="Search">
-            <button class="app-search__button"><i class="fa fa-search"></i></button>
+            <form action="<?php echo base_url('search-data'); ?>" method="POST">
+                <input class="app-search__input" name="key_word" id="key_word" type="password" placeholder="Search">
+                <button type="submit" class="app-search__button" id="search_auto_btn"><i class="fa fa-search"></i></button>
+            </form>
         </li>
         <!--Notification Menu-->
         <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Show notifications"><i class="fa fa-bell-o fa-lg"></i></a>

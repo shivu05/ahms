@@ -31,7 +31,7 @@ class Login extends SHV_Controller {
         } else {
             //if ($this->simpleloginsecure->check_license() == 1) {
             if ($this->simpleloginsecure->login($this->input->post('loginname'), $this->input->post('password'))) {
-                redirect('dashboard');
+                redirect('login/home');
             } else {
                 $this->session->set_flashdata('noty_msg', 'Wrong username / password ');
                 redirect('login');
@@ -52,6 +52,70 @@ class Login extends SHV_Controller {
         //$this->session->sess_destroy();
         $this->db->cache_delete_all();
         redirect('Login', true);
+    }
+
+    function home() {
+        if ($this->rbac->is_admin()) {
+            redirect('admin-dashboard');
+        } else if ($this->rbac->is_doctor()) {
+            redirect('home/doctor');
+        } else {
+            
+        }
+    }
+
+    function generate_meds() {
+        $this->db->limit(10);
+        $this->db->where('department <>', 'Swasthavritta');
+        $treatment_data = $this->db->get('treatmentdata')->result_array();
+        foreach ($treatment_data as $data) {
+            $digits = 4;
+            $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
+            $products = explode(',', $data['Trtment']);
+            $n = count($products);
+            for ($i = 0; $i < $n; $i++) {
+                if (strlen(trim($products[$i])) > 0) {
+                    $med_arr = array(
+                        'opdno' => $data['OpdNo'],
+                        'billno' => $four_digit_random_number,
+                        'batch' => 947,
+                        'date' => $data['CameOn'],
+                        'qty' => 1,
+                        'product' => $products[$i],
+                        'treat_id' => $data['ID']
+                    );
+                     $this->db->insert('sales_entry', $med_arr);
+                    pma($med_arr);
+                    //echo $i . ':';
+                }
+            }
+        }
+
+
+        /*    $treatment_data = $this->db->query("SELECT * FROM ipdtreatment i JOIN inpatientdetails ip On i.ipdno=ip.IpNo where ip.department !='Swasthavritta'")->result_array();
+          foreach ($treatment_data as $data) {
+          $digits = 4;
+          $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
+          $products = explode(',', $data['Trtment']);
+          $n = count($products);
+          for ($i = 0; $i < $n; $i++) {
+          if (strlen(trim($products[$i])) > 0) {
+          $med_arr = array(
+          'opdno' => $data['OpdNo'],
+          'billno' => $four_digit_random_number,
+          'batch' => 947,
+          'date' => $data['attndedon'],
+          'qty' => 1,
+          'ipdno' => $data['IpNo'],
+          'product' => $products[$i],
+          'treat_id' => $data['ID']
+          );
+          $this->db->insert('sales_entry', $med_arr);
+          //pma($med_arr);
+          echo $i . ':';
+          }
+          }
+          } */
     }
 
 }

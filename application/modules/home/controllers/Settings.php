@@ -17,7 +17,7 @@ class Settings extends SHV_Controller {
     function index() {
         $data = array();
         $data['settings'] = $this->settings_model->get_configuration_settings();
-        $data['user_profile'] = $this->settings_model->get_user_profile(1);
+        $data['user_profile'] = $this->settings_model->get_user_profile($this->rbac->get_uid());
         $this->layout->data = $data;
         $this->layout->render();
     }

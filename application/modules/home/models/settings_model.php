@@ -32,7 +32,7 @@ class Settings_model extends CI_Model {
     }
 
     function get_doctors_by_dept($dept) {
-        $query = "SELECT * FROM users u where LOWER(user_department)=LOWER('$dept')";
+        $query = "SELECT * FROM users u JOIN doctorsduty d ON u.id=d.doc_id where LOWER(user_department)=LOWER('$dept') and d.day=DAYOFWEEK(SYSDATE())";
         return $this->db->query($query)->result_array();
     }
 

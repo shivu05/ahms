@@ -23,15 +23,43 @@ class Dashboard extends SHV_Controller {
     }
 
     public function index() {
+        if ($this->rbac->is_admin()) {
+            redirect('admin-dashboard');
+        } else if ($this->rbac->is_doctor()) {
+            redirect('home/doctor');
+        }
+    }
 
-        $this->scripts_include->includePlugins(array('charts'), 'js');
+    public function admin() {
+        if ($this->rbac->is_admin()) {
+            $this->scripts_include->includePlugins(array('charts'), 'js');
+            $this->layout->navTitleFlag = true;
+            $this->layout->navTitle = "Dashboard";
+
+            $data = array();
+            $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();
+            $data['dept_wise_data'] = $this->dashboard_model->get_departmentwise_patient_count();
+
+            $this->layout->data = $data;
+            $this->layout->render();
+        } else {
+            $this->layout->render(array('error' => '401'));
+        }
+    }
+
+    public function doctors_dashboard() {
         $this->layout->navTitleFlag = true;
         $this->layout->navTitle = "Dashboard";
-
         $data = array();
         $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();
-        $data['dept_wise_data'] = $this->dashboard_model->get_departmentwise_patient_count();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
 
+    public function blank_dashboard() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Dashboard";
+        $data = array();
         $this->layout->data = $data;
         $this->layout->render();
     }

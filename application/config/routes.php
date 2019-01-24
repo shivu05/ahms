@@ -52,6 +52,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 $route['default_controller'] = 'login';
 $route['dashboard'] = "home/Dashboard/index";
+
+$route['admin-dashboard'] = "home/dashboard/admin";
+$route['home/doctor'] = "home/dashboard/doctors_dashboard";
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -71,6 +75,8 @@ $route['lab-count'] = "reports/Test/lab_count";
 $route['department-list'] = "master/department";
 $route['users-list'] = "master/users";
 $route['add-user'] = "master/users/add";
+
+$route['search-data'] = "auto/index";
 
 // Purchase
 $route['show-purchase-type'] = "pharmacy/purchase/purchase_items";

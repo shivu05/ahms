@@ -41,11 +41,17 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
 
     $top_heading = "";
     if (!empty($title)) {
+        $department = (isset($title['department'])) ? '<b>DEPARTMENT</b>:' . $title['department'] . '' : '';
+        $report_title = (isset($title['report_title'])) ? $title['report_title'] : '';
+        $from_date = (isset($title['start_date'])) ? '<b>FROM:</b>' . $title['start_date'] : '';
+        $to_date = (isset($title['end_date'])) ? '<b>TO: </b>' . $title['end_date'] : '';
+
         $top_heading .= '<table width="100%" style="border: none;">';
         $top_heading .= '<tr>';
-        $top_heading .= '<td width="33%"><b>DEPARTMENT</b>:' . $title['department'] . '</td><td width="33%" text-align:"center"; align="center"><h2>' . $title['report_title'] . '</h2></td><td width="33%" style="text-align:center;">
-            <b>FROM:</b>' . $title['start_date'] .
-                '&nbsp; <b>TO: </b>' . $title['end_date'] . '</td>';
+        $top_heading .= '<td width="33%">' . $department . '</td><td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td><td width="33%" style="text-align:center;">'
+                . $from_date .
+                '&nbsp;
+        ' . $to_date . '</td>';
         $top_heading .= '</tr>';
         $top_heading .= '</table>';
     }

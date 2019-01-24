@@ -1,7 +1,4 @@
 <div class="row">
-    <?php
-    // pma($dept_list);
-    ?>
     <div class="col-md-12">
         <div class="tile">
             <div class="tile-title">
@@ -95,7 +92,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputLastname">Consultation date: </label>
-                                <input class="form-control date_picker required" id="consultation_date" name="consultation_date" type="text" aria-describedby="consultation_dateHelp" placeholder="Enter consultation date">
+                                <input class="form-control date_picker required" id="consultation_date" name="consultation_date" type="text" aria-describedby="consultation_dateHelp" placeholder="Enter consultation date" value="<?= date('Y-m-d')?>">
                                 <small class="form-text text-muted" id="last_nameHelp"></small>
                             </div>
                         </div>
@@ -137,7 +134,6 @@
                 dataType: 'json',
                 type: 'POST',
                 success: function (response) {
-                    console.log(response.sub_dept)
                     if (response.sub_dept.length > 0) {
                         var option = '<option value="">Choose sub department</option>';
                         $.each(response.sub_dept, function (i) {
