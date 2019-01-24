@@ -83,4 +83,6 @@ $route['export-product-list'] = "pharmacy/purchase/export_product_list";
 
 $route['purchase-return'] = "pharmacy/purchase/purchase_return";
 
+$route['duty-doctors'] = "master/Doctors";
+
 
