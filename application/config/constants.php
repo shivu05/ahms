@@ -87,3 +87,6 @@ defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 125); // highest automatic
 //include other constans
 require_once 'site_status.php';
 require_once APPPATH . 'core' . DIRECTORY_SEPARATOR . 'common.php';
+
+defined('OLD_PATIENT') OR define('OLD_PATIENT', 'Old Patient');
+defined('NEW_PATIENT') OR define('NEW_PATIENT', 'New Patient');

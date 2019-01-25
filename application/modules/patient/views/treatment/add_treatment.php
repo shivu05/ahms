@@ -17,6 +17,7 @@
         </div>
     </div>
     <div class="col-md-9 col-sm-12">
+        <?php //pma($current_treatment, 1); ?>
         <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
             <!--hiddden fields-->
             <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
@@ -56,33 +57,33 @@
                             <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
                         </div>
                     </div>
-                    <hr/>
+                    <!--<hr/>
                     <div class="row">
                         <div class="col-md-4">
                             <label>Medicine name: <span class="text-danger">*</span></label>
                             <select name="medicine" id="medicine" class="form-control  required chosen-select">
                                 <option>Choose medicine</option>
 
-                                <?php
-                                if (!empty($medicines)) {
-                                    foreach ($medicines as $medicine) {
-                                        echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
-                                    }
-                                }
-                                ?>
+                    <?php
+                    if (!empty($medicines)) {
+                        foreach ($medicines as $medicine) {
+                            echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
+                        }
+                    }
+                    ?>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label>When to take: <span class="text-danger">*</span></label>
                             <select name="med_freq" id="med_freq" class="form-control  required chosen-select">
                                 <option>Choose frequency</option>
-                                <?php
-                                if (!empty($med_freqs)) {
-                                    foreach ($med_freqs as $frq) {
-                                        echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
-                                    }
-                                }
-                                ?>
+                    <?php
+                    if (!empty($med_freqs)) {
+                        foreach ($med_freqs as $frq) {
+                            echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
+                        }
+                    }
+                    ?>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -93,7 +94,7 @@
                             <label>Before food: <span class="text-danger">*</span></label>
                             <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
                         </div>
-                    </div>
+                    </div>-->
                     <hr/>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -102,19 +103,22 @@
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <label>Doctor: </label>
-                            <select class="form-control" name="doctor_name" id="doctor_name">
+                            <input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>
+                           <!-- <select class="form-control" name="doctor_name" id="doctor_name">
                                 <option>Choose doctor</option>
-                                <?php
-                                if (!empty($doctors)) {
-                                    foreach ($doctors as $doctor) {
-                                        echo '<option value="' . $doctor['doctorname'] . '">' . $doctor['doctorname'] . '</option>';
-                                    }
+                            <?php
+                            if (!empty($doctors)) {
+                                $selected_doc = $current_treatment['AddedBy'];
+                                foreach ($doctors as $doctor) {
+                                    $selected = (strtolower($selected_doc) == strtolower($doctor)) ? 'selected="selected"' : '';
+                                    echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
                                 }
-                                ?>
-                            </select>
+                            }
+                            ?>
+                            </select>-->
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <label>Date: </label>
+                            <label>Treated date: </label>
                             <input type="text" name="attened_date" id="attened_date" class="form-control date_picker" value="<?php echo date('Y-m-d') ?>" />
                         </div>
                     </div><!-- end of trearment div-->

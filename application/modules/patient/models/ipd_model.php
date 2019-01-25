@@ -22,7 +22,11 @@ class Ipd_model extends CI_Model {
         $columns = array(
             'IpNo', 'OpdNo', 'FName', 'Age', 'Gender', 'department', 'WardNo', 'BedNo', 'DoAdmission', 'Doctor'
         );
-        $where_cond = " WHERE status='stillin' ";
+        $user_dept_cond = '';
+        if ($this->rbac->is_doctor()) {
+            $user_dept_cond = " AND LOWER(department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
+        }
+        $where_cond = " WHERE status='stillin' $user_dept_cond ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -54,7 +58,7 @@ class Ipd_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->count_all('inpatientdetails');
+        $return['total_rows'] = $this->db->query("select * from inpatientdetails where IpNo is not null $user_dept_cond")->num_rows();
         return $return;
     }
 

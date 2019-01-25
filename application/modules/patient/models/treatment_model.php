@@ -50,7 +50,13 @@ class treatment_model extends CI_Model {
             't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
             't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType'
         );
-        $where_cond = " WHERE attndedon is NULL and InOrOutPat is NULL ";
+
+        $user_dept_cond = '';
+        if ($this->rbac->is_doctor()) {
+            $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
+        }
+
+        $where_cond = " WHERE attndedon is NULL AND InOrOutPat is NULL $user_dept_cond";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -79,12 +85,12 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond";
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query("SELECT * FROM treatmentdata t "
-                        . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code ")->num_rows();
+                        . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department WHERE 1=1 $user_dept_cond")->num_rows();
         return $return;
     }
 
@@ -207,6 +213,32 @@ class treatment_model extends CI_Model {
     public function discharge_patient($ipd, $discharge) {
         $this->db->where('IpNo', $ipd);
         return $this->db->update('inpatientdetails', $discharge);
+    }
+
+    public function add_to_pharmacy($treat_id) {
+        $this->db->where('ID', $treat_id);
+        $this->db->where('department <>', 'Swasthavritta');
+        $treatment_data = $this->db->get('treatmentdata')->row_array();
+        if (!empty($treatment_data)) {
+            $digits = 4;
+            $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
+            $products = explode(',', $treatment_data['Trtment']);
+            $n = count($products);
+            for ($i = 0; $i < $n; $i++) {
+                if (strlen(trim($products[$i])) > 0) {
+                    $med_arr = array(
+                        'opdno' => $treatment_data['OpdNo'],
+                        'billno' => $four_digit_random_number,
+                        'batch' => 947,
+                        'date' => $treatment_data['CameOn'],
+                        'qty' => 1,
+                        'product' => trim($products[$i]),
+                        'treat_id' => $treatment_data['ID']
+                    );
+                    $this->db->insert('sales_entry', $med_arr);
+                }
+            }
+        }// end if
     }
 
 }

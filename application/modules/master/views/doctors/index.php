@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-secondary" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add user</button>
+                        <button class="btn btn-secondary" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add doctor's duty</button>
                     </div>
                 </form>
                 <div id="user_details">

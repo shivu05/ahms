@@ -160,7 +160,7 @@
                     if (response.doctors.length > 0) {
                         var option = '<option value="">Choose doctor</option>';
                         $.each(response.doctors, function (i) {
-                            option += '<option value="' + response.doctors[i].doctorname + '">' + response.doctors[i].doctorname + '</option>'
+                            option += '<option value="' + response.doctors[i].user_name + '">' + response.doctors[i].user_name + '</option>'
                         });
                         $('#doctor_name').html(option);
                         $('#doctor_name').removeAttr('disabled');
@@ -172,7 +172,6 @@
             });
         });
         $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
-            alert();
             var form_data = $('#send_patient_for_followup').serializeArray();
             $.ajax({
                 url: base_url + "patient/patient/followup",
@@ -181,6 +180,14 @@
                 dataType: 'json',
                 success: function (res) {
                     console.log(res);
+                    $('#default_modal_box').modal('hide');
+                    $.notify({
+                        title: "Appointment:",
+                        message: "Appointment added successfully",
+                        icon: 'fa fa-check',
+                    }, {
+                        type: "success",
+                    });
                 }
             });
         });
@@ -200,7 +207,7 @@
                     dept_option += "<select name='department' id='department' class='form-control required'>";
                     dept_option += "<option value=''>Select Department</option>";
                     $.each(response, function () {
-                        dept_option += "<option value='" + response[i]['dept_unique_code'] + "'>" + response[i]['department'] + "</option>";
+                        dept_option += "<option value='" + response[i]['department'] + "'>" + response[i]['department'] + "</option>";
                         i++;
                     });
                     var sub_dept = "<select class='form-control required' name='sub_branch' id='sub_branch' disabled='disabled'><option value=''>Choose sub Branch</option><option value='Netra-Roga Vibhaga'>Netra-Roga Vibhaga</option><option value='karna-Nasa-Mukha & Danta Vibhaga'>Karna-Nasa-Mukha & Danta Vibhaga</option></select>";

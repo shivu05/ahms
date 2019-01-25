@@ -56,9 +56,15 @@ class Treatment extends SHV_Controller {
         $data['med_freqs'] = $this->get_medicine_frequency();
         $data['medicines'] = $this->get_product_list();
         $data['current_treatment'] = $treatment_details['treatment_data'];
-        $data['doctors'] = $treatment_details['doctors'];
+        //$data['doctors'] = $treatment_details['doctors'];
+        $data['doctors'] = $this->get_doctors($treatment_details['treatment_data']['department']);
+        //pma($data['doctors'], 1);
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    function add_pharmcy($treat_id) {
+        $this->treatment_model->add_to_pharmacy($treat_id);
     }
 
     function save() {
@@ -79,6 +85,7 @@ class Treatment extends SHV_Controller {
         $status = $this->treatment_model->store_treatment($treatpatientdata, $treat_id);
 
         if ($status) {
+            $this->add_pharmcy($treat_id);
             if ($this->input->post('ecg_check') == 'on') {
                 $ecgdata = array(
                     'OpdNo' => $this->input->post('opd_no'),

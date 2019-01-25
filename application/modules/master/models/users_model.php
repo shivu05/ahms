@@ -37,7 +37,7 @@ class Users_model extends CI_Model {
     function get_users_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile', 'u.user_type', 'get_department_name(u.user_department) as user_department', 'u.user_date', 'u.user_modified',
+        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile', 'u.user_type', '(u.user_department) as user_department', 'u.user_date', 'u.user_modified',
             'u.active', 'rm.role_name'
         );
 

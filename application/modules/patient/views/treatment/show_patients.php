@@ -121,9 +121,9 @@
             {
                 title: "Type",
                 data: function (item) {
-                    if (item.PatType == 'O') {
+                    if (item.PatType == 'Old Patient') {
                         return 'OLD';
-                    } else if (item.PatType == 'N') {
+                    } else if (item.PatType == 'New Patient') {
                         return 'New';
                     } else {
                         return '';

@@ -44,6 +44,13 @@ class Rbac {
         return 0;
     }
 
+    public function get_user_department() {
+        if (isset($this->_session['user_data']['user_department'])) {
+            return $this->_session['user_data']['user_department'];
+        }
+        return 0;
+    }
+
     public function is_admin() {
         if ($this->is_login()) {
             //if (in_array('ADMIN', $this->_session['user_data']['role_code'])) {

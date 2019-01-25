@@ -48,9 +48,8 @@ class Department extends SHV_Controller {
         echo json_encode(array('sub_departments' => $sub_departments, 'doctors' => $doctors));
     }
 
-    /*function get_doctors($dept) {
-        $doctors = $this->department_model->get_doctors_by_dept($dept);
-        return $doctors;
-    }*/
-
+    /* function get_doctors($dept = null) {
+      $doctors = $this->department_model->get_doctors_by_dept($dept);
+      return $doctors;
+      } */
 }

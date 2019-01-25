@@ -252,17 +252,18 @@ class Patient extends SHV_Controller {
         echo json_encode($data);
     }
 
-    function followup($pat_type = 'O') {
-
+    function followup() {
+        $pat_type = OLD_PATIENT;
+        $dept_opd = $this->get_next_dept_opd($this->input->post('department'));
         $treat_data = array(
             'OpdNo' => $this->input->post('opd'),
-            'deptOpdNo' => '',
+            'deptOpdNo' => $dept_opd,
             'PatType' => $pat_type,
             'department' => $this->input->post('department'),
             'AddedBy' => $this->input->post('doctor_name'),
             'CameOn' => $this->input->post('date'),
         );
-        $this->opd_model->store_treatment("add", $treat_data);
+        echo $this->opd_model->store_treatment("add", $treat_data);
     }
 
     function old_patient_entry() {

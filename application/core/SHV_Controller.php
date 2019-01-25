@@ -46,8 +46,8 @@ class SHV_Controller extends MX_Controller {
         echo json_encode($return);
     }
 
-    function get_doctors() {
-        $dept = $this->input->post('dept_id');
+    function get_doctors($dept = null) {
+        $dept_name = (empty($this->input->post('dept_id'))) ? $dept : $this->input->post('dept_id');
         return $this->settings_model->get_doctors_by_dept($dept);
     }
 
@@ -57,8 +57,12 @@ class SHV_Controller extends MX_Controller {
     }
 
     function get_next_dept_opd($dept) {
-        $dept_max_id = $this->db->select_max('deptOpdNo')->where('dept', $dept)->get('patientdata');
-        return $dept_max_id->row()->deptOpdNo;
+        $dept_max_id = $this->db->select_max('deptOpdNo')->where('department', $dept)->get('treatmentdata');
+        if (empty($dept_max_id->row()->deptOpdNo)) {
+            return 1;
+        } else {
+            return $dept_max_id->row()->deptOpdNo + 1;
+        }
     }
 
     function get_packaging_types() {
