@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Pending Patient's ECG list:</div>
+            <div class="tile-title">Pending Patient's USG list:</div>
             <div class="tile-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
@@ -17,7 +17,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Update ECG details</h5>
+                <h5 class="modal-title" id="default_modal_label">Update USG details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -25,9 +25,9 @@
             <div class="modal-body" id="ecg_modal_body">
                 <form action="" name="test_form" id="test_form" method="POST">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">ECG Date:</label>
+                        <label for="exampleInputEmail1">USG Date:</label>
                         <input type="hidden" name="test_id" id="test_id" />
-                        <input class="form-control date_picker" id="test_date" name="test_date" type="text" aria-describedby="test_dateHelp" placeholder="Enter ECG date">
+                        <input class="form-control date_picker" id="test_date" name="test_date" type="text" aria-describedby="test_dateHelp" placeholder="Enter USG date">
                         <small class="form-text text-muted" id="test_dateHelp"></small>
                     </div>
                 </form>
@@ -94,15 +94,15 @@
                 }
             },
             {
-                title: "ECG Date",
+                title: "USG Date",
                 data: function (item) {
-                    return item.ecgDate;
+                    return item.usgDate;
                 }
             },
             {
                 title: "Action",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o text-primary pointer edit_ecg" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_usg" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
                 }
             }
 
@@ -127,7 +127,7 @@
             'processing': true,
             'serverSide': true,
             'ajax': {
-                'url': base_url + 'patient/Ecg/get_pending_ecg_list',
+                'url': base_url + 'patient/usg/get_pending_usg_list',
                 'type': 'POST',
                 'dataType': 'json',
                 'data': function (d) {
@@ -142,7 +142,7 @@
             sScrollX: true
         });
 
-        $('#patient_table tbody').on('click', '.edit_ecg', function () {
+        $('#patient_table tbody').on('click', '.edit_usg', function () {
             var id = $(this).data('id');
             $('#test_modal_box #test_form #test_id').val(id);
             $('#test_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
@@ -151,7 +151,7 @@
         $('#test_modal_box .modal-footer').on('click', '#btn-ok', function () {
             var form_data = $('#test_form').serializeArray();
             $.ajax({
-                url: base_url + 'patient/ecg/save_ecg_data',
+                url: base_url + 'patient/usg/save_usg_data',
                 type: 'POST',
                 dataType: 'json',
                 data: form_data,
@@ -159,7 +159,7 @@
                     $('#test_modal_box').modal('hide');
                     if (res) {
                         $.notify({
-                            title: "ECG:",
+                            title: "USG:",
                             message: "Details added successfully",
                             icon: 'fa fa-check'
                         }, {
@@ -167,7 +167,7 @@
                         });
                     } else {
                         $.notify({
-                            title: "ECG:",
+                            title: "USG:",
                             message: "Failed to update data. Try again",
                             icon: 'fa fa-check'
                         }, {

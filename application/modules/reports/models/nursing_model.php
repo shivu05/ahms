@@ -64,7 +64,7 @@ class Nursing_model extends CI_Model {
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
             'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', '(t.department) as department');
 
-        $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.OpdNo=t.OpdNo AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -99,7 +99,7 @@ class Nursing_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM usgregistery u JOIN treatmentdata t WHERE u.OpdNo=t.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM usgregistery u JOIN treatmentdata t WHERE u.treatId=t.ID')->num_rows();
         return $return;
     }
 

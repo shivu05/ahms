@@ -63,6 +63,8 @@ class Login extends SHV_Controller {
             redirect('home/xray');
         } else if ($this->rbac->has_role('ECG')) {
             redirect('home/ecg');
+        } else if ($this->rbac->has_role('USG')) {
+            redirect('home/usg');
         } else {
             redirect('home/user');
         }
