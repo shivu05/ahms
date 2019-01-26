@@ -40,6 +40,9 @@ class Scripts_include {
         ),
         'chosen' => array(
             '/assets/plugins/chosen/chosen.jquery.js',
+        ),
+        'typeahead' => array(
+            '/assets/plugins/typeahead/typeahead.js',
         )
     );
     private $__cssFiles = array(

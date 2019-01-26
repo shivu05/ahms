@@ -48,14 +48,14 @@
                             <label>Treatment: <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="treatment" id="treatment"></textarea>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
                             <label>Panchakarma procedures: <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="panch_procedures" id="panch_procedures"></textarea>
                         </div>
-                        <div class="col-md-2 col-sm12">
+                        <!--<div class="col-md-2 col-sm12">
                             <label>Days</label>
                             <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
-                        </div>
+                        </div>-->
                     </div>
                     <!--<hr/>
                     <div class="row">
@@ -153,9 +153,9 @@
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
                                             <div class="control-group col-4">											
-                                                <label class="control-label" for="ecgdate">ECG Date:</label>
+                                                <label class="control-label" for="ecgdate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG Date" autocomplete="off">
+                                                    <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG referred date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -174,7 +174,7 @@
                                             <div class="control-group col-4">											
                                                 <label class="control-label" for="usgdate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter Date" autocomplete="off">
+                                                    <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter USG referred date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -197,17 +197,17 @@
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
+                                            <!--<div class="control-group col-4">											
                                                 <label class="control-label" for="filmsize">Film Size:</label>
                                                 <div class="controls">
                                                     <input id="filmsize" type="text" name="filmsize" class="form-control xray_inputs" placeholder="Enter Film Size" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
+                                            <!--</div> <!-- /control-group -->
                                             <div class="control-group col-4">											
-                                                <label class="control-label" for="xraydate">X-Ray Date:</label>
+                                                <label class="control-label" for="xraydate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter Date" autocomplete="off">
+                                                    <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -233,7 +233,7 @@
                                             <div class="control-group col-4">											
                                                 <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
                                                 <div class="controls">
-                                                    <input id="treatment" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
+                                                    <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -320,7 +320,7 @@
                                             <div class="control-group col-4">											
                                                 <label class="control-label" for="testname">Name of Test:</label>
                                                 <div class="controls">
-                                                    <input id="treatment" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
+                                                    <input id="testname" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->	
                                             </div> <!-- /control-group -->
@@ -401,6 +401,7 @@
         $('#ecg_check').click(function () {
             if ($(this).is(":checked")) {
                 $('.ecg_inputs').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#ecgdocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.ecg_inputs').attr('disabled', 'disabled');
             }
@@ -409,6 +410,7 @@
         $('#usg_check').click(function () {
             if ($(this).is(":checked")) {
                 $('.usg_inputs').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#usgdocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.usg_inputs').attr('disabled', 'disabled');
             }
@@ -417,6 +419,7 @@
         $('#xray_check').click(function () {
             if ($(this).is(":checked")) {
                 $('.xray_inputs').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#xraydocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.xray_inputs').attr('disabled', 'disabled');
             }
@@ -441,6 +444,7 @@
         $('#lab_check').click(function () {
             if ($(this).is(":checked")) {
                 $('.lab_inputs').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#labdocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.lab_inputs').attr('disabled', 'disabled');
             }

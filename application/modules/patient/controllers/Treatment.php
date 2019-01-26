@@ -44,7 +44,7 @@ class Treatment extends SHV_Controller {
     }
 
     function add_treatment($opd = NULL, $treat_id = NULL) {
-        $this->scripts_include->includePlugins(array('chosen'), 'js');
+        $this->scripts_include->includePlugins(array('chosen', 'typeahead'), 'js');
         $this->scripts_include->includePlugins(array('chosen'), 'css');
         $data = array();
         $data['opd'] = $opd;
@@ -90,7 +90,7 @@ class Treatment extends SHV_Controller {
                 $ecgdata = array(
                     'OpdNo' => $this->input->post('opd_no'),
                     'refDocName' => $this->input->post('ecgdocname'),
-                    'ecgDate' => $this->input->post('ecgdate'),
+                    'refDate' => $this->input->post('ecgdate'),
                     'treatId' => $treat_id,
                 );
                 $this->treatment_model->add_ecg_info($ecgdata);
@@ -100,7 +100,7 @@ class Treatment extends SHV_Controller {
                 $usgdata = array(
                     'OpdNo' => $this->input->post('opd_no'),
                     'refDocName' => $this->input->post('usgdocname'),
-                    'usgDate' => $this->input->post('usgdate'),
+                    'refDate' => $this->input->post('usgdate'),
                     'treatId' => $treat_id
                 );
                 $this->treatment_model->add_usg_info($usgdata);
