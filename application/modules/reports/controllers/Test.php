@@ -148,8 +148,8 @@ class Test extends SHV_Controller {
     function ecg() {
         $this->layout->title = "ECG";
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "ECG";
-        $this->layout->navDescr = "";
+        $this->layout->navTitle = "ECG Reports";
+        $this->layout->navDescr = "Electrocardiogram";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ecg_to_pdf');
@@ -192,7 +192,7 @@ class Test extends SHV_Controller {
             'address' => array('name' => 'Place', 'width' => '10'),
             'department' => array('name' => 'Department', 'width' => '12'),
             'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
-            'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
             'ecgDate' => array('name' => 'ECG date', 'align' => 'C', 'width' => '6'),
         );
         $html = generate_table_pdf($headers, $result['data']);

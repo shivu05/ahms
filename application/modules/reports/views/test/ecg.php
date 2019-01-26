@@ -70,6 +70,12 @@
             {
                 title: "Ref. Date",
                 data: function (item) {
+                    return item.refDate;
+                }
+            },
+            {
+                title: "ECG Date",
+                data: function (item) {
                     return item.ecgDate;
                 }
             }

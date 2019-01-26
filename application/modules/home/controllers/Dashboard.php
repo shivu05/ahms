@@ -27,6 +27,12 @@ class Dashboard extends SHV_Controller {
             redirect('admin-dashboard');
         } else if ($this->rbac->is_doctor()) {
             redirect('home/doctor');
+        } else if ($this->rbac->has_role('XRAY')) {
+            redirect('home/xray');
+        } else if ($this->rbac->has_role('ECG')) {
+            redirect('home/ecg');
+        } else {
+            redirect('home/user');
         }
     }
 
@@ -60,6 +66,28 @@ class Dashboard extends SHV_Controller {
         $this->layout->navTitleFlag = true;
         $this->layout->navTitle = "Dashboard";
         $data = array();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    public function xray_dashabord() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Dashboard";
+        $this->load->model('patient/xray_model');
+        $data = array();
+        $data['stats'] = $this->xray_model->dashboard_stats();
+
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    public function ecg_dashboard() {
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Dashboard";
+        $this->load->model('patient/ecg_model');
+        $data = array();
+        $data['stats'] = $this->ecg_model->dashboard_stats();
+
         $this->layout->data = $data;
         $this->layout->render();
     }

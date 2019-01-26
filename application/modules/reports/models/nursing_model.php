@@ -19,7 +19,7 @@ class Nursing_model extends CI_Model {
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
             'p.gender', 'p.address', 'p.deptOpdNo', '(t.department) as department', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
 
-        $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.OpdNo=t.OpdNo AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -107,9 +107,9 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 't.CameOn as entrydate', 'e.ecgDate', '(t.department) as department');
+            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(t.department) as department');
 
-        $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.OpdNo=t.OpdNo AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -144,7 +144,7 @@ class Nursing_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM ecgregistery e JOIN treatmentdata t WHERE e.OpdNo=t.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM ecgregistery e JOIN treatmentdata t WHERE e.treatId=t.ID')->num_rows();
         return $return;
     }
 

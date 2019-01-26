@@ -111,8 +111,8 @@ class Treatment extends SHV_Controller {
                     'OpdNo' => $this->input->post('opd_no'),
                     'refDocName' => $this->input->post('xraydocname'),
                     'partOfXray' => $this->input->post('partxray'),
-                    'filmSize' => $this->input->post('filmsize'),
-                    'xrayDate' => $this->input->post('xraydate'),
+                    //'filmSize' => $this->input->post('filmsize'),
+                    'refDate' => $this->input->post('xraydate'),
                     'treatID' => $treat_id
                 );
                 $this->treatment_model->add_xray_info($xraydata);

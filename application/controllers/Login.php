@@ -59,8 +59,12 @@ class Login extends SHV_Controller {
             redirect('admin-dashboard');
         } else if ($this->rbac->is_doctor()) {
             redirect('home/doctor');
+        } else if ($this->rbac->has_role('XRAY')) {
+            redirect('home/xray');
+        } else if ($this->rbac->has_role('ECG')) {
+            redirect('home/ecg');
         } else {
-            
+            redirect('home/user');
         }
     }
 
@@ -84,7 +88,7 @@ class Login extends SHV_Controller {
                         'product' => $products[$i],
                         'treat_id' => $data['ID']
                     );
-                     $this->db->insert('sales_entry', $med_arr);
+                    $this->db->insert('sales_entry', $med_arr);
                     pma($med_arr);
                     //echo $i . ':';
                 }

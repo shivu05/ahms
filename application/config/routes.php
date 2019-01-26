@@ -55,6 +55,12 @@ $route['dashboard'] = "home/Dashboard/index";
 
 $route['admin-dashboard'] = "home/dashboard/admin";
 $route['home/doctor'] = "home/dashboard/doctors_dashboard";
+$route['home/user'] = "home/dashboard/blank_dashboard";
+$route['home/xray'] = "home/dashboard/xray_dashabord";
+$route['home/ecg'] = "home/dashboard/ecg_dashboard";
+
+$route['xray-info'] = "patient/xray";
+$route['ecg-info'] = "patient/ecg";
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
