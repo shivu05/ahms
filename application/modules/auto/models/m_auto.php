@@ -269,141 +269,141 @@ class m_auto extends CI_Model {
 
     private function insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept) {
 
-        if ($labdisease == "AMAVATA") {
+        if (strtolower(trim($labdisease)) == strtolower("AMAVATA")) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "SANDHIVATA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("SANDHIVATA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "MADHUMEHA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("MADHUMEHA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "VATARAKTA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("VATARAKTA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ARDITA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ARDITA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ARSHA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ARSHA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ATISARA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ATISARA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "BHAGANDARA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("BHAGANDARA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "GARBHINI") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("GARBHINI"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "HYPERTENSION") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("HYPERTENSION"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "JWARA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("JWARA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "KAMALA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("KAMALA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "MUTRAKRUCHRA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("MUTRAKRUCHRA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PAKSHAGHATA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PAKSHAGHATA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PANDU") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PANDU"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PRAVAHIKA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PRAVAHIKA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "RAJAYAXMA") {
-            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-            $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "RAKTAPRADARA") {
-            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "STHOULYA") {
-            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "SWETAPRADARA") {
-            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "TAMAKA SWASA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("RAJAYAXMA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "VANDHYATWA FEMALE") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("RAKTAPRADARA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "VANDHYATWA MALE") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("STHOULYA"))) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "KASA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("SWETAPRADARA"))) {
+            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("TAMAKA SWASA"))) {
+            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "SWASA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("VANDHYATWA FEMALE"))) {
+            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("VANDHYATWA MALE"))) {
+            $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("KASA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PRATISHYAYA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("SWASA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PEENASA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PRATISHYAYA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "NASAGATA RAKTAPITTA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PEENASA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "NASAPAKA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("NASAGATA RAKTAPITTA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "MANYASTAMBH") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("NASAPAKA"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ASHMARI") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("MANYASTAMBH"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "KAPHAJA KASA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ASHMARI"))) {
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ABDOMINAL PAIN") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("KAPHAJA KASA"))) {
+            $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ABDOMINAL PAIN"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "4 MONTHS PREGNANCY ANC") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("4 MONTHS PREGNANCY ANC"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "6 MONTHS PREGNENCY ANC") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("6 MONTHS PREGNENCY ANC"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ANARTAVA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ANARTAVA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "5 MONTHS GARBHINI WITH PANDU") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("5 MONTHS GARBHINI WITH PANDU"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "4 MONTHS PREGNANCY ANC") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("4 MONTHS PREGNANCY ANC"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "6 MONTHS PREGNENCY ANC") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("6 MONTHS PREGNENCY ANC"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "8 1/2 MONTHS PREGNANCY FREQUENT PAIN IN LUMBER REGION") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("8 1/2 MONTHS PREGNANCY FREQUENT PAIN IN LUMBER REGION"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "18 YRS GIRL WITH DYSMENORRHEA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("18 YRS GIRL WITH DYSMENORRHEA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "8 1/2 MONTHS PREGNANCY WITH MILD PET") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("8 1/2 MONTHS PREGNANCY WITH MILD PET"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "8 MONTHS PREGNANCY WITH SHOTHA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("8 MONTHS PREGNANCY WITH SHOTHA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "5 MONTHS AMENORRHEA WITH POLYHYDROMNIOS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("5 MONTHS AMENORRHEA WITH POLYHYDROMNIOS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "M.2- 2 YRS PRIMARY INFERTILITY") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("M.2- 2 YRS PRIMARY INFERTILITY"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "6 MONTHS AMENORRHEA WITH IUGR") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("6 MONTHS AMENORRHEA WITH IUGR"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "9 MONTHS PREGNANCY WITH PAIN IN ABDOMEN") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("9 MONTHS PREGNANCY WITH PAIN IN ABDOMEN"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "5 MONTHS AMENORRHEA WITH POLYHYDROMNIOS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("5 MONTHS AMENORRHEA WITH POLYHYDROMNIOS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "6 MONTHS AMENORRHEA WITH IUGR") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("6 MONTHS AMENORRHEA WITH IUGR"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "6 MONTHS AMENORRHEA WITH ITCHING") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("6 MONTHS AMENORRHEA WITH ITCHING"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "8 1/2 MONTHS PREGNANCY") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("8 1/2 MONTHS PREGNANCY"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "2 MONTHS AMENORRHEA WITH VOMITING") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("2 MONTHS AMENORRHEA WITH VOMITING"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "HYDROCELE") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("HYDROCELE"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "APPENDICITIS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("APPENDICITIS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "CHOLECYSTITIS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("CHOLECYSTITIS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ASCITIS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ASCITIS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "CHOLECYSTITIS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("CHOLECYSTITIS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "HERNIA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("HERNIA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "AMC") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("AMC"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "ANARTAVA(AMENORRHOEA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("ANARTAVA(AMENORRHOEA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "STANA SHOTHA(MASTITIS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("STANA SHOTHA(MASTITIS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "IUGR") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("IUGR"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "STANARBUDA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("STANARBUDA"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "UDAR SHOOL") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("UDAR SHOOL"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "OLIGOHYDROMNIOS") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("OLIGOHYDROMNIOS"))) {
             $this->InsertUSGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
-        } else if ($labdisease == "PAKSHAGHATA" || $labdisease == "ARDITA" || $labdisease == "V.RAKTACHAP" || $labdisease == "HYPERTENSION" || $labdisease == "AMLAPITTA") {
+        } else if (strtolower(trim($labdisease)) == strtolower(trim("PAKSHAGHATA")) || strtolower(trim($labdisease)) == strtolower(trim("ARDITA")) || strtolower(trim($labdisease)) == strtolower(trim("V.RAKTACHAP")) || strtolower(trim($labdisease)) == strtolower(trim("HYPERTENSION")) || strtolower(trim($labdisease)) == strtolower(trim("AMLAPITTA"))) {
             $this->InsertECGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
         }
 
@@ -446,7 +446,7 @@ class m_auto extends CI_Model {
 
     function insertextradata($diff, $cdate, $target, $newpatient) {
 
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         $this->patPercent = $newpatient;
         $querydeptperc = $this->db->get('deptper');
         $a = $querydeptperc->result();
@@ -635,9 +635,35 @@ class m_auto extends CI_Model {
         $this->session->set_flashdata('noty_msg', "records added successfully");
     }
 
+    public function add_to_pharmacy($treat_id) {
+        $this->db->where('ID', $treat_id);
+        $this->db->where('department <>', 'Swasthavritta');
+        $treatment_data = $this->db->get('treatmentdata')->row_array();
+        if (!empty($treatment_data)) {
+            $digits = 4;
+            $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
+            $products = explode(',', $treatment_data['Trtment']);
+            $n = count($products);
+            for ($i = 0; $i < $n; $i++) {
+                if (strlen(trim($products[$i])) > 0) {
+                    $med_arr = array(
+                        'opdno' => $treatment_data['OpdNo'],
+                        'billno' => $four_digit_random_number,
+                        'batch' => 947,
+                        'date' => $treatment_data['CameOn'],
+                        'qty' => 1,
+                        'product' => trim($products[$i]),
+                        'treat_id' => $treatment_data['ID']
+                    );
+                    $this->db->insert('sales_entry', $med_arr);
+                }
+            }
+        }// end if
+    }
+
     function enter_prasooti_patient_details($arr, $cdate) {
 
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->getDeptNoForNewPatient('Prasooti & Striroga');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -690,24 +716,7 @@ class m_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
 
-                $tantramedicine = explode(',', $this->tantramed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'batch' => 947,
-                            'date' => $cdate,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+                $this->add_to_pharmacy($treatid);
 
                 $labdisease = trim($this->tantradiagnosis[$this->_index]);
                 $docname = $this->tantraDoc[$this->_index];
@@ -735,28 +744,12 @@ class m_auto extends CI_Model {
                     "AddedBy" => $val->AddedBy,
                     "patType" => "Old Patient");
                 $this->db->insert('treatmentdata', $treatment_arr2);
-                $last_id = $val->OpdNo;
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
-                $labdisease = $val->diagnosis;
+
+                $this->add_to_pharmacy($treatid);
+
                 $last_id = $val->OpdNo;
+                $labdisease = $val->diagnosis;
                 $docname = $val->AddedBy;
                 //insert_lexu
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'Prasooti & Striroga');
@@ -766,7 +759,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_balaroga_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->childage))) {
                 $this->_index = 0;
@@ -816,24 +809,9 @@ class m_auto extends CI_Model {
                     "patType" => "New Patient");
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $this->bcmed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid,
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->bcdiagnosis[$this->_index];
                 $docname = $this->bcDoc[$this->_index];
 
@@ -861,24 +839,9 @@ class m_auto extends CI_Model {
                     "patType" => "Old Patient");
                 $this->db->insert('treatmentdata', $treatment_arr2);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->AddedBy;
@@ -890,7 +853,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_kayachikitsa_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('KayaChikitsa');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->age)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -945,24 +908,8 @@ class m_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
 
-                $tantramedicine = explode(',', $this->kayamed[$this->_index]);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                $sizeoftest = sizeof($tantramedicine);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->kayadiagnosis[$this->_index];
                 $docname = $this->kayaDoc[$this->_index];
 
@@ -994,25 +941,8 @@ class m_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr2);
 
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
 
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid,
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+                $this->add_to_pharmacy($treatid);
 
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
@@ -1024,7 +954,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_shalakya_tantra_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('Shalakya Tantra');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ( $this->_index >= sizeof($this->age)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -1084,24 +1014,9 @@ class m_auto extends CI_Model {
                     $this->db->insert('treatmentdata', $treatment_arr);
                 }
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $this->shalkayamed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->shalkayadiagnosis[$this->_index];
                 $docname = $this->shalkayaDoc[$this->_index];
 
@@ -1109,13 +1024,9 @@ class m_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-
             $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='Shalakya Tantra' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-
             $query = $this->db->query($query);
-
             foreach ($query->result() as $val) {
-
                 $treatment_arr2 = array(
                     "deptOpdNo" => $val->deptOpdNo,
                     "Trtment" => $val->Trtment,
@@ -1132,24 +1043,9 @@ class m_auto extends CI_Model {
                     "patType" => "Old Patient");
                 $this->db->insert('treatmentdata', $treatment_arr2);
                 $treatid = $this->db->insert_id();
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
@@ -1161,7 +1057,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_shalya_tantra_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('Shalya Tantra');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->age)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -1221,24 +1117,9 @@ class m_auto extends CI_Model {
                     $this->db->insert('treatmentdata', $treatment_arr);
                 }
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $this->shalyamed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid,
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->shalyadiagnosis[$this->_index];
                 $docname = $this->shalyaDoc[$this->_index];
 
@@ -1268,24 +1149,9 @@ class m_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr2);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
@@ -1298,7 +1164,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_swasthavritta_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('Swasthavritta');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->age)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -1356,22 +1222,6 @@ class m_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
 
-                $tantramedicine = explode(',', $this->swasthamed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                /* for ($i = 0; $i < $sizeoftest; $i++) {
-                  $med_arr = array(
-                  'opdno' => $last_id,
-                  'billno' => $four_digit_random_number,
-                  'date' => $cdate,
-                  'batch' => 947,
-                  'qty' => 1,
-                  'product' => $tantramedicine[$i],
-                  'treat_id' => $treatid,
-                  );
-                  $this->db->insert('sales_entry', $med_arr);
-                  } */
                 $labdisease = $this->swasthaDiagnosis[$this->_index];
                 $docname = $this->swasthaDoc[$this->_index];
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'Swasthavritta');
@@ -1399,22 +1249,7 @@ class m_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr2);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                /* for ($i = 0; $i < $sizeoftest; $i++) {
-                  $med_arr = array(
-                  'opdno' => $val->OpdNo,
-                  'billno' => $four_digit_random_number,
-                  'date' => $cdate,
-                  'batch' => 947,
-                  'qty' => 1,
-                  'product' => $tantramedicine[$i],
-                  'treat_id' => $treatid
-                  );
-                  $this->db->insert('sales_entry', $med_arr);
-                  } */
+
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
@@ -1427,7 +1262,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_panchakarma_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
 
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('Panchakarma');
@@ -1488,24 +1323,9 @@ class m_auto extends CI_Model {
                     $this->db->insert('treatmentdata', $treatment_arr);
                 }
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $this->pkmed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->pkdiagnosis[$this->_index];
                 $docname = $this->pkDoc[$this->_index];
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'Panchakarma');
@@ -1532,24 +1352,9 @@ class m_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr2);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $val->Trtment);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $val->OpdNo,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
@@ -1561,7 +1366,7 @@ class m_auto extends CI_Model {
     }
 
     function enter_aatyayikachikitsa_patient_details($arr, $cdate) {
-        $addemailid = $this->session->userdata('user_email');
+        $addemailid = $this->session->userdata('user_name');
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('Aatyayikachikitsa');
             if (($this->_index >= sizeof($this->femfirstname)) || ($this->_index >= sizeof($this->femLastName)) || ($this->_index >= sizeof($this->age)) || ($this->_index >= sizeof($this->femoccp))) {
@@ -1614,24 +1419,9 @@ class m_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
-                $tantramedicine = explode(',', $this->akmed[$this->_index]);
-                $sizeoftest = sizeof($tantramedicine);
-                $digits = 4;
-                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-                for ($i = 0; $i < $sizeoftest; $i++) {
-                    if (strlen($tantramedicine[$i]) > 0) {
-                        $med_arr = array(
-                            'opdno' => $last_id,
-                            'billno' => $four_digit_random_number,
-                            'date' => $cdate,
-                            'batch' => 947,
-                            'qty' => 1,
-                            'product' => $tantramedicine[$i],
-                            'treat_id' => $treatid
-                        );
-                        $this->db->insert('sales_entry', $med_arr);
-                    }
-                }
+
+                $this->add_to_pharmacy($treatid);
+
                 $labdisease = $this->akdiagnosis[$this->_index];
                 $docname = $this->akDoc[$this->_index];
 
@@ -1716,6 +1506,7 @@ class m_auto extends CI_Model {
                 "refDocName" => $docname,
                 "partOfXray" => $val->xraypart,
                 "xrayDate" => $camedate,
+                "refDate" => $camedate,
                 "treatID" => $treatid,
                 "filmsize" => $val->filmsize
             );
@@ -1733,6 +1524,7 @@ class m_auto extends CI_Model {
             "OpdNo" => $opdno,
             "refDocName" => $docname,
             "usgDate" => $camedate,
+            "refDate" => $camedate,
             "treatId" => $treatid
         );
         $this->db->insert('usgregistery', $treatment_arr2);
@@ -1743,6 +1535,7 @@ class m_auto extends CI_Model {
             "OpdNo" => $opdno,
             "refDocName" => $docname,
             "ecgDate" => $camedate,
+            "refDate" => $camedate,
             "treatId" => $treatid
         );
         $this->db->insert('ecgregistery', $treatment_arr2);
@@ -1771,8 +1564,14 @@ class m_auto extends CI_Model {
     }
 
     function get_day_doctor($date = "", $dept = "") {
-        $result = $this->db->query("SELECT doctorname FROM doctors doc JOIN doctorsduty dd ON dd.doc_id=doc.id JOIN week_days wd ON dd.day=wd.week_id WHERE wd.week_day=DAYNAME(STR_TO_DATE('" . $date . "','%Y-%m-%d')) AND doc.doctortype='" . $dept . "' ORDER BY RAND() LIMIT 1")->row_array();
-        return $result['doctorname'];
+        $query = "SELECT u.ID,user_name FROM users u 
+            JOIN doctorsduty d ON u.ID=d.doc_id JOIN week_days wd ON d.day=wd.week_id 
+            WHERE LOWER(u.user_department)=LOWER('$dept') AND wd.week_day=DAYNAME(STR_TO_DATE('$date','%Y-%m-%d')) ORDER BY RAND() LIMIT 1;";
+        $result = $this->db->query($query)->row_array();
+        /* $result = $this->db->query("SELECT doctorname FROM doctors doc JOIN doctorsduty dd ON dd.doc_id=doc.id 
+          JOIN week_days wd ON dd.day=wd.week_id WHERE wd.week_day=DAYNAME(STR_TO_DATE('" . $date . "','%Y-%m-%d'))
+          AND doc.doctortype='" . $dept . "' ORDER BY RAND() LIMIT 1")->row_array(); */
+        return $result['user_name'];
     }
 
 }
