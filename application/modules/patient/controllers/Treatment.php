@@ -63,8 +63,8 @@ class Treatment extends SHV_Controller {
         $this->layout->render();
     }
 
-    function add_pharmcy($treat_id) {
-        $this->treatment_model->add_to_pharmacy($treat_id);
+    function add_pharmcy($treat_id, $type = 'opd') {
+        $this->treatment_model->add_to_pharmacy($treat_id, $type);
     }
 
     function save() {
@@ -242,7 +242,7 @@ class Treatment extends SHV_Controller {
             $last_ipd_id = $this->treatment_model->store_ipd_treatment($treatment_data);
             $treat_id = $last_ipd_id;
         }
-
+        $this->add_pharmcy($treat_id);
         if ($this->input->post('birth_check') == 'on') {
             $birth_data = array(
                 'OpdNo' => $this->input->post('opd_no'),
@@ -264,7 +264,7 @@ class Treatment extends SHV_Controller {
             $ecgdata = array(
                 'OpdNo' => $this->input->post('opd_no'),
                 'refDocName' => $this->input->post('ecgdocname'),
-                'ecgDate' => $this->input->post('ecgdate'),
+                'refDate' => $this->input->post('ecgdate'),
                 'treatId' => $treat_id,
             );
             $this->treatment_model->add_ecg_info($ecgdata);
@@ -274,7 +274,7 @@ class Treatment extends SHV_Controller {
             $usgdata = array(
                 'OpdNo' => $this->input->post('opd_no'),
                 'refDocName' => $this->input->post('usgdocname'),
-                'usgDate' => $this->input->post('usgdate'),
+                'refDate' => $this->input->post('usgdate'),
                 'treatId' => $treat_id
             );
             $this->treatment_model->add_usg_info($usgdata);
@@ -286,7 +286,7 @@ class Treatment extends SHV_Controller {
                 'refDocName' => $this->input->post('xraydocname'),
                 'partOfXray' => $this->input->post('partxray'),
                 'filmSize' => $this->input->post('filmsize'),
-                'xrayDate' => $this->input->post('xraydate'),
+                'refDate' => $this->input->post('xraydate'),
                 'treatID' => $treat_id
             );
             $this->treatment_model->add_xray_info($xraydata);

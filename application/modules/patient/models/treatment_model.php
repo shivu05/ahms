@@ -215,11 +215,34 @@ class treatment_model extends CI_Model {
         return $this->db->update('inpatientdetails', $discharge);
     }
 
-    public function add_to_pharmacy($treat_id) {
-        $this->db->where('ID', $treat_id);
-        $this->db->where('department <>', 'Swasthavritta');
-        $treatment_data = $this->db->get('treatmentdata')->row_array();
-        if (!empty($treatment_data)) {
+    public function add_to_pharmacy($treat_id, $type) {
+        if (strtolower($type) == 'opd') {
+            $this->db->where('ID', $treat_id);
+            $this->db->where('department <>', 'Swasthavritta');
+            $treatment_data = $this->db->get('treatmentdata')->row_array();
+            if (!empty($treatment_data)) {
+                $digits = 4;
+                $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
+                $products = explode(',', $treatment_data['Trtment']);
+                $n = count($products);
+                for ($i = 0; $i < $n; $i++) {
+                    if (strlen(trim($products[$i])) > 0) {
+                        $med_arr = array(
+                            'opdno' => $treatment_data['OpdNo'],
+                            'billno' => $four_digit_random_number,
+                            'batch' => 947,
+                            'date' => $treatment_data['CameOn'],
+                            'qty' => 1,
+                            'product' => trim($products[$i]),
+                            'treat_id' => $treatment_data['ID']
+                        );
+                        $this->db->insert('sales_entry', $med_arr);
+                    }
+                }
+            }// end if
+        } else if (strtolower($type) == 'ipd') {
+            $treatment_data = $this->db->query("SELECT * FROM ipdtreatment i JOIN inpatientdetails ip On i.ipdno=ip.IpNo 
+                WHERE ip.department !='Swasthavritta' AND ID='" . $treat_id . "'")->result_array();
             $digits = 4;
             $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
             $products = explode(',', $treatment_data['Trtment']);
@@ -230,15 +253,16 @@ class treatment_model extends CI_Model {
                         'opdno' => $treatment_data['OpdNo'],
                         'billno' => $four_digit_random_number,
                         'batch' => 947,
-                        'date' => $treatment_data['CameOn'],
+                        'date' => $treatment_data['attndedon'],
                         'qty' => 1,
-                        'product' => trim($products[$i]),
+                        'ipdno' => $treatment_data['IpNo'],
+                        'product' => $products[$i],
                         'treat_id' => $treatment_data['ID']
                     );
                     $this->db->insert('sales_entry', $med_arr);
                 }
             }
-        }// end if
+        }
     }
 
 }

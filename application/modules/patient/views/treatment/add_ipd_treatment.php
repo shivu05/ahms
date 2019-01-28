@@ -198,9 +198,9 @@
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
                                             <div class="control-group col-4">											
-                                                <label class="control-label" for="ecgdate">ECG Date:</label>
+                                                <label class="control-label" for="ecgdate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG Date" autocomplete="off">
+                                                    <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG referred date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -219,7 +219,7 @@
                                             <div class="control-group col-4">											
                                                 <label class="control-label" for="usgdate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter Date" autocomplete="off">
+                                                    <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter USG referred Date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
@@ -243,16 +243,9 @@
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
                                             <div class="control-group col-4">											
-                                                <label class="control-label" for="filmsize">Film Size:</label>
+                                                <label class="control-label" for="xraydate">Referred date:</label>
                                                 <div class="controls">
-                                                    <input id="filmsize" type="text" name="filmsize" class="form-control xray_inputs" placeholder="Enter Film Size" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="xraydate">X-Ray Date:</label>
-                                                <div class="controls">
-                                                    <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter Date" autocomplete="off">
+                                                    <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
