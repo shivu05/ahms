@@ -35,10 +35,10 @@ class treatment_model extends CI_Model {
         $treat_data = array(
             'OpdNo' => $last_id,
             'deptOpdNo' => $dept_opd_count,
-            'PatType' => 'N',
+            'PatType' => NEW_PATIENT,
             'department' => $post_values['department'],
             'AddedBy' => $post_values['doctor'],
-            'CameOn' => $post_values['consultation_date'],
+            'CameOn' => $post_values['consultation_date']
         );
         $this->db->insert('treatmentdata', $treat_data);
         $this->db->trans_complete();
