@@ -30,7 +30,8 @@ class auto extends SHV_Controller {
         $target = $this->input->post('target');
         $cdate = $this->input->post('cdate');
         $newpatient = $this->input->post('newpatient');
-        $data['message'] = $this->m_auto->auto_master($target, $cdate, $newpatient);
+        $pancha_count = $this->input->post('pancha_count');
+        $data['message'] = $this->m_auto->auto_master($target, $cdate, $newpatient, $pancha_count);
         $this->layout->data = $data;
         $this->layout->render();
     }

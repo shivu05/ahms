@@ -63,7 +63,8 @@ class Test extends SHV_Controller {
             'ID' => array('name' => 'X-Ray No', 'align' => 'C', 'width' => '7'),
             'partOfXray' => array('name' => 'Part', 'width' => '26'),
             'filmSize' => array('name' => 'Film size', 'width' => '15'),
-            'xrayDate' => array('name' => 'Date', 'width' => '8'),
+            'refDate' => array('name' => 'Ref.Date', 'align' => 'C', 'width' => '8'),
+            'xrayDate' => array('name' => 'Date', 'align' => 'C', 'width' => '8'),
         );
         $html = generate_table_pdf($headers, $result['data']);
 
@@ -489,6 +490,17 @@ class Test extends SHV_Controller {
         $input_array = $this->input->post();
         $data["patient"] = $this->nursing_model->get_lab_report_count($input_array);
         $this->load->view('reports/test/lab_report_count', $data);
+    }
+
+    function delete_records() {
+        $checkboxes = $this->input->post('check_del');
+        $table_name = base64_decode($this->input->post('tab'));
+        foreach ($checkboxes as $checkbox) {
+            $where = array('ID' => $checkbox);
+            $this->nursing_model->delete_record($table_name, $where);
+        }
+        echo TRUE;
+        exit;
     }
 
 }

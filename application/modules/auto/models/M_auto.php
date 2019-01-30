@@ -1,6 +1,6 @@
 <?php
 
-class m_auto extends CI_Model {
+class M_auto extends CI_Model {
 
     private $addemailid;
     private $countOld;
@@ -235,7 +235,7 @@ class m_auto extends CI_Model {
         $this->_total_records_to_be_entered = 0;
     }
 
-    function auto_master($target, $cdate, $newpatient) {
+    function auto_master($target, $cdate, $newpatient, $pancha_count) {
         $fnamess = shuffle($this->firstname);
         $comparedate = $this->db->get_where('treatmentdata', array('CameOn' => $cdate));
         $a = $comparedate->result();
@@ -260,7 +260,7 @@ class m_auto extends CI_Model {
 
         if ($count < $target) {
             if ($diff > 0) {
-                $this->insertextradata($diff, $cdate, $target, $newpatient);
+                $this->insertextradata($diff, $cdate, $target, $newpatient, $pancha_count);
             } else {
                 $this->session->set_flashdata('noty_msg', $count . " records are entered and Target is reached");
             }
@@ -408,7 +408,10 @@ class m_auto extends CI_Model {
         }
 
         if (strtolower($dept) == strtolower('Panchakarma')) {
-            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
+            $j = $this->db->get('panchaprocedure')->num_rows();
+            if ($j <= $this->_pancha_count) {
+                $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
+            }
         }
     }
 
@@ -443,12 +446,14 @@ class m_auto extends CI_Model {
     }
 
     private $_index = 0;
+    private $_pancha_count = 5;
 
-    function insertextradata($diff, $cdate, $target, $newpatient) {
+    function insertextradata($diff, $cdate, $target, $newpatient, $pancha_count) {
 
         $addemailid = $this->session->userdata('user_name');
         $this->patPercent = $newpatient;
         $querydeptperc = $this->db->get('deptper');
+        $this->_pancha_count = $pancha_count;
         $a = $querydeptperc->result();
         $this->panchakarper = $this->_entered_records_arr['panchakarma']['per'];
         $this->balachikper = $this->_entered_records_arr['balaroga']['per'];

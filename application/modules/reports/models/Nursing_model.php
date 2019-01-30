@@ -17,7 +17,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', '(t.department) as department', 'x.xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
+            'p.gender', 'p.address', 'p.deptOpdNo', '(t.department) as department', 'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -411,6 +411,10 @@ class Nursing_model extends CI_Model {
         } else {
             return false; //if data is wrong
         }
+    }
+
+    function delete_record($table, $where) {
+        return $this->db->delete($table, $where);
     }
 
 }

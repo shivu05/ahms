@@ -4,7 +4,10 @@
             <div class="tile-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
-                    <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
+                    <form name="test_form" id="test_form" method="POST">
+                        <input type="hidden" name="tab" id="tab" value="<?= base64_encode('xrayregistery') ?>" />
+                        <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
+                    </form>
                 </div
             </div>
             <div id="patient_statistics" class="col-12"></div>
@@ -93,16 +96,27 @@
                 }
             },
             {
-                title: "Date",
+                title: "Ref. Date",
+                data: function (item) {
+                    return item.refDate;
+                }
+            },
+            {
+                title: "X-Ray Date",
                 data: function (item) {
                     return item.xrayDate;
                 }
+            },
+            {
+                title: "Action",
+                data: function (item) {
+                    return "<center><input type='checkbox' name='check_del[]' class='check_xray' id='checkbx" + item.ID + "' value='" + item.ID + "'/></center>";
+                }
             }
-
         ];
-
+        var patient_table;
         function show_patients() {
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
@@ -136,5 +150,31 @@
                 sScrollX: true
             });
         }
+
+        $('#search_form').on('click', '#btn_delete', function () {
+
+            var $b = $('#test_form input[type=checkbox]');
+            num = $b.filter(':checked').length;
+            if (num == 0) {
+                alert('Please select atleast one records');
+            } else {
+                var form_data = $('#test_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'reports/Test/delete_records',
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'json',
+                    success: function (res) {
+                        alert('Deleted successfully');
+                        $('#search_form search').trigger('click');
+                        patient_table.clear();
+                        patient_table.draw();
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+                })
+            }
+        });
     });
 </script>
