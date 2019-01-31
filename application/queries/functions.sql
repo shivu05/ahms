@@ -18,3 +18,19 @@ RETURN new_dept;
 END $$
 
 DELIMITER ;
+
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS `display_date` $$
+CREATE FUNCTION `display_date` (str_date VARCHAR(50)) RETURNS VARCHAR(50)
+DETERMINISTIC
+BEGIN
+DECLARE new_date varchar(50);
+
+SET new_date = (SELECT DATE_FORMAT(str_date,'%d-%m-%Y') as ndate);
+
+RETURN new_date;
+
+END $$
+
+DELIMITER ;

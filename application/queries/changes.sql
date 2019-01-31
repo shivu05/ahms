@@ -16,3 +16,4 @@ ALTER TABLE `role_master` ADD PRIMARY KEY(`role_id`);
 ALTER TABLE `role_master` CHANGE `role_id` `role_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ecgregistery` ADD COLUMN `refDate` VARCHAR(45) AFTER `treatId`;
 ALTER TABLE `usgregistery` ADD COLUMN `refDate` VARCHAR(45) AFTER `treatId`;
+ALTER TABLE `treatmentdata` MODIFY COLUMN `deptOpdNo` INTEGER;
