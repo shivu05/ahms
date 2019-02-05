@@ -196,6 +196,91 @@ class Ipd extends SHV_Controller {
     function export_bed_to_pdf() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->ipd_model->get_bed_occpd_patients($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'width' => 5, 'align' => 'C'),
+            'OpdNo' => array('name' => 'C.OPD', 'width' => 5),
+            'IpNo' => array('name' => 'C.IPD', 'width' => 5),
+            'deptOpdNo' => array('name' => 'Dept.OPD', 'width' => 5),
+            'FName' => array('name' => 'Name', 'width' => 20, 'align' => 'L'),
+            'Age' => array('name' => 'Age', 'width' => 3, 'align' => 'C'),
+            'Gender' => array('name' => 'Sex', 'width' => 5),
+            'WardNo' => array('name' => 'W.No', 'width' => 2, 'align' => 'C'),
+            'BedNo' => array('name' => 'B.No', 'width' => 2, 'align' => 'C'),
+            'diagnosis' => array('name' => 'Diagnosis', 'width' => 26, 'align' => 'L'),
+            'DoAdmission' => array('name' => 'DOA', 'width' => 6),
+            'DoDischarge' => array('name' => 'DOD', 'width' => 6),
+            //'NofDays' => array('name' => 'Days', 'width' => 8),
+            'Doctor' => array('name' => 'Doctor', 'width' => 15, 'align' => 'L'),
+            'department' => array('name' => 'Department', 'align' => 'L', 'width' => 20)
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+        $stats_headers = array(
+            'department' => array('name' => 'Department', 'align' => 'L', 'width' => 20)
+        );
+        $statistics = $this->ipd_model->get_bed_occupied_statistics($input_array);
+        $stats_tbl = '<table style="margin-left: auto;margin-right: auto;" width="50%" class="table table-bordered">';
+        $stats_tbl .= '<thead>';
+        $stats_tbl .= '<tr>';
+        $stats_tbl .= '<th>Department</th>';
+        $stats_tbl .= '<th>Total</th>';
+        $stats_tbl .= '<th>Male</th>';
+        $stats_tbl .= '<th>Female</th>';
+        $stats_tbl .= '<th>Discharged</th>';
+        $stats_tbl .= '<th>BA</th>';
+        $stats_tbl .= '</tr>';
+        $stats_tbl .= '</thead>';
+        $stats_tbl .= '<tbody>';
+        $total = $female = $male = $discharged = $onbed = 0;
+        foreach ($statistics as $stat) {
+            $stats_tbl .= '<tr>';
+            $stats_tbl .= '<td>' . $stat['department'] . '</td>';
+            $stats_tbl .= '<td align="center">' . $stat['total'] . '</td>';
+            $stats_tbl .= '<td align="center">' . $stat['Male'] . '</td>';
+            $stats_tbl .= '<td align="center">' . $stat['Female'] . '</td>';
+            $stats_tbl .= '<td align="center">' . $stat['discharged'] . '</td>';
+            $stats_tbl .= '<td align="center">' . $stat['onbed'] . '</td>';
+            $stats_tbl .= '</tr>';
+            $total = $total + $stat['total'];
+            $female = $female + $stat['Female'];
+            $male = $male + $stat['Male'];
+            $discharged = $discharged + $stat['discharged'];
+            $onbed = $onbed + $stat['onbed'];
+        }
+        $stats_tbl .= '<tr style="background-color:#D9D9D9">';
+        $stats_tbl .= '<td>Total</td>';
+        $stats_tbl .= '<td align="center">' . $total . '</td>';
+        $stats_tbl .= '<td align="center">' . $male . '</td>';
+        $stats_tbl .= '<td align="center">' . $female . '</td>';
+        $stats_tbl .= '<td align="center">' . $discharged . '</td>';
+        $stats_tbl .= '<td align="center">' . $onbed . '</td>';
+        $stats_tbl .= '</tr>';
+        $stats_tbl .= '</tbody>';
+        $stats_tbl .= '</table>';
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'BED OCCUPIED REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html . '<br/>' . $stats_tbl);
+        exit;
+    }
+
+    function export_bed_to_pdf_tcp() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
         $data = array();
         $input_array = array();
         $head = array(
@@ -221,6 +306,8 @@ class Ipd extends SHV_Controller {
         }
 
         $result = $this->ipd_model->get_bed_occpd_patients($input_array, true);
+
+
         $statistics = $this->ipd_model->get_bed_occupied_statistics($input_array);
         //pma($statistics, 1);
         $patients = $result['data'];
