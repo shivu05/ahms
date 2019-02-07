@@ -20,7 +20,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputAge">Mobile: </label>
-                                <input class="form-control required" id="mobile" name="mobile" type="text" aria-describedby="ageHelp" placeholder="Enter your mobile number">
+                                <input class="form-control" id="mobile" name="mobile" type="text" aria-describedby="ageHelp" placeholder="Enter your mobile number">
                                 <small class="form-text text-muted" id="ageeHelp"></small>
                             </div>
                             <div class="form-group">
@@ -92,7 +92,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputLastname">Consultation date: </label>
-                                <input class="form-control date_picker required" id="consultation_date" name="consultation_date" type="text" aria-describedby="consultation_dateHelp" placeholder="Enter consultation date" value="<?= date('Y-m-d')?>">
+                                <input class="form-control date_picker required" id="consultation_date" name="consultation_date" type="text" aria-describedby="consultation_dateHelp" placeholder="Enter consultation date" value="<?= date('Y-m-d') ?>">
                                 <small class="form-text text-muted" id="last_nameHelp"></small>
                             </div>
                         </div>

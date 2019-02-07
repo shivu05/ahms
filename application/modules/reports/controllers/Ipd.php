@@ -172,7 +172,7 @@ class Ipd extends SHV_Controller {
         $this->layout->navTitle = "Bed occupied report";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation', 'js'));
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;

@@ -63,7 +63,6 @@
                         <p class="semibold-text mb-0"><a href="#" data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i> Back to Login</a></p>
                     </div>
                 </form>
-
             </div>
             <p>Powered by <a href="http://www.ayushsoftwares.com/" target="_blank">Ayush Softwares</a> <br/>Write us @: <a href="mailto:info@ayushsoftwares.com">info@ayushsoftwares.com</a></p>
         </section>

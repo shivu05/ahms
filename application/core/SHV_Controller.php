@@ -48,7 +48,7 @@ class SHV_Controller extends MX_Controller {
 
     function get_doctors($dept = null) {
         $dept_name = (empty($this->input->post('dept_id'))) ? $dept : $this->input->post('dept_id');
-        return $this->settings_model->get_doctors_by_dept($dept);
+        return $this->settings_model->get_doctors_by_dept($dept_name);
     }
 
     function get_roles() {

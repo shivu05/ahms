@@ -48,10 +48,53 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="patient_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="default_modal_label">Patient information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="default_modal_body">
+                <form name="patient_form" id="patient_form" method="POST">
+                    <div class="form-group">
+                        <label for="first_name">First name</label>
+                        <input class="form-control required" id="first_name" name="first_name" type="text" aria-describedby="first_nameHelp" placeholder="Enter First name">
+                        <input class="form-control required" id="opd" name="opd" type="hidden">
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label>
+                        <input class="form-control required" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input class="form-control required numbers-only" id="age" name="age" type="text" aria-describedby="last_nameHelp" placeholder="Enter Age">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-control required" name="gender" id="gender">
+                            <option value="">Choose gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-ok">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
-            show_patients();
+            patient_table.clear();
+            patient_table.draw();
         });
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
@@ -131,48 +174,119 @@
                 data: function (item) {
                     return item.Doctor;
                 }
+            },
+            {
+                title: "Action",
+                class: 'action',
+                data: function (item) {
+                    return '<center><i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i></center>';
+                }
             }
         ];
 
-        function show_patients() {
-            var statistics = '';
-            var patient_table = $('#patient_table').DataTable({
-                'columns': columns,
-                'columnDefs': [
-                    {className: "", "targets": [4]}
-                ],
-                "bDestroy": true,
-                language: {
-                    sZeroRecords: "<div class='no_records'>No patients found</div>",
-                    sEmptyTable: "<div class='no_records'>No patients found</div>",
-                    sProcessing: "<div class='no_records'>Loading</div>",
-                },
-                'searching': true,
-                'paging': true,
-                'pageLength': 25,
-                'lengthChange': true,
-                'aLengthMenu': [10, 25, 50, 100],
-                'processing': true,
-                'serverSide': true,
-                'ajax': {
-                    'url': base_url + 'reports/Ipd/get_bed_patients_list',
-                    'type': 'POST',
-                    'dataType': 'json',
-                    'data': function (d) {
-                        return $.extend({}, d, {
-                            "search_form": $('#search_form').serializeArray()
-                        });
-                    },
-                    drawCallback: function (response) {
-                        //statistics = response.statistics;
 
-                    }
+        var patient_table = $('#patient_table').DataTable({
+            'columns': columns,
+            'columnDefs': [
+                {className: "", "targets": [4]}
+            ],
+            "bDestroy": true,
+            language: {
+                sZeroRecords: "<div class='no_records'>No patients found</div>",
+                sEmptyTable: "<div class='no_records'>No patients found</div>",
+                sProcessing: "<div class='no_records'>Loading</div>",
+            },
+            'searching': true,
+            'paging': true,
+            'pageLength': 25,
+            'lengthChange': true,
+            'aLengthMenu': [10, 25, 50, 100],
+            'processing': true,
+            'serverSide': true,
+            'ajax': {
+                'url': base_url + 'reports/Ipd/get_bed_patients_list',
+                'type': 'POST',
+                'dataType': 'json',
+                'data': function (d) {
+                    return $.extend({}, d, {
+                        "search_form": $('#search_form').serializeArray()
+                    });
                 },
-                order: [[0, 'desc']],
-                info: true,
-                sScrollX: true
+                drawCallback: function (response) {
+                    //statistics = response.statistics;
+
+                }
+            },
+            order: [[0, 'desc']],
+            info: true,
+            sScrollX: true
+        });
+
+        $('#patient_form').validate();
+        $('#patient_modal_box').on('click', '#btn-ok', function () {
+
+            if ($('#patient_form').valid()) {
+                var form_data = $('#patient_form').serializeArray();
+
+                $.ajax({
+                    url: base_url + "common_methods/update_patient_info",
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status) {
+                            $('#patient_modal_box').modal('hide');
+                            $.notify({
+                                title: "Patient information:",
+                                message: "Successfully updated patient info",
+                                icon: 'fa fa-check',
+                            }, {
+                                type: "success",
+                            });
+                        } else {
+                            $.notify({
+                                title: "Patient information:",
+                                message: "Failed to update data please try again",
+                                icon: 'fa fa-cross',
+                            }, {
+                                z_index: 2000,
+                                type: "danger",
+                            });
+                        }
+                        patient_table.clear();
+                        patient_table.draw();
+                    }
+                });
+            } else {
+                $.notify({
+                    title: "Patient information:",
+                    message: "Failed to update data please try again",
+                    icon: 'fa fa-cross',
+                }, {
+                    z_index: 2000,
+                    type: "danger",
+                });
+            }
+        });
+        $('#patient_table tbody').on('click', '.action', function () {
+            var opd_id = $(this).find('i').data('opd');
+            var ipd_id = $(this).find('i').data('ipd');
+            $.ajax({
+                url: base_url + "common_methods/get_patient_details",
+                type: 'POST',
+                data: {opd: opd_id},
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+                        $('#patient_form #first_name').val(response.data.FirstName);
+                        $('#patient_form #last_name').val(response.data.LastName);
+                        $('#patient_form #age').val(response.data.Age);
+                        $('#patient_form #gender').val(response.data.gender);
+                        $('#patient_form #opd').val(response.data.OpdNo);
+                    }
+                }
             });
-            //show_statistics();
-        }
+            $('#patient_modal_box').modal('show');
+        });
     });
 </script>
