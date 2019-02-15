@@ -1,3 +1,41 @@
+<style type="text/css">
+    .accordion h1,
+    .accordion a{
+        color:#007b5e;
+    }
+    .accordion .btn-link {
+        font-weight: 400;
+        color: #007b5e;
+        background-color: transparent;
+        text-decoration: none !important;
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 25px;
+    }
+
+    .accordion .card-body {
+        border-top: 2px solid #007b5e;
+        font-size: 12px !important;
+    }
+
+    .accordion .card-header .btn.collapsed .fa.main{
+        display:none;
+    }
+
+    .accordion .card-header .btn .fa.main{
+        background: #007b5e;
+        padding: 10px 8px;
+        color: #ffffff;
+        width: 30px;
+        height: 35px;
+        position: absolute;
+        left: -1px;
+        top: 10px;
+        border-top-right-radius: 7px;
+        border-bottom-right-radius: 7px;
+        display:block;
+    }
+</style>
 <div class="row">
     <div class="col-md-3 col-sm-12">
         <div class="tile" style="border-top: 5px solid #009688;">
@@ -17,7 +55,8 @@
         </div>
     </div>
     <div class="col-md-9 col-sm-12">
-        <?php //pma($current_treatment, 1); ?>
+        <?php //pma($treatment_details, 1); ?>
+
         <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
             <!--hiddden fields-->
             <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
@@ -31,6 +70,55 @@
                             <a class="btn btn-info btn-sm" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
                         </span>
                     </h6>
+                    <hr/>
+
+                    <?php if (!empty($treatment_details)): ?>
+                        <div class="accordion" id="accordionExample">
+                            <?php
+                            $i = 0;
+                            foreach ($treatment_details as $treatment) {
+                                $i++;
+                                ?>        
+                                <div class="card mb-3">
+                                    <div class="card-header" id="heading<?= $i ?>">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?= $i ?>" aria-expanded="false" aria-controls="collapseOne">
+                                                <i class="fa fa-user-md main"></i><i class="fa fa-angle-double-right mr-3"></i>
+                                                Visited date: <?php echo $treatment['CameOn']; ?>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapse<?= $i ?>" class="collapse" aria-labelledby="heading<?= $i ?>" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3 border-info">
+                                                    <h6>Diagnosis:</h6>
+                                                    <p><?php echo $treatment['diagnosis']; ?></p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <h6>Treatment:</h6>
+                                                    <p><?php echo $treatment['Trtment']; ?></p>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <h6>Department:</h6>
+                                                    <p><?php echo $treatment['department']; ?></p>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <h6>Procedure:</h6>
+                                                    <p><?php echo $treatment['procedures']; ?></p>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <h6>Doctor:</h6>
+                                                    <p><?php echo $treatment['attndedby']; ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php endif; ?>
+
                     <hr/>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
