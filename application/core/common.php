@@ -202,3 +202,87 @@ if (!function_exists('display_department')) {
     }
 
 }
+
+if (!function_exists('create_dropdown_options_v2')) {
+
+    /**
+     * @param 1.array $data : whole data array [Mandatory]
+     * @param 2.string $key_col : data array index name which will treated as options key [Mandatory]
+     * @param 3.string $val_col : data array index name which will treated as options value text [Mandatory]
+     * @param 4.boolean $option_tag_flag: determines retured data should be in option tag or array [defaul: TRUE]
+     * @param 5.string $selected_val : the value which should display as selected option [defaul: blank]
+     * @param 6.string $selected_by : determines selected logic baseed on key or value [defaul: value]
+     * @param 7.string $attributes : adds extra attributes in options tag [defaul: blank]
+     * @param 8.string $chosen_flag : will add one blank index for cosen dropdown [defaul: FALSE]
+     * @param 9. boolean $title_flag : display title or not
+     * @param 10. string $title_col: which db column you want to dispay as title
+     * @param 11. boolean $sort_flag : determines sort will applay or not 
+     * @param 12. string $sort_type: determine sorting type a/d [default: a]
+     * @param 13: $data_attr = array(
+      'data-enrich' => array(
+      'OSA_MISSIONS_ENRICHED_EN' => array(
+      'sdp_pre_html' => '<div>',
+      'sdp_post_html' => '</div>',
+      ),
+      'OSA_ACTIVITY_ENRICHED_EN' => array(
+      'sdp_pre_html' => '<div>',
+      'sdp_post_html' => '</div>',
+      )
+      ),
+      'data-nonenrich' => array('OSA_MISSIONS_NONENRICHED_EN', 'OSA_ACTIVITY_NONENRICHED_EN')
+      );
+     * @return 
+     * @desc : used to return only options part of dropdown
+     * @author
+     */
+    function create_dropdown_options_v2($data, $key_col, $val_col, $option_tag_flag = TRUE, $selected_val = '', $selected_by = 'v', $attributes = '', $title_flag = FALSE, $title_col = '', $sort_flag = FALSE, $sort_type = 'a') {
+        $opt = "";
+
+        if ($option_tag_flag) {
+            $unique = array();
+            $sort_arr = array();
+            $opt_arr = array();
+            foreach ($data as $key => $val) {
+                $selected = '';
+                if ($selected_by === 'k') {
+                    if ($val[$key_col] == $selected_val) {
+                        $selected = " selected='selected' ";
+                    }
+                } else {
+                    if ($val[$val_col] == $selected_val) {
+                        $selected = " selected='selected' ";
+                    }
+                }
+                $ttle = '';
+                if (!in_array($val[$key_col], $unique)) {//ignore duplicates
+                    $sort_arr[$val[$key_col]] = $val[$val_col];
+
+                    if ($title_flag) {
+                        $title = str_replace("\n", "", $val[$title_col]);
+                        $opt_arr[$val[$key_col]] = "<option $selected $attributes  title='$title' value='$val[$key_col]'>" . $val[$val_col] . "</option>";
+                    } else {
+                        $opt_arr[$val[$key_col]] = "<option $selected $attributes  value='$val[$key_col]'>" . $val[$val_col] . "</option>";
+                    }
+                }
+                $unique[] = $val[$key_col];
+            }
+            if ($sort_flag && $sort_type != 'a') {
+                arsort($sort_arr); //reverse sorting the array data
+            } else if ($sort_flag) {
+                asort($sort_arr); //sorting the array data
+            }
+
+            $opt = '';
+            foreach ($sort_arr as $key => $val) {
+                $opt .= $opt_arr[$key];
+            }
+        } else {
+            foreach ($data as $key => $val) {
+                $opt[$val[$key_col]] = $val[$val_col];
+            }
+            sort($opt);
+        }
+        return $opt;
+    }
+
+}

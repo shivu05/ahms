@@ -13,9 +13,37 @@
  */
 class SHV_Controller extends MX_Controller {
 
+    protected $data = Array(); //protected variables goes here its declaration
+    private $Username;
+    private $Password;
+    private $Config;
+    private $Ipaddress;
+
     public function __construct() {
         parent::__construct();
         $this->load->model('home/settings_model');
+        $this->load->library('REST_Client');
+        $this->initialize_rest_client();
+    }
+
+    /**
+     * @param: String dvs / ''
+     * @return: NA
+     * @desc: To initialize rest client for both dvs and ems
+     * @author: Shivaraj B
+     */
+    public function initialize_rest_client() {
+
+        $this->Ipaddress = 'localhost';
+        $this->Config = array(
+            //'server' => 'http://' . $this->Ipaddress . '/ion.dvs/5_Coding/Branches/dvs_ide_1.6_work/',
+            'server' => APP_BASE,
+            'http_auth' => 'basic',
+            'http_user' => 'admin',
+            'http_pass' => '1234'
+        );
+        
+        $this->rest_client->initialize($this->Config);
     }
 
     function application_settings($columns = NULL) {

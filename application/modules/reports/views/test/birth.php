@@ -38,9 +38,16 @@
                 }
             },
             {
+                title: "IPD",
+                class: "opd_no",
+                data: function (item) {
+                    return item.IpNo;
+                }
+            },
+            {
                 title: "Name",
                 data: function (item) {
-                    return item.FirstName + ' ' + item.LastName;
+                    return item.FName;
                 }
             },
             {
@@ -50,27 +57,45 @@
                 }
             },
             {
-                title: "Gender",
+                title: "Diagnosis",
                 data: function (item) {
-                    return item.gender;
+                    return item.diagnosis;
                 }
             },
             {
-                title: "Place",
+                title: "Delivery details",
                 data: function (item) {
-                    return item.address;
+                    return item.deliveryDetail;
                 }
             },
             {
-                title: "Department",
+                title: "Birth date",
                 data: function (item) {
-                    return item.dept;
+                    return item.babyBirthDate;
                 }
             },
             {
-                title: "Ref. Date",
+                title: "Birth time",
                 data: function (item) {
-                    return item.usgDate;
+                    return item.birthtime;
+                }
+            },
+            {
+                title: "Baby weight",
+                data: function (item) {
+                    return item.babyWeight;
+                }
+            },
+            {
+                title: "Delivery type",
+                data: function (item) {
+                    return item.deliverytype;
+                }
+            },
+            {
+                title: "Doctor",
+                data: function (item) {
+                    return item.treatby;
                 }
             }
 
@@ -96,7 +121,7 @@
                 'processing': true,
                 'serverSide': true,
                 'ajax': {
-                    'url': base_url + 'reports/Test/get_usg_patients_list',
+                    'url': base_url + 'reports/Test/get_birth_register_data',
                     'type': 'POST',
                     'dataType': 'json',
                     'data': function (d) {

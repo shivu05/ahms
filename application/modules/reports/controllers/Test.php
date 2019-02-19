@@ -224,6 +224,59 @@ class Test extends SHV_Controller {
         $this->layout->render();
     }
 
+    function get_birth_register_data() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->nursing_model->get_birth_data($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function export_birth_to_pdf() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_birth_data($input_array, true);
+
+        $headers = array(
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
+            'IpNo' => array('name' => 'C.IPD', 'align' => 'C', 'width' => '7'),
+            'FName' => array('name' => 'Patient name', 'width' => '15'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'diagnosis' => array('name' => 'Diagnosis', 'width' => '15'),
+            'deliveryDetail' => array('name' => 'Delivery details', 'width' => '12'),
+            'babyBirthDate' => array('name' => 'Birth date', 'width' => '5'),
+            'birthtime' => array('name' => 'Birth time', 'width' => '5'),
+            'babyWeight' => array('name' => 'Weight', 'width' => '5'),
+            'deliverytype' => array('name' => 'Del. type', 'align' => 'C', 'width' => '6'),
+            'treatby' => array('name' => 'Doctor', 'align' => 'C', 'width' => '10'),
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'Birth REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
     function diet_register() {
         $this->layout->title = "Diet";
         $this->layout->navTitleFlag = true;

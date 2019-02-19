@@ -83,6 +83,7 @@ $route['lab-count'] = "reports/Test/lab_count";
 $route['department-list'] = "master/department";
 $route['users-list'] = "master/users";
 $route['add-user'] = "master/users/add";
+$route['birth'] = "reports/Test/birth";
 
 $route['search-data'] = "auto/index";
 
