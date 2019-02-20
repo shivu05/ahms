@@ -31,7 +31,6 @@
                                 <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                    <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +77,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" name="add_btn" id="add_btn">Add Product</button>
+                <button type="button" class="btn btn-primary" name="add_btn" id="add_btn">Add</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
