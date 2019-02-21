@@ -8,8 +8,8 @@
 -- Table structure for table `config`
 --
 
-DROP TABLE `config`;
-CREATE TABLE  `ahms_samcy_2019_dev`.`config` (
+DROP TABLE IF EXISTS `config`;
+CREATE TABLE  `config` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `college_name` text,
   `place` varchar(70) NOT NULL,
@@ -411,3 +411,31 @@ INSERT INTO `users` (`ID`, `user_name`, `user_email`, `user_password`, `user_cou
 (20, 'xray user', 'xraydept@samcy.com', '$2a$08$iI.L.DJq2GyZjPX0ZlfZY.RBIiG9Z6V1awQu1GJ5ZCbuJCP2rZRhS', '', '', '1234567890', '3', '', '2019-01-26T01:03:47+05:30', '2019-01-26T01:03:47+05:30', '1'),
 (21, 'ECG user', 'ecgdept@samcy.com', '$2a$08$D8odr40VhZ3Zj37ZrQErMuWXjamZGVRyenR5B.0YiThch6TGNryZ6', '', '', '1234567890', '5', '', '2019-01-26T13:45:01+05:30', '2019-01-26T13:45:01+05:30', '1'),
 (22, 'USG user', 'usgdept@samcy.com', '$2a$08$Sp6jb3IvuP1dy2yUmeG7KO.S32J39GjIa9Bob.0Aw/LsQo7Xc1T76', '', '', '1234567890', '6', '', '2019-01-26T13:45:25+05:30', '2019-01-26T13:45:25+05:30', '1');
+
+
+
+DROP TABLE IF EXISTS `purchase_types_master`;
+CREATE TABLE `purchase_types_master` (
+  `pt_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pt_desc` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`pt_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `purchase_types_master` (`pt_id`, `pt_desc`) VALUES
+(1, 'supplier'),
+(2, 'product'),
+(3, 'mfg'),
+(4, 'group'),
+(5, 'category');
+
+DROP TABLE IF EXISTS `packagin_type`;
+CREATE TABLE `packagin_type` (
+  `pakg_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pakg_name` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`pakg_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+--
+
+INSERT INTO `packagin_type` (`pakg_id`, `pakg_name`) VALUES
+(1, 'Box'),
+(2, 'Strip');

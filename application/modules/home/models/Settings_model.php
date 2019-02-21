@@ -37,7 +37,7 @@ class Settings_model extends CI_Model {
     }
 
     function get_packaging_types() {
-        return $this->db->get_where('packagin_type', array('status' => 'ACTIVE'))->result_array();
+        return $this->db->get('packagin_type')->result_array();
     }
 
     function get_medicine_frequency() {
