@@ -100,4 +100,6 @@ $route['purchase-return'] = "pharmacy/purchase/purchase_return";
 
 $route['duty-doctors'] = "master/Doctors";
 
+$route['opd-patients-list'] = "patient/Treatment/display_all_patients";
+
 

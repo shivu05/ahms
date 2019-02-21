@@ -42,7 +42,7 @@ class SHV_Controller extends MX_Controller {
             'http_user' => 'admin',
             'http_pass' => '1234'
         );
-        
+
         $this->rest_client->initialize($this->Config);
     }
 
@@ -107,6 +107,10 @@ class SHV_Controller extends MX_Controller {
 
     function get_product_list() {
         return $this->settings_model->get_medicine_list();
+    }
+
+    function get_configuration_variable($var_name='') {
+        return $this->settings_model->get_config_variable_value($var_name);
     }
 
 }

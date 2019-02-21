@@ -18,7 +18,7 @@ if (!defined('BASEPATH'))
  * params: Html content, file name, page orientation
  * return: produces pdf file from passed HTML content
  */
-function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $time = "", $pstyle = NULL) {
+function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $pstyle = NULL, $download_type='D', $water_marks=TRUE, $full_page_print=FALSE) {
     $CI = & get_instance();
     $config = $CI->db->get('config');
     $config = $config->row_array();
@@ -60,25 +60,32 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     $html = "<body><div id='content'>" . $content . "</div></body>";
 
     //$mpdf = new \mPDF('utf-8', '', '', 0, 15, 15, 30, 16, 9, 10, 9, 11, 'A4');
-    $mpdf = new \mPDF('', 'A4', 12, '', 15, 15, 30, 16);
+    //mPDF('encode','page','font-size','font-style','m-left','m-right','m-top','m-bottom')
+    $mpdf = NULL;
+    if ($full_page_print) {
+        $mpdf = new \mPDF('', 'A4', 8, '', 4, 4, 4, 4);
+    } else {
+        $mpdf = new \mPDF('', 'A4', 12, '', 15, 15, 30, 16);
+    }
+
     //$mpdf->debug = 'true';
     $mpdf->SetDisplayMode('fullpage');
     $mpdf->SetWatermarkImage('./assets/your_logo.png', 0.1);
-    $mpdf->showWatermarkImage = true;
+    $mpdf->showWatermarkImage = $water_marks;
     $stylesheet = file_get_contents('assets/css/print_table.css');
     if (strtoupper($orientation) == 'L') {
         $mpdf->AddPage('L');
     }
     $mpdf->WriteHTML($stylesheet, 1);
-    $mpdf->SetHTMLHeader($header, 'O', true);
-
-    $mpdf->SetHTMLFooter($footer, 'O', true);
+    //$mpdf->SetHTMLHeader($header, 'O', true);
+    //$mpdf->SetHTMLFooter($footer, 'O', true);
     $mpdf->use_kwt = true;
     $mpdf->shrink_tables_to_fit = 1;
     $mpdf->useSubstitutions = false;
     $mpdf->simpleTables = true;
     $mpdf->WriteHTML($top_heading, 2);
     $mpdf->WriteHTML($html, 2);
-    $mpdf->Output();
+
+    $mpdf->Output($filename . '.pdf', $download_type);
     return;
 }

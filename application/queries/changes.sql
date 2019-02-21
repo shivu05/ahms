@@ -17,3 +17,12 @@ ALTER TABLE `role_master` CHANGE `role_id` `role_id` INT(10) UNSIGNED NOT NULL A
 ALTER TABLE `ecgregistery` ADD COLUMN `refDate` VARCHAR(45) AFTER `treatId`;
 ALTER TABLE `usgregistery` ADD COLUMN `refDate` VARCHAR(45) AFTER `treatId`;
 ALTER TABLE `treatmentdata` MODIFY COLUMN `deptOpdNo` INTEGER;
+
+
+CREATE TABLE `config_variables` (
+  `config_var_id` INTEGER NOT NULL AUTO_INCREMENT,
+  `config_var_name` VARCHAR(250) NOT NULL,
+  `config_var_value` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`config_var_id`)
+)
+ENGINE = InnoDB;

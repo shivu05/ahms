@@ -265,4 +265,53 @@ class treatment_model extends CI_Model {
         }
     }
 
+    public function get_all_opd_patients($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array(
+            't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
+            't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType'
+        );
+
+        $where_cond = "";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND t.OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(p.FirstName,' ',p.LastName) LIKE '%$val%'";
+                        break;
+                    case 'date':
+                        $where_cond .= " AND t.CameOn='$val'";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond ORDER BY OpdNo DESC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query("SELECT * FROM treatmentdata t "
+                        . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department ")->num_rows();
+        return $return;
+    }
+
+    public function get_treatment_information($where=NULL) {
+        return $this->db->get_where('treatmentdata', $where)->row_array();
+    }
+
 }

@@ -337,4 +337,70 @@ class Treatment extends SHV_Controller {
         redirect('patient/patient/ipd_list');
     }
 
+    function display_all_patients() {
+        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->layout->navIcon = "fa fa-users ";
+        $this->layout->title = "OPD list";
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "OPD patients";
+        $this->layout->navDescr = "Out Patient Department";
+        $data = array();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_all_patients() {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->treatment_model->get_all_opd_patients($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function print_bill() {
+        $opd = 4566;
+        $treat_id = 5266;
+        $opd_charges = $this->get_configuration_variable('OPD_CHARGES');
+        $opd_charges_in_words = $this->get_configuration_variable('OPD_CHARGES_IN_WORDS');
+        $patient_info = $this->treatment_model->get_patient_basic_details($opd);
+        $where = array(
+            'OpdNo' => $opd,
+            'ID' => $treat_id
+        );
+        $treatment_info = $this->treatment_model->get_treatment_information($where);
+        $config = $this->db->get('config');
+        $config = $config->row_array();
+        $header = '<div class="row"><div class="col first">'
+                . '<img src="' . base_url('assets/your_logo.png') . '" width="40" height="40" alt="logo">
+                    </div>
+                    <div class="col half">
+                    <h4 align="center">' . $config["college_name"] . '</h4>
+                    </div></div><hr>';
+        $content = "<table width='100%' class='table table-bordered'>
+                    <thead><tr style='text-align: center;'><th>Sl.No</th><th>Perticulars</th><th>Amount</th></tr></thead>
+                    <tbody><tr ><td style='text-align: center;' height='60'>1</td><td>OPD Consulatation Fees</td><td style='text-align: right;padding-right:2%;'>" . $opd_charges . "</td></tr>
+                    <tr><td colspan=2 style='text-align: right;' width='66.66%'>Total <b></b></td><td style='text-align: right;padding-right:2%;' width='33.33%'>" . $opd_charges . "</td></tr>
+                    <tr><td colspan=3 width='100%' height='35'>Rupees in words: <b>" . $opd_charges_in_words . "</b></td></tr>
+                    <tr><td colspan=3 width='100%' height='35' style='text-align: right;padding-top:3%;padding-right:2%;'>Receivers sign</td></tr>    
+                    </tbody>
+                    </table>";
+        $html = "<div>";
+        $html .= "<div style='width:50% !important;border: 1px solid black;'>" . $header .
+                "<table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
+                    <td width='33.33%' style='text-align: center;'>OPD: <b>" . $opd . "</b></td>
+                    <td width='33.33%' style='text-align: right;'>Date: <b>" . $treatment_info['CameOn'] . "</b></td></tr>
+                <tr><td colspan=3 width='100%'>Patient Name: <b>" . $patient_info['FirstName'] . ' ' . $patient_info['LastName'] . "</b></td></tr>    
+                </table><br/>" . $content .
+                "</div>";
+        $html .="</div>";
+        $filename = 'opd_bill_' . $opd;
+        pdf_create($title, $html, $filename, NULL, 'D', FALSE, TRUE);
+        exit;
+    }
+
 }

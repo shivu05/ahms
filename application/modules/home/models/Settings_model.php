@@ -49,4 +49,8 @@ class Settings_model extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
+    function get_config_variable_value($var_name='') {
+        return $this->db->get_where('config_variables', array('config_var_name' => $var_name))->row()->config_var_value;
+    }
+
 }
