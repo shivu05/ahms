@@ -63,9 +63,9 @@ class Purchase_model extends CI_Model {
 
     function get_product_list($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('product_id', 'product_unique_id', 'product_master_id', 'product_batch', 'supplier_id', 'packing_name', 'product_mfg', 'product_type', 'manifacture_date', 'exp_date', 'quantity', 'purchase_rate',
-            'mrp', 'sale_rate', 'vat', 'no_of_items_in_pack', 'pack_type', 'item_unit_cost', 'no_of_sub_items', 'sub_item_pack_type', 'sub_item_unit_cost', 'no_of_sub_items_in_pack', 'discount', 'reorder_point',
-            'weight', 'rack', 'pv1.name as product_name', 'pv2.name as supplier_name');
+        $columns = array('product_id', 'product_unique_id', 'product_master_id', 'product_batch', 'supplier_id', 'packing_name', 'product_mfg','product_group',
+            'product_type', 'manifacture_date', 'exp_date', 'purchase_rate','mrp', 'sale_rate', 'vat','discount', 'reorder_point',
+            'weight', 'pv1.name as product_name', 'pv2.name as supplier_name');
         $where_cond = " WHERE product_master_id is NOT NULL ";
         $limit = '';
         if (!$export_flag) {

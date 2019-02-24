@@ -24,7 +24,6 @@
                     </div>
                     <div class="form-group col-md-4 align-self-end">
                         <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
-                        <button class="btn btn-danger" type="reset" id="reset"><i class="fa fa-fw fa-lg fa-refresh"></i>Reset</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
@@ -113,6 +112,13 @@
             }
         },
         {
+            title: "Group",
+            class: "email",
+            data: function (item) {
+                return item.product_group;
+            }
+        },
+        {
             title: "VAT",
             class: "email",
             data: function (item) {
@@ -141,59 +147,10 @@
             }
         },
         {
-            title: "No.of items in pack",
-            class: "email",
-            data: function (item) {
-                return item.no_of_items_in_pack;
-            }
-        },
-        {
-            title: "Pack type",
-            class: "email",
-            data: function (item) {
-                return item.pack_type;
-            }
-        },
-        {
-            title: "Unit cost",
-            class: "email",
-            data: function (item) {
-                return item.item_unit_cost;
-            }
-        },
-        {
             title: "Supplier",
             class: "email",
             data: function (item) {
                 return item.supplier_id;
-            }
-        },
-        {
-            title: "No.of sub items",
-            class: "email",
-            data: function (item) {
-                return item.no_of_sub_items;
-            }
-        },
-        {
-            title: "Sub item packing",
-            class: "email",
-            data: function (item) {
-                return item.sub_item_pack_type;
-            }
-        },
-        {
-            title: "Sub item unit cost",
-            class: "email",
-            data: function (item) {
-                return item.sub_item_unit_cost;
-            }
-        },
-        {
-            title: "No.of sub items in pack",
-            class: "email",
-            data: function (item) {
-                return item.no_of_sub_items_in_pack;
             }
         },
         {
@@ -215,13 +172,6 @@
             class: "email",
             data: function (item) {
                 return item.weight;
-            }
-        },
-        {
-            title: "Rack",
-            class: "email",
-            data: function (item) {
-                return item.rack;
             }
         },
         {

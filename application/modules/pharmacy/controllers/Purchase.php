@@ -104,24 +104,17 @@ class Purchase extends SHV_Controller {
             'packing_name' => $this->input->post('packing'),
             'product_mfg' => $this->input->post('mfr'),
             'product_type' => $this->input->post('category'),
+            'product_group' => $this->input->post('group'),
             'manifacture_date' => $this->input->post('manufacturing_date'),
             'exp_date' => $this->input->post('expiry_date'),
             'vat' => $this->input->post('vat'),
             'purchase_rate' => $this->input->post('purchase_rate'),
             'mrp' => $this->input->post('mrp'),
             'sale_rate' => $this->input->post('sale_rate'),
-            'quantity' => $this->input->post('pqty'),
             'discount' => $this->input->post('discount'),
-            'no_of_items_in_pack' => $this->input->post('no_of_items_in_pack'),
             'pack_type' => $this->input->post('pack_type'),
-            'item_unit_cost' => $this->input->post('item_unit_cost'),
-            'no_of_sub_items' => $this->input->post('no_of_sub_items'),
-            'sub_item_pack_type' => $this->input->post('sub_item_pack_type'),
-            'no_of_sub_items_in_pack' => $this->input->post('no_of_sub_items_in_pack'),
-            'no_of_sub_items_in_pack' => $this->input->post('no_of_sub_items_in_pack'),
             'reorder_point' => $this->input->post('reorder_point'),
-            'weight' => $this->input->post('weight'),
-            'rack' => $this->input->post('rack'),
+            'weight' => $this->input->post('weight')
         );
         $is_inserted = $this->purchase_model->save_product($form_data);
         if ($is_inserted) {

@@ -88,6 +88,21 @@
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
+                                <label for="groupHelp">Product Group:</label>
+                                <select class="form-control required chosen-select" name="group" id="group">
+                                    <option value="">Choose Group</option>
+                                    <?php
+                                    if (!empty($groups)) {
+                                        foreach ($groups as $group) {
+                                            echo '<option value="' . $group['name'] . '">' . $group['name'] . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
                                 <label for="vatHelp">VAT:</label>
                                 <input type="text" name="vat" id="vat" class="form-control required numbers-only" aria-describedby="vatHelp" placeholder="Enter VAT" value="0" />
                             </div>
@@ -112,74 +127,8 @@
                                 <input type="text" name="sale_rate" id="sale_rate" class="form-control required numbers-only" aria-describedby="sale_rateHelp" placeholder="Enter sale rate" />
                             </div>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="no_of_items_in_packHelp">No.of items in pack:</label>
-                                <input type="text" name="no_of_items_in_pack" id="no_of_items_in_pack" class="form-control required numbers-only" aria-describedby="no_of_items_in_packHelp" placeholder="Enter No.of items in pack" />
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="no_of_items_in_packHelp">Packing type:</label>
-                                <select class="form-control" name="pack_type" id="pack_type">
-                                    <option value="">Choose package type</option>
-                                    <?php
-                                    if (!empty($packaging_types)) {
-                                        foreach ($packaging_types as $type) {
-                                            echo '<option value="' . $type['pakg_name'] . '">' . $type['pakg_name'] . '</option>';
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="item_unit_costHelp">Item unit cost:</label>
-                                <input type="text" name="item_unit_cost" id="item_unit_cost" class="form-control required numbers-only" aria-describedby="item_unit_costHelp" placeholder="Enter item unit cost" />
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="no_of_sub_itemsHelp">No.of sub items in item:</label>
-                                <input type="text" name="no_of_sub_items" id="no_of_sub_items" class="form-control required numbers-only" aria-describedby="no_of_sub_itemsHelp" placeholder="Enter no.of sub items in item" />
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="sub_item_pack_typeHelp">Sub item Packing type:</label>
-                                <select class="form-control" name="sub_item_pack_type" id="sub_item_pack_type">
-                                    <option value="">Choose package type</option>
-                                    <?php
-                                    if (!empty($packaging_types)) {
-                                        foreach ($packaging_types as $type) {
-                                            echo '<option value="' . $type['pakg_name'] . '">' . $type['pakg_name'] . '</option>';
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="sub_item_unit_costHelp">Sub item unit cost:</label>
-                                <input type="text" name="sub_item_unit_cost" id="sub_item_unit_cost" class="form-control required numbers-only" aria-describedby="sub_item_unit_costHelp" placeholder="Enter sub item unit cost" />
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="no_of_sub_items_in_packHelp">No.of sub items in pack:</label>
-                                <input type="text" name="no_of_sub_items_in_pack" id="no_of_sub_items_in_pack" class="form-control required numbers-only" aria-describedby="no_of_sub_items_in_packHelp" placeholder="Enter no.of sub items in pack" />
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="mrpHelp">Purchase quantity:</label>
-                                <input type="text" name="pqty" id="pqty" class="form-control required numbers-only" aria-describedby="pqtyHelp" placeholder="Enter Purchase quantity" />
-                            </div>
-                        </div>
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="mrpHelp">Discount:</label>
@@ -201,13 +150,13 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="weightHelp">Weight:</label>
-                                <input type="text" name="weight" id="weight" class="form-control required" aria-describedby="weightHelp" placeholder="Enter weight" />
+                                <input type="text" name="weight" id="weight" class="form-control required" aria-describedby="weightHelp" placeholder="Enter Weight" />
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label for="rackHelp">Rack:</label>
-                                <input type="text" name="rack" id="rack" class="form-control required numbers-only" aria-describedby="rackHelp" placeholder="Enter Rack" />
+                                <label for="order_levelHelp">Order level:</label>
+                                <input type="text" name="order_level" id="order_level" class="form-control required numbers-only" aria-describedby="order_levelHelp" placeholder="Enter Order level" />
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -268,31 +217,9 @@
                 });
             }
         });
+        
         $('#mrp').on('change', function () {
             $('#sale_rate').val($(this).val());
-        });
-        $('#no_of_items_in_pack').on('change', function () {
-            var mrp = $('#mrp').val();
-            var sale_rate = $('#sale_rate').val();
-            if (mrp != '' && sale_rate != '' && sale_rate != 0) {
-                var unit_price = sale_rate / $(this).val();
-                $('#item_unit_cost').val(unit_price.toFixed(2));
-            } else {
-                alert('please enter MRP and Selling price');
-                $("#no_of_items_in_pack").focus();
-            }
-        });
-
-        $('#no_of_sub_items').on('change', function () {
-            var unit_price = $('#item_unit_cost').val();
-            if (unit_price != '' && unit_price != 0) {
-                var sub_item_unit_cost = unit_price / $(this).val();
-                $('#sub_item_unit_cost').val(sub_item_unit_cost.toFixed(2));
-                var sub_items_in_pack = $('#no_of_items_in_pack').val() * $('#no_of_sub_items').val();
-                $('#no_of_sub_items_in_pack').val(sub_items_in_pack);
-            } else {
-                alert('Unit price is invalid');
-            }
         });
     });
 </script>

@@ -363,44 +363,141 @@ class Treatment extends SHV_Controller {
     }
 
     function print_bill() {
-        $opd = 4566;
-        $treat_id = 5266;
-        $opd_charges = $this->get_configuration_variable('OPD_CHARGES');
-        $opd_charges_in_words = $this->get_configuration_variable('OPD_CHARGES_IN_WORDS');
-        $patient_info = $this->treatment_model->get_patient_basic_details($opd);
-        $where = array(
-            'OpdNo' => $opd,
-            'ID' => $treat_id
-        );
-        $treatment_info = $this->treatment_model->get_treatment_information($where);
-        $config = $this->db->get('config');
-        $config = $config->row_array();
-        $header = '<div class="row"><div class="col first">'
-                . '<img src="' . base_url('assets/your_logo.png') . '" width="40" height="40" alt="logo">
+        $c_date = '2019-02-16';
+        $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date'";
+        $patients = $this->db->query($query)->result_array();
+        if (!empty($patients)) {
+            $html = "";
+            foreach ($patients as $patient) {
+                $opd = $patient['OpdNo'];
+                $treat_id = $patient['ID'];
+                $opd_charges = $this->get_configuration_variable('OPD_CHARGES');
+                $opd_charges_in_words = $this->get_configuration_variable('OPD_CHARGES_IN_WORDS');
+                $patient_info = $this->treatment_model->get_patient_basic_details($opd);
+                $where = array(
+                    'OpdNo' => $opd,
+                    'ID' => $treat_id
+                );
+                $treatment_info = $this->treatment_model->get_treatment_information($where);
+                $config = $this->db->get('config');
+                $config = $config->row_array();
+                $header = '<div style="width:100%">
+                    <div style="width:20%;float:left;padding-left:1%;padding-top:1%;">'
+                        . '<img src="' . base_url('assets/your_logo.png') . '" width="60" height="60" alt="logo">
                     </div>
-                    <div class="col half">
-                    <h4 align="center">' . $config["college_name"] . '</h4>
+                    <div style="width:70%;float:left;padding-left:1%;padding-top:1%;">
+                    <h3 align="left">' . $config["college_name"] . '</h3>
                     </div></div><hr>';
-        $content = "<table width='100%' class='table table-bordered'>
+                $content = "<table width='100%' class='table table-bordered'>
                     <thead><tr style='text-align: center;'><th>Sl.No</th><th>Perticulars</th><th>Amount</th></tr></thead>
-                    <tbody><tr ><td style='text-align: center;' height='60'>1</td><td>OPD Consulatation Fees</td><td style='text-align: right;padding-right:2%;'>" . $opd_charges . "</td></tr>
+                    <tbody><tr><td style='text-align: center;' height='60' width='10%'>1</td><td  width='70%'>OPD Consulatation Fees</td><td style='text-align: right;padding-right:2%;'>" . $opd_charges . "</td></tr>
                     <tr><td colspan=2 style='text-align: right;' width='66.66%'>Total <b></b></td><td style='text-align: right;padding-right:2%;' width='33.33%'>" . $opd_charges . "</td></tr>
                     <tr><td colspan=3 width='100%' height='35'>Rupees in words: <b>" . $opd_charges_in_words . "</b></td></tr>
                     <tr><td colspan=3 width='100%' height='35' style='text-align: right;padding-top:3%;padding-right:2%;'>Receivers sign</td></tr>    
                     </tbody>
                     </table>";
-        $html = "<div>";
-        $html .= "<div style='width:50% !important;border: 1px solid black;'>" . $header .
-                "<table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
+                $html .= "<div style='margin-bottom:2% !important;'>";
+                $html .= "<div style='width:100% !important;border: 1px solid black;'>
+            " . $header .
+                        "<div style='width:100%'><h3 align='center'>OPD BILL</h3></div><hr><table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
                     <td width='33.33%' style='text-align: center;'>OPD: <b>" . $opd . "</b></td>
-                    <td width='33.33%' style='text-align: right;'>Date: <b>" . $treatment_info['CameOn'] . "</b></td></tr>
-                <tr><td colspan=3 width='100%'>Patient Name: <b>" . $patient_info['FirstName'] . ' ' . $patient_info['LastName'] . "</b></td></tr>    
+                    <td width='33.33%' style='text-align: right;'>Date: <b>" . format_date($patient['CameOn']) . "</b></td></tr>
+                <tr><td colspan=3 width='100%'>Patient Name: <b>" . $patient['FirstName'] . ' ' . $patient['LastName'] . "</b></td></tr>    
                 </table><br/>" . $content .
-                "</div>";
-        $html .="</div>";
-        $filename = 'opd_bill_' . $opd;
-        pdf_create($title, $html, $filename, NULL, 'D', FALSE, TRUE);
+                        "</div>";
+                $html .="</div>";
+            }//foreach
+        }//if
+        $filename = 'opd_bills_' . $c_date;
+        pdf_create($title, $html, $filename, 'P', 'D', FALSE, TRUE);
         exit;
+    }
+
+    public function print_prescription() {
+        $treat_id = 5102;
+        $opd = 4420;
+        $where = array(
+            't.OpdNo' => $opd,
+            't.ID' => $treat_id
+        );
+        $treatment_info = $this->treatment_model->get_treatment_information($where);
+        $medicines = explode(',', $treatment_info['Trtment']);
+        pma($medicines);
+        $med_table = '<table border=1>';
+        $i = 0;
+        foreach ($medicines as $med) {
+
+            $med_table .='<tr>';
+            $med_table .='<td>' . ++$i . '</td>';
+            $med_table .='<td>' . $this->display_medicine($med) . '</td>';
+            $med_table .='</tr>';
+        }
+        $med_table .= '</table>';
+        echo $med_table;
+    }
+
+    function display_medicine($med) {
+        if (strpos($med, 'BD') == true) {
+            return str_replace('BD', '', $med);
+        } else if (strpos($med, 'TDS') == true) {
+            return str_replace('TDS', '', $med);
+        } else if (strpos($med, 'TID') == true) {
+            return str_replace('TID', '', $med);
+        } else {
+            return $med;
+        }
+    }
+
+    function get_frequency($med) {
+        if (strpos($med, 'BD') == true) {
+            return '1-0-1';
+        } else if (strpos($med, 'TDS') == true) {
+            return '1-1-1';
+        } else if (strpos($med, 'TID') == true) {
+            return '1-1-1';
+        } else {
+            return '0-0-0';
+        }
+    }
+
+    function update_medicines() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $this->db->trans_start();
+        $this->db->where('Trtment <>', NULL);
+        //$this->db->limit(10);
+        $treat_data = $this->db->get('treatmentdata')->result_array();
+        foreach ($treat_data as $row) {
+            if ($row['department'] != 'Swasthavritta') {
+                echo $row['Trtment'] . '<br/>';
+                $medicines = explode(',', rtrim($row['Trtment'], ','));
+                foreach ($medicines as $med) {
+                    $med = trim($med);
+                    if ($med != '' && strlen($med) != 0) {
+                        $medicine_arr = array(
+                            'OpdNo' => $row['OpdNo'],
+                            'treat_id' => $row['ID'],
+                            'medicine_name' => $this->display_medicine($med),
+                            'frequency' => $this->get_frequency($med),
+                            'no_of_days' => 3
+                        );
+                        $this->db->insert('prescription_details', $medicine_arr);
+                    }
+                }
+            }
+        }
+        $this->db->query('UPDATE prescription_details SET no_of_days=0 WHERE frequency="0-0-0"');
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            # Something went wrong.
+            $this->db->trans_rollback();
+            echo 'failed';
+        } else {
+            # Everything is Perfect. 
+            # Committing data to the database.
+            $this->db->trans_commit();
+            echo 'success';
+        }
     }
 
 }

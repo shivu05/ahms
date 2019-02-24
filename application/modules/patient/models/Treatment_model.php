@@ -311,7 +311,10 @@ class treatment_model extends CI_Model {
     }
 
     public function get_treatment_information($where=NULL) {
-        return $this->db->get_where('treatmentdata', $where)->row_array();
+        $this->db->from('treatmentdata t');
+        $this->db->join('patientdata p', 'p.OpdNo=t.OpdNo');
+        $this->db->where($where);
+        return $this->db->get()->row_array();
     }
 
 }
