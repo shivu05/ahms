@@ -26,3 +26,6 @@ CREATE TABLE `config_variables` (
   PRIMARY KEY (`config_var_id`)
 )
 ENGINE = InnoDB;
+
+ALTER TABLE `treatmentdata` ADD COLUMN `monthly_sid` INTEGER NOT NULL AFTER `attndedon`;
+

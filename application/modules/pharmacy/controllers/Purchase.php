@@ -201,7 +201,7 @@ class Purchase extends SHV_Controller {
     function get_product_list_by_supplier() {
         $supplier_id = $this->input->post('supplier_id');
         $data['products_list'] = $this->purchase_model->get_products_by_supplier($supplier_id);
-        $data['batch'] = $this->purchase_model->get_product_variables('batch');
+        $data['batch'] = $this->purchase_model->get_product_variables('product_batch');
         echo json_encode($data);
     }
 

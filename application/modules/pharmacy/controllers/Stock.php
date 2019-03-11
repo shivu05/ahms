@@ -34,6 +34,19 @@ class Stock extends SHV_Controller {
 
     function save_stock() {
         pma($this->input->post());
+        $post_values = $this->input->post();
+        $products = $this->input->post('product');
+        $this->stock_model->save_stock($post_values);
+        //pma($products);
+    }
+
+    function get_batch() {
+        $product_id = $this->input->post('product_id');
+        $this->load->model('pharmacy/product_master');
+        $where = array('product_id' => $product_id);
+        $columns = array('product_batch', 'mrp', 'purchase_rate', 'vat', 'discount');
+        $result = $this->product_master->get_product_info($where, $columns);
+        echo json_encode($result);
     }
 
 }

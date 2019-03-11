@@ -63,7 +63,7 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputsupplier">Product:</label>
-                                                <select class="form-control required chosen-select product" name="product[]" id="product">
+                                                <select class="form-control required chosen-select product" name="products[]" id="product">
                                                     <option value="">Choose Product</option>
                                                 </select> 
                                             </div>
@@ -71,45 +71,50 @@
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputsupplier">Batch:</label>
-                                                <select class="form-control required chosen-select batch" name="batch[]" id="batch">
-                                                    <option value="">Choose Batch</option>
-                                                </select> 
+                                                <input type="text" name="batch[]" id="batch" class="form-control batch"/>
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
-                                                <label for="Inputsupplier">Purchase quantity:</label>
-                                                <input type="text" name="p_qty[]" id="p_qty" placeholder="Purchase Qty" onblur="getVal()" class="form-control required" />
+                                                <label for="Inputsupplier">P. Qty:</label>
+                                                <input type="text" name="p_qty[]" id="p_qty" placeholder="Purchase Qty" onblur="getVal('add_0')" class="form-control required p_qty" />
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputsupplier">F. Qty:</label>
-                                                <input type="text" name="f_qty[]" id="p_rate" placeholder="Purchase rate" onblur="getVal()" class="form-control required" />
+                                                <input type="text" name="f_qty[]" id="f_qty" placeholder="F. Qty" onblur="getVal('add_0')" class="form-control required f_qty" />
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputdiscount">MRP:</label>
-                                                <input type="text" name="mrp[]" id="mrp" placeholder="MRP" onblur="getVal()" class="form-control required" />
+                                                <input type="text" name="mrp[]" id="mrp" placeholder="MRP" onblur="getVal('add_0')" class="form-control required mrp" />
+                                                <input type="hidden" name="total_mrp" id="total_mrp" class="form-control required total_mrp" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label for="Inputdiscount">Purchase rate:</label>
+                                                <input type="text" name="p_rate[]" id="p_rate" placeholder="Purchase rate" onblur="getVal('add_0')" class="form-control required p_rate" />
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputdiscount">Discount:</label>
-                                                <input type="text" name="discount[]" id="discount" placeholder="Discount" onblur="getVal()" class="form-control required" />
+                                                <input type="text" name="discount[]" id="discount" placeholder="Discount" onblur="getVal('add_0')" class="form-control required discount" />
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="InputVAT">VAT:</label>
-                                                <input type="text" name="vat[]" id="vat" placeholder="VAT" onblur="getVal()" class="form-control required" />
+                                                <input type="text" name="vat[]" id="vat" placeholder="VAT" onblur="getVal('add_0')" class="form-control required vat" />
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="InputVAT">B-Type:</label>
-                                                <select class="form-control" name="btype[]" id="btype"><option>Select B-Type</option>
+                                                <select class="form-control required" name="btype[]" id="btype"><option>Select B-Type</option>
                                                     <option value="MRP ON P-QTY">MRP ON P-QTY</option>
                                                     <option value="MRP ON P-QTY+F-QTY">MRP ON P-QTY+F-QTY</option>
                                                     <option value="TRP ON P-QTY">TRP ON P-QTY</option>
@@ -117,10 +122,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <div class="form-group">
                                                 <label for="Inputtotal">Total:</label>
-                                                <input type="text" name="total[]" id="total" placeholder="Total" class="form-control required" />
+                                                <input type="text" name="total[]" id="total" placeholder="Total" class="form-control required total" />
                                             </div>
                                         </div>
                                     </div><!-- row -->
@@ -130,7 +135,7 @@
                             </div>
                         </div>
                     </div>
-                    <a id="add_row" class="btn btn-primary pull-left" style="color:#FFF">Add Row</a><a  style="color:#FFF" id='delete_row' class="pull-right btn btn-warning">Delete Row</a>
+                   <!-- <a id="add_row" class="btn btn-primary pull-left" style="color:#FFF">Add Row</a><a  style="color:#FFF" id='delete_row' class="pull-right btn btn-warning">Delete Row</a>-->
                 </form>
             </div>
             <div class="tile-footer">
@@ -184,7 +189,7 @@
                     if (response.batch.length > 0) {
                         var option_batch = '<option value="">Choose batch</option>';
                         $.each(response.batch, function (item) {
-                            option_batch += '<option value="' + response.batch[item].batch + '">' + response.batch[item].batch + '</option>';
+                            option_batch += '<option value="' + response.batch[item].product_batch + '">' + response.batch[item].product_batch + '</option>';
                         });
                         $('.batch').html(option_batch);
                         batch_option = option_batch;
@@ -195,84 +200,42 @@
                 error: function (error) {
                     console.log(error);
                 }
-
             });
         });
-        
-        var add_i=1;
-        var row_content = '<div class="row">'+
-            '<div class="col-lg-3">'+'<div class="form-group"><label for="Inputsupplier">Product:</label>'+
-            '<select class="form-control required chosen-select product" name="product[]" id="product">'+
-            '<option value="">Choose Product</option>'+
-            '</select> '+
-            '</div></div>'+
-            '<div class="col-lg-3">'+
-            '<div class="form-group">'+
-            '<label for="Inputsupplier">Batch:</label>'+
-            '<select class="form-control required chosen-select batch" name="batch[]" id="batch">'+
-            '<option value="">Choose Batch</option>'+
-            '</select> '+
-            '</div></div>'+
-            '<div class="col-lg-2">'+
-            '<div class="form-group">'+
-            '<label for="Inputsupplier">Purchase Quantity:</label>'+
-            '<input type="text" name="p_qty" id="p_qty" placeholder="Purchase Qty" onblur="getVal()" class="form-control required" />'+
-            '</div></div>'+
-            '<div class="col-lg-2">'+
-            '<div class="form-group">'+
-            '<label for="Inputsupplier">F quantity:</label>'+
-            '<input type="text" name="f_qty[]" id="f_qty" placeholder="F. Qty" onblur="getVal()" class="form-control required" />'+
-            '</div></div>'+
-            '<div class="col-lg-2">'+
-            '<div class="form-group">'+
-            '<label for="Inputdiscount">MRP:</label>'+
-            '<input type="text" name="mrp[]" id="mrp" placeholder="MRP" onblur="getVal()" class="form-control required" />'+
-            '</div></div>'+
-            '<div class="col-lg-3">'+
-            '<div class="form-group">'+
-            '<label for="Inputdiscount">Discount:</label>'+
-            '<input type="text" name="discount[]" id="discount" placeholder="Discount" onblur="getVal()" class="form-control required" />'+
-            '</div></div>'+
-            '<div class="col-lg-3">'+
-            '<div class="form-group">'+
-            '<label for="InputVAT">VAT:</label>'+
-            '<input type="text" name="vat[]" id="vat" placeholder="VAT" onblur="getVal()" class="form-control required" />'+
-            '</div></div>'+
-            '<div class="col-lg-2">'+
-            '<div class="form-group">'+
-            '<label for="Inputtotal">Total:</label>'+
-            '<input type="text" name="total[]" id="total" placeholder="Total" class="form-control required" />'+
-            '</div></div></div><hr/>';
-        $("#add_row").click(function(){
-            $('#addr'+add_i).html(row_content);
-            $('.product').html(product_option);
-            $('.batch').html(batch_option);
-            $('#rows_block').append('<div id="addr'+(add_i+1)+'"></div>');
-            add_i++; 
-        });
-        $("#delete_row").click(function(){
-            if(add_i>1){
-                $("#addr"+(add_i-1)).html('');
-                add_i--;
-            }
+        $('.product').on('change',function(){
+            var product_id = $(this).val();
+            var parent_div_id = $(this).parent().parent().parent().parent().attr('id');
+            $.ajax({
+                url : base_url + 'pharmacy/Stock/get_batch',
+                type:'POST',
+                dataType:'json',
+                data:{product_id:product_id},
+                success:function(response){
+                    $('#'+parent_div_id+' .batch').val(response[0].product_batch);
+                    $('#'+parent_div_id+' .p_rate').val(response[0].purchase_rate);
+                    $('#'+parent_div_id+' .mrp').val(response[0].mrp);
+                    $('#'+parent_div_id+' .discount').val(response[0].discount);
+                    $('#'+parent_div_id+' .vat').val(response[0].vat);
+                }
+            })
         });
         
     });//document ready ends
     
-    function getVal() {
-        /*var a = $('#qty').val();
-        var b = $('#p_rate').val();
+    function getVal(dom) {
+        var a = $('#'+dom+' .p_qty').val();
+        var b = $('#'+dom+' .mrp').val();
         var c = a * b;
-        $('#mrp').val(c);
-        var d = $('#discount').val();
+        $('#'+dom+' .total_mrp').val(c);
+        var d = $('#'+dom+' .discount').val();
         var e = (c * d) / 100;
         var f = c - e;
-        $('#total').val(f);
-        if ($('#vat').val() !== "") {
-            var g = $('#vat').val();
+        $('#'+dom+' .total').val(f);
+        if ($('#'+dom+' .vat').val() !== "") {
+            var g = $('#'+dom+' .vat').val();
             var i = (c * g) / 100;
-            var h = Number($('#total').val()) + Number(i);
-            $('#total').val(h);
-        }*/
+            var h = Number($('#'+dom+' .total').val()) + Number(i);
+            $('#'+dom+' .total').val(h);
+        }
     }
 </script>

@@ -63,8 +63,8 @@ class Purchase_model extends CI_Model {
 
     function get_product_list($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('product_id', 'product_unique_id', 'product_master_id', 'product_batch', 'supplier_id', 'packing_name', 'product_mfg','product_group',
-            'product_type', 'manifacture_date', 'exp_date', 'purchase_rate','mrp', 'sale_rate', 'vat','discount', 'reorder_point',
+        $columns = array('product_id', 'product_unique_id', 'product_master_id', 'product_batch', 'supplier_id', 'packing_name', 'product_mfg', 'product_group',
+            'product_type', 'manifacture_date', 'exp_date', 'purchase_rate', 'mrp', 'sale_rate', 'vat', 'discount', 'reorder_point',
             'weight', 'pv1.name as product_name', 'pv2.name as supplier_name');
         $where_cond = " WHERE product_master_id is NOT NULL ";
         $limit = '';
@@ -147,19 +147,20 @@ class Purchase_model extends CI_Model {
     }
 
     function get_products_by_supplier($supplies_id = NULL) {
-        $this->db->from('product_details pd');
-        $this->db->join('purchase_variables pv', 'pd.product_id=pv.id');
+        $this->db->from('product_master pd');
+        $this->db->join('purchase_variables pv', 'pd.product_master_id=pv.id');
         if ($supplies_id) {
-            $this->db->where('supplier', $supplies_id);
+            $this->db->where('supplier_id', $supplies_id);
         }
         return $this->db->get()->result_array();
+        //echo $this->db->last_query();exit;
     }
 
     function get_product_variables($column = null) {
         if ($column) {
             $this->db->distinct();
             $this->db->select($column);
-            return $this->db->get('product_details')->result_array();
+            return $this->db->get('product_master')->result_array();
         }
         return false;
     }

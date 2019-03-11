@@ -83,8 +83,10 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     $mpdf->shrink_tables_to_fit = 1;
     $mpdf->useSubstitutions = false;
     $mpdf->simpleTables = true;
+    
     $mpdf->WriteHTML($top_heading, 2);
     $mpdf->WriteHTML($html, 2);
+    //s$mpdf->writeBarcode('12345678');
 
     $mpdf->Output($filename . '.pdf', $download_type);
     return;

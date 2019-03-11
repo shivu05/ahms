@@ -375,7 +375,7 @@ class Treatment extends SHV_Controller {
                 $opd_charges_in_words = $this->get_configuration_variable('OPD_CHARGES_IN_WORDS');
                 $patient_info = $this->treatment_model->get_patient_basic_details($opd);
                 $where = array(
-                    'OpdNo' => $opd,
+                    't.OpdNo' => $opd,
                     'ID' => $treat_id
                 );
                 $treatment_info = $this->treatment_model->get_treatment_information($where);
@@ -414,26 +414,67 @@ class Treatment extends SHV_Controller {
     }
 
     public function print_prescription() {
-        $treat_id = 5102;
-        $opd = 4420;
-        $where = array(
-            't.OpdNo' => $opd,
-            't.ID' => $treat_id
-        );
-        $treatment_info = $this->treatment_model->get_treatment_information($where);
-        $medicines = explode(',', $treatment_info['Trtment']);
-        pma($medicines);
-        $med_table = '<table border=1>';
-        $i = 0;
-        foreach ($medicines as $med) {
+        $c_date = '2019-03-08';
+        $c_date = '2019-02-16';
+        $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date' AND t.department !='Swasthavritta' LIMIT 10";
+        $patients = $this->db->query($query)->result_array();
+        if (!empty($patients)) {
+            $html = "";
+            foreach ($patients as $patient) {
+                $opd = $patient['OpdNo'];
+                $treat_id = $patient['ID'];
+                $config = $this->db->get('config');
+                $config = $config->row_array();
+                $patient_info = $this->treatment_model->get_patient_basic_details($opd);
+                $where = array(
+                    't.OpdNo' => $opd,
+                    't.ID' => $treat_id
+                );
+                $treatment_info = $this->treatment_model->get_treatment_information($where);
+                $medicines = explode(',', rtrim($treatment_info['Trtment'], ','));
+                $med_table = '<table width="100%" class="table table-bordered">';
+                $med_table .= "<thead><tr style='text-align: center;'><th>Sl.No</th><th>Perticulars</th><th>Amount</th></tr></thead>";
+                $i = 0;
+                $find = array('BD', 'TID', 'TDS', 'ML', 'MG', 'GM', '.', '10ML');
+                $total_amount = 0;
 
-            $med_table .='<tr>';
-            $med_table .='<td>' . ++$i . '</td>';
-            $med_table .='<td>' . $this->display_medicine($med) . '</td>';
-            $med_table .='</tr>';
+                foreach ($medicines as $med) {
+                    $str = str_replace($find, '', trim($med));
+                    $clean_str = trim(preg_replace('/[0-9]+/', '', $str));
+                    $query = "SELECT * FROM product_list WHERE product LIKE '%" . $clean_str . "%' LIMIT 1";
+                    $data = $this->db->query($query)->row_array();
+                    $med_table .='<tr>';
+                    $med_table .='<td style="text-align:center; ">' . ++$i . '</td>';
+                    $med_table .='<td>' . $this->display_medicine($med) . '</td>';
+                    $med_table .='<td style="text-align:right;">' . number_format($data['price'], 2) . '</td>';
+                    $med_table .='</tr>';
+                    $total_amount = $total_amount + $data['price'];
+                }
+
+                $med_table .='<tr><td style="text-align:right;" colspan=2>Total:</td><td style="text-align:right;">' . number_format($total_amount, 2) . '</td></tr>';
+                $med_table .= '</table>';
+                //PDF content
+                $header = '<div style="width:100%">
+                    <div style="width:20%;float:left;padding-left:1%;padding-top:1%;">'
+                        . '<img src="' . base_url('assets/your_logo.png') . '" width="60" height="60" alt="logo">
+                    </div>
+                    <div style="width:70%;float:left;padding-left:1%;padding-top:1%;">
+                    <h3 align="left">' . $config["college_name"] . '</h3>
+                    </div></div><hr>';
+
+                $patient_details = "<div style='width:100%'><h3 align='center'>Pharmacy BILL</h3></div><hr><table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
+                    <td width='33.33%' style='text-align: center;'>OPD: <b>" . $opd . "</b></td>
+                    <td width='33.33%' style='text-align: right;'>Date: <b>" . format_date($treatment_info['CameOn']) . "</b></td></tr>
+                    <tr><td width='33.33%'>Patient Name: <b>" . $patient['FirstName'] . ' ' . $patient['LastName'] . "</b></td>
+                    <td width='33.33%' style='text-align: center;'>Age: <b>" . $patient['Age'] . "</b></td><td width='33.33%'>Ref.Doctor: <b>" . $treatment_info['attndedby'] . "</b></td></tr>    
+                </table><br/>";
+                $html .='<div style="height:50%">' . $header . $patient_details . $med_table . '</div>';
+                //'<barcode code="' . $treat_id . '" type="C128B" size="1.6" height="0.5" /><br/>
+            }
         }
-        $med_table .= '</table>';
-        echo $med_table;
+        $filename = 'pharmacy_bills_' . $c_date;
+        pdf_create($title, $html, $filename, 'P', 'I', FALSE, TRUE);
+        exit;
     }
 
     function display_medicine($med) {
@@ -458,6 +499,20 @@ class Treatment extends SHV_Controller {
         } else {
             return '0-0-0';
         }
+    }
+
+    function generate_barcode() {
+        $temp = rand(10000, 99999);
+        $this->set_barcode($temp);
+    }
+
+    private function set_barcode($code) {
+        //load library
+        $this->load->library('zend');
+        //load in folder Zend
+        $this->zend->load('Zend/Barcode');
+        //generate barcode
+        Zend_Barcode::render('code128', 'image', array('text' => $code), array());
     }
 
     function update_medicines() {
