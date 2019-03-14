@@ -439,3 +439,10 @@ CREATE TABLE `packagin_type` (
 INSERT INTO `packagin_type` (`pakg_id`, `pakg_name`) VALUES
 (1, 'Box'),
 (2, 'Strip');
+
+CREATE TABLE `medicine_frequency` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `frequency` VARCHAR(45) NOT NULL DEFAULT '',
+  PRIMARY KEY(`id`)
+)
+ENGINE = InnoDB;

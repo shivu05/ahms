@@ -30,6 +30,7 @@
                     </div>
                 </form>
                 <div id="patient_details">
+                    <p class="text-warning">Note: OPD number with green label indicated treatment is completed and OPD with red color indicated treatment is pending</p>
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div>
             </div>
@@ -67,7 +68,7 @@
                 title: "OPD",
                 class: "opd_no",
                 data: function (item) {
-                    return item.OpdNo;
+                    return '<span class="badge badge-primary" disabled="disabled">' + item.OpdNo + '</span>';
                 }
             },
             {
@@ -168,7 +169,18 @@
         });
         $('#patient_table tbody').on('click', 'tr', function () {
             var data = patient_table.row(this).data();
-            window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
+            if (data.attndedon == '' || data.attndedon == null) {
+                window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
+            } else {
+
+                $.notify({
+                    title: "Treatment:",
+                    message: "Patient treatment is completed",
+                    icon: 'fa fa-check',
+                }, {
+                    type: "info",
+                });
+            }
         });
 
         $('#default_modal_box').on('change', '#department', function () {

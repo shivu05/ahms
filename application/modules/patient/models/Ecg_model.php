@@ -23,10 +23,11 @@ class Ecg_model extends CI_Model {
 
     function get_pending_ecgs($conditions, $export_flag = FALSE) {
         $return = array();
+        $cur_date = date('Y-m-d');
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age',
             'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(t.department) as department');
 
-        $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate IS NULL";
+        $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND (e.ecgDate IS NULL OR e.ecgDate = '$cur_date') ";
 
         $limit = '';
         if (!$export_flag) {

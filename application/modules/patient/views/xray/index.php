@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Pending Patient's X-Ray list:</div>
+            <div class="tile-title">Patient's X-Ray list:</div>
             <div class="tile-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
@@ -53,12 +53,9 @@
         $('#search_form').on('click', '#search', function () {
             // show_patients();
         });
-
-
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
         });
-
         var columns = [
             {
                 title: "#",
@@ -125,12 +122,16 @@
             {
                 title: "Action",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o text-primary pointer edit_xray" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    if (item.xrayDate == '' || item.xrayDate == null) {
+                        return '<i class="fa fa-pencil-square-o text-primary  pointer edit_xray" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    } else {
+                        return '<i class="fa fa-pencil-square-o text-primary  fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    }
+
                 }
             }
 
         ];
-
         var patient_table = $('#patient_table').DataTable({
             'columns': columns,
             'columnDefs': [
@@ -164,12 +165,10 @@
             info: true,
             sScrollX: true
         });
-
         $('#patient_table tbody').on('click', '.edit_xray', function () {
             var id = $(this).data('id');
             $('#xray_modal_box #xray_form #xray_id').val(id);
             $('#xray_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
-
         });
         $('#xray_modal_box .modal-footer').on('click', '#btn-ok', function () {
             var form_data = $('#xray_form').serializeArray();

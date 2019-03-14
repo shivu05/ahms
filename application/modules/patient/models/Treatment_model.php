@@ -48,15 +48,15 @@ class treatment_model extends CI_Model {
         $return = array();
         $columns = array(
             't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
-            't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType'
+            't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType', 'attndedon', 'InOrOutPat'
         );
 
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
             $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
         }
-
-        $where_cond = " WHERE attndedon is NULL AND InOrOutPat is NULL $user_dept_cond";
+        $cur_date = date('Y-m-d');
+        $where_cond = " WHERE (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) $user_dept_cond";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -85,7 +85,7 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond";
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond order by t.ID";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -310,7 +310,7 @@ class treatment_model extends CI_Model {
         return $return;
     }
 
-    public function get_treatment_information($where=NULL) {
+    public function get_treatment_information($where = NULL) {
         $this->db->from('treatmentdata t');
         $this->db->join('patientdata p', 'p.OpdNo=t.OpdNo');
         $this->db->where($where);

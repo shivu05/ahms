@@ -22,12 +22,12 @@ class Usg_model extends CI_Model {
     }
 
     function get_pending_usgs($conditions, $export_flag = FALSE) {
-
+        $cur_date = date('Y-m-d');
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age',
             'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 'refDate', '(t.department) as department');
 
-        $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate IS NULL ";
+        $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND (u.usgDate IS NULL OR u.usgDate='$cur_date') ";
 
         $limit = '';
         if (!$export_flag) {

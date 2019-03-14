@@ -25,6 +25,12 @@
         <script type="text/javascript">
             var base_url = '<?= APP_BASE ?>';
         </script>
+        <style>
+            .fa-disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        </style>
     </head>
     <body class="app sidebar-mini rtl">
         <?php

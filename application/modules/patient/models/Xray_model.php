@@ -21,9 +21,10 @@ class Xray_model extends CI_Model {
             'x.ID', 'x.OpdNo', 'xrayNo', 'partOfXray', 'filmSize', 'refDocName', 'xrayDate', 'treatID', 'refDate', 'CONCAT(FirstName," ",LastName) as name', 't.department'
         );
 
+        $cur_date = date('Y-m-d');
         $search_data = $this->input->post('search');
         $search = (isset($search_data)) ? 'AND x.OpdNo like "%' . $search_data['value'] . '%"' : '';
-        $where_cond = " WHERE xrayDate is NULL AND filmSize is NULL $search"; //xrayDate is NULL AND filmSize is NULL
+        $where_cond = " WHERE (xrayDate is NULL AND filmSize is NULL) OR (xrayDate='$cur_date') $search"; //xrayDate is NULL AND filmSize is NULL
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;

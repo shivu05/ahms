@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Pending Patient's ECG list:</div>
+            <div class="tile-title">Patient's ECG list:</div>
             <div class="tile-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
@@ -102,7 +102,11 @@
             {
                 title: "Action",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o text-primary pointer edit_ecg" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    if (item.ecgDate == '' || item.ecgDate == null) {
+                        return '<i class="fa fa-pencil-square-o text-primary pointer edit_ecg" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    } else {
+                        return '<i class="fa fa-pencil-square-o text-primary  fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                    }
                 }
             }
 

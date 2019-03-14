@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="tile">
-            <div class="tile-title">Pending Patient's USG list:</div>
+            <div class="tile-title">Patient's USG list:</div>
             <div class="tile-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
@@ -102,7 +102,11 @@
             {
                 title: "Action",
                 data: function (item) {
-                    return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_usg" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                    if (item.usgDate == '' || item.usgDate == null) {
+                        return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_usg" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                    } else {
+                        return '<center><i class="fa fa-pencil-square-o text-primary text-center fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                    }
                 }
             }
 
