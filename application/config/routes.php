@@ -59,10 +59,12 @@ $route['home/user'] = "home/dashboard/blank_dashboard";
 $route['home/xray'] = "home/dashboard/xray_dashabord";
 $route['home/ecg'] = "home/dashboard/ecg_dashboard";
 $route['home/usg'] = "home/dashboard/usg_dashboard";
+$route['home/lab'] = "home/dashboard/lab_dashboard";
 
 $route['xray-info'] = "patient/xray";
 $route['ecg-info'] = "patient/ecg";
 $route['usg-info'] = "patient/usg";
+$route['lab-info'] = "patient/lab";
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

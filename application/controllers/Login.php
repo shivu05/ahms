@@ -65,6 +65,8 @@ class Login extends SHV_Controller {
             redirect('home/ecg');
         } else if ($this->rbac->has_role('USG')) {
             redirect('home/usg');
+        } else if ($this->rbac->has_role('LAB')) {
+            redirect('home/lab');
         } else {
             redirect('home/user');
         }

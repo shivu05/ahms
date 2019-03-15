@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="tile">
             <div class="tile-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_to_pdf_old'); ?>">
+                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_to_pdf'); ?>">
                     <div class="form-group col-md-2 col-sm-12">
                         <label class="control-label">From:</label>
                         <input class="form-control date_picker" type="text" placeholder="From date" name="start_date" id="start_date" autocomplete="off" required="required">

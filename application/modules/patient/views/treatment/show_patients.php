@@ -68,7 +68,11 @@
                 title: "OPD",
                 class: "opd_no",
                 data: function (item) {
-                    return '<span class="badge badge-primary" disabled="disabled">' + item.OpdNo + '</span>';
+                    if (item.attndedon) {
+                        return '<span class="badge badge-primary" disabled="disabled">' + item.OpdNo + '</span>';
+                    } else {
+                        return '<span class="badge badge-danger">' + item.OpdNo + '</span>';
+                    }
                 }
             },
             {

@@ -98,7 +98,7 @@ class Patient extends SHV_Controller {
 
         $user_id = $this->rbac->get_uid();
         $this->treatment_model->add_patient_for_treatment($this->input->post());
-        pma($user_id, 1);
+        redirect('patient');
     }
 
     function export_pdf() {

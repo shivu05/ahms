@@ -46,6 +46,56 @@ class Ipd extends SHV_Controller {
     }
 
     function export_to_pdf() {
+        $this->layout->title = 'OPD Report';
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->ipd_model->get_ipd_patients($input_array, true);
+        //pma($result, 1);
+        $patients = $result['data'];
+
+        $headers['serial_number'] = array('name' => 'Sl. No', 'align' => 'C', 'width' => '5');
+        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '5');
+        $headers['IpNo'] = array('name' => 'C.IPD', 'align' => 'C', 'width' => '5');
+        $headers['FName'] = array('name' => 'Name', 'width' => '20');
+        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '3');
+        $headers['Gender'] = array('name' => 'Gender', 'width' => '5');
+        $headers['WardNo'] = array('name' => 'Ward', 'align' => 'C', 'width' => '5');
+        $headers['BedNo'] = array('name' => 'Bed', 'align' => 'C', 'width' => '5');
+        $headers['DoAdmission'] = array('name' => 'Admission',  'align' => 'C','width' => '10');
+        $headers['DoDischarge'] = array('name' => 'Discharge', 'align' => 'C', 'width' => '10');
+        $headers['NofDays'] = array('name' => 'Days', 'align' => 'C', 'width' => '6');
+        $headers['Doctor'] = array('name' => 'Doctor', 'width' => '15');
+        $headers['department'] = array('name' => 'Department', 'width' => '18');
+
+        $html = generate_table_pdf($headers, $patients);
+        $return = $this->ipd_model->get_ipd_patients_count($input_array);
+        $stats_headers = array(
+            'department' => array('name' => 'Department', 'width' => '15'),
+            'Total' => array('name' => 'Total', 'align' => 'C', 'width' => '7'),
+            'Male' => array('name' => 'Male', 'align' => 'C', 'width' => '7'),
+            'Female' => array('name' => 'Female', 'align' => 'C', 'width' => '7'),
+        );
+        $stats_html = generate_table_pdf($stats_headers, $return);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+        $title = array(
+            'report_title' => 'IPD REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        $content = $html . '<br/>' . $stats_html;
+        pdf_create($title, $content);
+        exit;
+    }
+
+    function export_to_pdf_old() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $data = array();

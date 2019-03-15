@@ -446,3 +446,6 @@ CREATE TABLE `medicine_frequency` (
   PRIMARY KEY(`id`)
 )
 ENGINE = InnoDB;
+
+update labregistery set tested_date=testDate;
+ALTER TABLE `labregistery` MODIFY COLUMN `tested_date` DATE;

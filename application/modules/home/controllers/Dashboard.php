@@ -33,6 +33,8 @@ class Dashboard extends SHV_Controller {
             redirect('home/ecg');
         } else if ($this->rbac->has_role('USG')) {
             redirect('home/usg');
+        } else if ($this->rbac->has_role('LAB')) {
+            redirect('home/lab');
         } else {
             redirect('home/user');
         }
@@ -100,6 +102,18 @@ class Dashboard extends SHV_Controller {
         $this->load->model('patient/usg_model');
         $data = array();
         $data['stats'] = $this->usg_model->dashboard_stats();
+
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    public function lab_dashboard() {
+
+        $this->layout->navTitleFlag = true;
+        $this->layout->navTitle = "Dashboard";
+        $this->load->model('patient/lab_model');
+        $data = array();
+        $data['stats'] = $this->lab_model->dashboard_stats();
 
         $this->layout->data = $data;
         $this->layout->render();
