@@ -2,15 +2,15 @@
     <div class="col-12">
         <div class="tile">
             <div class="tile-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_patients_list_pdf'); ?>">
+                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('print-opd-bill'); ?>">
                     <div class="form-group col-md-3">
                         <label class="control-label">OPD</label>
                         <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
                     </div>
-                    <div class="form-group col-md-3">
+                    <!--<div class="form-group col-md-3">
                         <label class="control-label">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
-                    </div>
+                    </div>-->
                     <div class="form-group col-md-2">
                         <label class="control-label">Date</label>
                         <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
@@ -23,7 +23,6 @@
                                 <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                    <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
                                 </div>
                             </div>
                         </div>
@@ -77,27 +76,9 @@
                 }
             },
             {
-                title: "Age",
+                title: "Place",
                 data: function (item) {
-                    return item.Age;
-                }
-            },
-            {
-                title: "Gender",
-                data: function (item) {
-                    return item.gender;
-                }
-            },
-            {
-                title: "Address",
-                data: function (item) {
-                    return item.address;
-                }
-            },
-            {
-                title: "City",
-                data: function (item) {
-                    return item.city;
+                    return item.address + ' <br/>' + item.city;
                 }
             },
             {
@@ -120,12 +101,12 @@
             },
             {
                 title: "",
-                sorting:false,
-                data:function(item){
-                    return '<i class="fa fa-download" style="cursor:pointer;" aria-hidden="true" data-treat_id="'+item.ID+'" title="Download prescription"></i>'+
-                        '<i class="fa fa-file-pdf-o print_opd_bill" style="cursor:pointer;margin-left:10px !important;" aria-hidden="true" data-treat_id="'+item.ID+'" title="Print prescription"></i>';
+                sorting: false,
+                data: function (item) {
+                    return '<i class="fa fa-file-pdf-o print_opd_bill" style="cursor:pointer;margin-left:10px !important;" aria-hidden="true" data-treat_id="' +
+                            item.ID + '" title="Print OPD bill"></i>';
                 }
-                
+
             }
         ];
         var patient_table = $('#patient_table').DataTable({
@@ -165,11 +146,14 @@
         });
         $('#patient_table tbody').on('click', '.print_opd_bill', function () {
             var data = $(this).data('treat_id');
-            alert(encodeURIComponent(data));
-            console.log(encodeURIComponent(data));
+            //alert(encodeURIComponent(data));
+            //console.log(encodeURIComponent(data));
+            if (data) {
+                window.open(base_url + 'print-opd-bill/0/' + data + '/00', '_blank');
+            }
         });
     });
-    
-    
+
+
 
 </script>

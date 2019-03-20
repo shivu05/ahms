@@ -104,6 +104,8 @@ $route['duty-doctors'] = "master/Doctors";
 
 $route['opd-patients-list'] = "patient/Treatment/display_all_patients";
 
-
 $route['stock-entry'] = "pharmacy/Stock/stock_entry";
 $route['save-stock'] = "pharmacy/Stock/save_stock";
+
+//$route['print-opd-bill/(:num)/(:num)/(:any)'] = 'patient/Treatment/print_bill/$1/$2/$3';
+$route['print-opd-bill'] = 'patient/Treatment/print_bill';

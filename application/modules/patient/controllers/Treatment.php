@@ -363,9 +363,16 @@ class Treatment extends SHV_Controller {
     }
 
     function print_bill() {
-        $c_date = '2019-02-16';
-        $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date'";
-        $patients = $this->db->query($query)->result_array();
+
+//        if ($type == 1) {
+//            //$c_date = '2019-02-16';
+//            $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date'";
+//        } else {
+//            $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE t.ID='$treat_id'";
+//        }
+        $result = $this->treatment_model->get_all_opd_patients($this->input->post(), true);
+        $patients = $result['data'];
+        //$patients = $this->db->query($query)->result_array();
         if (!empty($patients)) {
             $html = "";
             foreach ($patients as $patient) {
@@ -405,11 +412,11 @@ class Treatment extends SHV_Controller {
                 <tr><td colspan=3 width='100%'>Patient Name: <b>" . $patient['FirstName'] . ' ' . $patient['LastName'] . "</b></td></tr>    
                 </table><br/>" . $content .
                         "</div>";
-                $html .="</div>";
+                $html .= "</div>";
             }//foreach
         }//if
         $filename = 'opd_bills_' . $c_date;
-        pdf_create($title, $html, $filename, 'P', 'D', FALSE, TRUE);
+        pdf_create('', $html, $filename, 'P', 'I', FALSE, TRUE);
         exit;
     }
 
@@ -431,9 +438,9 @@ class Treatment extends SHV_Controller {
                     't.ID' => $treat_id
                 );
                 $treatment_info = $this->treatment_model->get_treatment_information($where);
-                $medicines = explode(',', rtrim($treatment_info['Trtment'], ','));
+                $medicines = explode(',', rtrim(trim($treatment_info['Trtment']), ','));
                 $med_table = '<table width="100%" class="table table-bordered">';
-                $med_table .= "<thead><tr style='text-align: center;'><th>Sl.No</th><th>Perticulars</th><th>Amount</th></tr></thead>";
+                $med_table .= "<thead><tr style='text-align: center;'><th>Sl.No</th><th>Perticulars</th><th>QTY</th><th>Amount</th></tr></thead>";
                 $i = 0;
                 $find = array('BD', 'TID', 'TDS', 'ML', 'MG', 'GM', '.', '10ML');
                 $total_amount = 0;
@@ -443,18 +450,19 @@ class Treatment extends SHV_Controller {
                     $clean_str = trim(preg_replace('/[0-9]+/', '', $str));
                     $query = "SELECT * FROM product_list WHERE product LIKE '%" . $clean_str . "%' LIMIT 1";
                     $data = $this->db->query($query)->row_array();
-                    $med_table .='<tr>';
-                    $med_table .='<td style="text-align:center; ">' . ++$i . '</td>';
-                    $med_table .='<td>' . $this->display_medicine($med) . '</td>';
-                    $med_table .='<td style="text-align:right;">' . number_format($data['price'], 2) . '</td>';
-                    $med_table .='</tr>';
+                    $med_table .= '<tr>';
+                    $med_table .= '<td style="text-align:center; ">' . ++$i . '</td>';
+                    $med_table .= '<td>' . $this->display_medicine($med) . '</td>';
+                    $med_table .= '<td style="text-align:center; ">1</td>';
+                    $med_table .= '<td style="text-align:right;">' . number_format($data['price'], 2) . '</td>';
+                    $med_table .= '</tr>';
                     $total_amount = $total_amount + $data['price'];
                 }
 
-                $med_table .='<tr><td style="text-align:right;" colspan=2>Total:</td><td style="text-align:right;">' . number_format($total_amount, 2) . '</td></tr>';
+                $med_table .= '<tr><td style="text-align:right;" colspan=3>Total:</td><td style="text-align:right;">' . number_format($total_amount, 2) . '</td></tr>';
                 $med_table .= '</table>';
                 //PDF content
-                $header = '<div style="width:100%">
+                $header = '<div style="width:100%;">
                     <div style="width:20%;float:left;padding-left:1%;padding-top:1%;">'
                         . '<img src="' . base_url('assets/your_logo.png') . '" width="60" height="60" alt="logo">
                     </div>
@@ -468,7 +476,7 @@ class Treatment extends SHV_Controller {
                     <tr><td width='33.33%'>Patient Name: <b>" . $patient['FirstName'] . ' ' . $patient['LastName'] . "</b></td>
                     <td width='33.33%' style='text-align: center;'>Age: <b>" . $patient['Age'] . "</b></td><td width='33.33%'>Ref.Doctor: <b>" . $treatment_info['attndedby'] . "</b></td></tr>    
                 </table><br/>";
-                $html .='<div style="height:50%">' . $header . $patient_details . $med_table . '</div>';
+                $html .= '<div style="height:50%;border-style: dashed; border-bottom: 1px solid black;">' . $header . $patient_details . $med_table . '</div>';
                 //'<barcode code="' . $treat_id . '" type="C128B" size="1.6" height="0.5" /><br/>
             }
         }
@@ -520,7 +528,6 @@ class Treatment extends SHV_Controller {
         set_time_limit(0);
         $this->db->trans_start();
         $this->db->where('Trtment <>', NULL);
-        //$this->db->limit(10);
         $treat_data = $this->db->get('treatmentdata')->result_array();
         foreach ($treat_data as $row) {
             if ($row['department'] != 'Swasthavritta') {

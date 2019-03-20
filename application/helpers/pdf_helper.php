@@ -74,12 +74,14 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     $mpdf->showWatermarkImage = $water_marks;
     $stylesheet = file_get_contents('assets/css/print_table.css');
     if (strtoupper($orientation) == 'L') {
-        
+        $mpdf->AddPage('L');
     }
-    $mpdf->AddPage('L');
+
     $mpdf->WriteHTML($stylesheet, 1);
-    //$mpdf->SetHTMLHeader($header, 'O', true);
-    //$mpdf->SetHTMLFooter($footer, 'O', true);
+    if (!$full_page_print) {
+        $mpdf->SetHTMLHeader($header, 'O', true);
+        $mpdf->SetHTMLFooter($footer, 'O', true);
+    }
     $mpdf->use_kwt = true;
     $mpdf->shrink_tables_to_fit = 1;
     $mpdf->useSubstitutions = false;
