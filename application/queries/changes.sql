@@ -27,5 +27,9 @@ CREATE TABLE `config_variables` (
 )
 ENGINE = InnoDB;
 
+INSERT INTO `config_variables` (`config_var_id`, `config_var_name`, `config_var_value`) VALUES
+(1, 'OPD_CHARGES', '10.00'),
+(2, 'OPD_CHARGES_IN_WORDS', 'Ten rupees only');
+
 ALTER TABLE `treatmentdata` ADD COLUMN `monthly_sid` INTEGER NOT NULL AFTER `attndedon`;
 ALTER TABLE `treatmentdata` ADD COLUMN `year_no` INTEGER DEFAULT 0 AFTER `monthly_sid`;

@@ -98,15 +98,6 @@
                 data: function (item) {
                     return item.CameOn;
                 }
-            },
-            {
-                title: "",
-                sorting: false,
-                data: function (item) {
-                    return '<i class="fa fa-file-pdf-o print_opd_bill" style="cursor:pointer;margin-left:10px !important;" aria-hidden="true" data-treat_id="' +
-                            item.ID + '" title="Print OPD bill"></i>';
-                }
-
             }
         ];
         var patient_table = $('#patient_table').DataTable({
