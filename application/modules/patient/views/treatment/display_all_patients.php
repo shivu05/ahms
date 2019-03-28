@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="tile">
             <div class="tile-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('print-opd-bill'); ?>">
+                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="">
                     <div class="form-group col-md-3">
                         <label class="control-label">OPD</label>
                         <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
@@ -22,7 +22,8 @@
                             <div class="btn-group" role="group">
                                 <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
+                                    <a class="dropdown-item" href="#" id="export_to_pdf">OPD bill</a>
+                                    <a class="dropdown-item" href="#" id="export_to_prescription_pdf">OPD Prescription</a>
                                 </div>
                             </div>
                         </div>
@@ -58,8 +59,21 @@
         $('#patient_table tbody').on('click', 'tr', function () {
             alert()
         });
-        $('#search_form #export').on('click', '#export_to_pdf', function () {
+        var submitForm = function (method) {
+            //set form action based on the method passed in the click handler, update/delete
+            var formAction = base_url + method;
+            //set form action
+            $('#search_form').attr('action', formAction);
+            //submit form
             $('#search_form').submit();
+        };
+
+        $('#search_form #export').on('click', '#export_to_pdf', function () {
+            submitForm('print-opd-bill');
+        });
+
+        $('#search_form #export').on('click', '#export_to_prescription_pdf', function () {
+            submitForm('print-opd-prescription');
         });
         var columns = [
             {

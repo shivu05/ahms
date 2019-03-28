@@ -478,10 +478,13 @@ class Treatment extends SHV_Controller {
     }
 
     public function print_prescription() {
-        $c_date = '2019-03-08';
-        $c_date = '2019-02-16';
-        $query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date' AND t.department !='Swasthavritta' LIMIT 10";
-        $patients = $this->db->query($query)->result_array();
+        $result = $this->treatment_model->get_all_opd_patients($this->input->post(), true);
+        $patients = $result['data'];
+        //pma($result,1);
+        //$c_date = '2019-03-08';
+        //$c_date = '2019-02-16';
+        //$query = "SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >='$c_date' AND CameOn <='$c_date' AND t.department !='Swasthavritta' LIMIT 10";
+        //$patients = $this->db->query($query)->result_array();
         if (!empty($patients)) {
             $html = "";
             foreach ($patients as $patient) {
@@ -506,7 +509,7 @@ class Treatment extends SHV_Controller {
                     $str = str_replace($find, '', trim($med));
                     $clean_str = trim(preg_replace('/[0-9]+/', '', $str));
                     $query = "SELECT * FROM product_list WHERE product LIKE '%" . $clean_str . "%' LIMIT 1";
-                    $data = $this->db->query($query)->row_array();
+                    //$data = $this->db->query($query)->row_array();
                     $med_table .= '<tr>';
                     $med_table .= '<td style="text-align:center; ">' . ++$i . '</td>';
                     $med_table .= '<td>' . $this->display_medicine($med) . '</td>';
@@ -540,8 +543,8 @@ class Treatment extends SHV_Controller {
                 //'<barcode code="' . $treat_id . '" type="C128B" size="1.6" height="0.5" /><br/>
             }
         }
-        $filename = 'pharmacy_bills_' . $c_date;
-        pdf_create($title, $html, $filename, 'P', 'I', FALSE, TRUE);
+        $filename = 'pharmacy_bills_' . date('Y_m_d');
+        pdf_create('', $html, $filename, 'P', 'I', FALSE, TRUE);
         exit;
     }
 
