@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="col-md-9 col-sm-12">
-        <?php //pma($treatment_details, 1); ?>
+        <?php //pma($lab_categories, 1); ?>
 
         <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
             <!--hiddden fields-->
@@ -405,6 +405,22 @@
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
+                                            <div class="control-group col-4">
+                                                <label class="control-label" for="testname">Category:</label>
+                                                <div class="controls">
+                                                    <select name="lab_Category" class="form-control">
+                                                        <option value="">Select category</option>
+                                                        <?php
+                                                        if (!empty($lab_categories)) {
+                                                            foreach ($lab_categories as $cat) {
+                                                                echo '<option value="' . $cat['lab_cat_name'] . '">' . $cat['lab_cat_name'] . '</option>';
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <p class="help-block"></p>
+                                                </div> <!-- /controls -->
+                                            </div><!-- /control-group -->
                                             <div class="control-group col-4">											
                                                 <label class="control-label" for="testname">Name of Test:</label>
                                                 <div class="controls">

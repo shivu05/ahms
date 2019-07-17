@@ -68,4 +68,12 @@ class Lab_model extends CI_Model {
         return $this->db->update('labregistery', $update_data);
     }
 
+    function get_lab_categories() {
+        return $this->db->get('lab_categories')->result_array();
+    }
+
+    function get_lab_tests_list() {
+        return $this->db->get('lab_tests')->result_array();
+    }
+
 }
