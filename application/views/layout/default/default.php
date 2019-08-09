@@ -25,10 +25,13 @@
         <script type="text/javascript">
             var base_url = '<?= APP_BASE ?>';
         </script>
-        <style>
+        <style type="text/css">
             .fa-disabled {
                 opacity: 0.6;
                 cursor: not-allowed;
+            }
+            .chosen-container{
+                width: 100% !important;
             }
         </style>
     </head>

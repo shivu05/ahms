@@ -33,4 +33,26 @@ class Common_methods extends SHV_Controller {
         }
     }
 
+    function fetch_laboratory_test_list() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $category = $this->input->post('category');
+            $data = $this->common_model->get_laboratory_test_list($category);
+            echo json_encode(array('data' => $data, 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
+    function fetch_laboratory_investigation_list() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $tests = $this->input->post('tests');
+            $data = $this->common_model->get_laboratory_investigation_list($tests);
+            echo json_encode(array('data' => $data, 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
 }

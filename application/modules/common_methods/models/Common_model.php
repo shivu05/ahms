@@ -37,4 +37,24 @@ class Common_model extends CI_Model {
         return $is_updated;
     }
 
+    function get_laboratory_test_list($category = NULL) {
+        if (!empty($category)) {
+            $query = "SELECT * FROM lab_tests l WHERE lab_cat_id 
+            IN (SELECT lab_cat_id FROM lab_categories WHERE lab_cat_name IN ('" . implode("','", $category) . "'))";
+            return $this->db->query($query)->result_array();
+        } else {
+            return NULL;
+        }
+    }
+
+    function get_laboratory_investigation_list($tests = NULL) {
+        if (!empty($tests)) {
+            $query = "SELECT * FROM lab_investigations l where lab_test_id IN (
+                                   SELECT lab_test_id FROM lab_tests WHERE lab_test_name IN('" . implode("','", $tests) . "'))";
+            return $this->db->query($query)->result_array();
+        } else {
+            return NULL;
+        }
+    }
+
 }

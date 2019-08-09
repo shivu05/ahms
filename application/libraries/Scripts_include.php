@@ -29,6 +29,7 @@ class Scripts_include {
             '/assets/plugins/theme/js/plugins/pace.min.js',
             '/assets/plugins/theme/js/plugins/bootstrap-datepicker.min.js',
             '/assets/plugins/theme/js/plugins/bootstrap-notify.min.js',
+            '/assets/plugins/chosen/chosen.jquery.js',
         ),
         'datatables' => array(
             '/assets/plugins/datatables/jquery.dataTables.min.js',
@@ -48,7 +49,8 @@ class Scripts_include {
     private $__cssFiles = array(
         'common' => array(
             '/assets/plugins/theme/css/main.css',
-            '/assets/font-awesome-4.7.0/css/font-awesome.css'
+            '/assets/font-awesome-4.7.0/css/font-awesome.css',
+            '/assets/plugins/chosen/bootstrap-chosen.css',
         ),
         'datatables' => array(
             '/assets/plugins/datatables/dataTables.bootstrap4.min.css',

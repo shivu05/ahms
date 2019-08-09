@@ -152,7 +152,9 @@ class Treatment extends SHV_Controller {
                 $labdata = array(
                     'OpdNo' => $this->input->post('opd_no'),
                     'refDocName' => $this->input->post('labdocname'),
-                    'testName' => $this->input->post('testname'),
+                    'lab_test_cat' => $this->input->post('lab_category'),
+                    'lab_test_type' => $this->input->post('lab_test'),
+                    'testName' => $this->input->post('lab_investigations'),
                     'testrange' => $this->input->post('testrange'),
                     'testvalue' => $this->input->post('testvalue'),
                     'testDate' => $this->input->post('testdate'),
@@ -626,5 +628,5 @@ class Treatment extends SHV_Controller {
             echo 'success';
         }
     }
-
+    
 }

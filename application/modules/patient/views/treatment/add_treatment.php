@@ -55,8 +55,6 @@
         </div>
     </div>
     <div class="col-md-9 col-sm-12">
-        <?php //pma($lab_categories, 1); ?>
-
         <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
             <!--hiddden fields-->
             <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
@@ -398,18 +396,17 @@
                                     <div class="tab-pane fade" id="lab">
                                         <div id="Lab" style="margin-top: 2%;">
                                             <h4><input type="checkbox" name="lab_check" id="lab_check" /> Laboratory Register</h4>
-                                            <div class="control-group col-4">
+                                            <div class="control-group col-6">
                                                 <label class="control-label" for="labdocname">Referred Doctor Name:</label>
                                                 <div class="controls">
                                                     <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
-                                            <div class="control-group col-4">
-                                                <label class="control-label" for="testname">Category:</label>
+                                            <div class="control-group col-6">
+                                                <label class="control-label" for="lab_category">Category:</label>
                                                 <div class="controls">
-                                                    <select name="lab_Category" class="form-control">
-                                                        <option value="">Select category</option>
+                                                    <select name="lab_category" id="lab_category" class="form-control chosen-select" multiple data-placeholder="Select Category">
                                                         <?php
                                                         if (!empty($lab_categories)) {
                                                             foreach ($lab_categories as $cat) {
@@ -421,14 +418,30 @@
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->
                                             </div><!-- /control-group -->
-                                            <div class="control-group col-4">											
+                                            <div class="control-group col-6">
+                                                <label class="control-label" for="testname">Tests:</label>
+                                                <div class="controls">
+                                                    <select name="lab_test" id="lab_test" class="form-control chosen-select" multiple="" data-placeholder="Choose test">
+                                                    </select>
+                                                    <p class="help-block"></p>
+                                                </div> <!-- /controls -->
+                                            </div><!-- /control-group -->
+                                            <div class="control-group col-6">
+                                                <label class="control-label" for="lab_investigations">Investigations:</label>
+                                                <div class="controls">
+                                                    <select name="lab_investigations" id="lab_investigations" class="form-control chosen-select" multiple="" data-placeholder="Choose investigation">
+                                                    </select>
+                                                    <p class="help-block"></p>
+                                                </div> <!-- /controls -->
+                                            </div><!-- /control-group 
+                                            <div class="control-group col-6">											
                                                 <label class="control-label" for="testname">Name of Test:</label>
                                                 <div class="controls">
                                                     <input id="testname" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->	
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
+                                            <!--</div> <!-- /control-group -->
+                                            <div class="control-group col-6">											
                                                 <label class="control-label" for="testname">Referred Date:</label>
                                                 <div class="controls">
                                                     <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs" placeholder="Enter Date" autocomplete="off">
@@ -466,7 +479,7 @@
                             <div class="row">
                                 <div class="col-md-4 col-sm-12">
                                     <select class="form-control" name="bed_no" id="bed_no">
-                                        <option>Select bed</option>
+                                        <option value="">Select bed</option>
                                         <?php echo $bed_select; ?>
                                     </select>
                                 </div>
@@ -560,7 +573,84 @@
                 $('#admit_form').hide();
             }
         });
+        $('#lab_category').on('change', function () {
+            $.ajax({
+                url: base_url + 'common_methods/fetch_laboratory_test_list',
+                type: 'POST',
+                data: {category: $('#lab_category').val()},
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res);
+                    if (res.status) {
+                        var selected_tests = $('#lab_test').val();
+                        if (selected_tests) {
+                            var test_name = selected_tests.toString();
+                            var test_name_split = test_name.split(",");
+                        }
+                        var list = res.data;
+                        var options = '<option>select</option>';
+                        $.each(list, function (i, item) {
+                            var selected = '';
+                            if (test_name_split) {
+                                $.each(test_name_split, function (j, item1) {
+                                    if (item1 == item.lab_test_name) {
+                                        selected = 'selected';
+                                    }
+                                });
+                            }
+                            options += '<option ' + selected + ' value="' + item.lab_test_name + '">' + item.lab_test_name + '</option>';
+                        });
+                        $('#lab_test').html(options);
+                        $("#lab_test").trigger("chosen:updated");
+                    } else {
+                        alert('something went wrong try again');
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        });
 
+        $('#lab_test').on('change', function () {
+            $.ajax({
+                url: base_url + 'common_methods/fetch_laboratory_investigation_list',
+                type: 'POST',
+                data: {category: $('#lab_category').val(), tests: $('#lab_test').val()},
+                dataType: 'json',
+                success: function (res) {
+                    console.log('investigation');
+                    console.log(res);
+                    if (res.status) {
+                        var selected_tests = $('#lab_investigations').val();
+                        if (selected_tests) {
+                            var test_name = selected_tests.toString();
+                            var test_name_split = test_name.split(",");
+                        }
+                        var list = res.data;
+                        var options = '<option>select</option>';
+                        $.each(list, function (i, item) {
+                            var selected = '';
+                            if (test_name_split) {
+                                $.each(test_name_split, function (j, item1) {
+                                    if (item1 == item.lab_inv_name) {
+                                        selected = 'selected';
+                                    }
+                                });
+                            }
+                            options += '<option ' + selected + ' value="' + item.lab_inv_name + '">' + item.lab_inv_name + '</option>';
+                        });
+                        $('#lab_investigations').html(options);
+                        $("#lab_investigations").trigger("chosen:updated");
+                    } else {
+                        alert('something went wrong try again');
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        });
 
     });
 
