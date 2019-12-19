@@ -26,7 +26,7 @@ if (empty($patient)) {
                 echo "<td style='text-align:center;'>" . $count . "</td>";
                 echo "<td style='text-align:center;'>" . $row->OpdNo . "</td>";
                 echo "<td style='text-align:center;'>" . $row->deptOpdNo . "</td>";
-                echo "<td>" . $row->FirstName . ' ' . $row->MidName . ' ' . $row->LastName . "</td>";
+                echo "<td>" . $row->FirstName . ' ' . $row->LastName . "</td>";
                 echo "<td style='text-align:center;'>" . $row->Age . "</td>";
                 echo "<td style='text-align:center;'>" . $row->gender . "</td>";
                 echo "<td>" . $row->AddedBy . "</td>";
@@ -63,7 +63,7 @@ if (empty($patient)) {
 
                                 <td style='text-align:center;'>
                                     <?php
-                                    for ($j = 0; $j < $sizeofvalue; $j++) {
+                                    for ($j = 0; $j < $sizeoftest; $j++) {
                                         echo $testvalue[$j] . "<br>";
                                     }
                                     ?>
@@ -74,8 +74,8 @@ if (empty($patient)) {
                                 ?>							
                                 <td style='text-align:center;'>
                                     <?php
-                                    for ($h = 0; $h < $sizeofrange; $h++) {
-                                        echo $testrange[$h] . "<br>";
+                                    for ($h = 0; $h < $sizeoftest; $h++) {
+                                        echo (!empty($testrange[$h])) ? $testrange[$h]. "<br>" : '' . "<br>";
                                     }
                                     ?>
                                 </td>

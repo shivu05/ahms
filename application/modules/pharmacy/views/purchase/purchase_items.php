@@ -22,7 +22,7 @@
                         <label class="control-label">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name" autocomplete="off">
                     </div>
-                    <div class="form-group col-md-4 align-self-end">
+                    <div class="form-group col-6 align-self-end">
                         <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <button class="btn btn-danger" type="reset" id="reset"><i class="fa fa-fw fa-lg fa-refresh"></i>Reset</button>
                         <div class="btn-group" role="group" id="export">

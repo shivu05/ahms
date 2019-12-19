@@ -58,9 +58,8 @@ class Treatment extends SHV_Controller {
         $data['medicines'] = $this->get_product_list();
         $data['lab_categories'] = $this->lab_model->get_lab_categories();
         $data['current_treatment'] = $treatment_details['treatment_data'];
-        //$data['doctors'] = $treatment_details['doctors'];
+        $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
         $data['doctors'] = $this->get_doctors($treatment_details['treatment_data']['department']);
-        //pma($data['doctors'], 1);
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -72,6 +71,27 @@ class Treatment extends SHV_Controller {
     function save() {
         $treat_id = $this->input->post('treat_id');
         $is_admit = ($this->input->post('admit') == 'on') ? 'Admit' : 'FollowUp';
+        if ($this->input->post('panchakarma_check') == 'on') {
+            $post_values = $this->input->post();
+            $i = 0;
+            foreach ($post_values['pancha_procedure'] as $row) {
+
+                //id, opdno, disease, treatment, procedure, date, docname, treatid, proc_end_date
+                $pancha_data = array(
+                    'opdno' => $post_values['opd_no'],
+                    'disease' => @$post_values['diagnosis'],
+                    'treatment' => $row,
+                    'procedure' => $post_values['pancha_sub_procedure'][$i],
+                    'date' => $post_values['pancha_proc_start_date'][$i],
+                    'proc_end_date' => $post_values['pancha_proc_end_date'][$i],
+                    'docname' => $post_values['doctor_name'],
+                    'treatid' => $post_values['treat_id'],
+                );
+                $i++;
+                $this->db->insert('panchaprocedure', $pancha_data);
+            }
+        }
+        
         //Treatment data
         $treatpatientdata = array(
             'Trtment' => $this->input->post('treatment'),
@@ -628,5 +648,5 @@ class Treatment extends SHV_Controller {
             echo 'success';
         }
     }
-    
+
 }

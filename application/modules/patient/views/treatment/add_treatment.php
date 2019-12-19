@@ -36,6 +36,14 @@
         display:block;
     }
 </style>
+<?php
+$panchakarma_markup = "";
+if (!empty($pancha_procedures)) {
+    foreach ($pancha_procedures as $proc) {
+        $panchakarma_markup .= "<option value='" . $proc['proc_name'] . "'>" . $proc['proc_name'] . "</option>";
+    }
+}
+?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
         <div class="tile" style="border-top: 5px solid #009688;">
@@ -223,6 +231,7 @@
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kshara">Ksharasutra</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade" id="birth">
@@ -450,6 +459,48 @@
                                             </div> <!-- /control-group -->
                                         </div>
                                     </div>
+                                    <div  class="tab-pane fade" id="panchakarma_treatment">
+                                        <div id="panchakarma_div" style="margin-top: 2%;">
+                                            <h4><input type="checkbox" name="panchakarma_check" id="panchakarma_check" /> Refer for Panchakarma</h4>
+                                            <input type="hidden" name="tab_row_count" id="tab_row_count" value="1" />
+                                            <table class="table table-borderless" id="panchakarma_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 30% !important;">Procedure</th>
+                                                        <th style="width: 30% !important;">Sub procedure</th>
+                                                        <th style="width: 20% !important;">Start date</th>
+                                                        <th style="width: 20% !important;">End date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_1">
+                                                                <option value="">Choose procedure</option>
+                                                                <?= $panchakarma_markup ?>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
+                                                                <option value="">Choose sub procedure</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
+                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3">&nbsp;</td>
+                                                        <td class="pull-right">
+                                                            <button type="button" name="" id="add_row" class="btn btn-sm btn-primary">
+                                                                <i class="fa fa-plus"></i> Add more procedure</button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -510,6 +561,7 @@
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
     var procedure_div_ids = ['ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
+    var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
@@ -564,6 +616,24 @@
                 copy_input_text('#doctor_name', '#labdocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.lab_inputs').attr('disabled', 'disabled');
+            }
+        });
+        $('#copy_diagnosis').click(function () {
+            if ($(this).is(":checked")) {
+                if ($('#diagnosis').val().length <= 0) {
+                    $.notify({
+                        title: "Treatment:",
+                        message: "Please enter diagnosis to copy it",
+                        icon: 'fa fa-cross',
+                    }, {
+                        type: "danger",
+                    });
+                    $("#copy_diagnosis").prop("checked", false);
+                } else {
+                    copy_input_text('#diagnosis', '#pancha_disease');
+                }
+            } else if ($(this).is(":not(:checked)")) {
+                $('#pancha_disease').val('');
             }
         });
         $('#admit').click(function () {
@@ -652,6 +722,62 @@
             });
         });
 
+        $('#panchakarma_table').on('change', '.pancha_procedure', function () {
+            alert();
+            var panchaprocedure = $(this).val();
+            var dom = $(this);
+            $.ajax({
+                url: base_url + 'master/panchakarma/fetch_sub_procedures',
+                data: {'proc_name': panchaprocedure},
+                dataType: 'json',
+                type: 'POST',
+                success: function (response) {
+                    console.log(response);
+                    var sub_proc_options = '<option value="">choose sub procedure</option>';
+                    if (response.status) {
+                        var sub_proc = response.data;
+                        $.each(sub_proc, function (i) {
+                            sub_proc_options += '<option value="' + sub_proc[i].sub_proc_name + '">' + sub_proc[i].sub_proc_name + '</option>';
+                        });
+                        dom.closest('td').next('td').find('.pancha_sub_procedure').html(sub_proc_options);
+                        dom.closest('td').next('td').find('.pancha_sub_procedure').trigger("chosen:updated");
+                    }
+                },
+                error: function (xhr, errorType, exception) {
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $('#add_row').on('click', function () {
+            var n = $('#tab_row_count').val();
+            $('#tab_row_count').val(n + 1);
+            var markup = '<tr>' + '<td>' +
+                    '<select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_' + (n + 1) + '">' +
+                    '<option value="">Choose procedure</option>' +
+                    panchakarma_markup +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">' +
+                    '<option value="">Choose sub procedure</option>' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_start_date[]" id = "pancha_proc_start_date" />' + '</td>' +
+                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_end_date[]" pancha_proc_end_date />' + '</td>' +
+                    '</tr>';
+            $('#panchakarma_table').append(markup);
+            $(".pancha_procedure").chosen();
+            $(".pancha_sub_procedure").chosen();
+            $('.date_picker').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                daysOfWeekHighlighted: "0"
+            });
+            $('.date_picker').attr('autocomplete', 'off');
+        });
     });
 
 </script>

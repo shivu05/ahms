@@ -377,7 +377,8 @@ class Nursing_model extends CI_Model {
         $columns = array('l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
             'p.deptOpdNo', 'p.dept', 'l.disease', 'l.treatment', 'l.procedure', 'l.date', 't.notes', 'l.docname');
 
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' AND l.proc_end_date >='" . $conditions['end_date'] . "')
+             OR (l.proc_end_date <='" . $conditions['end_date'] . "')) ";
 
         $limit = '';
         if (!$export_flag) {
@@ -438,8 +439,9 @@ class Nursing_model extends CI_Model {
     }
 
     function get_lab_report($conditions, $export_flag = false) {
-        $query = "SELECT p.deptOpdNo,t.AddedBy,l.OpdNo,p.FirstName,p.MidName,p.LastName,p.Age,p.gender,p.address,p.deptOpdNo,p.dept,l.testName,l.testrange,l.testvalue,l.labdisease,l.testName,l.testDate,t.notes 
-            FROM labregistery l,patientdata p,treatmentdata t WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc";
+        $query = "SELECT p.deptOpdNo,t.AddedBy,l.OpdNo,p.FirstName,p.LastName,p.Age,p.gender,p.address,p.deptOpdNo,p.dept,l.testName,l.testrange,l.testvalue,l.labdisease,l.testName,l.testDate,t.notes 
+            FROM labregistery l,patientdata p,treatmentdata t 
+            WHERE l.OpdNo = p.OpdNo AND l.testName <>'' AND l.treatID = t.ID AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc";
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
             return $query->result(); //if data is true

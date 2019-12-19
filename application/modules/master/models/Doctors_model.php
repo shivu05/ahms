@@ -44,6 +44,9 @@ class Doctors_model extends CI_Model {
                     case 'role':
                         $where_cond .= " AND ur.role_id='$val'";
                         break;
+                    case 'day':
+                        $where_cond .= " AND UPPER(w.week_day)=UPPER('$val')";
+                        break;
                     case 'name':
                         $where_cond .= " AND user_name LIKE '%$val%'";
                         break;
@@ -56,7 +59,10 @@ class Doctors_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM doctorsduty d JOIN users u on d.doc_id=u.id JOIN i_user_roles ur ON u.id=ur.user_id JOIN week_days w ON w.week_id=d.day,
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM doctorsduty d 
+            JOIN users u on d.doc_id=u.id 
+            JOIN i_user_roles ur ON u.id=ur.user_id 
+            JOIN week_days w ON w.week_id=d.day,
         (SELECT @a:= 0) AS a  $where_cond ORDER BY user_department,week_id";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();

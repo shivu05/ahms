@@ -5,8 +5,17 @@
             <div class="tile-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('master/doctors/export_duty_chart_pdf'); ?>">
                     <div class="form-group col-md-2">
-                        <label class="control-label">Email:</label>
-                        <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email" autocomplete="off">
+                        <label class="control-label">Day:</label>
+                        <select class="form-control required" name="day" id="day">
+                            <option value="">Choose day</option>
+                            <?php
+                            if (!empty($week_days)) {
+                                foreach ($week_days as $day) {
+                                    echo '<option value="' . $day['week_day'] . '">' . $day['week_day'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group col-md-2">
                         <label class="control-label">Name</label>
@@ -25,7 +34,7 @@
                             ?>
                         </select>
                     </div>
-                    <div class="form-group col-md-4 align-self-end">
+                    <div class="form-group col-6 align-self-end">
                         <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>

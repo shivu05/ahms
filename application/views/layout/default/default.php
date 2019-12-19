@@ -76,7 +76,8 @@
             $('.date_picker').datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
-                todayHighlight: true
+                todayHighlight: true,
+                daysOfWeekHighlighted: "0"
             });
             $('.date_picker').attr('autocomplete', 'off');
         </script>

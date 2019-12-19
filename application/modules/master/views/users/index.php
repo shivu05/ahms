@@ -25,7 +25,7 @@
                             ?>
                         </select>
                     </div>
-                    <div class="form-group col-md-4 align-self-end">
+                    <div class="form-group col-6 align-self-end">
                         <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>

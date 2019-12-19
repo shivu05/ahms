@@ -33,3 +33,25 @@ INSERT INTO `config_variables` (`config_var_id`, `config_var_name`, `config_var_
 
 ALTER TABLE `treatmentdata` ADD COLUMN `monthly_sid` INTEGER NOT NULL AFTER `attndedon`;
 ALTER TABLE `treatmentdata` ADD COLUMN `year_no` INTEGER DEFAULT 0 AFTER `monthly_sid`;
+
+ALTER TABLE `panchaprocedure` ADD COLUMN `proc_end_date` DATE AFTER `treatid`;
+
+CREATE TABLE `master_panchakarma_procedures` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `proc_name` VARCHAR(200) NOT NULL,
+  `last_modified_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+)
+ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS `ahms_2019`.`master_panchakarma_sub_procedures`;
+CREATE TABLE  `ahms_2019`.`master_panchakarma_sub_procedures` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `procecure_id` int(11) NOT NULL,
+  `sub_proc_name` varchar(200) NOT NULL,
+  `no_of_treatment_days` int(11) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK_master_panchakarma_sub_procedures_1` (`procecure_id`),
+  CONSTRAINT `FK_master_panchakarma_sub_procedures_1` FOREIGN KEY (`procecure_id`) REFERENCES `master_panchakarma_procedures` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;

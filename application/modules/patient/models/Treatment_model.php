@@ -46,6 +46,7 @@ class treatment_model extends CI_Model {
 
     function get_patients($conditions, $export_flag = FALSE) {
         $return = array();
+        $display_all = FALSE;
         $columns = array(
             't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
             't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType', 'attndedon', 'InOrOutPat'
@@ -64,6 +65,10 @@ class treatment_model extends CI_Model {
             $limit = ' LIMIT ' . $start . ',' . ($length);
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
+        if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
+            $display_all = TRUE;
+        }
+
 
         foreach ($conditions as $col => $val) {
             $val = trim($val);
@@ -82,6 +87,9 @@ class treatment_model extends CI_Model {
                         $where_cond .= " AND $col = '$val'";
                 endswitch;
             }
+        }
+        if ($display_all) {
+            $where_cond = "";
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "

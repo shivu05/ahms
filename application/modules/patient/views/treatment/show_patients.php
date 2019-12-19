@@ -2,28 +2,38 @@
     <div class="col-12">
         <div class="tile">
             <div class="tile-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_patients_list_pdf'); ?>">
-                    <div class="form-group col-md-3">
-                        <label class="control-label">OPD</label>
-                        <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label class="control-label">Name</label>
-                        <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label class="control-label">Date</label>
-                        <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
-                    </div>
-                    <div class="form-group col-md-4 align-self-end">
-                        <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
-                        <div class="btn-group" role="group" id="export">
-                            <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                    <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
+                <form class="form-horizontal" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_patients_list_pdf'); ?>">
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="control-label">OPD</label>
+                            <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="control-label">Name</label>
+                            <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="control-label">Date</label>
+                            <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
+                        </div>
+                        <div class="form-group col-2">
+                            <div class="form-check" style="padding-top: 25% !important">
+                                <input class="form-check-input" type="checkbox" value="1" name="all_patients" id="all_patients">
+                                <label class="form-check-label" for="all_patients">
+                                    Display all patients
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-4 align-self-end">
+                            <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                            <div class="btn-group" role="group" id="export">
+                                <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                    <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
+                                        <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

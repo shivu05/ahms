@@ -62,8 +62,14 @@ class SHV_Controller extends MX_Controller {
         }
     }
 
-    function get_panchakarma_procedures() {
-        return $this->db->get('panchakarma_procedures')->result_array();
+    function fetch_panchakarma_procedures() {
+        $this->load->model('master/panchakarma_model');
+        $data = $this->panchakarma_model->get_procedures();
+        if ($this->input->is_ajax_request()) {
+            echo json_encode(array('data' => $data, 'status_code' => 200, 'status' => 'true'));
+        } else {
+            return $data;
+        }
     }
 
     function get_sub_department() {
@@ -109,7 +115,7 @@ class SHV_Controller extends MX_Controller {
         return $this->settings_model->get_medicine_list();
     }
 
-    function get_configuration_variable($var_name='') {
+    function get_configuration_variable($var_name = '') {
         return $this->settings_model->get_config_variable_value($var_name);
     }
 
