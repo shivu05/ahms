@@ -35,7 +35,7 @@
             }
         </style>
     </head>
-    <body class="app sidebar-mini rtl">
+    <body class="app sidebar-mini rtl sidenav-toggled">
         <?php
         if ($this->layout->headerFlag) :
             $this->load->view($this->layout->layoutsFolder . '/header');
@@ -49,7 +49,8 @@
 
         <!-- Main content -->
         <main class="app-content">
-            <?php if ($this->layout->navTitleFlag): ?>   
+            <?php $this->layout->navTitleFlag = false;
+            if ($this->layout->navTitleFlag): ?>   
                 <div class="app-title">
                     <div>
                         <h1><i class="<?php echo $this->layout->navIcon; ?>"></i> <?php echo $this->layout->navTitle; ?></h1>
@@ -61,7 +62,7 @@
                     </ul>
                 </div>
             <?php endif; ?>
-            <?= $content ?>
+<?= $content ?>
         </main>
         <!-- /.content -->
         <?php
@@ -71,7 +72,7 @@
             $this->load->view($this->layout->layoutsFolder . '/no_footer');
         }
         ?>
-        <?= $this->scripts_include->includeJs(); ?>
+<?= $this->scripts_include->includeJs(); ?>
         <script type="text/javascript">
             $('.date_picker').datepicker({
                 format: "yyyy-mm-dd",

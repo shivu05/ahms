@@ -35,18 +35,18 @@
                         </select>
                     </div>
                     <div class="form-group col-6 align-self-end">
-                        <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                        <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
-                            <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                            <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <button class="btn btn-info dropdown-toggle btn-sm" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
                                     <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-secondary" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add doctor's duty</button>
+                        <button class="btn btn-secondary btn-sm" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add doctor's duty</button>
                     </div>
                 </form>
                 <div id="user_details">
@@ -101,8 +101,60 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" name="add_btn" id="add_btn">Save duty</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" name="add_btn" id="add_btn">Save duty</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal modal fade" id="edit_duty_modal_box" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Doctors duty</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" method="POST" name="edit_duty_form" id="edit_duty_form">
+                    <div class="form-group">
+                        <label class="control-label">Department:</label>
+                        <select class="form-control required required" name="user_dept" id="user_dept" required="required">
+                            <option value="">Choose department</option>
+                            <?php
+                            if (!empty($department_list)) {
+                                foreach ($department_list as $dept) {
+                                    echo '<option value="' . $dept['dept_unique_code'] . '">' . $dept['department'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Doctor name:</label>
+                        <select class="form-control chosen required" name="doctor_name" id="doctor_name" required="required">
+                            <option value="">Choose doctor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Duty day:</label>
+                        <select class="form-control required" name="week_day" id="week_day" required="required">
+                            <option value="">Choose day</option>
+                            <?php
+                            if (!empty($week_days)) {
+                                foreach ($week_days as $day) {
+                                    echo '<option value="' . $day['week_id'] . '">' . $day['week_day'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="hidden" name="edit_duty_id" id="edit_duty_id" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" name="edit_btn" id="edit_btn">Update duty</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -154,6 +206,31 @@
                 }
             });
         });
+        var edit_doc_id = '';
+        $('#edit_duty_modal_box').on('change', '#user_dept', function () {
+            var dept = $('#user_dept').val();
+            $.ajax({
+                url: base_url + 'master/doctors/get_doctors_by_dept',
+                type: 'POST',
+                dataType: 'json',
+                data: {'dept': dept},
+                success: function (response) {
+                    console.log(response);
+                    if (response.data.length > 0) {
+                        var option = '<option value="">Choose doctor</option>';
+                        $.each(response.data, function (i) {
+                            var selected = '';
+                            if (edit_doc_id == response.data[i].ID) {
+                                selected = 'selected="selected"';
+                            }
+                            option += '<option value="' + response.data[i].ID + '" ' + selected + '>' + response.data[i].user_name + '</option>';
+                        });
+                        $('#edit_duty_modal_box #doctor_name').html(option);
+                    }
+                }
+            });
+        });
+
         var validator = $('#add_duty_form').validate();
         $('#add_duty_modal_box').on('click', '#add_btn', function () {
             if ($('#add_duty_form').valid()) {
@@ -180,9 +257,9 @@
                             $.notify({
                                 title: "Doctors duty:",
                                 message: "Added successfully",
-                                icon: 'fa fa-check',
+                                icon: 'fa fa-check'
                             }, {
-                                type: "success",
+                                type: "success"
                             });
                             user_table.clear();
                             user_table.draw();
@@ -193,11 +270,11 @@
                 $.notify({
                     title: "Doctors duty:",
                     message: "Failed to add please try again.",
-                    icon: 'fa fa-times',
+                    icon: 'fa fa-times'
                 }, {
                     type: "danger",
                     placement: {
-                        from: "bottom",
+                        from: "bottom"
                     },
                 });
             }
@@ -234,10 +311,12 @@
                 }
             },
             {
-                title: "Delete",
+                title: "Action",
                 class: "delete",
                 data: function (item) {
-                    return '<i class="fa fa-trash-o error delete_duty" data-id="' + item.id + '" aria-hidden="true"></i>';
+                    console.log(item);
+                    return '<i style="margin-right:15px !important;" data-week_id="' + item.week_id + '" data-dept="' + item.user_department + '" data-name="' + item.user_name + '" data-doc_id="' + item.doc_id + '" class="fa fa-pencil text-primary edit_duty" data-id="' + item.id + '" aria-hidden="true"></i>' +
+                            '<i class="fa fa-trash-o error delete_duty"  data-id="' + item.id + '" aria-hidden="true"></i>';
                 }
             }
         ];
@@ -282,6 +361,15 @@
             $('#confirmation_modal_box').modal('show');
         });
 
+        $('#users_table tbody').on('click', '.edit_duty', function () {
+            duty_id = $(this).data("id");
+            $('#edit_duty_modal_box #user_dept').val($(this).data("dept")).trigger('change');
+            $('#edit_duty_modal_box #edit_duty_id').val(duty_id);
+            edit_doc_id = $(this).data("doc_id");
+            $('#edit_duty_modal_box #week_day').val($(this).data("week_id")).trigger('change');
+            $('#edit_duty_modal_box').modal('show');
+        });
+
         $('#confirmation_modal_box').on('click', '#btn-ok', function () {
             $.ajax({
                 url: base_url + 'master/doctors/delete_doctors_duty',
@@ -314,6 +402,39 @@
                     user_table.draw();
                 }
             });
-        })
+        });
+        $('#edit_duty_modal_box').on('click', '#edit_btn', function () {
+            var form_data = $('#edit_duty_modal_box #edit_duty_form').serializeArray();
+            $.ajax({
+                url: base_url + 'master/doctors/edit_doctors_duty',
+                type: 'POST',
+                dataType: 'json',
+                data: form_data,
+                success: function (response) {
+                    console.log(response);
+                    if (response.status) {
+                        $('#edit_duty_modal_box').modal('hide');
+                        $.notify({
+                            title: "Updated:",
+                            message: "Doctor duty data updated successfully",
+                            icon: 'fa fa-check'
+                        }, {
+                            type: "success"
+                        });
+                    } else {
+                        $('#edit_duty_modal_box').modal('hide');
+                        $.notify({
+                            title: "Doctors duty:",
+                            message: "Failed to update data please try again",
+                            icon: 'fa fa-times'
+                        }, {
+                            type: "danger"
+                        });
+                    }
+                    user_table.clear();
+                    user_table.draw();
+                }
+            });
+        });
     });
 </script>

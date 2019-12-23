@@ -94,4 +94,11 @@ class Doctors_model extends CI_Model {
         return FALSE;
     }
 
+    function edit_doctors_duty($post_values) {
+        //$this->db->trans_start();
+        $this->db->where('id', $post_values['edit_duty_id']);
+        return $this->db->update('doctorsduty', array('day' => $post_values['week_day']));
+        //$this->db->trans_complete();
+    }
+
 }

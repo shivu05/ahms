@@ -61,6 +61,22 @@ class Doctors extends SHV_Controller {
         }
     }
 
+    function get_doctor_by_id() {
+        $doc_id = $this->input->post('doc_id');
+        $doc_data = $this->doctors_model->get_doctors_info($doc_id);
+        echo json_encode($doc_data);
+    }
+
+    function edit_doctors_duty() {
+        $post_values = $this->input->post();
+        $is_updated = $this->doctors_model->edit_doctors_duty($post_values);
+        if ($is_updated) {
+            echo json_encode(array('status' => TRUE));
+        } else {
+            echo json_encode(array('status' => FALSE));
+        }
+    }
+
     function export_duty_chart_pdf() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);

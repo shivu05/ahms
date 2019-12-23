@@ -48,8 +48,15 @@ class Department extends SHV_Controller {
         echo json_encode(array('sub_departments' => $sub_departments, 'doctors' => $doctors));
     }
 
-    /* function get_doctors($dept = null) {
-      $doctors = $this->department_model->get_doctors_by_dept($dept);
-      return $doctors;
-      } */
+    function update_dept_percentage() {
+        $perc = $this->input->post('perc');
+        $dept_id = $this->input->post('dept_id');
+        $is_updated = $this->department_model->update_dept_percentage($dept_id, $perc);
+        if ($is_updated) {
+            echo json_encode(array('status' => TRUE));
+        } else {
+            echo json_encode(array('status' => FALSE));
+        }
+    }
+
 }

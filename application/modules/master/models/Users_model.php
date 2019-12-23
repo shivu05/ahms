@@ -72,7 +72,7 @@ class Users_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
-        (SELECT @a:= 0) AS a  $where_cond ORDER BY u.ID ASC";
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY serial_number ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

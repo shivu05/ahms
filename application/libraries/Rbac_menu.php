@@ -161,9 +161,9 @@ class Rbac_menu {
                             $url = $parent['perm_url'];
                         }
                         $menu_str .= '<li ' . $dropdown . '>
-                                   <a href="' . $url . '" ' . $dtdropdown . ' class="app-menu__item" ' . $parent['perm_attr'] . ' ><i class="app-menu__icon '.$parent['perm_icon'].'"></i><span class="app-menu__label">' . $pmenu  . '</span>'.$caret.'</a>';
+                                   <a href="' . $url . '" ' . $dtdropdown . ' class="app-menu__item" ' . $parent['perm_attr'] . ' ><i class="app-menu__icon ' . $parent['perm_icon'] . '"></i><span class="app-menu__label">' . $pmenu . '</span>' . $caret . '</a>';
                         //$smenu_flag = 1;
-                        
+
                         if (is_array($menus) && count($menus) > 0) {
                             $menu_str .= '<ul class="treeview-menu" role="menu">';
                             foreach ($menus as $scode => $menu) {
@@ -261,6 +261,81 @@ class Rbac_menu {
 
         $menuHtml = '<li style="color:blue" class="' . $class . ' ' . $menu_data['perm_class'] . '"><span>' . $menu_name . '</span></li>';
         return $menuHtml;
+    }
+
+    public function show_user_menu_top($tree_array_flag = FALSE) {
+        if ($this->_ci->rbac->is_login()) {
+            $menu_arr = $this->_tree;
+
+            $tree = $menu_arr;
+
+            if ($tree_array_flag) {
+                return $tree;
+            }
+            if ($tree && is_array($tree)) {
+                $menu_str = '<ul class="nav navbar-nav">';
+                foreach ($tree as $pcode => $menus) {
+                    if (isset($menus[$pcode])) {
+                        if (isset($menus[$pcode])) {
+                            $parent = $menus[$pcode];
+                            unset($menus[$pcode]);
+                            $pmenu = $parent['perm_desc'];
+                        } else if (is_array($menus) && $menus['perm_parent'] == 0) {
+                            $parent = $menus;
+                            $pmenu = $parent['perm_desc'];
+                            $menus = array(); //it has only one main menu
+                        }
+                        $caret = (is_array($menus) && count($menus) > 0) ? '<span class="caret"></span>' : '';
+                        $dtdropdown = (is_array($menus) && count($menus) > 0) ? 'data-toggle="dropdown"' : '';
+                        $dropdown = (is_array($menus) && count($menus) > 0) ? 'class="dropdown"' : '';
+                        $url = ($parent['perm_url'] == '#') ? '#' : base_url($parent['perm_url']);
+                        if (strtolower($pmenu) == "feedback") {
+                            $url = $parent['perm_url'];
+                        }
+                        $menu_str .= '<li ' . $dropdown . '>
+                                   <a href="' . $url . '" ' . $dtdropdown . ' ' . $parent['perm_attr'] . ' >' . $pmenu . $caret . '</a>';
+                        //$smenu_flag = 1;
+                        if (is_array($menus) && count($menus) > 0) {
+                            $menu_str .= '<ul class="dropdown-menu" role="menu">';
+                            foreach ($menus as $scode => $menu) {
+                                if (isset($menu[$scode])) {
+                                    $caret = (is_array($menus) && count($menus) > 0) ? '<span class="caret"></span>' : '';
+                                    $dropdown = (is_array($menus) && count($menus) > 0) ? '' : '';
+                                    $sparent = $menu[$scode];
+                                    $pmenu = $sparent['perm_desc'];
+                                    unset($menu[$scode]);
+                                    $menu_str .= '<li class="dropdown"><a tabindex="-1" href="#"> ' . $pmenu . '</a>';
+                                    //sub-sub menu
+                                    $menu_str .= '<ul class="dropdown-menu" role="menu">';
+                                    foreach ($menu as $sscode => $ssmenu) {
+                                        $smenu = $ssmenu['perm_desc'];
+                                        $menu_str .= '<li ' . $ssmenu['perm_attr'] . ' ><a  tabindex="-1" href="' . base_url($ssmenu['perm_url']) . '" ' . $ssmenu['perm_class'] . '>' . $smenu . '</a></li>';
+                                    }
+                                    $menu_str .= '</ul>';
+                                    $menu_str .= '<li>';
+                                } else {
+                                    $smenu = $menu['perm_desc'];
+                                    $menu_str .= '<li ' . $menu['perm_attr'] . ' ><a href="' . base_url($menu['perm_url']) . '" ' . $menu['perm_class'] . '> ' . $smenu . '</a></li>';
+                                }
+                            }
+                            $menu_str .= '</ul>';
+                            $menu_str .= '</li>';
+                        }
+                    } else {
+                        $pmenu = $menus['perm_desc'];
+                        $menu_str .= '<li>
+                                   <a href="' . base_url($menus['perm_url']) . '">
+                                       <i class="fa ' . $menus['perm_class'] . '"></i> <span>' . $pmenu . '</span>                    
+                                   </a>
+                               </li>';
+                    }
+                }
+                $menu_str .= '</ul>';
+                //pma($menu_str, 1);
+                return $menu_str;
+            }
+        }
+        return 1;
     }
 
 }

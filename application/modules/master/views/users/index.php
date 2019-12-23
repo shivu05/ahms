@@ -6,15 +6,15 @@
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-2">
                         <label class="control-label">Email:</label>
-                        <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email" autocomplete="off">
+                        <input class="form-control form-control-sm" type="text" placeholder="Enter Email" name="email" id="email" autocomplete="off">
                     </div>
                     <div class="form-group col-md-2">
                         <label class="control-label">Name</label>
-                        <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
+                        <input class="form-control form-control-sm" type="text" placeholder="Enter name" name="name" id="name">
                     </div>
                     <div class="form-group col-md-2">
                         <label class="control-label">Role</label>
-                        <select name="role" id="role" class="form-control">
+                        <select name="role" id="role" class="form-control form-control-sm">
                             <option value="">Choose</option>
                             <?php
                             if (!empty($roles)) {
@@ -26,18 +26,18 @@
                         </select>
                     </div>
                     <div class="form-group col-6 align-self-end">
-                        <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                        <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
-                            <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                            <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <button class="btn btn-info dropdown-toggle btn-sm" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
                                     <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
                                 </div>
                             </div>
                         </div>
-                        <a href="<?php echo base_url('add-user'); ?>" class="btn btn-secondary" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add user</a>
+                        <a href="<?php echo base_url('add-user'); ?>" class="btn btn-secondary btn-sm" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add user</a>
                     </div>
                 </form>
                 <div id="user_details">
@@ -99,7 +99,10 @@
                 title: "Department",
                 class: "department",
                 data: function (item) {
-                    return item.user_department;
+                    return item.user_department.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+                        return letter.toUpperCase();
+                    });
+                    ;
                 }
             },
             {

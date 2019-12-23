@@ -183,18 +183,19 @@
         });
         $('#patient_table tbody').on('click', 'tr', function () {
             var data = patient_table.row(this).data();
-            if (data.attndedon == '' || data.attndedon == null) {
-                window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
-            } else {
-
-                $.notify({
-                    title: "Treatment:",
-                    message: "Patient treatment is completed",
-                    icon: 'fa fa-check',
-                }, {
-                    type: "info",
-                });
-            }
+            /*if (data.attndedon == '' || data.attndedon == null) {
+             window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
+             } else {
+             
+             $.notify({
+             title: "Treatment:",
+             message: "Patient treatment is completed",
+             icon: 'fa fa-check',
+             }, {
+             type: "info",
+             });
+             }*/
+            window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
         });
 
         $('#default_modal_box').on('change', '#department', function () {

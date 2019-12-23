@@ -81,6 +81,13 @@ class Rbac {
         return 0;
     }
 
+    public function get_logged_in_user_name() {
+        if (isset($this->_session['user_data']['ID'])) {
+            return $this->_session['user_data']['user_name'];
+        }
+        return '';
+    }
+
     public function has_role($role_code) {
 
         if (isset($this->_session['user_data']['role_code']) && $this->_session['user_data']['role_code'] == $role_code) {

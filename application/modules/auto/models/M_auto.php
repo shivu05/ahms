@@ -260,6 +260,7 @@ class M_auto extends CI_Model {
 
         if ($count < $target) {
             if ($diff > 0) {
+                //pma($this->_entered_records_arr);
                 $this->insertextradata($diff, $cdate, $target, $newpatient, $pancha_count);
             } else {
                 $this->session->set_flashdata('noty_msg', $count . " records are entered and Target is reached");
@@ -268,7 +269,7 @@ class M_auto extends CI_Model {
     }
 
     private function insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept) {
-
+        return true;
         if (strtolower(trim($labdisease)) == strtolower("AMAVATA")) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
@@ -597,7 +598,7 @@ class M_auto extends CI_Model {
         }
 
         $this->shuffle();
-
+        //pma($this->_department_data,1);
         //main logic starts
         $depts = array_keys($this->_entered_records_arr);
         $this->db->trans_start();
