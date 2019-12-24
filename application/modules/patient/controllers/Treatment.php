@@ -91,136 +91,138 @@ class Treatment extends SHV_Controller {
                 $this->db->insert('panchaprocedure', $pancha_data);
             }
         }
-        
-        //Treatment data
-        $treatpatientdata = array(
-            'Trtment' => $this->input->post('treatment'),
-            'diagnosis' => $this->input->post('diagnosis'),
-            'complaints' => $this->input->post('complaints'),
-            'procedures' => $this->input->post('panch_procedures'),
-            'notes' => $this->input->post('notes'),
-            'InOrOutPat' => $is_admit,
-            'attndedby' => $this->input->post('doctor_name'),
-            'attndedon' => $this->input->post('attened_date'),
-        );
+        if ($this->input->post('add_prescription') == 'on') {
+            //Treatment data
+            $treatpatientdata = array(
+                'Trtment' => $this->input->post('treatment'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'complaints' => $this->input->post('complaints'),
+                'procedures' => $this->input->post('panch_procedures'),
+                'notes' => $this->input->post('notes'),
+                'InOrOutPat' => $is_admit,
+                'attndedby' => $this->input->post('doctor_name'),
+                'attndedon' => $this->input->post('attened_date'),
+            );
 
-        $status = $this->treatment_model->store_treatment($treatpatientdata, $treat_id);
-
-        if ($status) {
+            $this->treatment_model->store_treatment($treatpatientdata, $treat_id);
             $this->add_pharmcy($treat_id);
-            if ($this->input->post('ecg_check') == 'on') {
-                $ecgdata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'refDocName' => $this->input->post('ecgdocname'),
-                    'refDate' => $this->input->post('ecgdate'),
-                    'treatId' => $treat_id,
-                );
-                $this->treatment_model->add_ecg_info($ecgdata);
-            }
-
-            if ($this->input->post('usg_check') == 'on') {
-                $usgdata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'refDocName' => $this->input->post('usgdocname'),
-                    'refDate' => $this->input->post('usgdate'),
-                    'treatId' => $treat_id
-                );
-                $this->treatment_model->add_usg_info($usgdata);
-            }
-
-            if ($this->input->post('xray_check') == 'on') {
-                $xraydata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'refDocName' => $this->input->post('xraydocname'),
-                    'partOfXray' => $this->input->post('partxray'),
-                    //'filmSize' => $this->input->post('filmsize'),
-                    'refDate' => $this->input->post('xraydate'),
-                    'treatID' => $treat_id
-                );
-                $this->treatment_model->add_xray_info($xraydata);
-            }
-
-            if ($this->input->post('kshara_check') == 'on') {
-                $ksharadata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'ksharsType' => $this->input->post('ksharatype'),
-                    'ksharaname' => $this->input->post('ksharaname'),
-                    'surgeon' => $this->input->post('ksharasurgeonname'),
-                    'anaesthetic' => $this->input->post('ksharaanaesthetist'),
-                    'asssurgeon' => $this->input->post('assksharasurgeonname'),
-                    'ksharsDate' => $this->input->post('ksharadate'),
-                    'treatId' => $treat_id
-                );
-                $this->treatment_model->add_kshara_info($ksharadata);
-            }
-
-            if ($this->input->post('surgery_check') == 'on') {
-                $surgerydata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'surgName' => $this->input->post('SurgeryDocname'),
-                    'surgType' => $this->input->post('surgerytype'),
-                    'surgDate' => $this->input->post('surgerydate'),
-                    'treatId' => $treat_id,
-                    'anaesthetic' => $this->input->post('surganaesthetist'),
-                    'asssurgeon' => $this->input->post('AssSurgeryDocname'),
-                    'surgeryname' => $this->input->post('surgeryname'),
-                );
-                $this->treatment_model->add_surgery_info($surgerydata);
-            }
-
-            if ($this->input->post('lab_check') == 'on') {
-                $labdata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'refDocName' => $this->input->post('labdocname'),
-                    'lab_test_cat' => $this->input->post('lab_category'),
-                    'lab_test_type' => $this->input->post('lab_test'),
-                    'testName' => $this->input->post('lab_investigations'),
-                    'testrange' => $this->input->post('testrange'),
-                    'testvalue' => $this->input->post('testvalue'),
-                    'testDate' => $this->input->post('testdate'),
-                    'treatID' => $treat_id
-                );
-                $this->treatment_model->add_lab_info($labdata);
-            }
-
-            if ($this->input->post('admit') == 'on') {
-                $beddata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'bedstatus' => 'Not Available',
-                    'treatId' => $treat_id,
-                );
-                $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
-
-                $inpatientdata = array(
-                    'OpdNo' => $this->input->post('opd_no'),
-                    'deptOpdNo' => $this->input->post('dopd'),
-                    'FName' => $this->input->post('fname'),
-                    'Age' => $this->input->post('age'),
-                    'Gender' => $this->input->post('gender'),
-                    'diagnosis' => $this->input->post('diagnosis'),
-                    'DoAdmission' => $this->input->post('admit_date'),
-                    'Doctor' => $this->input->post('doctor_name'),
-                    'department' => $this->input->post('department'),
-                    'BedNo' => $this->input->post('bed_no'),
-                    'WardNo' => '',
-                    'treatId' => $treat_id
-                );
-                $last_ipd_number = $this->treatment_model->add_patient_to_ipd($inpatientdata);
-
-                $ipd_treatment = array(
-                    'ipdno' => $last_ipd_number,
-                    'Trtment' => $this->input->post('treatment'),
-                    'diagnosis' => $this->input->post('diagnosis'),
-                    'complaints' => $this->input->post('complaints'),
-                    'procedures' => $this->input->post('panch_procedures'),
-                    'notes' => $this->input->post('notes'),
-                    'AddedBy' => $this->input->post('doctor_name'),
-                    'attndedon' => $this->input->post('admit_date'),
-                );
-
-                $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
-            }
         }
+
+        //if ($status) {
+
+        if ($this->input->post('ecg_check') == 'on') {
+            $ecgdata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'refDocName' => $this->input->post('ecgdocname'),
+                'refDate' => $this->input->post('ecgdate'),
+                'treatId' => $treat_id,
+            );
+            $this->treatment_model->add_ecg_info($ecgdata);
+        }
+
+        if ($this->input->post('usg_check') == 'on') {
+            $usgdata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'refDocName' => $this->input->post('usgdocname'),
+                'refDate' => $this->input->post('usgdate'),
+                'treatId' => $treat_id
+            );
+            $this->treatment_model->add_usg_info($usgdata);
+        }
+
+        if ($this->input->post('xray_check') == 'on') {
+            $xraydata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'refDocName' => $this->input->post('xraydocname'),
+                'partOfXray' => $this->input->post('partxray'),
+                //'filmSize' => $this->input->post('filmsize'),
+                'refDate' => $this->input->post('xraydate'),
+                'treatID' => $treat_id
+            );
+            $this->treatment_model->add_xray_info($xraydata);
+        }
+
+        if ($this->input->post('kshara_check') == 'on') {
+            $ksharadata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'ksharsType' => $this->input->post('ksharatype'),
+                'ksharaname' => $this->input->post('ksharaname'),
+                'surgeon' => $this->input->post('ksharasurgeonname'),
+                'anaesthetic' => $this->input->post('ksharaanaesthetist'),
+                'asssurgeon' => $this->input->post('assksharasurgeonname'),
+                'ksharsDate' => $this->input->post('ksharadate'),
+                'treatId' => $treat_id
+            );
+            $this->treatment_model->add_kshara_info($ksharadata);
+        }
+
+        if ($this->input->post('surgery_check') == 'on') {
+            $surgerydata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'surgName' => $this->input->post('SurgeryDocname'),
+                'surgType' => $this->input->post('surgerytype'),
+                'surgDate' => $this->input->post('surgerydate'),
+                'treatId' => $treat_id,
+                'anaesthetic' => $this->input->post('surganaesthetist'),
+                'asssurgeon' => $this->input->post('AssSurgeryDocname'),
+                'surgeryname' => $this->input->post('surgeryname'),
+            );
+            $this->treatment_model->add_surgery_info($surgerydata);
+        }
+
+        if ($this->input->post('lab_check') == 'on') {
+            $labdata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'refDocName' => $this->input->post('labdocname'),
+                'lab_test_cat' => $this->input->post('lab_category'),
+                'lab_test_type' => $this->input->post('lab_test'),
+                'testName' => $this->input->post('lab_investigations'),
+                'testrange' => $this->input->post('testrange'),
+                'testvalue' => $this->input->post('testvalue'),
+                'testDate' => $this->input->post('testdate'),
+                'treatID' => $treat_id
+            );
+            $this->treatment_model->add_lab_info($labdata);
+        }
+
+        if ($this->input->post('admit') == 'on') {
+            $beddata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'bedstatus' => 'Not Available',
+                'treatId' => $treat_id,
+            );
+            $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
+
+            $inpatientdata = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'deptOpdNo' => $this->input->post('dopd'),
+                'FName' => $this->input->post('fname'),
+                'Age' => $this->input->post('age'),
+                'Gender' => $this->input->post('gender'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'DoAdmission' => $this->input->post('admit_date'),
+                'Doctor' => $this->input->post('doctor_name'),
+                'department' => $this->input->post('department'),
+                'BedNo' => $this->input->post('bed_no'),
+                'WardNo' => '',
+                'treatId' => $treat_id
+            );
+            $last_ipd_number = $this->treatment_model->add_patient_to_ipd($inpatientdata);
+
+            $ipd_treatment = array(
+                'ipdno' => $last_ipd_number,
+                'Trtment' => $this->input->post('treatment'),
+                'diagnosis' => $this->input->post('diagnosis'),
+                'complaints' => $this->input->post('complaints'),
+                'procedures' => $this->input->post('panch_procedures'),
+                'notes' => $this->input->post('notes'),
+                'AddedBy' => $this->input->post('doctor_name'),
+                'attndedon' => $this->input->post('admit_date'),
+            );
+
+            $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
+        }
+        //}
         redirect('patient/treatment/show_patients', 'refresh');
     }
 

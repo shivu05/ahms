@@ -128,23 +128,29 @@ if (!empty($pancha_procedures)) {
                     <hr/>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
+                            <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
+                            <label>Add prescription: <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
                             <label>Complaints: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="complaints" id="complaints"></textarea>
+                            <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <label>Diagnosis: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="diagnosis" id="diagnosis"></textarea>
+                            <textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>
                         </div>
                     </div>
                     <hr/>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label>Treatment: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="treatment" id="treatment"></textarea>
+                            <textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <label>Panchakarma procedures: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="panch_procedures" id="panch_procedures"></textarea>
+                            <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
                         </div>
                         <!--<div class="col-md-2 col-sm12">
                             <label>Days</label>
@@ -193,7 +199,7 @@ if (!empty($pancha_procedures)) {
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label>Notes: <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="notes" id="notes"></textarea>
+                            <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <label>Doctor: </label>
@@ -213,7 +219,7 @@ if (!empty($pancha_procedures)) {
                         </div>
                         <div class="col-md-3 col-sm-12">
                             <label>Treated date: </label>
-                            <input type="text" name="attened_date" id="attened_date" class="form-control date_picker" value="<?php echo date('Y-m-d') ?>" />
+                            <input type="text" name="attened_date" id="attened_date" class="form-control date_picker prescription_inputs" value="<?php echo date('Y-m-d') ?>" />
                         </div>
                     </div><!-- end of trearment div-->
 
@@ -560,11 +566,19 @@ if (!empty($pancha_procedures)) {
         $('.chosen-select').chosen();
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
+        });
+
+        $('#add_prescription').click(function () {
+            if ($(this).is(":checked")) {
+                $('.prescription_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.prescription_inputs').attr('disabled', 'disabled');
+            }
         });
 
         $('#ecg_check').click(function () {
