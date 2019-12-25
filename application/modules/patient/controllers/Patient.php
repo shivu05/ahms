@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Patient
  *
@@ -427,6 +421,18 @@ class Patient extends SHV_Controller {
         $data = $this->ipd_model->get_indent_patients($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function search_patient() {
+        $this->layout->render();
+    }
+
+    function fetch_patient_info() {
+        $this->load->model('patient_model');
+        $opd = $this->input->post('opd_id');
+        $data["patient_data"] = $this->patient_model->get_patient_info($opd);
+        $this->layout->data = $data;
+        $this->load->view('patient/patient/patient_view_ajax',$data);
     }
 
 }
