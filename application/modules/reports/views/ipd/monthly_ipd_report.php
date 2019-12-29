@@ -1,15 +1,17 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border"><h3 class="box-title">IPD Report</h3>
+                <?php if (!empty($result)) { ?>
+                    <a href="<?php echo base_url('report/reports/print_YearlyIpdCount/'); ?>" class="pull-right btn btn-info btn-sm" id="export_pdf"><i class="fa fa-download "></i> Export</a>
+                <?php } ?>
+            </div>
+            <div class="box-body">
                 <?php
                 if (empty($result)) {
                     echo "<h4 class='center red'>No Records found</h4>";
                 } else {
                     ?>
-                    <a href="<?php echo base_url('report/reports/print_YearlyIpdCount/'); ?>" class="pull-right btn btn-info" id="export_pdf"><i class="icon-book"></i> Export</a>
-                    <div class="clearfix"></div>
-                    <hr>
                     <table id="example" border='1' class="table table-condensed" cellspacing="0"  width="90%">
 
                         <thead>

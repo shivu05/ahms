@@ -46,8 +46,8 @@ if (!empty($pancha_procedures)) {
 ?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
-        <div class="tile" style="border-top: 5px solid #009688;">
-            <div class="tile-body">
+        <div class="box box-primary" style="border-top: 5px solid #009688;">
+            <div class="box-body">
                 <div class="text-center">
                     <img class="img-responsive rounded" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
                 </div>
@@ -63,507 +63,512 @@ if (!empty($pancha_procedures)) {
         </div>
     </div>
     <div class="col-md-9 col-sm-12">
-        <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
-            <!--hiddden fields-->
-            <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
-            <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $opd; ?>"/>
-            <input type="hidden" name="department" id="department" value="<?php echo $current_treatment['department']; ?>"/>
-            <div class="tile" style="border-top: 5px solid #009688;">
-                <div class="tile-body">
-                    <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $current_treatment['department']))); ?></span>
-                        <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span> 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a class="btn btn-info btn-sm" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
-                        </span>
-                    </h6>
-                    <hr/>
+        <div class="">
+            <div class="">
+                <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
+                    <!--hiddden fields-->
+                    <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
+                    <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $opd; ?>"/>
+                    <input type="hidden" name="department" id="department" value="<?php echo $current_treatment['department']; ?>"/>
+                    <div class="box box-primary">
+                        <div class="box-body">
+                            <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $current_treatment['department']))); ?></span>
+                                <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-info btn-sm" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
+                                </span>
+                            </h6>
+                            <hr/>
 
-                    <?php if (!empty($treatment_details)): ?>
-                        <div class="accordion" id="accordionExample">
+                            <?php if (!empty($treatment_details)): ?>
+                                <div class="box-group" id="accordion">
+                                    <?php
+                                    $i = 0;
+                                    foreach ($treatment_details as $treatment) {
+                                        $i++;
+                                        ?>        
+                                        <div class="panel box box-primary">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $i ?>" aria-expanded="true" class="">
+                                                        <i class="fa fa-user-md main"></i><i class="fa fa-angle-double-right mr-3"></i>
+                                                        Visited date: <?php echo $treatment['CameOn']; ?>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse<?= $i ?>" class="collapse" aria-labelledby="heading<?= $i ?>" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3 border-info">
+                                                            <h6>Diagnosis:</h6>
+                                                            <p><?php echo $treatment['diagnosis']; ?></p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <h6>Treatment:</h6>
+                                                            <p><?php echo $treatment['Trtment']; ?></p>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <h6>Department:</h6>
+                                                            <p><?php echo $treatment['department']; ?></p>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <h6>Procedure:</h6>
+                                                            <p><?php echo $treatment['procedures']; ?></p>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <h6>Doctor:</h6>
+                                                            <p><?php echo $treatment['attndedby']; ?></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
+                                    <label>Add prescription: <span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Complaints: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Diagnosis: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Treatment: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Panchakarma procedures: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
+                                </div>
+                                <!--<div class="col-md-2 col-sm12">
+                                    <label>Days</label>
+                                    <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
+                                </div>-->
+                            </div>
+                            <!--<hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Medicine name: <span class="text-danger">*</span></label>
+                                    <select name="medicine" id="medicine" class="form-control  required chosen-select">
+                                        <option>Choose medicine</option>
+        
                             <?php
-                            $i = 0;
-                            foreach ($treatment_details as $treatment) {
-                                $i++;
-                                ?>        
-                                <div class="card mb-3">
-                                    <div class="card-header" id="heading<?= $i ?>">
-                                        <h2 class="mb-0">
-                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<?= $i ?>" aria-expanded="false" aria-controls="collapseOne">
-                                                <i class="fa fa-user-md main"></i><i class="fa fa-angle-double-right mr-3"></i>
-                                                Visited date: <?php echo $treatment['CameOn']; ?>
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapse<?= $i ?>" class="collapse" aria-labelledby="heading<?= $i ?>" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-3 border-info">
-                                                    <h6>Diagnosis:</h6>
-                                                    <p><?php echo $treatment['diagnosis']; ?></p>
+                            if (!empty($medicines)) {
+                                foreach ($medicines as $medicine) {
+                                    echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
+                                }
+                            }
+                            ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>When to take: <span class="text-danger">*</span></label>
+                                    <select name="med_freq" id="med_freq" class="form-control  required chosen-select">
+                                        <option>Choose frequency</option>
+                            <?php
+                            if (!empty($med_freqs)) {
+                                foreach ($med_freqs as $frq) {
+                                    echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
+                                }
+                            }
+                            ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Days: <span class="text-danger">*</span></label>
+                                    <input type="text" name="days" id="days" class="form-control required numbers-only" placeholder="Days" />
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Before food: <span class="text-danger">*</span></label>
+                                    <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
+                                </div>
+                            </div>-->
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-12">
+                                    <label>Notes: <span class="text-danger">*</span></label>
+                                    <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <label>Doctor: </label>
+                                    <input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>
+                                   <!-- <select class="form-control" name="doctor_name" id="doctor_name">
+                                        <option>Choose doctor</option>
+                                    <?php
+                                    if (!empty($doctors)) {
+                                        $selected_doc = $current_treatment['AddedBy'];
+                                        foreach ($doctors as $doctor) {
+                                            $selected = (strtolower($selected_doc) == strtolower($doctor)) ? 'selected="selected"' : '';
+                                            echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                    </select>-->
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <label>Treated date: </label>
+                                    <input type="text" name="attened_date" id="attened_date" class="form-control date_picker prescription_inputs" value="<?php echo date('Y-m-d') ?>" />
+                                </div>
+                            </div><!-- end of trearment div-->
+
+                            <!-- Tests -->
+                            <hr/>
+                            <div class="row" style="margin-bottom: 2rem;">
+                                <div class="col-md-12">
+                                    <h3>Procedures:</h3>
+                                    <div class="bs-component">
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav-item"><a class="nav-link disabled" data-toggle="tab" href="#birth" title="disabled">Birth</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#ecg">ECG</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usg">USG</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#xray">X-Ray</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kshara">Ksharasutra</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade" id="birth">
+                                                <p>Birth register</p>
+                                            </div>
+                                            <div class="tab-pane fade" id="ecg">
+                                                <div id="ECG">
+                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="ecg_check" id="ecg_check"/> ECG Register</h5>
+                                                    <div class="control-group col-4">
+                                                        <label class="control-label" for="ecgdocname">Referred Doctor Name:</label>
+                                                        <div class="controls">
+                                                            <input id="ecgdocname" value="" type="text" name="ecgdocname" class="form-control ecg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ecgdate">Referred date:</label>
+                                                        <div class="controls">
+                                                            <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG referred date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <h6>Treatment:</h6>
-                                                    <p><?php echo $treatment['Trtment']; ?></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="usg">
+                                                <div id="USG" style="display: block;margin-top: 2%;">
+                                                    <h5><input type="checkbox" name="usg_check" id="usg_check" /> USG Register</h5>
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="usgdocname">Referred Doctor Name:</label>
+                                                        <div class="controls">
+                                                            <input id="usgdocname" value="" type="text" name="usgdocname" class="form-control usg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="usgdate">Referred date:</label>
+                                                        <div class="controls">
+                                                            <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter USG referred date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <h6>Department:</h6>
-                                                    <p><?php echo $treatment['department']; ?></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="xray">
+                                                <div id="Xray" style="margin-top: 2%">
+                                                    <h5><input type="checkbox" name="xray_check" id="xray_check" /> X-ray Register</h5>
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="xraydocname">Referred Doctor Name:</label>
+                                                        <div class="controls">
+                                                            <input id="xraydocname" value="" type="text" name="xraydocname" class="form-control xray_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="partxray">Part of X-Ray:</label>
+                                                        <div class="controls">
+                                                            <input id="partxray" type="text" name="partxray" class="form-control xray_inputs" placeholder="Enter X-Ray Part" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <!--<div class="control-group col-4">											
+                                                        <label class="control-label" for="filmsize">Film Size:</label>
+                                                        <div class="controls">
+                                                            <input id="filmsize" type="text" name="filmsize" class="form-control xray_inputs" placeholder="Enter Film Size" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    <!--</div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="xraydate">Referred date:</label>
+                                                        <div class="controls">
+                                                            <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <h6>Procedure:</h6>
-                                                    <p><?php echo $treatment['procedures']; ?></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="kshara">
+                                                <div id="Kshara" style="margin-top: 2%">
+                                                    <h4><input type="checkbox" name="kshara_check" id="kshara_check" /> Ksharasutra Register</h4>
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharatype">Type of Ksharasutra:</label>
+                                                        <div class="controls">
+                                                            <input id="ksharatype" type="text" name="ksharatype" class="form-control kshara_inputs" placeholder="Enter Type of ksharasutra" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharatype">Name of Ksharasutra:</label>
+                                                        <div class="controls">
+                                                            <input id="ksharaname" type="text" name="ksharaname" class="form-control kshara_inputs" placeholder="Enter Name of ksharasutra" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
+                                                        <div class="controls">
+                                                            <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharasurgeonname">Name Of Asst. Surgeon:</label>
+                                                        <div class="controls">
+                                                            <input id="assksharasurgeonname" type="text" name="assksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharaanaesthetist">Name Of Anaesthetist:</label>
+                                                        <div class="controls">
+                                                            <input id="ksharaanaesthetist" type="text" name="ksharaanaesthetist" class="form-control kshara_inputs" placeholder="Enter Name " autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="ksharadate">Ksharasutra Date:</label>
+                                                        <div class="controls">
+                                                            <input id="ksharadate" type="text" name="ksharadate" class="form-control date_picker kshara_inputs" placeholder="Enter Date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <h6>Doctor:</h6>
-                                                    <p><?php echo $treatment['attndedby']; ?></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="surgery">
+                                                <div id="Surgery" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="surgery_check" id="surgery_check" /> Surgery Register</h4>
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="SurgeryDocname">Name of Surgeon:</label>
+                                                        <div class="controls">
+                                                            <input id="SurgeryDocname" value="" type="text" name="SurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Surgeon Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="AssSurgeryDocname">Name of Assistant Surgeon:</label>
+                                                        <div class="controls">
+                                                            <input id="AssSurgeryDocname" type="text" name="AssSurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Assistant Surgeon Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="surganaesthetist">Name of anaesthetist:</label>
+                                                        <div class="controls">
+                                                            <input id="surganaesthetist" type="text" name="surganaesthetist" class="form-control surgery_inputs" placeholder="Enter Anaesthetist" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="surgeryname">Name of surgery:</label>
+                                                        <div class="controls">
+                                                            <input id="surgeryname" type="text" name="surgeryname" class="form-control surgery_inputs" placeholder="Enter Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="surgerytype">Type of surgery:</label>
+                                                        <div class="controls">
+                                                            <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-4">											
+                                                        <label class="control-label" for="surgerydate">Date of surgery:</label>
+                                                        <div class="controls">
+                                                            <input id="surgerydate" type="text" name="surgerydate" class="form-control date_picker surgery_inputs" placeholder="Enter Date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="lab">
+                                                <div id="Lab" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="lab_check" id="lab_check" /> Laboratory Register</h4>
+                                                    <div class="control-group col-6">
+                                                        <label class="control-label" for="labdocname">Referred Doctor Name:</label>
+                                                        <div class="controls">
+                                                            <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                    <div class="control-group col-6">
+                                                        <label class="control-label" for="lab_category">Category:</label>
+                                                        <div class="controls">
+                                                            <select name="lab_category" id="lab_category" class="form-control chosen-select" multiple data-placeholder="Select Category">
+                                                                <?php
+                                                                if (!empty($lab_categories)) {
+                                                                    foreach ($lab_categories as $cat) {
+                                                                        echo '<option value="' . $cat['lab_cat_name'] . '">' . $cat['lab_cat_name'] . '</option>';
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->
+                                                    </div><!-- /control-group -->
+                                                    <div class="control-group col-6">
+                                                        <label class="control-label" for="testname">Tests:</label>
+                                                        <div class="controls">
+                                                            <select name="lab_test" id="lab_test" class="form-control chosen-select" multiple="" data-placeholder="Choose test">
+                                                            </select>
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->
+                                                    </div><!-- /control-group -->
+                                                    <div class="control-group col-6">
+                                                        <label class="control-label" for="lab_investigations">Investigations:</label>
+                                                        <div class="controls">
+                                                            <select name="lab_investigations" id="lab_investigations" class="form-control chosen-select" multiple="" data-placeholder="Choose investigation">
+                                                            </select>
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->
+                                                    </div><!-- /control-group 
+                                                    <div class="control-group col-6">											
+                                                        <label class="control-label" for="testname">Name of Test:</label>
+                                                        <div class="controls">
+                                                            <input id="testname" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->	
+                                                    <!--</div> <!-- /control-group -->
+                                                    <div class="control-group col-6">											
+                                                        <label class="control-label" for="testname">Referred Date:</label>
+                                                        <div class="controls">
+                                                            <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs" placeholder="Enter Date" autocomplete="off">
+                                                            <p class="help-block"></p>
+                                                        </div> <!-- /controls -->				
+                                                    </div> <!-- /control-group -->
+                                                </div>
+                                            </div>
+                                            <div  class="tab-pane fade" id="panchakarma_treatment">
+                                                <div id="panchakarma_div" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="panchakarma_check" id="panchakarma_check" /> Refer for Panchakarma</h4>
+                                                    <input type="hidden" name="tab_row_count" id="tab_row_count" value="1" />
+                                                    <table class="table table-borderless" id="panchakarma_table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 30% !important;">Procedure</th>
+                                                                <th style="width: 30% !important;">Sub procedure</th>
+                                                                <th style="width: 20% !important;">Start date</th>
+                                                                <th style="width: 20% !important;">End date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_1">
+                                                                        <option value="">Choose procedure</option>
+                                                                        <?= $panchakarma_markup ?>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
+                                                                        <option value="">Choose sub procedure</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td><input type="text" class="form-control date_picker" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
+                                                                <td><input type="text" class="form-control date_picker" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="3">&nbsp;</td>
+                                                                <td class="pull-right">
+                                                                    <button type="button" name="" id="add_row" class="btn btn-sm btn-primary">
+                                                                        <i class="fa fa-plus"></i> Add more procedure</button>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
-                            <label>Add prescription: <span class="text-danger">*</span></label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label>Complaints: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label>Diagnosis: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label>Treatment: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <label>Panchakarma procedures: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
-                        </div>
-                        <!--<div class="col-md-2 col-sm12">
-                            <label>Days</label>
-                            <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
-                        </div>-->
-                    </div>
-                    <!--<hr/>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>Medicine name: <span class="text-danger">*</span></label>
-                            <select name="medicine" id="medicine" class="form-control  required chosen-select">
-                                <option>Choose medicine</option>
-
-                    <?php
-                    if (!empty($medicines)) {
-                        foreach ($medicines as $medicine) {
-                            echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
-                        }
-                    }
-                    ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label>When to take: <span class="text-danger">*</span></label>
-                            <select name="med_freq" id="med_freq" class="form-control  required chosen-select">
-                                <option>Choose frequency</option>
-                    <?php
-                    if (!empty($med_freqs)) {
-                        foreach ($med_freqs as $frq) {
-                            echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
-                        }
-                    }
-                    ?>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label>Days: <span class="text-danger">*</span></label>
-                            <input type="text" name="days" id="days" class="form-control required numbers-only" placeholder="Days" />
-                        </div>
-                        <div class="col-md-2">
-                            <label>Before food: <span class="text-danger">*</span></label>
-                            <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
-                        </div>
-                    </div>-->
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <label>Notes: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <label>Doctor: </label>
-                            <input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>
-                           <!-- <select class="form-control" name="doctor_name" id="doctor_name">
-                                <option>Choose doctor</option>
-                            <?php
-                            if (!empty($doctors)) {
-                                $selected_doc = $current_treatment['AddedBy'];
-                                foreach ($doctors as $doctor) {
-                                    $selected = (strtolower($selected_doc) == strtolower($doctor)) ? 'selected="selected"' : '';
-                                    echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
-                                }
-                            }
-                            ?>
-                            </select>-->
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <label>Treated date: </label>
-                            <input type="text" name="attened_date" id="attened_date" class="form-control date_picker prescription_inputs" value="<?php echo date('Y-m-d') ?>" />
-                        </div>
-                    </div><!-- end of trearment div-->
-
-                    <!-- Tests -->
-                    <hr/>
-                    <div class="row" style="margin-bottom: 2rem;">
-                        <div class="col-12">
-                            <h3>Procedures:</h3>
-                            <div class="bs-component">
-                                <ul class="nav nav-tabs">
-                                    <li class="nav-item"><a class="nav-link disabled" data-toggle="tab" href="#birth" title="disabled">Birth</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#ecg">ECG</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usg">USG</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#xray">X-Ray</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kshara">Ksharasutra</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
-                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
-                                </ul>
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade" id="birth">
-                                        <p>Birth register</p>
-                                    </div>
-                                    <div class="tab-pane fade" id="ecg">
-                                        <div id="ECG">
-                                            <h5 style="margin-top: 2%;"><input type="checkbox" name="ecg_check" id="ecg_check"/> ECG Register</h5>
-                                            <div class="control-group col-4">
-                                                <label class="control-label" for="ecgdocname">Referred Doctor Name:</label>
-                                                <div class="controls">
-                                                    <input id="ecgdocname" value="" type="text" name="ecgdocname" class="form-control ecg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ecgdate">Referred date:</label>
-                                                <div class="controls">
-                                                    <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG referred date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="usg">
-                                        <div id="USG" style="display: block;margin-top: 2%;">
-                                            <h5><input type="checkbox" name="usg_check" id="usg_check" /> USG Register</h5>
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="usgdocname">Referred Doctor Name:</label>
-                                                <div class="controls">
-                                                    <input id="usgdocname" value="" type="text" name="usgdocname" class="form-control usg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="usgdate">Referred date:</label>
-                                                <div class="controls">
-                                                    <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter USG referred date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="xray">
-                                        <div id="Xray" style="margin-top: 2%">
-                                            <h5><input type="checkbox" name="xray_check" id="xray_check" /> X-ray Register</h5>
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="xraydocname">Referred Doctor Name:</label>
-                                                <div class="controls">
-                                                    <input id="xraydocname" value="" type="text" name="xraydocname" class="form-control xray_inputs" placeholder="Enter Doctor Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="partxray">Part of X-Ray:</label>
-                                                <div class="controls">
-                                                    <input id="partxray" type="text" name="partxray" class="form-control xray_inputs" placeholder="Enter X-Ray Part" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <!--<div class="control-group col-4">											
-                                                <label class="control-label" for="filmsize">Film Size:</label>
-                                                <div class="controls">
-                                                    <input id="filmsize" type="text" name="filmsize" class="form-control xray_inputs" placeholder="Enter Film Size" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            <!--</div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="xraydate">Referred date:</label>
-                                                <div class="controls">
-                                                    <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="kshara">
-                                        <div id="Kshara" style="margin-top: 2%">
-                                            <h4><input type="checkbox" name="kshara_check" id="kshara_check" /> Ksharasutra Register</h4>
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharatype">Type of Ksharasutra:</label>
-                                                <div class="controls">
-                                                    <input id="ksharatype" type="text" name="ksharatype" class="form-control kshara_inputs" placeholder="Enter Type of ksharasutra" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharatype">Name of Ksharasutra:</label>
-                                                <div class="controls">
-                                                    <input id="ksharaname" type="text" name="ksharaname" class="form-control kshara_inputs" placeholder="Enter Name of ksharasutra" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
-                                                <div class="controls">
-                                                    <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharasurgeonname">Name Of Asst. Surgeon:</label>
-                                                <div class="controls">
-                                                    <input id="assksharasurgeonname" type="text" name="assksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharaanaesthetist">Name Of Anaesthetist:</label>
-                                                <div class="controls">
-                                                    <input id="ksharaanaesthetist" type="text" name="ksharaanaesthetist" class="form-control kshara_inputs" placeholder="Enter Name " autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="ksharadate">Ksharasutra Date:</label>
-                                                <div class="controls">
-                                                    <input id="ksharadate" type="text" name="ksharadate" class="form-control date_picker kshara_inputs" placeholder="Enter Date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="surgery">
-                                        <div id="Surgery" style="margin-top: 2%;">
-                                            <h4><input type="checkbox" name="surgery_check" id="surgery_check" /> Surgery Register</h4>
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="SurgeryDocname">Name of Surgeon:</label>
-                                                <div class="controls">
-                                                    <input id="SurgeryDocname" value="" type="text" name="SurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Surgeon Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="AssSurgeryDocname">Name of Assistant Surgeon:</label>
-                                                <div class="controls">
-                                                    <input id="AssSurgeryDocname" type="text" name="AssSurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Assistant Surgeon Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="surganaesthetist">Name of anaesthetist:</label>
-                                                <div class="controls">
-                                                    <input id="surganaesthetist" type="text" name="surganaesthetist" class="form-control surgery_inputs" placeholder="Enter Anaesthetist" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="surgeryname">Name of surgery:</label>
-                                                <div class="controls">
-                                                    <input id="surgeryname" type="text" name="surgeryname" class="form-control surgery_inputs" placeholder="Enter Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="surgerytype">Type of surgery:</label>
-                                                <div class="controls">
-                                                    <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="surgerydate">Date of surgery:</label>
-                                                <div class="controls">
-                                                    <input id="surgerydate" type="text" name="surgerydate" class="form-control date_picker surgery_inputs" placeholder="Enter Date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="lab">
-                                        <div id="Lab" style="margin-top: 2%;">
-                                            <h4><input type="checkbox" name="lab_check" id="lab_check" /> Laboratory Register</h4>
-                                            <div class="control-group col-6">
-                                                <label class="control-label" for="labdocname">Referred Doctor Name:</label>
-                                                <div class="controls">
-                                                    <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-6">
-                                                <label class="control-label" for="lab_category">Category:</label>
-                                                <div class="controls">
-                                                    <select name="lab_category" id="lab_category" class="form-control chosen-select" multiple data-placeholder="Select Category">
-                                                        <?php
-                                                        if (!empty($lab_categories)) {
-                                                            foreach ($lab_categories as $cat) {
-                                                                echo '<option value="' . $cat['lab_cat_name'] . '">' . $cat['lab_cat_name'] . '</option>';
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->
-                                            </div><!-- /control-group -->
-                                            <div class="control-group col-6">
-                                                <label class="control-label" for="testname">Tests:</label>
-                                                <div class="controls">
-                                                    <select name="lab_test" id="lab_test" class="form-control chosen-select" multiple="" data-placeholder="Choose test">
-                                                    </select>
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->
-                                            </div><!-- /control-group -->
-                                            <div class="control-group col-6">
-                                                <label class="control-label" for="lab_investigations">Investigations:</label>
-                                                <div class="controls">
-                                                    <select name="lab_investigations" id="lab_investigations" class="form-control chosen-select" multiple="" data-placeholder="Choose investigation">
-                                                    </select>
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->
-                                            </div><!-- /control-group 
-                                            <div class="control-group col-6">											
-                                                <label class="control-label" for="testname">Name of Test:</label>
-                                                <div class="controls">
-                                                    <input id="testname" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->	
-                                            <!--</div> <!-- /control-group -->
-                                            <div class="control-group col-6">											
-                                                <label class="control-label" for="testname">Referred Date:</label>
-                                                <div class="controls">
-                                                    <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs" placeholder="Enter Date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
-                                        </div>
-                                    </div>
-                                    <div  class="tab-pane fade" id="panchakarma_treatment">
-                                        <div id="panchakarma_div" style="margin-top: 2%;">
-                                            <h4><input type="checkbox" name="panchakarma_check" id="panchakarma_check" /> Refer for Panchakarma</h4>
-                                            <input type="hidden" name="tab_row_count" id="tab_row_count" value="1" />
-                                            <table class="table table-borderless" id="panchakarma_table">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width: 30% !important;">Procedure</th>
-                                                        <th style="width: 30% !important;">Sub procedure</th>
-                                                        <th style="width: 20% !important;">Start date</th>
-                                                        <th style="width: 20% !important;">End date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_1">
-                                                                <option value="">Choose procedure</option>
-                                                                <?= $panchakarma_markup ?>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
-                                                                <option value="">Choose sub procedure</option>
-                                                            </select>
-                                                        </td>
-                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
-                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <td colspan="3">&nbsp;</td>
-                                                        <td class="pull-right">
-                                                            <button type="button" name="" id="add_row" class="btn btn-sm btn-primary">
-                                                                <i class="fa fa-plus"></i> Add more procedure</button>
-                                                        </td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <!--end of tests-->
-                    <div class="admin_div">
-                        <div class="toggle-flip">
-                            <label>
-                                <input type="checkbox" name="admit" id="admit"><span class="flip-indecator" data-toggle-on="Admit" data-toggle-off="Follow up"></span>
-                            </label>
-                        </div>
-                        <?php
-                        $bed_select = '';
-                        if (!empty($wards)) {
-                            foreach ($wards as $ward) {
-                                $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
-                                $beds = explode(',', $ward['beds']);
-                                if (!empty($beds)) {
-                                    foreach ($beds as $bed) {
-                                        $bed_select .= '<option value="' . $bed . '">' . $bed . '</option>';
+                            <!--end of tests-->
+                            <div class="admin_div">
+                                <div class="toggle-flip">
+                                    <label>
+                                        <input type="checkbox" name="admit" id="admit"> Admit
+                                    </label>
+                                </div>
+                                <?php
+                                $bed_select = '';
+                                if (!empty($wards)) {
+                                    foreach ($wards as $ward) {
+                                        $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
+                                        $beds = explode(',', $ward['beds']);
+                                        if (!empty($beds)) {
+                                            foreach ($beds as $bed) {
+                                                $bed_select .= '<option value="' . $bed . '">' . $bed . '</option>';
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                        }
-                        ?>
-                        <div id="admit_form" style="display: none;margin-left: 2%;">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-12">
-                                    <select class="form-control" name="bed_no" id="bed_no">
-                                        <option value="">Select bed</option>
-                                        <?php echo $bed_select; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row" style="">
-                                <div class="col-md-4 col-sm-12">
-                                    <label>Admission date: </label>
-                                    <input type="text" name="admit_date" id="admit_date" class="form-control date_picker" placeholder="Admission date"/>
+                                ?>
+                                <div id="admit_form" style="display: none;margin-left: 2%;">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12">
+                                            <select class="form-control" name="bed_no" id="bed_no">
+                                                <option value="">Select bed</option>
+                                                <?php echo $bed_select; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="">
+                                        <div class="col-md-4 col-sm-12">
+                                            <label>Admission date: </label>
+                                            <input type="text" name="admit_date" id="admit_date" class="form-control date_picker" placeholder="Admission date"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 text-center">
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> Save</button>
+                                <button class="btn btn-danger"><i class="fa fa-refresh"></i> Reset</button>
+                            </div>
+                        </div>
+                        <br/>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 text-center">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> Save</button>
-                        <button class="btn btn-danger"><i class="fa fa-refresh"></i> Reset</button>
-                    </div>
-                </div>
-            </div>
 
-        </form>
+                </form>
+            </div>
+        </div>
     </div><!-- col-9 -->
 </div>
 <script type="text/javascript">
     $(function () {
-        $('.chosen-select').chosen();
+        $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
     var procedure_div_ids = ['prescription_inputs', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
@@ -782,8 +787,8 @@ if (!empty($pancha_procedures)) {
                     '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_end_date[]" pancha_proc_end_date />' + '</td>' +
                     '</tr>';
             $('#panchakarma_table').append(markup);
-            $(".pancha_procedure").chosen();
-            $(".pancha_sub_procedure").chosen();
+            $(".pancha_procedure").chosen({width: '100%'});
+            $(".pancha_sub_procedure").chosen({width: '100%'});
             $('.date_picker').datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,

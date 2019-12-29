@@ -202,7 +202,7 @@ class Rbac {
             }
             $params = array('tree' => $tree, 'rbac_session' => $this->_session);
             $this->_ci->load->library('rbac_menu', $params);
-            return $this->_ci->rbac_menu->show_user_menu_left();
+            return $this->_ci->rbac_menu->show_user_menu_top();
         } else {
             redirect('Login');
         }

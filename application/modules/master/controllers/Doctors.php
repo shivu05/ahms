@@ -16,9 +16,10 @@ class Doctors extends SHV_Controller {
     function index() {
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navIcon = "fa fa-users";
         $this->layout->navTitle = "Doctors duty";
+        $this->layout->title = "Doctors duty";
         $this->layout->navDescr = "Duty doctos list";
         $data = array();
         $data['department_list'] = $this->get_department_list('array');

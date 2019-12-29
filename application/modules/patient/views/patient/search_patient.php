@@ -1,10 +1,10 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="tile">
-            <div class="tile-title">
-                <h5>Search patient:</h5>
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Search patient:</h3>
             </div>
-            <div class="tile-body">
+            <div class="box-body">
                 <form name="patient_info_form" id="patient_info_form" method="POST">
                     <div class="row">
 

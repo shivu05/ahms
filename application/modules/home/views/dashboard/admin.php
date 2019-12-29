@@ -1,70 +1,85 @@
 <div class="row">
-    <div class="col-md-4 col-lg-4">
-        <div class="widget-small primary "><i class="icon fa fa-male fa-3x"></i>
-            <div class="info">
-                <h4>Male</h4>
-                <p><b><?php echo $gender_count[0]['males']; ?></b></p>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="icon fa fa-male fa-1x"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Male</span>
+                <span class="info-box-number"><?php echo $gender_count[0]['males']; ?></span>
             </div>
+            <!--/.info-box-content -->
         </div>
+        <!--/.info-box -->
     </div>
-    <div class="col-md-4 col-lg-4">
-        <div class="widget-small info"><i class="icon fa fa-female fa-3x"></i>
-            <div class="info">
-                <h4>Female</h4>
-                <p><b><?php echo $gender_count[0]['females']; ?></b></p>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="icon fa fa-female"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Female</span>
+                <span class="info-box-number"><?php echo $gender_count[0]['females']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
+        <!-- /.info-box -->
     </div>
-    <div class="col-md-4 col-lg-4">
-        <div class="widget-small warning"><i class="icon fa fa-user-plus fa-3x"></i>
-            <div class="info">
-                <h4>Total</h4>
-                <p><b><?php echo $gender_count[0]['total']; ?></b></p>
+    <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="icon fa fa-user-plus"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Total</span>
+                <span class="info-box-number"><?php echo $gender_count[0]['total']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
+        <!-- /.info-box -->
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="tile">
-            <h3 class="tile-title">Department wise Patients</h3>
-            <?php
-            $table = '';
-            $graph = array();
-            if (!empty($dept_wise_data)) {
-                $total = 0;
-                $maletotal = 0;
-                $femaletotal = 0;
-                $table = "<div class='table-responsive'><table class='table table-bordered'>";
-                $table .= "<thead><tr style='background-color:#009688;color:#FFFFFF'><th><center>Department</center></th><th><center>Old</center></th><th><center>New</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th></tr></thead>";
-                $table .= "<tbody>";
-                foreach ($dept_wise_data as $pdata) {
-                    $table .= "<tr>";
-                    $table .= "<td>" . $pdata['department'] . "</td>";
-                    $table .= "<td style='text-align: right;'>" . $pdata['OLD'] . "</td>";
-                    $table .= "<td style='text-align: right;'>" . $pdata['NEW'] . "</td>";
-                    $table .= "<td style='text-align: right;'>" . $pdata['Total'] . "</td>";
-                    $table .= "<td style='text-align: right;'>" . $pdata['Male'] . "</td>";
-                    $table .= "<td style='text-align: right;'>" . $pdata['Female'] . "</td>";
-                    $table .= "</tr>";
-                    $total = $total + $pdata['Total'];
-                    $maletotal = $maletotal + $pdata['Male'];
-                    $femaletotal = $femaletotal + $pdata['Female'];
-                    $dept = restructure_string(preg_replace('/&/', '', $pdata['department']));
-                    array_push($graph, array($dept => $pdata['Total']));
-                }
-                $table .= "<tr class='alert-info' style='text-align: right;'><td colspan=3 align=right>Total:</td><td style='text-align: right;'>" . $total . "</td><td>" . $maletotal . "</td><td>" . $femaletotal . "</td></tr>";
-                $table .= "</tbody>";
-                $table .= "</table></div>";
-            }
-            echo $table;
-            ?>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="tile">
-            <div class="embed-responsive embed-responsive-16by9" >
-                <canvas class="embed-responsive-item" id="lineChartDemo"></canvas>
+<div class="box box-primary">
+    <div class="box-header with-border"><h3 class="box-title">Department wise patients</h3></div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="tile">
+                    <h3 class="tile-title"></h3>
+                    <?php
+                    $table = '';
+                    $graph = array();
+                    if (!empty($dept_wise_data)) {
+                        $total = 0;
+                        $maletotal = 0;
+                        $femaletotal = 0;
+                        $table = "<div class='table-responsive'><table class='table table-bordered'>";
+                        $table .= "<thead><tr style='background-color:#009688;color:#FFFFFF'><th><center>Department</center></th><th><center>Old</center></th><th><center>New</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th></tr></thead>";
+                        $table .= "<tbody>";
+                        foreach ($dept_wise_data as $pdata) {
+                            $table .= "<tr>";
+                            $table .= "<td>" . $pdata['department'] . "</td>";
+                            $table .= "<td style='text-align: right;'>" . $pdata['OLD'] . "</td>";
+                            $table .= "<td style='text-align: right;'>" . $pdata['NEW'] . "</td>";
+                            $table .= "<td style='text-align: right;'>" . $pdata['Total'] . "</td>";
+                            $table .= "<td style='text-align: right;'>" . $pdata['Male'] . "</td>";
+                            $table .= "<td style='text-align: right;'>" . $pdata['Female'] . "</td>";
+                            $table .= "</tr>";
+                            $total = $total + $pdata['Total'];
+                            $maletotal = $maletotal + $pdata['Male'];
+                            $femaletotal = $femaletotal + $pdata['Female'];
+                            $dept = restructure_string(preg_replace('/&/', '', $pdata['department']));
+                            array_push($graph, array($dept => $pdata['Total']));
+                        }
+                        $table .= "<tr class='alert-info' style='text-align: right;'><td colspan=3 align=right>Total:</td><td style='text-align: right;'>" . $total . "</td><td>" . $maletotal . "</td><td>" . $femaletotal . "</td></tr>";
+                        $table .= "</tbody>";
+                        $table .= "</table></div>";
+                    }
+                    echo $table;
+                    ?>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="tile">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <canvas class="embed-responsive-item" id="lineChartDemo"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

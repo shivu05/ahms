@@ -19,7 +19,7 @@ class Treatment extends SHV_Controller {
         $this->layout->navIcon = "fa fa-user-md ";
         $this->layout->title = "OPD Treatment";
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "OPD Treatment";
+        $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
     }
 
@@ -366,9 +366,9 @@ class Treatment extends SHV_Controller {
     function display_all_patients() {
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->layout->navIcon = "fa fa-users ";
-        $this->layout->title = "OPD list";
+        $this->layout->title = "OPD";
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "OPD patients";
+        $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Print OPD bills";
         $data = array();
         $this->layout->data = $data;

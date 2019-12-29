@@ -1,34 +1,34 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="tile">
-            <div class="tile-title">
-                <h5>Add new patient:</h5>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Add new patient:</h3>
             </div>
-            <div class="row tile-body">
+            <div class="row box-body">
                 <form class="form-horizontal col-md-12" name="patient_form" id="patient_form" action="<?php echo base_url('patient/save'); ?>" method="POST">
                     <div class="row">
-                        <div class="col-lg-5">
-                            <div class="form-group">
+                        <div class="col-md-6">
+                            <div class=" ">
                                 <label for="inputFirstname">First name: </label>
                                 <input class="form-control required" id="first_name" name="first_name" type="text" aria-describedby="first_nameHelp" placeholder="Enter your firstname">
                                 <small class="form-text text-muted" id="first_nameHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputAge">Age: </label>
                                 <input class="form-control required" id="age" name="age" type="text" aria-describedby="ageHelp" placeholder="Enter your age">
                                 <small class="form-text text-muted" id="ageeHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputAge">Mobile: </label>
                                 <input class="form-control" id="mobile" name="mobile" type="text" aria-describedby="ageHelp" placeholder="Enter your mobile number">
                                 <small class="form-text text-muted" id="ageeHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputAge">Place: </label>
                                 <input class="form-control required" id="place" name="place" type="text" aria-describedby="placeHelp" placeholder="Enter your place">
                                 <small class="form-text text-muted" id="placeHelp"></small>
                             </div>
-                            <div class="form-group" style="margin-top: 36px">
+                            <div class=" " style="margin-top: 36px">
                                 <label for="exampleSelect1">Department:</label>
                                 <select class="form-control required" id="department" name="department">
                                     <option value="">Choose department</option>
@@ -41,7 +41,7 @@
                                     ?>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="exampleSelect1">Doctor:</label>
                                 <select class="form-control required" id="doctor" name="doctor" disabled="disabled">
                                     <option value="">Choose doctor</option>
@@ -50,12 +50,12 @@
 
                         </div>
                         <div class="col-lg-5">
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputLastname">Last name: </label>
                                 <input class="form-control required" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
                                 <small class="form-text text-muted" id="last_nameHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label class="control-label">Gender:</label><br/>
                                 <div class="form-check-inline">
                                     <label class="form-check-label inline">
@@ -73,24 +73,24 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="form-group" style="margin-top: 30px">
+                            <div class=" " style="margin-top: 30px">
                                 <label for="inputAge">Occupation: </label>
                                 <input class="form-control required" id="occupation" name="occupation" type="text" aria-describedby="ageHelp" placeholder="Enter your occupation">
                                 <small class="form-text text-muted" id="occupationHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputAddress">Address: </label>
                                 <textarea class="form-control required" id="address" name="address" type="text" aria-describedby="addressHelp" placeholder="Enter your address"></textarea>
                                 <small class="form-text text-muted" id="addressHelp"></small>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="exampleSelect1">Sub department:</label>
                                 <select class="form-control required" id="sub_department" name="sub_department" disabled="disabled">
                                     <option value="">Choose sub department</option>
 
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class=" ">
                                 <label for="inputLastname">Consultation date: </label>
                                 <input class="form-control date_picker required" id="consultation_date" name="consultation_date" type="text" aria-describedby="consultation_dateHelp" placeholder="Enter consultation date" value="<?= date('Y-m-d') ?>">
                                 <small class="form-text text-muted" id="last_nameHelp"></small>
@@ -99,12 +99,12 @@
                     </div>
                 </form>
             </div>
-            <div class="tile-footer">
+            <div class="box-footer">
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-6">
-                        <button class="btn btn-primary" type="button" name="save_button" id="save_button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-danger" type="reset" name="reset_button" id="reset_button"><i class="fa fa-fw fa-lg fa-refresh"></i>Reset</button>&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-secondary" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                    <div class="col-md-12">
+                        <a class="btn btn-default pull-right" href="#"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cancel</a>
+                        <button class="btn btn-danger pull-right rm-1" type="reset" name="reset_button" id="reset_button"><i class="fa fa-fw fa-lg fa-refresh"></i>Reset</button>
+                        <button class="btn btn-primary pull-right rm-1" type="button" name="save_button" id="save_button"><i class="fa fa-fw fa-lg fa-check-circle"></i>Register</button>
                     </div>
                 </div>
             </div>

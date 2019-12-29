@@ -1,8 +1,8 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <!-- /widget-header -->
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header with-border"><h3 class="box-title"></h3></div>
+            <div class="box-body">
                 <?php
                 if (empty($result)) {
                     echo "<h4 class='center red'>No Records found</h4>";

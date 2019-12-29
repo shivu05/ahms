@@ -22,7 +22,7 @@ class Ipd extends SHV_Controller {
 
     function index() {
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "IPD patients";
+        $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "In Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
@@ -219,7 +219,7 @@ class Ipd extends SHV_Controller {
 
     public function bed_occupied_report() {
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "Bed occupied report";
+        $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation', 'js'));
@@ -462,7 +462,7 @@ class Ipd extends SHV_Controller {
 
     function bed_occupancy_chart() {
         $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "Bed occupancy report";
+        $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -503,7 +503,7 @@ class Ipd extends SHV_Controller {
 
     function monthly_ipd_report() {
         $this->layout->title = "IPD";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD Report";
         $this->layout->navDescr = "Monthly IPD report";
         $this->layout->navIcon = 'fa fa-bed';

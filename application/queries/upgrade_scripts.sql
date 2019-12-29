@@ -449,3 +449,7 @@ ENGINE = InnoDB;
 
 update labregistery set tested_date=testDate;
 ALTER TABLE `labregistery` MODIFY COLUMN `tested_date` DATE;
+
+
+INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) VALUES (41, 'SEARCH_PATIENT', 'Search patient', '4', '4', '4', '', 'patient/search_patient', 'Active', '', '', '1', CURRENT_TIMESTAMP);
+INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES (NULL, '1', '41', 'Active', '1', CURRENT_TIMESTAMP, '1');

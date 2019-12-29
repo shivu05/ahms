@@ -1,11 +1,16 @@
+<style>
+    .modal-body{
+        margin: 0 10px 0 10px;
+    }
+</style>
 <div class="row">
     <div class="col-12">
-        <div class="tile">
-            <div class="tile-title">Doctors duty chart:</div>
-            <div class="tile-body">
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title">Doctors duty chart:</h3></div>
+            <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('master/doctors/export_duty_chart_pdf'); ?>">
                     <div class="form-group col-md-2">
-                        <label class="control-label">Day:</label>
+                        <label class="control-label sr-only">Day:</label>
                         <select class="form-control required" name="day" id="day">
                             <option value="">Choose day</option>
                             <?php
@@ -18,11 +23,11 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="control-label">Name</label>
+                        <label class="control-label sr-only">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="control-label">Role</label>
+                        <label class="control-label sr-only">Role</label>
                         <select name="role" id="role" class="form-control">
                             <option value="">Choose</option>
                             <?php
@@ -38,13 +43,14 @@
                         <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle btn-sm" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                    <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
-                                </div>
-                            </div>
+                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
+                                <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
+                            </ul>
                         </div>
                         <button class="btn btn-secondary btn-sm" type="button" id="add"><i class="fa fa-fw fa-lg fa-plus-circle"></i> Add doctor's duty</button>
                     </div>
@@ -112,8 +118,9 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
                 <h4 class="modal-title">Edit Doctors duty</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="POST" name="edit_duty_form" id="edit_duty_form">

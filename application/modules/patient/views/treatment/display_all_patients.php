@@ -1,10 +1,11 @@
 <div class="row">
     <div class="col-12">
-        <div class="tile">
-            <div class="tile-body">
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title">Patient's List:</h3></div>
+            <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="">
                     <div class="form-group col-md-3">
-                        <label class="control-label">OPD</label>
+                        <label class="control-label sr-only">OPD</label>
                         <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
                     </div>
                     <!--<div class="form-group col-md-3">
@@ -12,19 +13,22 @@
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
                     </div>-->
                     <div class="form-group col-md-2">
-                        <label class="control-label">Date</label>
+                        <label class="control-label  sr-only">Date</label>
                         <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
                     </div>
                     <div class="form-group col-md-4 align-self-end">
-                        <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                        <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
-                            <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                            <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">OPD bill</a>
-                                    <a class="dropdown-item" href="#" id="export_to_prescription_pdf">OPD Prescription</a>
-                                </div>
+                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item" href="#" id="export_to_pdf">OPD bill</a></li>
+                                    <li><a class="dropdown-item" href="#" id="export_to_prescription_pdf">OPD Prescription</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -80,7 +84,7 @@
                 title: "OPD",
                 class: "opd_no",
                 data: function (item) {
-                    return item.OpdNo;
+                    return '<span class="badge hand_cursor"> ' + item.OpdNo + '</span>';
                 }
             },
             {

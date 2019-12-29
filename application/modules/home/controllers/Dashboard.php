@@ -20,6 +20,7 @@ class Dashboard extends SHV_Controller {
         }
         $this->layout->title = 'Dashboard';
         $this->load->model('home/dashboard_model');
+        $this->layout->breadcrumbsFlag = TRUE;
     }
 
     public function index() {
@@ -42,9 +43,10 @@ class Dashboard extends SHV_Controller {
 
     public function admin() {
         if ($this->rbac->is_admin()) {
-            $this->scripts_include->includePlugins(array('charts'), 'js');
+            $this->scripts_include->includePlugins(array('chartjs'), 'js');
             $this->layout->navTitleFlag = true;
             $this->layout->navTitle = "Dashboard";
+            $this->breadcrumbs->push('Dashboard', '#');
 
             $data = array();
             $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();

@@ -1,26 +1,13 @@
-<div class="row user">
-    <!--<div class="col-md-12">
-        <div class="profile">
-            <div class="info"><img class="user-img" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg">
-                <h4>John Doe</h4>
-                <p>FrontEnd Developer</p>
-            </div>
-            <div class="cover-image"></div>
-        </div>
-    </div>-->
-    <?php $is_admin = $this->rbac->is_admin(); ?>
-    <div class="col-md-3">
-        <div class="tile p-0">
-            <ul class="nav flex-column nav-tabs user-tabs">
-                <!--<li class="nav-item"><a class="nav-link active" href="#user-timeline" data-toggle="tab">Timeline</a></li>-->
-                <?php if ($is_admin): ?>
-                    <li class="nav-item"><a class="nav-link active user-settings" href="#user-settings" data-toggle="tab">Settings</a></li>
-                <?php endif; ?>
-                <li class="nav-item"><a class="nav-link profile-settings <?= (!$is_admin) ? 'active' : '' ?>" href="#profile-settings" data-toggle="tab">Profile</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-9">
+<?php $is_admin = $this->rbac->is_admin(); ?>
+<div class="col-md-12">
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <?php if ($is_admin): ?>
+                <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="true">Settings</a></li>
+            <?php endif; ?>
+            <li class="<?= (!$is_admin) ? 'active' : '' ?>"><a class="" href="#profile-settings" data-toggle="tab" aria-expanded="false">Profile</a></li>
+        </ul>
         <div class="tab-content">
             <?php if ($is_admin) { ?>
                 <div class="tab-pane <?= ($is_admin) ? 'active' : '' ?>" id="user-settings">
@@ -107,7 +94,9 @@
                 </div>
             </div>
         </div>
+        <!-- /.tab-content -->
     </div>
+    <!-- nav-tabs-custom -->
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

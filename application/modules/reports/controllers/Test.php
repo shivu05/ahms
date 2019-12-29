@@ -16,7 +16,7 @@ class Test extends SHV_Controller {
 
     function xray() {
         $this->layout->title = "X-Ray";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "X-Ray";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -83,7 +83,7 @@ class Test extends SHV_Controller {
 
     function usg() {
         $this->layout->title = "USG";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "USG";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -148,7 +148,7 @@ class Test extends SHV_Controller {
 
     function ecg() {
         $this->layout->title = "ECG";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "ECG Reports";
         $this->layout->navDescr = "Electrocardiogram";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -213,7 +213,7 @@ class Test extends SHV_Controller {
 
     function birth() {
         $this->layout->title = "Birth";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Birth";
         $this->layout->navDescr = "Birth register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -279,7 +279,7 @@ class Test extends SHV_Controller {
 
     function diet_register() {
         $this->layout->title = "Diet";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Diet";
         $this->layout->navDescr = "Diet register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -305,7 +305,7 @@ class Test extends SHV_Controller {
 
     function ksharasutra() {
         $this->layout->title = "Ksharasutra";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Ksharasutra";
         $this->layout->navDescr = "Ksharasutra register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -418,7 +418,7 @@ class Test extends SHV_Controller {
 
     function surgery() {
         $this->layout->title = "Surgery";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Surgery";
         $this->layout->navDescr = "Surgery register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -444,7 +444,7 @@ class Test extends SHV_Controller {
 
     function panchakarma() {
         $this->layout->title = "Panchakarma";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -470,7 +470,7 @@ class Test extends SHV_Controller {
 
     function panchakarma_proc_count() {
         $this->layout->title = "Panchakarma procedures";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma procedure count";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -490,7 +490,7 @@ class Test extends SHV_Controller {
 
     function surgery_count() {
         $this->layout->title = "Surgery";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Surgery";
         $this->layout->navDescr = "Surgery count";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -509,7 +509,7 @@ class Test extends SHV_Controller {
 
     function lab() {
         $this->layout->title = "Lab";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Lab";
         $this->layout->navDescr = "Laboratory";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -528,7 +528,7 @@ class Test extends SHV_Controller {
 
     function lab_count() {
         $this->layout->title = "Lab";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Lab";
         $this->layout->navDescr = "Laboratory test count";
         $this->scripts_include->includePlugins(array('datatables', 'js'));

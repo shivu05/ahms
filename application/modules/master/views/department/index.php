@@ -1,10 +1,9 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-title">Department list:</div>
-            <div class="tile-body">
-                <?php //pma($depts) ?>
-                <div class="col-4">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">Department list:</div>
+            <div class="box-body">
+                <div class="col-md-4">
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
@@ -45,7 +44,7 @@
                 <h4 class="modal-title">Edit Department </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="margin: 0 10px 0 10px;">
                 <form class="form-horizontal" method="POST" name="edit_dept_form" id="edit_dept_form">
                     <div class="form-group">
                         <label for="week_day">Percentage:</label>
@@ -86,7 +85,11 @@
                             message: "Data updated successfully",
                             icon: 'fa fa-check'
                         }, {
-                            type: "success"
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            }
                         });
                         window.location.reload();
                     } else {
@@ -96,7 +99,11 @@
                             message: "Failed to update data please try again",
                             icon: 'fa fa-times'
                         }, {
-                            type: "danger"
+                            type: "danger",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            }
                         });
                     }
                 }

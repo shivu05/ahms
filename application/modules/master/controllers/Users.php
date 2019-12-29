@@ -9,9 +9,6 @@ class Users extends SHV_Controller {
     }
 
     public function index() {
-        $this->layout->navTitleFlag = true;
-        $this->layout->navIcon = "fa fa-users";
-        $this->layout->navTitle = "Users";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();

@@ -1,10 +1,8 @@
-<?php
-//pma($deptbed, 1);
-?>
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header"><h3 class="box-title">Bed occupancy report</h3></div>
+            <div class="box-body">
                 <div class="col-8 offset-2">
                     <?php
                     foreach ($dept_bed_count as $dept) {

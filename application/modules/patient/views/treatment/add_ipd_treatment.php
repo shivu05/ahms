@@ -1,18 +1,7 @@
-<?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//echo $ipd;
-//pma($patient_details,1);
-//pma($treatment_details);
-?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
-        <div class="tile" style="border-top: 5px solid #009688;">
-            <div class="tile-body">
+        <div class="box box-primary" style="border-top: 5px solid #009688;">
+            <div class="box-body">
                 <div class="text-center">
                     <img class="img-responsive rounded" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
                 </div>
@@ -34,8 +23,8 @@
             <input type="hidden" name="ipd_no" id="ipd_no" value="<?php echo $ipd; ?>"/>
             <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $patient_details['OpdNo']; ?>"/>
             <input type="hidden" name="department" id="department" value="<?php echo $patient_details['department']; ?>"/>
-            <div class="tile" style="border-top: 5px solid #009688;">
-                <div class="tile-body">
+            <div class="box box-primary">
+                <div class="box-body">
                     <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $patient_details['department']))); ?></span>
                         <span class="pull-right">Admission date: <span class="text-warning"> <?php echo $patient_details['DoAdmission']; ?></span> 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-info btn-sm" style="color:white;"><i class="fa fa-backward"></i> Back</a>
@@ -88,11 +77,10 @@
                             <input type="text" name="attened_date" id="attened_date" class="form-control date_picker prescription_inputs" value="<?php echo date('Y-m-d') ?>" />
                         </div>
                     </div><!-- end of trearment div-->
-
                     <!-- Tests -->
                     <hr/>
                     <div class="row" style="margin-bottom: 2rem;">
-                        <div class="col-12">
+                        <div class="col-md-12">
                             <h3>Procedures:</h3>
                             <div class="bs-component">
                                 <ul class="nav nav-tabs">

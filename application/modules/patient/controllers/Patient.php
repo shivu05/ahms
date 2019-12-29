@@ -16,8 +16,8 @@ class Patient extends SHV_Controller {
 
     function index() {
         $this->scripts_include->includePlugins(array('jq_validation', 'js'));
-        $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "OPD patients";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Add new patient";
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
@@ -26,8 +26,8 @@ class Patient extends SHV_Controller {
     }
 
     function opd_list() {
-        $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "OPD patients";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
@@ -288,7 +288,7 @@ class Patient extends SHV_Controller {
     }
 
     function ipd_list() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -400,7 +400,7 @@ class Patient extends SHV_Controller {
     }
 
     function indent_list() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'js'));

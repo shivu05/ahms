@@ -1,9 +1,9 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
+    <div class="col-md-12">
+        <div class="box box-primary">
             <?php //pma($pt_items); ?>
-            <div class="tile-title">Product list:</div>
-            <div class="tile-body">
+            <div class="box-header"><h3 class="box-title">Product list:</h3></div>
+            <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
                         <label class="control-label">Type:</label>

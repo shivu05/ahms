@@ -1,12 +1,12 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
+    <div class="col-md-12">
+        <div class="box box-primary">
             <?php //pma($pt_items); ?>
-            <div class="tile-title">Purchase master data list:</div>
-            <div class="tile-body">
+            <div class="box-header"><h3 class="box-title">Purchase master data list:</h3></div>
+            <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
-                        <label class="control-label">Type:</label>
+                        <label class="control-label sr-only">Type:</label>
                         <select class="form-control" name="type" id="type">
                             <option value="">Choose type</option>
                             <?php
@@ -19,7 +19,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="control-label">Name</label>
+                        <label class="control-label  sr-only">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name" autocomplete="off">
                     </div>
                     <div class="form-group col-6 align-self-end">
@@ -28,10 +28,13 @@
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                </div>
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
+                                </ul>
                             </div>
                         </div>
                         <button class="btn btn-dark" type="button" id="add_product" name="add_product" data-backdrop="static" data-keyboard="false"><i class="fa fa-fw fa-lg fa-plus-circle"></i>Add</button>

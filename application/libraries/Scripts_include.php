@@ -17,18 +17,24 @@ class Scripts_include {
     public $cssFile = array('common');
     private $__jsFiles = array(
         'top' => array(
-            '/assets/plugins/theme/js/jquery-3.2.1.min.js',
-            '/assets/plugins/theme/js/popper.min.js',
-            '/assets/plugins/theme/js/plugins/chart.js',
             '/assets/js/download.js',
             '/assets/js/common_jsfunctions.js',
+            '/assets/bower_components/jquery/dist/jquery.min.js',
+            '/assets/bower_components/jquery-ui/jquery-ui.js',
+            '/assets/bower_components/bootstrap-notify-master/bootstrap-notify.min.js',
+            '/assets/bower_components/chart.js/Chart.js'
         ),
         'common' => array(
-            '/assets/plugins/theme/js/bootstrap.min.js',
-            '/assets/plugins/theme/js/main.js',
-            '/assets/plugins/theme/js/plugins/pace.min.js',
-            '/assets/plugins/theme/js/plugins/bootstrap-datepicker.min.js',
-            '/assets/plugins/theme/js/plugins/bootstrap-notify.min.js',
+            '/assets/bower_components/bootstrap/dist/js/bootstrap.min.js',
+            '/assets/bower_components/bootstrap/dist/js/bootstrap-dialog.js',
+            '/assets/plugins/themes/admin/dist/js/adminlte.min.js',
+            //'/assets/bower_components/bootstrap3-dialog/src/js/bootstrap-dialog.js',
+            '/assets/bower_components/select2/dist/js/select2.full.min.js',
+            '/assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+            '/assets/js/download.js',
+            '/assets/plugins/jquery-validation/dist/jquery.validate.min.js',
+            '/assets/plugins/jquery-validation/dist/additional-methods.min.js',
+            '/assets/plugins/jquery-validation/formValidation.js',
             '/assets/plugins/chosen/chosen.jquery.js',
         ),
         'datatables' => array(
@@ -44,13 +50,24 @@ class Scripts_include {
         ),
         'typeahead' => array(
             '/assets/plugins/typeahead/typeahead.js',
+        ),
+        'chartjs' => array(
         )
     );
     private $__cssFiles = array(
         'common' => array(
-            '/assets/plugins/theme/css/main.css',
-            '/assets/font-awesome-4.7.0/css/font-awesome.css',
+            '/assets/bower_components/bootstrap/dist/css/bootstrap.min.css',
+            '/assets/bower_components/bootstrap/dist/css/bootstrap-dialog.min.css',
+            '/assets/bower_components/font-awesome/css/font-awesome.min.css',
+            '/assets/bower_components/Ionicons/css/ionicons.min.css',
+            '/assets/bower_components/select2/dist/css/select2.min.css',
+            '/assets/plugins/themes/admin/dist/css/AdminLTE.min.css',
+            '/assets/plugins/themes/admin/dist/css/skins/_all-skins.min.css',
+            '/assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
+            '/assets/plugins/jQueryUI/jquery-ui.css',
+            '/assets/css/custom_styles.css',
             '/assets/plugins/chosen/bootstrap-chosen.css',
+            '/assets/css/myApp.css',
         ),
         'datatables' => array(
             '/assets/plugins/datatables/dataTables.bootstrap4.min.css',

@@ -18,7 +18,7 @@ class Purchase extends SHV_Controller {
     function purchase_items() {
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Pharmacy";
         $this->layout->navDescr = "Purchase item master";
         $data = array();
@@ -57,7 +57,7 @@ class Purchase extends SHV_Controller {
     function product_list() {
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Products";
         $this->layout->navDescr = "Product list";
         $data = array();
@@ -81,7 +81,7 @@ class Purchase extends SHV_Controller {
     function add_product() {
         $this->scripts_include->includePlugins(array('jq_validation', 'chosen'), 'js');
         $this->scripts_include->includePlugins(array('chosen'), 'css');
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Pharmacy | Product";
         $this->layout->navDescr = "Product entry";
         $data = array();
@@ -173,7 +173,7 @@ class Purchase extends SHV_Controller {
     function purchase_return() {
         $this->scripts_include->includePlugins(array('jq_validation', 'datatables', 'chosen'), 'js');
         $this->scripts_include->includePlugins(array('chosen', 'datatables'), 'css');
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Purchase return";
         $this->layout->navDescr = "Returnging purchased items";
         $data = array();
