@@ -7,20 +7,22 @@
         <label class="control-label  sr-only">To:</label>
         <input class="form-control date_picker" type="text" placeholder="To date" name="end_date" id="end_date" required="required" autocomplete="off">
     </div>
-    <div class="form-group col-md-3 col-sm-12">
-        <label class="control-label  sr-only">Department:</label>
-        <select name="department" id="department" class="form-control" required="required">
-            <option value="">Select Department</option>
-            <option value="1">Central OPD</option>
-            <?php
-            if (!empty($dept_list)) {
-                foreach ($dept_list as $dept) {
-                    echo "<option value='" . $dept['dept_unique_code'] . "'>" . $dept['department'] . "</option>";
+    <?php if (!$dept_hide) { ?>
+        <div class="form-group col-md-3 col-sm-12">
+            <label class="control-label  sr-only">Department:</label>
+            <select name="department" id="department" class="form-control" required="required">
+                <option value="">Select Department</option>
+                <option value="1">Central OPD</option>
+                <?php
+                if (!empty($dept_list)) {
+                    foreach ($dept_list as $dept) {
+                        echo "<option value='" . $dept['dept_unique_code'] . "'>" . $dept['department'] . "</option>";
+                    }
                 }
-            }
-            ?>
-        </select>
-    </div>
+                ?>
+            </select>
+        </div>
+    <?php } ?>
     <div class="form-group col-md-4 col-sm-12 align-self-end">
         <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
         <div class="btn-group" role="group" id="export">

@@ -20,7 +20,7 @@ class Usg extends SHV_Controller {
 
     function index() {
         $this->layout->title = "USG";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = FALSE;
         $this->layout->navTitle = "USG";
         $this->layout->navDescr = "Ultrasonography";
         $this->scripts_include->includePlugins(array('datatables', 'js'));

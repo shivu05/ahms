@@ -20,7 +20,7 @@ class Ecg extends SHV_Controller {
 
     function index() {
         $this->layout->title = "ECG";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = FALSE;
         $this->layout->navTitle = "ECG";
         $this->layout->navDescr = "Electrocardiogram";
         $this->scripts_include->includePlugins(array('datatables', 'js'));

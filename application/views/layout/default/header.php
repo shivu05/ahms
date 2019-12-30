@@ -20,12 +20,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                 <?php echo ($this->rbac->show_user_menu_top()) ?>
-                <form class="navbar-form navbar-left" role="search" action="<?php echo base_url('search-data'); ?>" method="POST">
-                    <div class="form-group">
-                        <input class="form-control" name="key_word" id="navbar-search-input" type="password" placeholder="Search">
-                        <button type="submit" class="app-search__button" id="search_auto_btn"><i class="fa fa-search"></i></button>
-                    </div>
-                </form>
+                <?php if ($this->rbac->is_admin()) { ?>
+                    <form class="navbar-form navbar-left" role="search" action="<?php echo base_url('search-data'); ?>" method="POST">
+                        <div class="form-group">
+                            <input class="form-control" name="key_word" id="navbar-search-input" type="password" placeholder="Search">
+                            <button type="submit" class="app-search__button" id="search_auto_btn"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                <?php } ?>
             </div>
             <!-- /.navbar-collapse -->
             <div class="navbar-custom-menu">

@@ -464,4 +464,53 @@ class Nursing_model extends CI_Model {
         return $this->db->delete($table, $where);
     }
 
+    function get_kriyakalp_data($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 'p.gender', 't.AddedBy',
+            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 't.department','t.procedures','sub_dept','IpNo');
+
+        $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('Shalakya Tantra') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        //$where_cond = " WHERE 1=1 ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " 
+            FROM treatmentdata t, (SELECT @a:= 0) AS a 
+            JOIN patientdata p 
+            LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
+            $where_cond ORDER BY CameOn ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
+
 }

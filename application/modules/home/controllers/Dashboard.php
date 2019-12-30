@@ -88,7 +88,7 @@ class Dashboard extends SHV_Controller {
     }
 
     public function ecg_dashboard() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Dashboard";
         $this->load->model('patient/ecg_model');
         $data = array();

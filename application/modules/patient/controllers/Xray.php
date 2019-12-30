@@ -15,7 +15,7 @@ class Xray extends SHV_Controller {
 
     function index() {
         $this->layout->title = "X-Ray";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "X-Ray";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables', 'js'));

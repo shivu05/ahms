@@ -6,8 +6,9 @@ class Common_methods extends SHV_Controller {
         parent::__construct();
     }
 
-    function date_dept_selection_form($url) {
+    function date_dept_selection_form($url, $dept_hide = false) {
         $data['submit_url'] = base_url($url);
+        $data['dept_hide'] = $dept_hide;
         $data['dept_list'] = $this->get_department_list('array');
         $this->load->view('common_methods/common_methods/date_dept_selection_form', $data);
     }

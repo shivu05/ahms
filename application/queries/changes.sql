@@ -44,8 +44,8 @@ CREATE TABLE `master_panchakarma_procedures` (
 )
 ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `ahms_2019`.`master_panchakarma_sub_procedures`;
-CREATE TABLE  `ahms_2019`.`master_panchakarma_sub_procedures` (
+DROP TABLE IF EXISTS `master_panchakarma_sub_procedures`;
+CREATE TABLE  `master_panchakarma_sub_procedures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `procecure_id` int(11) NOT NULL,
   `sub_proc_name` varchar(200) NOT NULL,

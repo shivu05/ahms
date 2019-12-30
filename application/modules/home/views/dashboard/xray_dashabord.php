@@ -1,26 +1,35 @@
 <div class="row">
     <div class="col-md-4 col-lg-4">
-        <div class="widget-small primary "><i class="icon fa fa-clock-o fa-3x"></i>
-            <div class="info">
-                <h4>Pending</h4>
-                <p><b><?php echo $stats['PENDING']; ?></b></p>
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="icon fa fa-male fa-1x"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Pending</span>
+                <span class="info-box-number"><?php echo $stats['PENDING']; ?></span>
             </div>
+            <!--/.info-box-content -->
         </div>
+        <!--/.info-box -->
     </div>
     <div class="col-md-4 col-lg-4">
-        <div class="widget-small info"><i class="icon fa fa-check fa-3x"></i>
-            <div class="info">
-                <h4>Completed</h4>
-                <p><b><?php echo $stats['COMPLETED']; ?></b></p>
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="icon fa fa-female"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Completed</span>
+                <span class="info-box-number"><?php echo $stats['COMPLETED']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
+        <!-- /.info-box -->
     </div>
     <div class="col-md-4 col-lg-4">
-        <div class="widget-small warning"><i class="icon fa fa-plus-circle fa-3x"></i>
-            <div class="info">
-                <h4>Total</h4>
-                <p><b><?php echo $stats['TOTAL']; ?></b></p>
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="icon fa fa-user-plus"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Total</span>
+                <span class="info-box-number"><?php echo $stats['TOTAL']; ?></span>
             </div>
+            <!-- /.info-box-content -->
         </div>
     </div>
 </div>

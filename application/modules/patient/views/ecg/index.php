@@ -1,14 +1,14 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-title">Patient's ECG list:</div>
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title">Patient's ECG list:</h3></div>
+            <div class="box-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div
             </div>
-            <div id="patient_statistics" class="col-12"></div>
+            <div id="patient_statistics" class="col-md-12"></div>
         </div>
     </div>
 </div>

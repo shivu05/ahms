@@ -18,7 +18,7 @@ class Treatment extends SHV_Controller {
         $this->load->model('patient/treatment_model');
         $this->layout->navIcon = "fa fa-user-md ";
         $this->layout->title = "OPD Treatment";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
     }

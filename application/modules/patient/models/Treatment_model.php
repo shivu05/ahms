@@ -89,7 +89,7 @@ class treatment_model extends CI_Model {
             }
         }
         if ($display_all) {
-            $where_cond = "";
+            $where_cond = " WHERE 1=1 $user_dept_cond";
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
