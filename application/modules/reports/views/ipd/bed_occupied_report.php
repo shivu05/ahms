@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box">
-            <div class="box-header with-border"><h3 class="box-title">Bed occupied report</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-book"></i> IPD: Bed occupied report</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Ipd/export_bed_to_pdf'); ?>">
                     <div class="form-group col-md-2 col-sm-12">
@@ -16,7 +16,7 @@
                         <label class="control-label sr-only">Department:</label>
                         <select name="department" id="department" class="form-control" required="required">
                             <option value="">Select Department</option>
-                            <option value="1">Central OPD</option>
+                            <option value="1">Central</option>
                             <?php
                             if (!empty($dept_list)) {
                                 foreach ($dept_list as $dept) {
@@ -37,7 +37,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
+                                    <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
                                 </ul>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div
             </div>
-            <div id="patient_statistics" class="col-12"></div>
+            <div id="patient_statistics" class="col-md-12"></div>
         </div>
     </div>
 </div>
@@ -243,18 +243,18 @@
                             $.notify({
                                 title: "Patient information:",
                                 message: "Successfully updated patient info",
-                                icon: 'fa fa-check',
+                                icon: 'fa fa-check'
                             }, {
-                                type: "success",
+                                type: "success"
                             });
                         } else {
                             $.notify({
                                 title: "Patient information:",
                                 message: "Failed to update data please try again",
-                                icon: 'fa fa-cross',
+                                icon: 'fa fa-cross'
                             }, {
                                 z_index: 2000,
-                                type: "danger",
+                                type: "danger"
                             });
                         }
                         patient_table.clear();
@@ -265,10 +265,10 @@
                 $.notify({
                     title: "Patient information:",
                     message: "Failed to update data please try again",
-                    icon: 'fa fa-cross',
+                    icon: 'fa fa-cross'
                 }, {
                     z_index: 2000,
-                    type: "danger",
+                    type: "danger"
                 });
             }
         });

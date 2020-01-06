@@ -90,7 +90,7 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     $mpdf->WriteHTML($top_heading, 2);
     $mpdf->WriteHTML($html, 2);
     //s$mpdf->writeBarcode('12345678');
-
+    //pma($html,1);
     $mpdf->Output($filename . '.pdf', $download_type);
     return;
 }

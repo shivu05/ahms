@@ -21,9 +21,6 @@ class Ipd extends SHV_Controller {
     }
 
     function index() {
-        $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "IPD";
-        $this->layout->navDescr = "In Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
@@ -40,13 +37,22 @@ class Ipd extends SHV_Controller {
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
         $data = $this->ipd_model->get_ipd_patients($input_array);
-
-        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        $return = $this->ipd_model->get_ipd_patients_count($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data'], 'statistics' => $return);
         echo json_encode($response);
     }
 
+    function get_statistics() {
+        $input_array = array();
+        $input_array['start_date'] = $this->input->post('start_date');
+        $input_array['end_date'] = $this->input->post('end_date');
+        $input_array['department'] = $this->input->post('department');
+        $return = $this->ipd_model->get_ipd_patients_count($input_array);
+        echo json_encode(array('statistics' => $return));
+    }
+
     function export_to_pdf() {
-        $this->layout->title = 'OPD Report';
+        $this->layout->title = 'IPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -67,7 +73,7 @@ class Ipd extends SHV_Controller {
         $headers['Gender'] = array('name' => 'Gender', 'width' => '5');
         $headers['WardNo'] = array('name' => 'Ward', 'align' => 'C', 'width' => '5');
         $headers['BedNo'] = array('name' => 'Bed', 'align' => 'C', 'width' => '5');
-        $headers['DoAdmission'] = array('name' => 'Admission',  'align' => 'C','width' => '10');
+        $headers['DoAdmission'] = array('name' => 'Admission', 'align' => 'C', 'width' => '10');
         $headers['DoDischarge'] = array('name' => 'Discharge', 'align' => 'C', 'width' => '10');
         $headers['NofDays'] = array('name' => 'Days', 'align' => 'C', 'width' => '6');
         $headers['Doctor'] = array('name' => 'Doctor', 'width' => '15');
@@ -218,7 +224,7 @@ class Ipd extends SHV_Controller {
     }
 
     public function bed_occupied_report() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
@@ -461,7 +467,7 @@ class Ipd extends SHV_Controller {
     }
 
     function bed_occupancy_chart() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
@@ -487,9 +493,33 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
+    function bed_occupancy_chart_pdf() {
+        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
+        $months_arr = array(
+            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+        );
+
+        $data_bed = array();
+        foreach ($months_arr as $month) {
+            $depts = $this->get_department_list('array');
+            $data['departments'] = $depts;
+            $dept_counts = array();
+            foreach ($depts as $dept) {
+                $result = $this->ipd_model->get_monthwise_bed_occupancy($month, $dept['department']);
+                array_push($dept_counts, array($dept['department'] => $result));
+            }
+            array_push($data_bed, array($month => $dept_counts));
+        }
+        $data['deptbed'] = $data_bed;
+        $table = "<h3 align='center'>BED OCCUPANCY REGISTER</h3>";
+        $this->load->helper('pdf');
+        $content = $this->load->view('reports/ipd/bed_occ_chart_print_view', $data, true);
+        pdf_create($table, $content, 'ahms_bed_occupancy_count_report');
+    }
+
     function monthly_io_report() {
         $this->layout->title = "OPD-IPD";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD-IPD Report";
         $this->layout->navDescr = "Monthly OPD-IPD report";
         $this->layout->navIcon = 'fa fa-bed';
@@ -513,6 +543,27 @@ class Ipd extends SHV_Controller {
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    function monthly_ipd_report_pdf() {
+        ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', '-1'); //300 seconds = 5 minutes
+        $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
+        $data['show_date'] = 0;
+        $table = "<h3 align='center'>MONTHLY IPD PATIENT'S REGISTER</h3>";
+        $this->load->helper('pdf');
+        $content = $this->load->view('reports/ipd/yearly_ipd_count_report_print', $data, true);
+        pdf_create($table, $content, 'ahms_monthly_ipd_report', 'L');
+    }
+
+    function monthly_ipd_opd_report_pdf() {
+        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
+        $data['show_date'] = 0;
+        $table = "<h3 align='center'>MONTHLY OPD - IPD PATIENT'S REGISTER</h3>";
+        $this->load->helper('pdf');
+        $content = $this->load->view('reports/ipd/monthly_opd_ipd_count_print', $data, true);
+        pdf_create($table, $content, 'ahms_monthly_opd_ipd_report', 'L');
+        exit;
     }
 
 }

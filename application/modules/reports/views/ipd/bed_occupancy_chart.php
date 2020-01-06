@@ -1,15 +1,29 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
-            <div class="box-header"><h3 class="box-title">Bed occupancy report</h3></div>
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-book"></i> IPD: Bed occupancy report</h3>
+                <div class="btn-group pull-right" role="group" id="export">
+                    <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" target="_blank" href="<?= base_url('reports/Ipd/bed_occupancy_chart_pdf') ?>" id="export_to_pdf">.pdf</a></li>
+                            <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div class="box-body">
-                <div class="col-8 offset-2">
+                <div class="col-md-8 col-md-offset-2">
                     <?php
                     foreach ($dept_bed_count as $dept) {
                         $cur_year = date('Y');
                         ?>
-                        <table class="table table-bordered">
-                            <tr class="table-success" style="font-weight: bold;">
+                        <table class="table table-bordered table-hover">
+                            <tr class="bg-aqua-gradient" style="font-weight: bold;">
                                 <td colspan="2"><?php echo 'Department: ' . $dept->department . ""; ?></td>
                                 <td></td>
                                 <td><?php echo "Alloted beds : " . $dept->sum; ?></td>

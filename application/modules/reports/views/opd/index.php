@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-book"></i> OPD report:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_to_pdf'); ?>">
                     <div class="form-group col-md-2 col-sm-12">
@@ -36,7 +37,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
+                                    <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
                                 </ul>
                             </div>
                         </div>

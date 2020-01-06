@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
-            <div class="box-header with-border"><h3 class="box-title">IPD Report</h3>
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title">Month-wise IPD Report</h3>
                 <?php if (!empty($result)) { ?>
-                    <a href="<?php echo base_url('report/reports/print_YearlyIpdCount/'); ?>" class="pull-right btn btn-info btn-sm" id="export_pdf"><i class="fa fa-download "></i> Export</a>
+                    <a target="_blank" href="<?php echo base_url('reports/Ipd/monthly_ipd_report_pdf/'); ?>" class="pull-right btn btn-info btn-sm" id="export_pdf"><i class="fa fa-download "></i> Export</a>
                 <?php } ?>
             </div>
             <div class="box-body">
