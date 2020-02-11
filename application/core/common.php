@@ -203,6 +203,26 @@ if (!function_exists('display_department')) {
 
 }
 
+if (!function_exists('prepare_pancha_table')) {
+
+    function prepare_pancha_table($data = NULL) {
+        if (strlen($data) > 0) {
+            $arr = explode(',', $data);
+            $table = "<table class='table table-bordered'>";
+            if (count($arr) > 0) {
+                foreach ($arr as $row) {
+                    $table .= '<tr><td width="85%">' . $row . '</td>';
+                    $table .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
+                }
+            }
+            $table .= "</table>";
+            return $table;
+        } else {
+            return '';
+        }
+    }
+
+}
 if (!function_exists('create_dropdown_options_v2')) {
 
     /**
