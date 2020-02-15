@@ -18,7 +18,8 @@ class Panchakarma_model extends CI_Model {
 
     public function get_procedures() {
         //return $this->db->order_by('id')->get($this->_panchkarmaTable)->result_array();
-        $query = "SELECT mp.id,proc_name,GROUP_CONCAT(msp.id) as sub_ids,GROUP_CONCAT(sub_proc_name) as sub_grp_name,mp.last_modified_date 
+        $query = "SELECT mp.id,proc_name,GROUP_CONCAT(msp.id) as sub_ids,GROUP_CONCAT(sub_proc_name) as sub_grp_name,
+            GROUP_CONCAT(no_of_treatment_days) as tdays,mp.last_modified_date 
             FROM master_panchakarma_procedures mp 
             LEFT JOIN master_panchakarma_sub_procedures msp ON mp.id=msp.procecure_id 
             GROUP BY proc_name";
@@ -34,6 +35,10 @@ class Panchakarma_model extends CI_Model {
 
     public function save_pancha_procedure($proc_name) {
         return $this->db->insert($this->_panchkarmaTable, array('proc_name' => $proc_name));
+    }
+
+    public function save_sub_pancha_procedure($input_arr) {
+        return $this->db->insert($this->_panchkarmasubProcTable, $input_arr);
     }
 
 }

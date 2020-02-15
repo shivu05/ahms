@@ -206,13 +206,17 @@ if (!function_exists('display_department')) {
 if (!function_exists('prepare_pancha_table')) {
 
     function prepare_pancha_table($data = NULL) {
-        if (strlen($data) > 0) {
-            $arr = explode(',', $data);
+        if (!empty($data)) {
+            $arr = explode(',', $data['sub_grp_name']);
+            $daysarr = explode(',', $data['tdays']);
             $table = "<table class='table table-bordered'>";
             if (count($arr) > 0) {
+                $i = 0;
                 foreach ($arr as $row) {
-                    $table .= '<tr><td width="85%">' . $row . '</td>';
+                    $table .= '<tr><td width="45%">' . $row . '</td>';
+                    $table .= '<td width="40%">' . $daysarr[$i] . '</td>';
                     $table .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
+                    $i++;
                 }
             }
             $table .= "</table>";
