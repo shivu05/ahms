@@ -211,4 +211,5 @@ INSERT INTO `lab_investigations` (`lab_inv_id`, `lab_inv_name`, `lab_test_id`) V
 (90, 'SERUM ADH', 62);
 
 ALTER TABLE `labregistery` ADD `lab_test_cat` VARCHAR(250) NULL AFTER `refDocName`, ADD `lab_test_type` VARCHAR(250) NULL AFTER `lab_test_cat`;
+ALTER TABLE `lab_investigations` ADD COLUMN `lab_test_reference` TINYTEXT AFTER `lab_test_id`;
 -- --------------------------------------------------------

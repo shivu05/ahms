@@ -15,7 +15,7 @@ class Patient extends SHV_Controller {
     }
 
     function index() {
-        $this->scripts_include->includePlugins(array('jq_validation', 'js'));
+        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Add new patient";
@@ -29,10 +29,23 @@ class Patient extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
         $data = array();
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    function update_patient_personal_information() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('patient/patient_model');
+            $post_values = $this->input->post();
+            $is_updated = $this->patient_model->save_patient($post_values, $post_values['OpdNo']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Faied to updat', 'status' => 'nok'));
+            }
+        }
     }
 
     function sub_dept() {
@@ -432,7 +445,7 @@ class Patient extends SHV_Controller {
         $opd = $this->input->post('opd_id');
         $data["patient_data"] = $this->patient_model->get_patient_info($opd);
         $this->layout->data = $data;
-        $this->load->view('patient/patient/patient_view_ajax',$data);
+        $this->load->view('patient/patient/patient_view_ajax', $data);
     }
 
 }

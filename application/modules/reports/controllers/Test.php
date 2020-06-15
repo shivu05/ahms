@@ -1,17 +1,16 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Test extends SHV_Controller {
+
+    private $_is_admin = false;
 
     public function __construct() {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
         $this->load->model('reports/nursing_model');
+        $this->_is_admin = $this->rbac->is_admin();
     }
 
     function xray() {
@@ -23,6 +22,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_xray_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -38,6 +38,18 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_xray_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    public function update_xray() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $is_updated = $this->nursing_model->update_xray_info($post_values, $post_values['ID']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        }
     }
 
     function export_xray_to_pdf() {
@@ -86,7 +98,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "USG";
         $this->layout->navDescr = "";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_usg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -151,7 +163,8 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "ECG Reports";
         $this->layout->navDescr = "Electrocardiogram";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ecg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -216,7 +229,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Birth";
         $this->layout->navDescr = "Birth register";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_birth_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -308,7 +321,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Ksharasutra";
         $this->layout->navDescr = "Ksharasutra register";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra');
         $data['dept_list'] = $this->get_department_list('array');
@@ -421,7 +434,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Surgery";
         $this->layout->navDescr = "Surgery register";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery');
         $data['dept_list'] = $this->get_department_list('array');
@@ -447,7 +460,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma register";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
         $data['dept_list'] = $this->get_department_list('array');
@@ -473,7 +486,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma procedure count";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
         $data['dept_list'] = $this->get_department_list('array');
@@ -493,7 +506,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Surgery";
         $this->layout->navDescr = "Surgery count";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
         $data['dept_list'] = $this->get_department_list('array');
@@ -512,7 +525,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Lab";
         $this->layout->navDescr = "Laboratory";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
         $data['dept_list'] = $this->get_department_list('array');
@@ -561,9 +574,9 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Kriyakalpa";
         $this->layout->navDescr = "Kriyakalpa";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count',true);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count', true);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();

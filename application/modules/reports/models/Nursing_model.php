@@ -58,6 +58,13 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
+    function update_xray_info($post_valyes, $id) {
+        if ($id) {
+            return $this->db->update('xrayregistery', $post_valyes, array('ID' => $id));
+        }
+        return false;
+    }
+
     function get_usg_data($conditions, $export_flag = false) {
 
         $return = array();
@@ -439,12 +446,21 @@ class Nursing_model extends CI_Model {
     }
 
     function get_lab_report($conditions, $export_flag = false) {
-        $query = "SELECT p.deptOpdNo,t.AddedBy,l.OpdNo,p.FirstName,p.LastName,p.Age,p.gender,p.address,p.deptOpdNo,p.dept,l.testName,l.testrange,l.testvalue,l.labdisease,l.testName,l.testDate,t.notes 
-            FROM labregistery l,patientdata p,treatmentdata t 
-            WHERE l.OpdNo = p.OpdNo AND l.testName <>'' AND l.treatID = t.ID AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc";
-        $query = $this->db->query($query);
-        if ($query->num_rows() > 0) {
-            return $query->result(); //if data is true
+        $columns = array('l.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.deptOpdNo', 't.diagnosis as labdisease',
+            'GROUP_CONCAT(li.lab_test_reference) testrange', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type', 'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat',
+            'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName');
+        $query = "SELECT " . implode(',', $columns) . "
+                FROM labregistery l
+                JOIN patientdata p ON l.OpdNo = p.OpdNo
+                JOIN treatmentdata t ON  l.treatID = t.ID
+                JOIN lab_investigations li ON li.lab_inv_id=l.testName
+                JOIN lab_tests lt ON l.lab_test_type=lt.lab_test_id
+                JOIN lab_categories lc on l.lab_test_cat = lc.lab_cat_id
+                WHERE l.testName <>'' AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc
+            ";
+        $result = $this->db->query($query);
+        if ($result->num_rows() > 0) {
+            return $result->result(); //if data is true
         } else {
             return false; //if data is wrong
         }
@@ -467,7 +483,7 @@ class Nursing_model extends CI_Model {
     function get_kriyakalp_data($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 'p.gender', 't.AddedBy',
-            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 't.department','t.procedures','sub_dept','IpNo');
+            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 't.department', 't.procedures', 'sub_dept', 'IpNo');
 
         $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('Shalakya Tantra') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";

@@ -29,11 +29,14 @@ if (empty($patient)) {
                 echo "<td>" . $row->FirstName . ' ' . $row->LastName . "</td>";
                 echo "<td style='text-align:center;'>" . $row->Age . "</td>";
                 echo "<td style='text-align:center;'>" . $row->gender . "</td>";
-                echo "<td>" . $row->AddedBy . "</td>";
+                echo "<td>" . $row->refDocName . "</td>";
                 echo "<td>" . $row->labdisease . "</td>";
                 echo "<td style='text-align:center;'>" . $row->testDate . "</td>";
-                $testname = explode(",", $row->testName);
-                $sizeoftest = sizeof($testname);
+                $testname = array_from_delimeted_string($row->testName, ",", true);
+                $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", true);
+                $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", true);
+                $testrange = array_from_delimeted_string($row->testrange, ",", true);
+                //$sizeoftest = $testname['count'];
                 echo "</tr>";
                 ?>
                 <tr>
@@ -44,41 +47,18 @@ if (empty($patient)) {
                                 <td colspan='6' align='center'><b>Test Details:</b></caption></td>
                             </tr>
                             <tr>
-                                <th width="33.3333%">Test Name</th>
-                                <th width="33.3333%" style='text-align:center;'>Test Value</th>
-                                <th width="33.3333%" style='text-align:center;'>Test Range</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th style='text-align:center;'>Value</th>
+                                <th style='text-align:center;'>Range</th>
                             </tr>
                             <tr> 
-                                <td>
-                                    <?php
-                                    for ($i = 0; $i < $sizeoftest; $i++) {
-                                        echo $testname[$i] . "<br>";
-                                    }
-                                    ?>
-                                </td>  
-                                <?php
-                                $testvalue = explode(",", $row->testvalue);
-                                $sizeofvalue = sizeof($testvalue);
-                                ?>
-
-                                <td style='text-align:center;'>
-                                    <?php
-                                    for ($j = 0; $j < $sizeoftest; $j++) {
-                                        echo $testvalue[$j] . "<br>";
-                                    }
-                                    ?>
-                                </td>
-                                <?php
-                                $testrange = explode(",", $row->testrange);
-                                $sizeofrange = sizeof($testrange);
-                                ?>							
-                                <td style='text-align:center;'>
-                                    <?php
-                                    for ($h = 0; $h < $sizeoftest; $h++) {
-                                        echo (!empty($testrange[$h])) ? $testrange[$h]. "<br>" : '' . "<br>";
-                                    }
-                                    ?>
-                                </td>
+                                <td><?= $lab_cat_name ?></td>
+                                <td><?= $lab_test_type ?></td>
+                                <td><?= $testname ?></td>
+                                <td></td>
+                                <td><?= $testrange ?></td>
                             </tr>
                         </table> 
                     </td> 

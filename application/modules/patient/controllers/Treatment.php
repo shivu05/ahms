@@ -59,7 +59,7 @@ class Treatment extends SHV_Controller {
         $data['lab_categories'] = $this->lab_model->get_lab_categories();
         $data['current_treatment'] = $treatment_details['treatment_data'];
         $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
-        $data['doctors'] = $this->get_doctors($treatment_details['treatment_data']['department']);
+        $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -171,17 +171,29 @@ class Treatment extends SHV_Controller {
         }
 
         if ($this->input->post('lab_check') == 'on') {
-            $labdata = array(
-                'OpdNo' => $this->input->post('opd_no'),
-                'refDocName' => $this->input->post('labdocname'),
-                'lab_test_cat' => $this->input->post('lab_category'),
-                'lab_test_type' => $this->input->post('lab_test'),
-                'testName' => $this->input->post('lab_investigations'),
-                'testrange' => $this->input->post('testrange'),
-                'testvalue' => $this->input->post('testvalue'),
-                'testDate' => $this->input->post('testdate'),
-                'treatID' => $treat_id
-            );
+
+            $lab_cats = $this->input->post('lab_category');
+            $lab_test = $this->input->post('lab_test');
+            $lab_investigation = $this->input->post('lab_investigations');
+            $labdata = array();
+
+            if (sizeof($lab_investigation) > 0) {
+                $i = 0;
+                foreach ($lab_investigation as $cat) {
+                    if ($cat != ' ') {
+                        $labdata[] = array(
+                            'OpdNo' => $this->input->post('opd_no'),
+                            'refDocName' => $this->input->post('labdocname'),
+                            'lab_test_cat' => $lab_cats[$i],
+                            'lab_test_type' => $lab_test[$i],
+                            'testName' => $cat,
+                            'testDate' => $this->input->post('testdate'),
+                            'treatID' => $treat_id
+                        );
+                        $i++;
+                    }
+                }
+            }
             $this->treatment_model->add_lab_info($labdata);
         }
 
@@ -222,7 +234,6 @@ class Treatment extends SHV_Controller {
 
             $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
         }
-        //}
         redirect('patient/treatment/show_patients', 'refresh');
     }
 

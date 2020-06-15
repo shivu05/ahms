@@ -310,3 +310,33 @@ if (!function_exists('create_dropdown_options_v2')) {
     }
 
 }
+
+if (!function_exists('array_from_delimeted_string')) {
+
+    function array_from_delimeted_string($string, $delimeter = ",", $return_enclose = false) {
+        $return = array();
+        $return['data'] = explode($delimeter, $string);
+        $return['count'] = sizeof($return['data']);
+        if ($return_enclose) {
+            return return_enclosed_string($return['data']);
+        } else {
+            return $return;
+        }
+    }
+
+}
+
+if (!function_exists('return_enclosed_string')) {
+
+    function return_enclosed_string($data_arr, $enclose_start = "<p>", $enclose_end = "</p>") {
+        if (!empty($data_arr)) {
+            $data = "";
+            foreach ($data_arr as $val) {
+                $data .= $enclose_start . $val . $enclose_end;
+            }
+            return $data;
+        }
+        return '';
+    }
+
+}

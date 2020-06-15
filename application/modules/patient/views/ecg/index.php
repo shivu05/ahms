@@ -17,10 +17,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Update ECG details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h5 class="modal-title" id="default_modal_label">Update ECG details</h5>
             </div>
             <div class="modal-body" id="ecg_modal_body">
                 <form action="" name="test_form" id="test_form" method="POST">
@@ -103,9 +103,9 @@
                 title: "Action",
                 data: function (item) {
                     if (item.ecgDate == '' || item.ecgDate == null) {
-                        return '<i class="fa fa-pencil-square-o text-primary pointer edit_ecg" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                        return '<i class="fa fa-pencil-square-o text-primary hand_cursor edit_ecg" data-id="' + item.ID + '" aria-hidden="true"></i>';
                     } else {
-                        return '<i class="fa fa-pencil-square-o text-primary  fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                        return '<i class="fa fa-pencil-square-o fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
                     }
                 }
             }

@@ -1,10 +1,6 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Xray extends SHV_Controller {
 
@@ -18,7 +14,8 @@ class Xray extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "X-Ray";
         $this->layout->navDescr = "";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_xray_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
