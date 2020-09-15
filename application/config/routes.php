@@ -112,3 +112,5 @@ $route['save-stock'] = "pharmacy/Stock/save_stock";
 //$route['print-opd-bill/(:num)/(:num)/(:any)'] = 'patient/Treatment/print_bill/$1/$2/$3';
 $route['print-opd-bill'] = 'patient/Treatment/print_bill';
 $route['print-opd-prescription'] = 'patient/Treatment/print_prescription';
+
+$route['list'] = 'patient/patient/opd_list';

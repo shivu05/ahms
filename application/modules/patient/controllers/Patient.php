@@ -30,6 +30,7 @@ class Patient extends SHV_Controller {
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $this->layout->data = $data;
         $this->layout->render();

@@ -30,7 +30,7 @@
                     </div>
                 </form>
                 <div id="patient_details">
-                    <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
+                    <table class="table table-hover table-bordered dataTable display nowrap" id="patient_table" width="100%"></table>
                 </div>
             </div>
         </div>
@@ -68,6 +68,8 @@
                             <input type="text" name="LastName" id="LastName" class="form-control required"/>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Age:</label>
@@ -84,6 +86,8 @@
                             </select>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Occupation:</label>
@@ -96,6 +100,8 @@
                             <input type="text" name="city" id="city" class="form-control required"/>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Address:</label>
@@ -108,7 +114,7 @@
                 ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Cancel</button>
                 <button type="button" class="btn btn-primary" id="btn-update"><i class="fa fa-save"></i> Update</button>
             </div>
         </div>
@@ -138,6 +144,7 @@
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
         });
+
         var columns = [
             {
                 title: "C.OPD",
@@ -221,12 +228,14 @@
             info: true,
             sScrollX: true
         });
+
         $('#patient_table tbody').on('click', '.take_appointment', function () {
             var data = patient_table.row($(this).closest('tr')).data();
             get_patient_info_by_opd(data);
         });
-        $('#patient_edit_form').validate();
+        var validator = $('#patient_edit_form').validate();
         $('#patient_table tbody').on('click', '.edit_patient', function () {
+            validator.resetForm();
             var data = patient_table.row($(this).closest('tr')).data();
             $('#patient_modal_label #opd_number').html(data.OpdNo);
             $('#patient_modal_body #OpdNo').val(data.OpdNo);

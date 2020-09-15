@@ -1,9 +1,9 @@
 <script type="text/javascript">
     var base_url = '<?= base_url() ?>';
-    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+    /*jQuery.ui.autocomplete.prototype._resizeMenu = function () {
         var ul = this.menu.element;
         ul.outerWidth(this.element.outerWidth());
-    }
+    }*/
 </script>
 <header class="main-header">
     <!-- Header Navbar: style can be found in header.less -->

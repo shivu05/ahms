@@ -1,15 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Script_manage
  *
- * @author Himansu
+ * @author Shivaraj
  */
 class Scripts_include {
 
@@ -38,8 +32,10 @@ class Scripts_include {
             '/assets/plugins/chosen/chosen.jquery.js',
         ),
         'datatables' => array(
-            '/assets/plugins/datatables/jquery.dataTables.min.js',
-            '/assets/plugins/datatables/dataTables.bootstrap4.min.js'
+            '/node_modules/datatables.net/js/jquery.dataTables.min.js',
+            '/node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+            '/node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.min.js',
+            '/node_modules/datatables.net-fixedheader-bs/js/fixedHeader.bootstrap.js'
         ),
         'jq_validation' => array(
             '/assets/plugins/jq_validation/jquery.validate.js',
@@ -62,17 +58,19 @@ class Scripts_include {
             '/assets/bower_components/Ionicons/css/ionicons.min.css',
             '/assets/bower_components/select2/dist/css/select2.min.css',
             '/assets/plugins/themes/admin/dist/css/AdminLTE.min.css',
-            '/assets/plugins/themes/admin/dist/css/skins/_all-skins.min.css',
+            '/assets/plugins/themes/admin/dist/css/skins/skin-red.min.css',
             '/assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
-            '/assets/plugins/jQueryUI/jquery-ui.css',
-            '/assets/css/custom_styles.css',
+            '/assets/bower_components/jquery-ui/jquery-ui.css',
             '/assets/plugins/chosen/bootstrap-chosen.css',
             '/assets/css/myApp.css',
         ),
         'datatables' => array(
-            '/assets/plugins/datatables/dataTables.bootstrap4.min.css',
-            '/assets/plugins/datatables/responsive.bootstrap.min.css',
-            '/assets/plugins/datatables/fixedHeader.bootstrap.min.css'
+            '/node_modules/datatables.net-bs/css/dataTables.bootstrap.min.css',
+            '/node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.min.css',
+            '/node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
+        /* '/assets/plugins/datatables/dataTables.bootstrap4.min.css',
+          '/assets/plugins/datatables/responsive.bootstrap.min.css',
+          '/assets/plugins/datatables/fixedHeader.bootstrap.min.css' */
         ),
         'chosen' => array(
             '/assets/plugins/chosen/bootstrap-chosen.css',
@@ -135,7 +133,6 @@ class Scripts_include {
             $str .= '<script src="' . base_url($files) . '" ></script>';
         }
         return $str;
-        ;
     }
 
 }

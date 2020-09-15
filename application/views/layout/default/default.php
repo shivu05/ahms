@@ -48,14 +48,14 @@
             }
         </style>
         <script type="text/javascript">
-            jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+           /* jQuery.ui.autocomplete.prototype._resizeMenu = function () {
                 var ul = this.menu.element;
                 ul.outerWidth(this.element.outerWidth());
-            };
+            };*/
         </script>
 
     </head>
-    <body class="hold-transition skin-blue layout-top-nav">   
+    <body class="hold-transition skin-red layout-top-nav">   
         <div class="wrapper" style="overflow-y:hidden !important;">
             <?php
             if ($this->layout->headerFlag) :
@@ -126,7 +126,7 @@
         <!-- ./wrapper -->
         <?= $this->scripts_include->includeJs() ?>
         <script type="text/javascript">
-            $.widget.bridge('uibutton', $.ui.button);
+            //$.widget.bridge('uibutton', $.ui.button);
             $(function () {
                 //Initialize Select2 Elements
                 $('.select2').select2();

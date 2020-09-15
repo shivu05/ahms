@@ -99,10 +99,10 @@
                 data: [parseInt(graph[0].aatyayikachikitsa), parseInt(graph[1].balaroga), parseInt(graph[2].kayachikitsa), parseInt(graph[3].panchakarma),
                     parseInt(graph[4].prasooti_striroga), parseInt(graph[5].shalakya_tantra), parseInt(graph[6].shalya_tantra),
                     parseInt(graph[7].swasthavritta)]
-            },
+            }
         ]
 
-    }
+    };
     var ctxl = $("#lineChartDemo").get(0).getContext("2d");
     var lineChart = new Chart(ctxl).Bar(lineChartData);
 </script>

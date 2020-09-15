@@ -22,7 +22,7 @@
                                     echo '<td class="text-center">' . $i . '</td>';
                                     echo '<td>' . $dept['department'] . '</td>';
                                     echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
-                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
+                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
                                     echo '</tr>';
                                     $i++;
                                 }
@@ -41,11 +41,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Edit Department </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa fa-edit"></i> Edit department </h4>
             </div>
             <div class="modal-body" style="margin: 0 10px 0 10px;">
                 <form class="form-horizontal" method="POST" name="edit_dept_form" id="edit_dept_form">
+                    <div class="form-group">
+                        <label for="dept_name">Department</label>
+                        <input type="text" name="dept_name" id="dept_name" readonly="readonly" class="form-control"/>
+                    </div>
                     <div class="form-group">
                         <label for="week_day">Percentage:</label>
                         <input type="type" name="perc" id="perc" class="form-control"/>
@@ -54,8 +58,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm" name="edit_btn" id="edit_btn">Update</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" name="edit_btn" id="edit_btn">Update</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -67,6 +71,7 @@
             var per = $(this).data('per');
             $('#perc').val(per);
             $('#dept_id').val($(this).data('id'));
+            $('#dept_name').val($(this).data('name'));
             $('#edit_modal_box').modal('show');
         });
         $('#edit_modal_box').on('click', '#edit_btn', function () {
@@ -77,7 +82,6 @@
                 dataType: 'json',
                 data: form_data,
                 success: function (response) {
-                    console.log(response);
                     if (response.status) {
                         $('#edit_modal_box').modal('hide');
                         $.notify({
