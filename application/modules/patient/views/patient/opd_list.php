@@ -36,6 +36,84 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="patient_modal" tabindex="-1" role="dialog" aria-labelledby="patient_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="patient_modal_label">Edit Patient, OPD: <span id="opd_number"></span></h5>
+            </div>
+            <div class="modal-body" id="patient_modal_body">
+                <div class="callout callout-warning">
+                    <p>Note: If the patient information is updated it will be reflected globally for all the visits which can not be reverted back.</p>
+                </div>
+                <?php
+                $attributes = array(
+                    'id' => 'patient_edit_form',
+                    'name' => 'patient_edit_form'
+                );
+                echo form_open('', $attributes);
+                ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>First name:</label>
+                            <input type="text" name="FirstName" id="FirstName" class="form-control required"/>
+                            <input type="hidden" name="OpdNo" id="OpdNo" class="form-control required" value=""/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Last name:</label>
+                            <input type="text" name="LastName" id="LastName" class="form-control required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Age:</label>
+                            <input type="text" name="Age" id="Age" class="form-control required digits-only"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Gender:</label>
+                            <select name="gender" id="gender" class="form-control required">
+                                <option value="">Choose gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Occupation:</label>
+                            <input type="text" name="occupation" id="occupation" class="form-control required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>City:</label>
+                            <input type="text" name="city" id="city" class="form-control required"/>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Address:</label>
+                            <textarea name="address" id="address" class="form-control required"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                echo form_close();
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+                <button type="button" class="btn btn-primary" id="btn-update"><i class="fa fa-save"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
@@ -56,18 +134,16 @@
                 }
             });
         });
-        $('#patient_table tbody').on('click', 'tr', function () {
-            alert()
-        });
+
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
         });
         var columns = [
             {
-                title: "OPD",
-                class: "opd_no",
+                title: "C.OPD",
+                class: "opd_no text-center",
                 data: function (item) {
-                    return '<span class="badge bg-aqua hand_cursor">' + item.OpdNo + '</span>';
+                    return  item.OpdNo;
                 }
             },
             {
@@ -105,6 +181,13 @@
                 data: function (item) {
                     return item.occupation;
                 }
+            },
+            {
+                title: "Action",
+                data: function (item) {
+                    return '<i class="fa fa-edit edit_patient" style="cursor:pointer;" title="Edit patient information"></i>'
+                            + '&nbsp;&nbsp;&nbsp;&nbsp;<i title="Take appointment" class="fa fa-calendar-plus-o take_appointment" style="cursor:pointer"></i>';
+                }
             }
         ];
         var patient_table = $('#patient_table').DataTable({
@@ -138,10 +221,58 @@
             info: true,
             sScrollX: true
         });
-        $('#patient_table tbody').on('click', 'tr', function () {
-            var data = patient_table.row(this).data();
+        $('#patient_table tbody').on('click', '.take_appointment', function () {
+            var data = patient_table.row($(this).closest('tr')).data();
             get_patient_info_by_opd(data);
         });
+        $('#patient_edit_form').validate();
+        $('#patient_table tbody').on('click', '.edit_patient', function () {
+            var data = patient_table.row($(this).closest('tr')).data();
+            $('#patient_modal_label #opd_number').html(data.OpdNo);
+            $('#patient_modal_body #OpdNo').val(data.OpdNo);
+            $('#patient_modal_body #FirstName').val(data.FirstName);
+            $('#patient_modal_body #LastName').val(data.LastName);
+            $('#patient_modal_body #Age').val(data.Age);
+            $('#patient_modal_body #gender').val(data.gender);
+            $('#patient_modal_body #address').val(data.address);
+            $('#patient_modal_body #city').val(data.city);
+            $('#patient_modal_body #occupation').val(data.occupation);
+            $('#patient_modal').modal({backdrop: 'static', keyboard: false}, 'show');
+        });
+
+        $('#patient_modal .modal-footer').on('click', '#btn-update', function () {
+            var form_data = $('#patient_edit_form').serializeArray();
+            if ($('#patient_edit_form').valid()) {
+                $.ajax({
+                    url: base_url + 'patient/update_patient_personal_information',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        $('#patient_modal').modal('hide');
+                        if (res.status === 'ok') {
+                            $.notify({
+                                title: "Patient:",
+                                message: res.msg,
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                            $('#search_form #search').trigger('click');
+                        } else {
+                            $.notify({
+                                title: "Patient:",
+                                message: res.msg,
+                                icon: 'fa fa-remove'
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
         $('#default_modal_box').on('change', '#department', function () {
             var dept_id = $('#department').val();
             $.ajax({
@@ -176,23 +307,25 @@
             });
         });
         $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
-            var form_data = $('#send_patient_for_followup').serializeArray();
-            $.ajax({
-                url: base_url + "patient/patient/followup",
-                type: 'POST',
-                data: form_data,
-                dataType: 'json',
-                success: function (res) {
-                    $('#default_modal_box').modal('hide');
-                    $.notify({
-                        title: "Appointment:",
-                        message: "Appointment added successfully",
-                        icon: 'fa fa-check',
-                    }, {
-                        type: "success",
-                    });
-                }
-            });
+            if ($('#send_patient_for_followup').valid()) {
+                var form_data = $('#send_patient_for_followup').serializeArray();
+                $.ajax({
+                    url: base_url + "patient/patient/followup",
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#default_modal_box').modal('hide');
+                        $.notify({
+                            title: "Appointment:",
+                            message: "Appointment added successfully",
+                            icon: 'fa fa-check',
+                        }, {
+                            type: "success",
+                        });
+                    }
+                });
+            }
         });
     });
     function get_patient_info_by_opd(data) {
@@ -228,7 +361,7 @@
                 }
                 table += "</table>";
                 table += "</form>";
-                $('#default_modal_box #default_modal_label').html('Send patient for OPD');
+                $('#default_modal_box #default_modal_label').html('Confirm Appointment');
                 $('#default_modal_box #default_modal_body').html(table);
                 $('#default_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
                 $('#date').datepicker({
@@ -236,6 +369,7 @@
                     autoclose: true,
                     todayHighlight: true
                 });
+                $('#send_patient_for_followup').validate();
             },
             error: function () {},
         });

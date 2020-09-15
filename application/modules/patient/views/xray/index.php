@@ -16,22 +16,22 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Update X-Ray details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h5 class="modal-title" id="xray_modal_label">Update X-Ray details</h5>
             </div>
             <div class="modal-body" id="xray_modal_body">
                 <form action="" name="xray_form" id="xray_form" method="POST">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Film size:</label>
+                        <label for="film_size">Film size:</label>
                         <input type="hidden" name="xray_id" id="xray_id" />
-                        <input class="form-control" id="film_size" name="film_size" type="text" aria-describedby="film_sizeHelp" placeholder="Enter film size">
+                        <input class="form-control required" id="film_size" name="film_size" type="text" aria-describedby="film_sizeHelp" placeholder="Enter film size">
                         <small class="form-text text-muted" id="film_sizeHelp"></small>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Date:</label>
-                        <input class="form-control date_picker" id="xray_date" name="xray_date" type="text" aria-describedby="xray_dateHelp" placeholder="Enter X-Ray date">
+                        <label for="xray_date">Date:</label>
+                        <input class="form-control date_picker required" id="xray_date" name="xray_date" type="text" aria-describedby="xray_dateHelp" placeholder="Enter X-Ray date">
                         <small class="form-text text-muted" id="xray_dateHelp"></small>
                     </div>
                 </form>
@@ -122,9 +122,9 @@
                 title: "Action",
                 data: function (item) {
                     if (item.xrayDate == '' || item.xrayDate == null) {
-                        return '<i class="fa fa-pencil-square-o text-primary  pointer edit_xray" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                        return '<i class="fa fa-pencil-square-o text-primary  pointer edit_xray hand_cursor" data-id="' + item.ID + '" aria-hidden="true"></i>';
                     } else {
-                        return '<i class="fa fa-pencil-square-o text-primary  fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
+                        return '<i class="fa fa-pencil-square-o fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i>';
                     }
 
                 }
@@ -169,36 +169,49 @@
             $('#xray_modal_box #xray_form #xray_id').val(id);
             $('#xray_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
         });
-        $('#xray_modal_box .modal-footer').on('click', '#btn-ok', function () {
-            var form_data = $('#xray_form').serializeArray();
-            $.ajax({
-                url: base_url + 'patient/xray/save_xray_data',
-                type: 'POST',
-                dataType: 'json',
-                data: form_data,
-                success: function (res) {
-                    $('#xray_modal_box').modal('hide');
-                    if (res) {
-                        $.notify({
-                            title: "X-Ray:",
-                            message: "Details added successfully",
-                            icon: 'fa fa-check',
-                        }, {
-                            type: "success",
-                        });
-                    } else {
-                        $.notify({
-                            title: "X-Ray:",
-                            message: "Failed to update data. Try again",
-                            icon: 'fa fa-check'
-                        }, {
-                            type: "danger"
-                        });
-                    }
-                    patient_table.clear();
-                    patient_table.draw();
+        $('#xray_form').validate({
+            messages: {
+                film_size: {
+                    required: 'Film size is empty'
+                },
+                xray_date: {
+                    required: 'Date is empty'
                 }
-            });
+            }
+        });
+        $('#xray_modal_box .modal-footer').on('click', '#btn-ok', function () {
+            if ($('#xray_form').valid()) {
+                var form_data = $('#xray_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'patient/xray/save_xray_data',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        $('#xray_modal_box').modal('hide');
+                        if (res) {
+                            $.notify({
+                                title: "X-Ray:",
+                                message: "Details added successfully",
+                                icon: 'fa fa-check',
+                            }, {
+                                type: "success",
+                            });
+                        } else {
+                            $.notify({
+                                title: "X-Ray:",
+                                message: "Failed to update data. Try again",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                        //patient_table.clear();
+                        //patient_table.draw();
+                        window.location = base_url + 'xray-info';
+                    }
+                });
+            }
         });
     });
 </script>`

@@ -203,6 +203,30 @@ if (!function_exists('display_department')) {
 
 }
 
+if (!function_exists('prepare_pancha_table')) {
+
+    function prepare_pancha_table($data = NULL) {
+        if (!empty($data)) {
+            $arr = explode(',', $data['sub_grp_name']);
+            $daysarr = explode(',', $data['tdays']);
+            $table = "<table class='table table-bordered'>";
+            if (count($arr) > 0) {
+                $i = 0;
+                foreach ($arr as $row) {
+                    $table .= '<tr><td width="45%">' . $row . '</td>';
+                    $table .= '<td width="40%">' . $daysarr[$i] . '</td>';
+                    $table .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
+                    $i++;
+                }
+            }
+            $table .= "</table>";
+            return $table;
+        } else {
+            return '';
+        }
+    }
+
+}
 if (!function_exists('create_dropdown_options_v2')) {
 
     /**
@@ -283,6 +307,36 @@ if (!function_exists('create_dropdown_options_v2')) {
             sort($opt);
         }
         return $opt;
+    }
+
+}
+
+if (!function_exists('array_from_delimeted_string')) {
+
+    function array_from_delimeted_string($string, $delimeter = ",", $return_enclose = false) {
+        $return = array();
+        $return['data'] = explode($delimeter, $string);
+        $return['count'] = sizeof($return['data']);
+        if ($return_enclose) {
+            return return_enclosed_string($return['data']);
+        } else {
+            return $return;
+        }
+    }
+
+}
+
+if (!function_exists('return_enclosed_string')) {
+
+    function return_enclosed_string($data_arr, $enclose_start = "<p>", $enclose_end = "</p>") {
+        if (!empty($data_arr)) {
+            $data = "";
+            foreach ($data_arr as $val) {
+                $data .= $enclose_start . $val . $enclose_end;
+            }
+            return $data;
+        }
+        return '';
     }
 
 }

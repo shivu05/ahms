@@ -10,8 +10,8 @@ class Settings extends SHV_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('home/settings_model');
-        $this->layout->navTitleFlag = true;
-        $this->layout->navTitle = "Configuration settings";
+        //$this->layout->navTitleFlag = true;
+        //$this->layout->navTitle = "Configuration settings";
     }
 
     function index() {

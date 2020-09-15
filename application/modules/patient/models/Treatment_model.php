@@ -168,7 +168,7 @@ class treatment_model extends CI_Model {
     }
 
     public function add_lab_info($labdata) {
-        $this->db->insert('labregistery', $labdata);
+        $this->db->insert_batch('labregistery', $labdata);
     }
 
     public function update_bed_info($beddata, $bed_no) {

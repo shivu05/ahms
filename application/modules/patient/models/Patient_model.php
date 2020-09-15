@@ -12,8 +12,11 @@ class Patient_model extends CI_Model {
         parent::__construct();
     }
 
-    public function save_patient($post_values) {
-        
+    public function save_patient($post_values, $id = null) {
+        if ($id) {
+            return $this->db->update('patientdata', $post_values, array('OpdNo' => $id));
+        }
+        return false;
     }
 
     function get_patient_info($opd = NULL, $ipd = NULL) {

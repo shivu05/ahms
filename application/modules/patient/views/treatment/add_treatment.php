@@ -43,12 +43,18 @@ if (!empty($pancha_procedures)) {
         $panchakarma_markup .= "<option value='" . $proc['proc_name'] . "'>" . $proc['proc_name'] . "</option>";
     }
 }
+$lab_categories_markup = "";
+if (!empty($lab_categories)) {
+    foreach ($lab_categories as $cat) {
+        $lab_categories_markup .= '<option value="' . $cat['lab_cat_id'] . '">' . $cat['lab_cat_name'] . '</option>';
+    }
+}
 ?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
         <div class="box box-primary" style="border-top: 5px solid #009688;">
             <div class="box-body">
-                <div class="text-center">
+                <div class="text-center" style="margin: auto">
                     <img class="img-responsive rounded" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
                 </div>
                 <h4 style="margin-top: 2%;" class="text-center"><?php echo $patient_details['FirstName'] . ' ' . $patient_details['LastName']; ?></h4>
@@ -205,19 +211,19 @@ if (!empty($pancha_procedures)) {
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <label>Doctor: </label>
-                                    <input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>
-                                   <!-- <select class="form-control" name="doctor_name" id="doctor_name">
+                                    <!--<input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>-->
+                                    <select class="form-control" name="doctor_name" id="doctor_name" readonly="readonly">
                                         <option>Choose doctor</option>
-                                    <?php
-                                    if (!empty($doctors)) {
-                                        $selected_doc = $current_treatment['AddedBy'];
-                                        foreach ($doctors as $doctor) {
-                                            $selected = (strtolower($selected_doc) == strtolower($doctor)) ? 'selected="selected"' : '';
-                                            echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
+                                        <?php
+                                        if (!empty($doctors)) {
+                                            $selected_doc = $current_treatment['AddedBy'];
+                                            foreach ($doctors as $doctor) {
+                                                $selected = (strtolower($selected_doc) == strtolower($doctor['doctorname'])) ? 'selected="selected"' : '';
+                                                echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
+                                            }
                                         }
-                                    }
-                                    ?>
-                                    </select>-->
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <label>Treated date: </label>
@@ -417,51 +423,50 @@ if (!empty($pancha_procedures)) {
                                                         <label class="control-label" for="labdocname">Referred Doctor Name:</label>
                                                         <div class="controls">
                                                             <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                            <input type="hidden" name="tab_lab_row_count" id="tab_lab_row_count" value="1" />
                                                             <p class="help-block"></p>
                                                         </div> <!-- /controls -->				
                                                     </div> <!-- /control-group -->
-                                                    <div class="control-group col-6">
-                                                        <label class="control-label" for="lab_category">Category:</label>
-                                                        <div class="controls">
-                                                            <select name="lab_category" id="lab_category" class="form-control chosen-select" multiple data-placeholder="Select Category">
-                                                                <?php
-                                                                if (!empty($lab_categories)) {
-                                                                    foreach ($lab_categories as $cat) {
-                                                                        echo '<option value="' . $cat['lab_cat_name'] . '">' . $cat['lab_cat_name'] . '</option>';
-                                                                    }
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->
-                                                    </div><!-- /control-group -->
-                                                    <div class="control-group col-6">
-                                                        <label class="control-label" for="testname">Tests:</label>
-                                                        <div class="controls">
-                                                            <select name="lab_test" id="lab_test" class="form-control chosen-select" multiple="" data-placeholder="Choose test">
-                                                            </select>
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->
-                                                    </div><!-- /control-group -->
-                                                    <div class="control-group col-6">
-                                                        <label class="control-label" for="lab_investigations">Investigations:</label>
-                                                        <div class="controls">
-                                                            <select name="lab_investigations" id="lab_investigations" class="form-control chosen-select" multiple="" data-placeholder="Choose investigation">
-                                                            </select>
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->
-                                                    </div><!-- /control-group 
-                                                    <div class="control-group col-6">											
-                                                        <label class="control-label" for="testname">Name of Test:</label>
-                                                        <div class="controls">
-                                                            <input id="testname" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->	
-                                                    <!--</div> <!-- /control-group -->
+                                                    <div class="col-12" id="lab_cats">
+                                                        <table class="table table-borderless" id="lab_cat_table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Category</th>
+                                                                    <th>Test</th>
+                                                                    <th>Investigations</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <select name="lab_category[]" id="lab_category" class="form-control lab_category chosen-select" data-placeholder="Select Category">
+                                                                            <option value="">Choose Category</option>
+                                                                            <?= $lab_categories_markup ?>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="lab_test[]" id="lab_test" class="form-control lab_test chosen-select" data-placeholder="Choose test"></select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="lab_investigations[]" id="lab_investigations" class="lab_investigations form-control chosen-select" data-placeholder="Choose investigation"></select>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="2">&nbsp;</td>
+                                                                    <td class="pull-right">
+                                                                        <button type="button" name="add_lab_row" id="add_lab_row" class="btn btn-sm btn-primary">
+                                                                            <i class="fa fa-plus"></i> Add more</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
                                                     <div class="control-group col-6">											
                                                         <label class="control-label" for="testname">Referred Date:</label>
                                                         <div class="controls">
-                                                            <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs" placeholder="Enter Date" autocomplete="off">
+                                                            <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs required" placeholder="Enter Date" autocomplete="off">
                                                             <p class="help-block"></p>
                                                         </div> <!-- /controls -->				
                                                     </div> <!-- /control-group -->
@@ -662,87 +667,61 @@ if (!empty($pancha_procedures)) {
                 $('#admit_form').hide();
             }
         });
-        $('#lab_category').on('change', function () {
+        $('#lab_cat_table').on('change', '.lab_category', function () {
+            var dom = $(this);
             $.ajax({
                 url: base_url + 'common_methods/fetch_laboratory_test_list',
                 type: 'POST',
-                data: {category: $('#lab_category').val()},
+                data: {category: $(this).val()},
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res);
                     if (res.status) {
-                        var selected_tests = $('#lab_test').val();
-                        if (selected_tests) {
-                            var test_name = selected_tests.toString();
-                            var test_name_split = test_name.split(",");
-                        }
                         var list = res.data;
-                        var options = '<option>select</option>';
+                        var options = '<option value="">Choose test</option>';
                         $.each(list, function (i, item) {
-                            var selected = '';
-                            if (test_name_split) {
-                                $.each(test_name_split, function (j, item1) {
-                                    if (item1 == item.lab_test_name) {
-                                        selected = 'selected';
-                                    }
-                                });
-                            }
-                            options += '<option ' + selected + ' value="' + item.lab_test_name + '">' + item.lab_test_name + '</option>';
+                            options += '<option value="' + item.lab_test_id + '">' + item.lab_test_name + '</option>';
                         });
-                        $('#lab_test').html(options);
-                        $("#lab_test").trigger("chosen:updated");
+                        dom.closest('td').next('td').find('.lab_test').html(options);
+                        dom.closest('td').next('td').find('.lab_test').trigger("chosen:updated");
                     } else {
                         alert('something went wrong try again');
                     }
                 },
                 error: function (error) {
-                    console.log(error)
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
                 }
             });
         });
 
-        $('#lab_test').on('change', function () {
+        $('#lab_cat_table').on('change', '.lab_test', function () {
+            var dom = $(this);
             $.ajax({
                 url: base_url + 'common_methods/fetch_laboratory_investigation_list',
                 type: 'POST',
-                data: {category: $('#lab_category').val(), tests: $('#lab_test').val()},
+                data: {tests: $(this).val()},
                 dataType: 'json',
                 success: function (res) {
-                    console.log('investigation');
-                    console.log(res);
                     if (res.status) {
-                        var selected_tests = $('#lab_investigations').val();
-                        if (selected_tests) {
-                            var test_name = selected_tests.toString();
-                            var test_name_split = test_name.split(",");
-                        }
                         var list = res.data;
-                        var options = '<option>select</option>';
+                        var options = '<option value="">Choose Investigations</option>';
                         $.each(list, function (i, item) {
-                            var selected = '';
-                            if (test_name_split) {
-                                $.each(test_name_split, function (j, item1) {
-                                    if (item1 == item.lab_inv_name) {
-                                        selected = 'selected';
-                                    }
-                                });
-                            }
-                            options += '<option ' + selected + ' value="' + item.lab_inv_name + '">' + item.lab_inv_name + '</option>';
+                            options += '<option value="' + item.lab_inv_id + '">' + item.lab_inv_name + '</option>';
                         });
-                        $('#lab_investigations').html(options);
-                        $("#lab_investigations").trigger("chosen:updated");
+                        dom.closest('td').next('td').find('.lab_investigations').html(options);
+                        dom.closest('td').next('td').find('.lab_investigations').trigger("chosen:updated");
                     } else {
                         alert('something went wrong try again');
                     }
                 },
                 error: function (error) {
-                    console.log(error)
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
                 }
             });
         });
 
         $('#panchakarma_table').on('change', '.pancha_procedure', function () {
-            alert();
             var panchaprocedure = $(this).val();
             var dom = $(this);
             $.ajax({
@@ -751,7 +730,6 @@ if (!empty($pancha_procedures)) {
                 dataType: 'json',
                 type: 'POST',
                 success: function (response) {
-                    console.log(response);
                     var sub_proc_options = '<option value="">choose sub procedure</option>';
                     if (response.status) {
                         var sub_proc = response.data;
@@ -796,6 +774,33 @@ if (!empty($pancha_procedures)) {
                 daysOfWeekHighlighted: "0"
             });
             $('.date_picker').attr('autocomplete', 'off');
+        });
+        var lab_cat_markup = '<?= $lab_categories_markup ?>';
+
+        $('#add_lab_row').on('click', function () {
+            var n = $('#tab_lab_row_count').val();
+            $('#tab_lab_row_count').val(n + 1);
+            var markup = '<tr>' + '<td>' +
+                    '<select class="form-control chosen-select lab_category" name="lab_category[]" id="lab_category_' + (n + 1) + '">' +
+                    '<option value="">Choose Category</option>' +
+                    lab_cat_markup +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control lab_test chosen-select" name="lab_test[]" id="lab_test_' + (n + 1) + '">' +
+                    '<option value="">Choose Test</option>' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" id="lab_investigations_' + (n + 1) + '">' +
+                    '<option value="">Choose Investigations</option>' +
+                    '</select>'
+                    + '</td>' +
+                    '</tr>';
+            $('#lab_cat_table').append(markup);
+            $(".lab_category").chosen({width: '100%'});
+            $(".lab_test").chosen({width: '100%'});
+            $(".lab_investigations").chosen({width: '100%'});
         });
     });
 

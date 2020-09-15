@@ -1,3 +1,4 @@
+-- Database Changes file
 --
 -- Dumping data for table perm_master
 --

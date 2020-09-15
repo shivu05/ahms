@@ -1,10 +1,5 @@
 <?php
 
-/*
- * @author: Himansu 
- * @Updated by: Shivaraj B
- */
-
 class Rbac {
 
     private $_session;
