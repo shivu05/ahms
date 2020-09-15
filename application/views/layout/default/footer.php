@@ -21,6 +21,6 @@
         <div class="pull-right hidden-xs" style="margin-right: 15px !important">
             v 1.0
         </div>
-        <strong> AYUSH -Copyright © 2019 by <a href="http://ayushsoftwares.com/" target="_blank">AYUSH Softwares</a></strong>    
+        <strong> AYUSH -Copyright © 2020 by <a href="http://ayushsoftwares.com/" target="_blank">AYUSH Softwares</a></strong>    
     </div>
 </footer>
