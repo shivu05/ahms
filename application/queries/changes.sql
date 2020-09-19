@@ -55,3 +55,5 @@ CREATE TABLE  `master_panchakarma_sub_procedures` (
   KEY `FK_master_panchakarma_sub_procedures_1` (`procecure_id`),
   CONSTRAINT `FK_master_panchakarma_sub_procedures_1` FOREIGN KEY (`procecure_id`) REFERENCES `master_panchakarma_procedures` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+update perm_master set perm_desc='Patient Master',perm_code='PATIENT_MASTER',perm_url='patient-list' where perm_id=5;

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Patient's List:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Patient master:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
@@ -290,7 +290,6 @@
                 data: {dept_id: dept_id},
                 dataType: 'json',
                 success: function (response) {
-                    console.log(response)
                     if (response.sub_departments.length > 0) {
                         var option = '<option value="">Choose sub department';
                         $.each(response.sub_departments, function (i) {

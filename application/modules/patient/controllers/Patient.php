@@ -25,7 +25,7 @@ class Patient extends SHV_Controller {
         $this->layout->render();
     }
 
-    function opd_list() {
+    function patient_list() {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";

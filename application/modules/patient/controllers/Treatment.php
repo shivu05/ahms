@@ -24,7 +24,8 @@ class Treatment extends SHV_Controller {
     }
 
     function show_patients() {
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $this->layout->data = $data;
         $this->layout->render();
@@ -375,10 +376,11 @@ class Treatment extends SHV_Controller {
     }
 
     function display_all_patients() {
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $this->layout->navIcon = "fa fa-users ";
         $this->layout->title = "OPD";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Print OPD bills";
         $data = array();

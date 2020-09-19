@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Patient's List:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title">OPD bill : <small>(Bill & Prescription print)</small></h3></div>
             <div class="box-body">
-                <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="">
+                <form class="row" name="search_form" id="search_form" method="POST">
                     <div class="form-group col-md-3">
                         <label class="control-label sr-only">OPD</label>
                         <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
@@ -13,7 +13,7 @@
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
                     </div>-->
                     <div class="form-group col-md-2">
-                        <label class="control-label  sr-only">Date</label>
+                        <label class="control-label sr-only">Date</label>
                         <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
                     </div>
                     <div class="form-group col-md-4 align-self-end">
@@ -112,7 +112,7 @@
                 }
             },
             {
-                title: "Came on",
+                title: "Entry date",
                 data: function (item) {
                     return item.CameOn;
                 }
