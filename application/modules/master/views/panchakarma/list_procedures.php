@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Panchakarma procedures:</h3>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Panchakarma procedures:</h3>
                 <button class="btn btn-sm btn-primary pull-right" id="add_main_pancha"><i class="fa fa-plus"></i> Add main procedure</button>
                 <button class="btn btn-sm btn-success pull-right" style="margin-right: 1%;" id="add_sub_pancha"><i class="fa fa-plus"></i> Add sub procedure</button></div>
             <div class="box-body">

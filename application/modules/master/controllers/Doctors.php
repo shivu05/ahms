@@ -79,6 +79,7 @@ class Doctors extends SHV_Controller {
     }
 
     function export_duty_chart_pdf() {
+        $this->layout->title = "Doctors duty";
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -90,10 +91,10 @@ class Doctors extends SHV_Controller {
         $result = $this->doctors_model->get_doctos_duty_list($input_array, true);
 
         $headers = array(
-            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
-            'user_name' => array('name' => 'Name'),
-            'user_department' => array('name' => 'Department'),
-            'week_day' => array('name' => 'Day')
+            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '10'),
+            'user_name' => array('name' => 'Name', 'align' => 'L', 'width' => '30'),
+            'user_department' => array('name' => 'Department', 'align' => 'L', 'width' => '30'),
+            'week_day' => array('name' => 'Day', 'align' => 'L', 'width' => '30')
         );
         $html = generate_table_pdf($headers, $result['data']);
 
@@ -103,6 +104,31 @@ class Doctors extends SHV_Controller {
 
         pdf_create($title, $html);
         exit;
+    }
+
+    function export_to_excel() {
+        $this->load->helper('to_excel');
+        $search_criteria = NULL;
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+        $result = $this->doctors_model->get_doctos_duty_list($input_array, true);
+        $export_array = $result['data'];
+
+        $headings = array(
+            'serial_number' => 'Sl. No',
+            'user_name' => 'Name',
+            'user_department' => 'Department',
+            'week_day' => 'Day'
+        );
+        $date = date('d_m_Y');
+        $file_name = 'doctors_duty_chart_' . $date . '.xlsx';
+        $freeze_column = '';
+        $worksheet_name = 'Doctors duty chart';
+        download_to_excel($export_array, $file_name, $headings, $worksheet_name, null, $search_criteria, TRUE);
+        ob_end_flush();
     }
 
 }

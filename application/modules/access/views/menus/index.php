@@ -1,10 +1,13 @@
 <style type="text/css">
-
     .perm_order{
         text-align: center;
     }
     .acess_perms{
         text-align: center;
+    }
+    .dataTable  thead >tr{
+        background-color: #666666;
+        color: white;
     }
     .edit_btn{
         text-align: center;
@@ -15,122 +18,47 @@
         cursor: pointer;
     }
 </style>
-<script type="text/javascript">
-    var columns = [
-        {
-            title: 'Description',
-            class: 'perm_desc',
-            target: 0,
-            data: function (item) {
-                return item.perm_desc;
-            }
-        }, {
-            title: 'Code',
-            class: 'perm_code',
-            target: 1,
-            data: function (item) {
-                return item.perm_code;
-            }
-        }, {
-            title: 'Parent menu',
-            class: 'perm_parent',
-            target: 2,
-            data: function (item) {
-                return item.parent_perm_code;
-            }
-        },
-        {
-            title: 'Order',
-            class: 'perm_order',
-            target: 3,
-            data: function (item) {
-                return item.perm_order;
-            }
-        }, {
-            title: 'URL',
-            class: 'perm_url',
-            target: 4,
-            data: function (item) {
-                return item.perm_url;
-            }
-        }, {
-            title: 'Status',
-            class: 'perm_status',
-            target: 5,
-            data: function (item) {
-                var icon = '<h4><i class="fa fa-remove text-danger" title="Inactive"></i></h4>';
-                if (item.perm_status == 'Active') {
-                    icon = '<h4><i class="fa fa-check text-success" title="Active"></i></h4>';
-                }
-                return icon;
-            }
-        },
-        {
-            title: 'Edit',
-            class: 'edit_btn',
-            target: 7,
-            data: function (item) {
-                return '<i class="btn btn-info fa fa-pencil btn_edit_menu" data-perm_id="' + item.perm_id + '"><i>';
-            }
-        },
-        {
-            title: 'Manage',
-            class: 'acess_perms',
-            target: 8,
-            data: function (item) {
-                return '<i class="btn btn-warning btn_manage_menu fa fa-cog" data-perm_name="' + item.perm_desc + '" data-perm_id="' + item.perm_id + '"></i>';
-            }
-        },
-        {
-            title: 'Last updated',
-            class: 'last_updated_id',
-            target: 6,
-            data: function (item) {
-                return item.last_updated_date;
-            }
-        }
-
-    ];
-</script>
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-bars" aria-hidden="true"></i> <?= $this->lang->line('MENU_MANAGEMENT_HEAD') ?></h3>
+                <button class="btn btn-primary btn-sm pull-right" id="add_new_menu">Add menu</button>
+            </div>
+            <div class="box-body">
                 <form id="search_menu_form" method="POST">
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="pwd" id="course_code_label">Parent menu:</label>
-                        <div class="col-sm-9">
-                            <select name="menu_p" id="menu_p" class="chosen-select form-control" style="width: 62%;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6 class="error"><?= $this->lang->line('FORM_NOTE_ALL_MANDATORY') ?></h6>        
+                        </div>
+                        <div class="col-md-4">
+                            <select name="menu_p" id="menu_p" class="select2 form-control" data-placeholder="Parent menu">
                                 <option value="">Select parent menu</option>
                                 <?php echo $parent_menus; ?>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-sm-6 button_margin col-sm-offset-3">
-                            <button type="button" class="btn  btn-success btn-block" id="show_eval_status" style="width: 94%;">Show menus</button>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success btn-sm" id="show_eval_status">Show menus</button>
                         </div>
                     </div>
                 </form>
-                <div id="patient_details">
-                    <div class="col-md-12">
-                        <button class="btn btn-primary pull-right" id="add_new_menu">Add menu</button>
-                    </div>
-                    <table id="menu_table" class="table table-hover table-bordered dataTable" cellspacing="0" cellpadding="0" width="100%"></table>
-                </div
+
+                <div class="clearfix"></div>
+                <hr/>
+                <div class="col-md-12">
+                    <table id="menu_table" class="table table-bordered dataTable" cellspacing="0" cellpadding="0" width="100%"></table>
+                </div>
             </div>
-            <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
-</div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="addMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Add Menu</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Menu</h4>
             </div>
             <div class="modal-body">
                 <div id="add_menu_msg"></div>
@@ -142,15 +70,9 @@
                     </div>
                     <div class="form-group" style="display: none;" id="parent_menu_dropdown">
                         <label for="parent_menu">Parent menu:</label>
-                        <select name="parent_menu" id="parent_menu" class="chosen-select required form-control">
+                        <select name="parent_menu" id="parent_menu" class="select2 required form-control">
                             <option value="">Select parent menu</option>
-                            <?php
-                            if (!empty($menus_list->data)) {
-                                foreach ($menus_list->data as $menu) {
-                                    echo "<option value='" . $menu->perm_id . "'>" . $menu->perm_desc . "</option>";
-                                }
-                            }
-                            ?>
+                            <?= $parent_menus; ?>
                         </select>
                     </div>
                     <div class="form-group">
@@ -191,8 +113,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Access management</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Access management</h4>
             </div>
             <div class="modal-body">
                 <div id="accessPermModalMSG"></div>
@@ -210,37 +132,115 @@
 <script type="text/javascript">
     var dt_table;
     var url = base_url + 'access/menus/get_sub_menus';
-    //var url = base_url + 'api/menu_management/get_application_menus';
+    //var url = base_ur + 'api/menu_management/get_application_menus';
 
     $(document).ready(function () {
+
+        var columns = [
+            {
+                title: 'Description',
+                class: 'perm_desc',
+                target: 0,
+                data: function (item) {
+                    return item.perm_desc;
+                }
+            }, {
+                title: 'Code',
+                class: 'perm_code',
+                target: 1,
+                data: function (item) {
+                    return item.perm_code;
+                }
+            }, {
+                title: 'Parent menu',
+                class: 'perm_parent',
+                target: 2,
+                data: function (item) {
+                    return item.parent_perm_code;
+                }
+            },
+            {
+                title: 'Order',
+                class: 'perm_order',
+                target: 3,
+                data: function (item) {
+                    return item.perm_order;
+                }
+            }, {
+                title: 'URL',
+                class: 'perm_url',
+                target: 4,
+                data: function (item) {
+                    return item.perm_url;
+                }
+            }, {
+                title: 'Status',
+                class: 'perm_status',
+                target: 5,
+                data: function (item) {
+                    //return item.perm_status;
+                    console.log(item.perm_status);
+                    var icon = '<h4><i class="glyphicon glyphicon-remove-circle text-danger" title="Inactive"></i></h4>';
+                    if (item.perm_status == 'Active') {
+                        icon = '<h4><i class="glyphicon glyphicon-ok-circle text-success" title="Active"></i></h4>';
+                    }
+                    return icon;
+                }
+            },
+            {
+                title: 'Edit',
+                class: 'edit_btn',
+                target: 6,
+                data: function (item) {
+                    return '<i class="btn btn-info glyphicon glyphicon-pencil btn_edit_menu" data-perm_id="' + item.perm_id + '"><i>';
+                }
+            },
+            {
+                title: 'Manage',
+                class: 'acess_perms',
+                target: 7,
+                data: function (item) {
+                    return '<i class="btn btn-warning btn_manage_menu glyphicon glyphicon-cog" data-perm_name="' + item.perm_desc + '" data-perm_id="' + item.perm_id + '"></i>';
+                }
+            },
+            {
+                title: 'Last updated',
+                class: 'last_updated_id',
+                target: 8,
+                data: function (item) {
+                    return item.last_updated_date + '<br/><small>[' + item.user_name + ']</small>';
+                }
+            }
+
+        ];
+
+
         dt_table = $('#menu_table').DataTable({
             'columns': columns,
             'columnDefs': [
-                {className: "", "targets": [4]}
+                {className: "", "targets": [8]}
             ],
-            "bDestroy": true,
             language: {
-                sZeroRecords: "<div class='no_records'>No patients found</div>",
-                sEmptyTable: "<div class='no_records'>No patients found</div>",
+                sZeroRecords: "<div class='no_records'>No records found</div>",
+                sEmptyTable: "<div class='no_records'>No records found</div>",
                 sProcessing: "<div class='no_records'>Loading</div>",
             },
-            'searching': true,
+            'searching': false,
             'paging': true,
             'pageLength': 25,
             'lengthChange': true,
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
-            'ajax': {
-                'url': url,
+            ajax: {
                 'type': 'POST',
-                'dataType': 'json',
+                'url': url,
+                dataType: 'json',
                 'data': function (d) {
                     return $.extend({}, d, {
                         "search_form": $('#search_menu_form').serializeArray()
                     });
-                },
-                drawCallback: function (response) {}
+                }
             },
             order: [[0, 'desc']],
             info: true,
@@ -387,13 +387,15 @@
                 dataType: 'json',
                 data: {'perm_id': perm_id},
                 success: function (res) {
+                    console.log(res);
                     if (res.num_rows > 0) {
                         $.each(res.data, function (item) {
                             if (res.data[item].perm_parent != '0') {
                                 $('#is_child').prop('checked', true);
-                                $('#parent_menu').val(res.data[item].perm_parent);
-                                $('#parent_menu_dropdown').show();
+                                $('#parent_menu').val(res.data[item].perm_parent).trigger('change');
+                                ;
 
+                                $('#parent_menu_dropdown').show();
                             } else {
                                 $('#is_child').prop('checked', false);
                                 $('#parent_menu_dropdown').hide();
@@ -439,7 +441,7 @@
                     $.each(res.data, function (i) {
                         content += '<tr>';
                         content += '<td><input type="hidden" name="role_info_' + i + '" id="role_info" value="' + res.data[i].role_id + '">'
-                            + res.data[i].role_name + '</td>';
+                                + res.data[i].role_name + '</td>';
                         var chk = '';
                         if (res.data[i].perm_id != '0' && res.data[i].status == 'Active') {
                             chk = 'checked=checked';

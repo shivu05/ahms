@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <?php //pma($pt_items); ?>
-            <div class="box-header"><h3 class="box-title">Purchase master data list:</h3></div>
+            <div class="box-header"><h3 class="box-title"><i class="fa fa-list"></i> Purchase master data list:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
@@ -49,38 +49,41 @@
     </div>
 </div>
 
-<div class="modal modal fade" id="product_modal_box" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="product_modal_box" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Purchase master data</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
+                <h4 class="modal-title">Purchase master data</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" method="POST" name="add_product_form" id="add_product_form" action="<?php echo base_url('add-purchase-type'); ?>">
-                    <div class="form-group">
-                        <label class="control-label">Type:</label>
-                        <select class="form-control required" name="add_type" id="add_type">
-                            <option value="">Choose type</option>
-                            <?php
-                            if (!empty($pt_items)) {
-                                foreach ($pt_items as $items) {
-                                    echo '<option value="' . $items['pt_desc'] . '">' . $items['pt_desc'] . '</option>';
-                                }
-                            }
-                            ?>
-                        </select>
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <form class="form-horizontal" method="POST" name="add_product_form" id="add_product_form" action="<?php echo base_url('add-purchase-type'); ?>">
+                            <div class="form-group">
+                                <label class="control-label">Type:</label>
+                                <select class="form-control required select2" name="add_type" id="add_type" style="width: 100%">
+                                    <option value="">Choose type</option>
+                                    <?php
+                                    if (!empty($pt_items)) {
+                                        foreach ($pt_items as $items) {
+                                            echo '<option value="' . $items['pt_desc'] . '">' . $items['pt_desc'] . '</option>';
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="add_name">Name:</label>
+                                <input class="form-control required" name="add_name" type="text" aria-describedby="add_name" placeholder="Enter name" id="add_name"/>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Name:</label>
-                        <input class="form-control required" name="add_name" type="text" aria-describedby="nameHelp" placeholder="Enter name" id="add_name"/>
-                    </div>
-                </form>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" name="add_btn" id="add_btn">Add</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" name="add_btn" id="add_btn">Add</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -125,7 +128,16 @@
             validator.resetForm();
             $('#product_modal_box').modal('show');
         });
-        validator = $('#add_product_form').validate();
+        validator = $('#add_product_form').validate({
+            messages: {
+                add_type: {
+                    required: 'Type is required'
+                },
+                add_name: {
+                    required: 'Name is required'
+                }
+            }
+        });
         $('#add_btn').on('click', function () {
 
             var form_data = $('#add_product_form').serializeArray();

@@ -2,7 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
-require_once APPPATH . 'third_party/tcpdf/tcpdf.php';
+require_once APPPATH . 'third_party/TCPDF-main/tcpdf.php';
 ini_set("memory_limit", -1);
 
 class Pdf extends TCPDF {
@@ -12,7 +12,7 @@ class Pdf extends TCPDF {
 
     public function __construct($title = NULL) {
         parent::__construct();
-        // $this->_Report_title = $title;
+        $this->_Report_title = $title;
     }
 
     function setData($template) {
@@ -47,42 +47,14 @@ class Pdf extends TCPDF {
         }
     }
 
-    function string_split() {
-        $longString = 'I like apple. You like oranges. We like fruit. I like meat, also.';
-
-        $arrayWords = explode(' ', $longString);
-
-        $maxLineLength = 18;
-
-        $currentLength = 0;
-        $index = 0;
-
-        foreach ($arrayWords as $word) {
-            // +1 because the word will receive back the space in the end that it loses in explode()
-            $wordLength = strlen($word) + 1;
-
-            if (($currentLength + $wordLength) <= $maxLineLength) {
-                $arrayOutput[$index] .= $word . ' ';
-
-                $currentLength += $wordLength;
-            } else {
-                $index += 1;
-
-                $currentLength = $wordLength;
-
-                $arrayOutput[$index] = $word;
-            }
-        }
-    }
-
     //  Page header
     public function Header() {
 
-        $image_file = K_PATH_IMAGES . 'your_logo.png';
+        $image_file = FCPATH . '/assets/your_logo.png';
         //$this->Image($image_file, 0, 0, 90, 90, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         $this->Image($image_file, 10, 5, 20, 20, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
         // Set font
-        $this->SetFont('helvetica', 'B', 16);
+        $this->SetFont(PDF_FONT, 'B', 16);
         //$this->SetTextColorArray(array(252, 124, 39));
         // Title
         $this->Cell(0, 20, 'SHARADA AYURVEDIC MEDICAL COLLEGE AND HOSPITAL YADGIR - 585202', 0, 1, 'C');
@@ -90,7 +62,8 @@ class Pdf extends TCPDF {
         $this->SetTextColorArray(array(252, 124, 39));
         $this->Cell(0, 4, $this->template['report_title'], 0, 1, 'C');
         //$this->Cell($w, $h, $txt, $border, $ln, $align, $fill, $link, $stretch, $ignore_min_height)
-        $this->Line(5, 30, $this->w - 5, 30);
+        $this->Line(5, 30, $this->w - 9, 30);
+
         // get the current page break margin
         $bMargin = $this->getBreakMargin();
         // get current auto-page-break mode
@@ -103,11 +76,13 @@ class Pdf extends TCPDF {
         // Position at 15 mm from bottom
         $this->SetY(-15);
         // Set font
-        $this->SetFont('helvetica', 'B', 8);
+        $this->SetFont(PDF_FONT, 'B', 8);
         //$this->SetTextColorArray(array(252, 124, 39));
         //$this->SetLineStyle(array('width' => (-1 / $this->k), 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(25, 124, 39)));
+        $this->Cell(10, 0, 'Exported on: ' . date('d-m-Y') . '', 'T', 0, 'L');
+
         // Page number
-        $this->Cell(0, 0, 'Copyright © 2018 by Ayurveda Softwares', 'T', 0, 'C');
+        $this->Cell(0, 0, 'Copyright © ' . date('Y') . ' by Ayush Softwares', 'T', 0, 'C');
         $this->Cell(0, 0, 'Page ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 'T', 0, 'R');
         $this->SetTextColorArray(array(0, 0, 0));
         $this->Cell(0, 0, '', 'T', 0, 'R');

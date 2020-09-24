@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Treatment
  *
@@ -48,6 +42,8 @@ class Treatment extends SHV_Controller {
         $this->scripts_include->includePlugins(array('chosen', 'typeahead'), 'js');
         $this->scripts_include->includePlugins(array('chosen'), 'css');
         $this->load->model('patient/lab_model');
+        $this->load->model('diagnosis');
+        $this->load->model('complaints');
         $data = array();
         $data['opd'] = $opd;
         $data['treat_id'] = $treat_id;
@@ -61,6 +57,8 @@ class Treatment extends SHV_Controller {
         $data['current_treatment'] = $treatment_details['treatment_data'];
         $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
         $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
+        $data['diagnosis'] = $this->diagnosis->all();
+        $data['complaints'] = $this->complaints->all();
         $this->layout->data = $data;
         $this->layout->render();
     }

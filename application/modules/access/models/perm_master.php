@@ -1,6 +1,6 @@
 <?php
 
-class idvs_perm_master extends CI_Model {
+class perm_master extends CI_Model {
 
     private $_uid;
 
@@ -46,14 +46,14 @@ class idvs_perm_master extends CI_Model {
         }
         $query = "SELECT " . join(',', $columns) . " FROM perm_master m1 
             LEFT JOIN perm_master m2 ON m1.perm_parent=m2.perm_id 
-            LEFT JOIN users imu ON imu.ID=m1.last_updated_id $where_cond order by m1.perm_id desc $limit ";
+            LEFT JOIN users imu ON imu.id=m1.last_updated_id $where_cond order by m1.perm_id desc $limit ";
         $result = $this->db->query($query);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $result->num_rows();
 
         $rows = $this->db->query("SELECT COUNT(*) as total_count FROM perm_master m1 
             LEFT JOIN perm_master m2 ON m1.perm_parent=m2.perm_id 
-            LEFT JOIN users imu ON imu.ID=m1.last_updated_id $where_cond")->row_array();
+            LEFT JOIN users imu ON imu.id=m1.last_updated_id $where_cond")->row_array();
         $return['total_rows'] = $rows['total_count'];
 
         return $return;

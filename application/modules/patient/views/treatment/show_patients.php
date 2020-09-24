@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">OPD Treatment</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-pencil"></i> OPD Treatment</h3></div>
             <div class="box-body">
                 <form class="form-horizontal" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_patients_list_pdf'); ?>">
                     <div class="row">
@@ -187,19 +187,7 @@
         });
         $('#patient_table tbody').on('click', 'tr', function () {
             var data = patient_table.row(this).data();
-            /*if (data.attndedon == '' || data.attndedon == null) {
-             window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
-             } else {
-             
-             $.notify({
-             title: "Treatment:",
-             message: "Patient treatment is completed",
-             icon: 'fa fa-check',
-             }, {
-             type: "info",
-             });
-             }*/
-            window.location.href = base_url + 'patient/treatment/add_treatment/' + data.OpdNo + '/' + data.ID;
+            window.location.href = base_url + 'add-opd-treatment/' + data.OpdNo + '/' + data.ID;
         });
 
         $('#default_modal_box').on('change', '#department', function () {

@@ -143,8 +143,10 @@ if (!function_exists('generate_table_pdf')) {
             if (!empty($headers)) {
                 $table .= '<thead>';
                 $table .= '<tr>';
-                foreach ($headers as $head) {
-                    $table .= '<th>' . $head['name'] . '</th>';
+                foreach ($headers as $head => $v) {
+                    $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
+                    $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
+                    $table .= '<th ' . $width . ' ' . $align . '><b>' . $v['name'] . '</b></th>';
                 }
                 $table .= '</tr>';
                 $table .= '</thead>';
@@ -155,8 +157,7 @@ if (!function_exists('generate_table_pdf')) {
                         foreach ($headers as $k => $v) {
                             $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
                             $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
-
-                            $table .= '<td ' . $width . ' ' . $align . '>' . $row[$k] . '</th>';
+                            $table .= '<td ' . $width . ' ' . $align . '>' . $row[$k] . '</td>';
                         }
                         $table .= '</tr>';
                     }

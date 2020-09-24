@@ -23,7 +23,9 @@ class Doctors_model extends CI_Model {
 
     function get_doctos_duty_list($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('d.id', 'd.doc_id', 'week_id', 'week_day', 'u.ID as user_id', 'u.user_name', 'u.user_email', '(u.user_department) as user_department', 'added_date'
+        $columns = array(
+            'd.id', 'd.doc_id', 'week_id', 'week_day', 'u.ID as user_id', 'u.user_name',
+            'u.user_email', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'added_date'
         );
 
         $where_cond = " WHERE u.ID != 1 AND u.active=1";

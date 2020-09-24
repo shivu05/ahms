@@ -54,8 +54,8 @@ if (!empty($lab_categories)) {
     <div class="col-md-3 col-sm-12">
         <div class="box box-primary" style="border-top: 5px solid #009688;">
             <div class="box-body">
-                <div class="text-center" style="margin: auto">
-                    <img class="img-responsive rounded" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
+                <div class="text-center" style="margin: auto;text-align: center;">
+                    <img class="img-responsive rounded" style="text-align: center;margin: auto" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
                 </div>
                 <h4 style="margin-top: 2%;" class="text-center"><?php echo $patient_details['FirstName'] . ' ' . $patient_details['LastName']; ?></h4>
                 <ul class="list-group list-group-flush">
@@ -85,7 +85,6 @@ if (!empty($lab_categories)) {
                                 </span>
                             </h6>
                             <hr/>
-
                             <?php if (!empty($treatment_details)): ?>
                                 <div class="box-group" id="accordion">
                                     <?php
@@ -132,7 +131,6 @@ if (!empty($lab_categories)) {
                                     <?php } ?>
                                 </div>
                             <?php endif; ?>
-
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
@@ -143,11 +141,31 @@ if (!empty($lab_categories)) {
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Complaints: <span class="text-danger">*</span></label>
-                                    <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>
+                                    <select class="form-control select2 prescription_inputs" name="diagnosis" id="diagnosis" multiple="multiple" data-placeholder="Choose complaints">
+                                        <option value="">choose complaints</option>
+                                        <?php
+                                        if (!empty($complaints)) {
+                                            foreach ($complaints as $row) {
+                                                echo '<option value="' . $row['id'] . '">' . $row['name'] . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                   <!-- <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>-->
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <label>Diagnosis: <span class="text-danger">*</span></label>
-                                    <textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>
+                                    <select class="form-control select2 prescription_inputs" name="diagnosis" id="diagnosis" multiple="multiple" data-placeholder="Choose diagnosis">
+                                        <option value="">choose diagnosis</option>
+                                        <?php
+                                        if (!empty($diagnosis)) {
+                                            foreach ($diagnosis as $row) {
+                                                echo '<option value="' . $row['id'] . '">' . $row['diagnosis_name'] . '</option>';
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>-->
                                 </div>
                             </div>
                             <hr/>
@@ -165,33 +183,33 @@ if (!empty($lab_categories)) {
                                     <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
                                 </div>-->
                             </div>
-                            <!--<hr/>
+                            <hr/>
                             <div class="row">
                                 <div class="col-md-4">
                                     <label>Medicine name: <span class="text-danger">*</span></label>
                                     <select name="medicine" id="medicine" class="form-control  required chosen-select">
                                         <option>Choose medicine</option>
-        
-                            <?php
-                            if (!empty($medicines)) {
-                                foreach ($medicines as $medicine) {
-                                    echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
-                                }
-                            }
-                            ?>
+
+                                        <?php
+                                        if (!empty($medicines)) {
+                                            foreach ($medicines as $medicine) {
+                                                echo '<option value="' . $medicine['id'] . '">' . $medicine['name'] . '</option>';
+                                            }
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
                                     <label>When to take: <span class="text-danger">*</span></label>
                                     <select name="med_freq" id="med_freq" class="form-control  required chosen-select">
                                         <option>Choose frequency</option>
-                            <?php
-                            if (!empty($med_freqs)) {
-                                foreach ($med_freqs as $frq) {
-                                    echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
-                                }
-                            }
-                            ?>
+                                        <?php
+                                        if (!empty($med_freqs)) {
+                                            foreach ($med_freqs as $frq) {
+                                                echo '<option value="' . $frq['med_freq'] . '">' . $frq['med_freq'] . '</option>';
+                                            }
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -202,7 +220,7 @@ if (!empty($lab_categories)) {
                                     <label>Before food: <span class="text-danger">*</span></label>
                                     <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
                                 </div>
-                            </div>-->
+                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
@@ -212,7 +230,7 @@ if (!empty($lab_categories)) {
                                 <div class="col-md-3 col-sm-12">
                                     <label>Doctor: </label>
                                     <!--<input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>-->
-                                    <select class="form-control" name="doctor_name" id="doctor_name" readonly="readonly">
+                                    <select class="form-control " name="doctor_name" id="doctor_name" readonly="readonly">
                                         <option>Choose doctor</option>
                                         <?php
                                         if (!empty($doctors)) {

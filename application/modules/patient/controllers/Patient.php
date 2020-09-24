@@ -136,121 +136,28 @@ class Patient extends SHV_Controller {
         $search_criteria = NULL;
         $input_array = array();
 
-        /* foreach ($this->input->post('search_form') as $search_data) {
-          //$input_array[$search_data] = $val;
-          $input_array[$search_data['name']] = $search_data['value'];
-          } */
-        $result = $this->opd_model->get_patients($input_array, true);
-
-        $headers = array(
-            'OpdNo' => 'OPD No',
-            'FirstName' => 'First name',
-            'LastName' => 'Last name',
-            'Age' => 'Age',
-            'gender' => 'Gender',
-            'city' => 'City',
-            'occupation' => 'Ocuupation',
-            'address' => 'Address'
-        );
-        $html = generate_table_pdf($headers, $result['data']);
-
-//        $table = '';
-//
-//        $table .= '<table autosize="1" style="overflow: wrap" width="100%" class="table table-bordered">';
-//        $table .= '<thead><tr><td>OPD</td><td>Name</td><td>Age</td><td>Sex</td><td>City</td><td>Occupation</td><td>Address</td></tr></thead>';
-//        $table .= '<tbody>';
-//        $i = 0;
-//        foreach ($result['data'] as $data) {
-//            $i++;
-//            $table .= '<tr>';
-//            $table .= '<td>' . $data['OpdNo'] . '</td>';
-//            $table .= '<td>' . $data['FirstName'] . ' ' . $data['LastName'] . '</td>';
-//            $table .= '<td>' . $data['Age'] . '</td>';
-//            $table .= '<td>' . $data['gender'] . '</td>';
-//            $table .= '<td>' . $data['city'] . '</td>';
-//            $table .= '<td>' . $data['occupation'] . '</td>';
-//            $table .= '<td>' . $data['address'] . '</td>';
-//            $table .= '</tr>';
-//            if ($i == 100)
-//                break;
-//        }
-//        $table .= '</tbody>';
-//        $table .= '</table>';
-
-
-        /* $mpdf = new \mPDF('utf-8', 'A4', '');
-          $mpdf->useSubstitutions = false;
-          $mpdf->simpleTables = true;
-          $mpdf->shrink_tables_to_fit = 1;
-          $mpdf->WriteHTML($table);
-          $mpdf->Output(); */
-
-        $title = "";
-        $title .= '<table width="100%" style="border: none;">';
-        $title .= '<tr>';
-        $title .= '<td width="33%"><b>DEPARTMENT</b>:KAYACHIKISTA <br/>' . '</td><td width="33%" text-align:"center"; align="center"><h2>OPD REGISTER</h2></td><td width="33%" style="text-align:center;"><b>FROM:</b> 14-01-2019 &nbsp; <b>TO: </b>14-01-2019 </td>';
-        $title .= '</tr>';
-        $title .= '</table>';
-        pdf_create($title, $html);
-
-        exit;
-        ini_set("memory_limit", "-1");
-        set_time_limit(0);
-        $data = array();
-        $input_array = array();
-
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
             //$input_array[$search_data['name']] = $search_data['value'];
         }
         $result = $this->opd_model->get_patients($input_array, true);
-        $patients = $result['data'];
+        $headers = array(
+            'OpdNo' => array('name' => 'OPD No', 'align' => 'C', 'width' => '10'),
+            'FirstName' => array('name' => 'First name', 'align' => 'L', 'width' => '15'),
+            'LastName' => array('name' => 'Last name', 'align' => 'L', 'width' => '15'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Gender', 'align' => 'L', 'width' => '10'),
+            'city' => array('name' => 'Place', 'align' => 'L', 'width' => '10'),
+            'occupation' => array('name' => 'Ocuupation', 'align' => 'L', 'width' => '15'),
+            'address' => array('name' => 'Address', 'align' => 'L', 'width' => '20'),
+        );
+        $html = generate_table_pdf($headers, $result['data']);
+        $title = array(
+            'report_title' => 'Patients list',
+        );
 
-        $this->load->library('pdf');
-        $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
-
-        // set document information
-        $pdf->setPrintHeader(TRUE);
-        // set header and footer fonts
-        $pdf->SetFont('Helvetica', '', 10);
-// ---------------------------------------------------------
-        // add a page
-        // set some text to print
-        // print a block of text using Write()
-        $pdf->SetFillColor(140, 142, 145);
-        $pdf->SetTextColor(255);
-        $pdf->SetDrawColor(140, 142, 145);
-        $pdf->SetLineWidth(0.3);
-        $pdf->SetFont('', 'B');
-        $pdf->SetMargins(5, 32, 10, true);
-        $pdf->AddPage('L');
-        $pdf->cell(20, 6, 'OPD', 1, 0, 'C', 1);
-        $pdf->cell(80, 6, 'Name', 1, 0, 'L', 1);
-        $pdf->cell(20, 6, 'Age', 1, 0, 'C', 1);
-        $pdf->cell(20, 6, 'Sex', 1, 0, 'C', 1);
-        $pdf->cell(50, 6, 'Address', 1, 0, 'L', 1);
-        $pdf->cell(40, 6, 'City', 1, 0, 'L', 1);
-        $pdf->cell(55, 6, 'Occupation', 1, 0, 'L', 1);
-        $pdf->Ln();
-        // Color and font restoration
-        $pdf->SetFillColor(224, 235, 255);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('');
-        // Data
-        $fill = 0;
-        foreach ($patients as $patient) {
-            $pdf->Cell(20, 6, $patient['OpdNo'], '1', 0, 'R');
-            $pdf->Cell(80, 6, $patient['FirstName'] . ' ' . $patient['LastName'], '1', 0, 'L');
-            $pdf->Cell(20, 6, $patient['Age'], '1', 0, 'C');
-            $pdf->Cell(20, 6, $patient['gender'], '1', 0, 'C');
-            $pdf->Cell(50, 6, $patient['address'], '1', 0, 'L');
-            $pdf->Cell(40, 6, $patient['city'], '1', 0, 'L');
-            $pdf->Cell(55, 6, $patient['occupation'], '1', 0, 'L');
-            $pdf->Ln();
-            $fill = !$fill;
-        }
-        ob_end_clean();
-        return $pdf->Output('Test_pdf.pdf', 'I');
+        pdf_create($title, $html);
+        exit;
     }
 
     function get_patient_by_opd() {

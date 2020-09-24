@@ -2,7 +2,8 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Add new patient:</h3>
+                <h3 class="box-title"><i class="fa fa-plus"></i> Add new patient:</h3>
+                <a href="<?php echo base_url('patient-list'); ?>" class="btn btn-sm btn-primary pull-right"><i class="fa fa-list"></i> Patient list</a>
             </div>
             <div class="box-body">
                 <form class="form-horizontal" name="patient_form" id="patient_form" action="<?php echo base_url('patient/save'); ?>" method="POST">

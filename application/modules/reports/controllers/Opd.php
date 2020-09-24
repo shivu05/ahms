@@ -68,7 +68,7 @@ class Opd extends SHV_Controller {
         $patients = $result['data'];
 
         $headers['serial_number'] = array('name' => 'Sl. No', 'align' => 'C', 'width' => '5');
-        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '5');
+        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
         if ($input_array['department'] != 1) {
             $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
         }
@@ -93,14 +93,14 @@ class Opd extends SHV_Controller {
         $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
         $stats_headers = array(
-            'department' => array('name' => 'Department', 'width' => '15'),
-            'OLD' => array('name' => 'OLD', 'align' => 'C', 'width' => '7'),
-            'NEW' => array('name' => 'NEW', 'align' => 'C', 'width' => '7'),
-            'Total' => array('name' => 'Total', 'align' => 'C', 'width' => '7'),
-            'Male' => array('name' => 'Male', 'align' => 'C', 'width' => '7'),
-            'Female' => array('name' => 'Female', 'align' => 'C', 'width' => '7'),
-            'NRV' => array('name' => 'Netra-Roga Vibhaga', 'align' => 'C', 'width' => '7'),
-            'KNMDV' => array('name' => 'karna-Nasa-Mukha & Danta Vibhaga', 'align' => 'C', 'width' => '7'),
+            'department' => array('name' => 'Department', 'align' => 'L', 'width' => '20'),
+            'OLD' => array('name' => 'OLD', 'align' => 'C', 'width' => '10'),
+            'NEW' => array('name' => 'NEW', 'align' => 'C', 'width' => '10'),
+            'Total' => array('name' => 'Total', 'align' => 'C', 'width' => '10'),
+            'Male' => array('name' => 'Male', 'align' => 'C', 'width' => '10'),
+            'Female' => array('name' => 'Female', 'align' => 'C', 'width' => '10'),
+            'NRV' => array('name' => 'Netra-Roga Vibhaga', 'align' => 'C', 'width' => '15'),
+            'KNMDV' => array('name' => 'karna-Nasa-Mukha & Danta Vibhaga', 'align' => 'C', 'width' => '15'),
         );
         $stats_html = generate_table_pdf($stats_headers, $return);
 
@@ -112,7 +112,7 @@ class Opd extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        $content = $html . '<br/>' . $stats_html;
+        $content = $html . '<br/><br/>' . $stats_html;
         pdf_create($title, $content);
         exit;
     }

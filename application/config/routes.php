@@ -114,3 +114,10 @@ $route['print-opd-bill'] = 'patient/Treatment/print_bill';
 $route['print-opd-prescription'] = 'patient/Treatment/print_prescription';
 
 $route['patient-list'] = 'patient/patient_list';
+$route['procedure-list'] = 'master/panchakarma/list_procedures';
+$route['export-duty-doctors-xls'] = 'master/doctors/export_to_excel';
+
+$route['search-patient'] = 'patient/search_patient';
+$route['add-opd-treatment/(:num)/(:num)'] = 'patient/treatment/add_treatment/$1/$2';
+
+

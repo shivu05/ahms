@@ -48,14 +48,18 @@
             }
         </style>
         <script type="text/javascript">
-           /* jQuery.ui.autocomplete.prototype._resizeMenu = function () {
-                var ul = this.menu.element;
-                ul.outerWidth(this.element.outerWidth());
-            };*/
+            /* jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+             var ul = this.menu.element;
+             ul.outerWidth(this.element.outerWidth());
+             };*/
         </script>
 
     </head>
     <body class="hold-transition skin-red layout-top-nav">   
+        <div class="loading-box" id="ajxloading">
+            <p class="h1"><i class="fa fa-refresh fa-spin text-info"></i></p>
+            <p id="load_msg"><small>please wait...</small></p>
+        </div>
         <div class="wrapper" style="overflow-y:hidden !important;">
             <?php
             if ($this->layout->headerFlag) :
@@ -86,10 +90,6 @@
 
                     <!-- Main content -->
                     <section class="content">
-                        <div class="loading-box" id="ajxloading">
-                            <p class="h1"><i class="fa fa-refresh fa-spin text-lime"></i></p>
-                            <p id="load_msg"><small>please wait...</small></p>
-                        </div>
                         <?php
                         if (GLOBAL_NOTICE) {
                             echo '<div class="alert alert-warning alert-dismissible">

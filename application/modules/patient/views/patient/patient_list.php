@@ -36,7 +36,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="patient_modal" tabindex="-1" role="dialog" aria-labelledby="patient_modal_label" aria-hidden="true">
+<div class="modal fade" id="patient_modal" tabindex="-1" role="dialog" aria-labelledby="patient_modal_label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -128,7 +128,7 @@
         });
         $('#search_form #export').on('click', '#export_to_xls', function (e) {
             e.preventDefault();
-            //$('#search_form').submit();
+            $('.loading-box').css('display', 'block');
             var form_data = $('#search_form').serializeArray();
             $.ajax({
                 url: base_url + 'patient/patient/export_patients_list',
@@ -136,6 +136,7 @@
                 dataType: 'json',
                 data: {search_form: form_data},
                 success: function (data) {
+                    $('.loading-box').css('display', 'none');
                     download(data.file, data.file_name, 'application/octet-stream');
                 }
             });

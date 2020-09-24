@@ -18,27 +18,10 @@ if (!defined('BASEPATH'))
  * params: Html content, file name, page orientation
  * return: produces pdf file from passed HTML content
  */
-function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $pstyle = NULL, $download_type = 'I', $water_marks = TRUE, $full_page_print = FALSE) {
+function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $pstyle = NULL, $download_type = 'I') {
     $CI = & get_instance();
-    $config = $CI->db->get('config');
-    $config = $config->row_array();
+    $config = $CI->db->get('config')->row_array();
     $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
-    //Html page design
-    $header = '<div class="row"><div class="col first">'
-            . '<img src="' . base_url('assets/your_logo.png') . '" width="60" height="60" alt="logo">
-                    </div>
-                    <div class="col half">
-                    <h3 align="center">' . $config["college_name"] . '</h3>
-                    </div></div><hr>';
-
-    $footer = '<table width="100%" style="color:#000000;border-top-style: solid;font-size:10px;">
-    <tr>
-        <td width="33%"></td>
-        <td width="33%" align="center">{PAGENO}/{nbpg}</td>
-        <td width="33%" style="text-align: right;">©Ayush softwares </td>
-    </tr>
-</table>';
-
     $top_heading = "";
     if (!empty($title)) {
         $department = (isset($title['department'])) ? '<b>DEPARTMENT</b>:' . $title['department'] . '' : '';
@@ -51,46 +34,29 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
         $top_heading .= '<td width="33%">' . $department . '</td><td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td><td width="33%" style="text-align:center;">'
                 . $from_date .
                 '&nbsp;
-        ' . $to_date . '</td>';
+      ' . $to_date . '</td>';
         $top_heading .= '</tr>';
-        $top_heading .= '</table>';
+        $top_heading .= '</table><br/><br/>';
     }
 
     //Main content
-    $html = "<body><div id='content'>" . $content . "</div></body>";
+    $html = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
+    $html .= "<body><div id='content'>" . $top_heading . $content . "</div></body>";
 
-    //$mpdf = new \mPDF('utf-8', '', '', 0, 15, 15, 30, 16, 9, 10, 9, 11, 'A4');
-    //mPDF('encode','page','font-size','font-style','m-left','m-right','m-top','m-bottom')
-    $mpdf = NULL;
-    if ($full_page_print) {
-        $mpdf = new \mPDF('', 'A4', 8, '', 4, 4, 4, 4);
-    } else {
-        $mpdf = new \mPDF('', 'A4', 12, '', 15, 15, 30, 16);
-    }
+    $CI->load->library('pdf');
+    //ob_start();
+    $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
+    // set document information
+    $pdf->SetMargins(5, 32, 10, true);
+    $pdf->setPrintHeader(true);
 
-    //$mpdf->debug = 'true';
-    $mpdf->SetDisplayMode('fullpage');
-    $mpdf->SetWatermarkImage('./assets/your_logo.png', 0.1);
-    $mpdf->showWatermarkImage = $water_marks;
-    $stylesheet = file_get_contents('assets/css/print_table.css');
-    if (strtoupper($orientation) == 'L') {
-        $mpdf->AddPage('L');
-    }
+    $pdf->SetFont(PDF_FONT, '', 10);
+    $pdf->AddPage($orientation);
+    $pdf->SetMargins(5, 32, 10, true);
+    $pdf->writeHTML($html, true, false, true, false, '');
+    $pdf->SetFooterMargin(1.5);
 
-    $mpdf->WriteHTML($stylesheet, 1);
-    if (!$full_page_print) {
-        $mpdf->SetHTMLHeader($header, 'O', true);
-        $mpdf->SetHTMLFooter($footer, 'O', true);
-    }
-    $mpdf->use_kwt = true;
-    $mpdf->shrink_tables_to_fit = 1;
-    $mpdf->useSubstitutions = false;
-    $mpdf->simpleTables = true;
-
-    $mpdf->WriteHTML($top_heading, 2);
-    $mpdf->WriteHTML($html, 2);
-    //s$mpdf->writeBarcode('12345678');
-    //pma($html,1);
-    $mpdf->Output($filename . '.pdf', $download_type);
+    ob_end_clean();
+    $pdf->Output($filename . '.pdf', $download_type);
     return;
 }

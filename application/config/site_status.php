@@ -40,7 +40,7 @@ switch (APP_ENV) {
         defined('DB_NAME') OR define('DB_NAME', 'ahms_2020');
         defined('DB_USER') OR define('DB_USER', 'root');
         defined('DB_PASS') OR define('DB_PASS', '');
-        defined('ENC_KEY') OR define('ENC_KEY', 'cinaacabcdef123ef4578z1k2l3i4p5o67q890n98b');
+        defined('ENC_KEY') OR define('ENC_KEY', '8F3jdhXYHWv3K3QpmzEF3kVrdtqXEMuR');
         /*         * ***** DEFAULT DEBUG ******* */
         defined('DEBUG') OR define('DEBUG', '1'); //array('ERROR' => 1, 'DEBUG' => 2, 'INFO' => 3, 'ALL' => 4);
         /*         * ***** CUSTOM DEBUG ******* */
@@ -49,4 +49,5 @@ switch (APP_ENV) {
         defined('CUSTOM_APP_LOG') OR define('CUSTOM_APP_LOG', 'APP');
         defined('DB_QUERIES_LOG') OR define('DB_QUERIES_LOG', '1');
         defined('APP_AUTH_FLAG') OR define('APP_AUTH_FLAG', '1');
+        defined('PDF_FONT') OR define('PDF_FONT', 'Courier');
 }

@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Doctors duty chart:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Doctors duty chart:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('master/doctors/export_duty_chart_pdf'); ?>">
                     <div class="form-group col-md-2">
@@ -187,6 +187,20 @@
 
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
+        });
+
+        $('#search_form #export').on('click', '#export_to_xls', function () {
+            $('.loading-box').css('display', 'block');
+            var form_fields = $('#search_form').serialize();
+            $.ajax({
+                type: 'POST',
+                url: "<?= base_url('export-duty-doctors-xls') ?>",
+                data: form_fields,
+                dataType: 'json'
+            }).done(function (data) {
+                download(data.file, data.file_name, 'application/octet-stream');
+                $('.loading-box').css('display', 'none');
+            });
         });
 
 
