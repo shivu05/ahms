@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class Purchase_model extends CI_Model {
 
     function get_purchase_variables($conditions, $export_flag = false) {
@@ -156,13 +150,15 @@ class Purchase_model extends CI_Model {
         //echo $this->db->last_query();exit;
     }
 
-    function get_product_variables($column = null) {
+    function get_product_variables($column = null, $where = null) {
         if ($column) {
-            $this->db->distinct();
+            //$this->db->distinct();
             $this->db->select($column);
-            return $this->db->get('product_master')->result_array();
         }
-        return false;
+        if ($where) {
+            $this->db->where($where);
+        }
+        return $this->db->get('product_master')->result_array();
     }
 
     function get_product_info($product_id, $batch) {
@@ -170,6 +166,67 @@ class Purchase_model extends CI_Model {
         $this->db->where('batch', $batch);
         $this->db->limit(1);
         return $this->db->get('product_details')->result_array();
+    }
+
+    function save_temp_purchase_data($post_values) {
+        return $this->db->insert('temp_purchase_entry', $post_values);
+    }
+
+    function get_temp_purchase_data() {
+        $user_id = $this->rbac->get_uid();
+        $this->db->where('user_id', $user_id);
+        return $this->db->get('temp_purchase_entry')->row_array();
+    }
+
+    function save_purchase_entry($bill_no) {
+        $uid = $this->rbac->get_uid();
+        $this->db->trans_begin();
+        //fetech temp data to main table
+        $this->db->query("INSERT INTO purchase_entry (supplier_id, billno, date, refno, price, opbal, product, batch, pty, fty, prate, mrp, discount, vat, btype, total, user_id) 
+            SELECT supplier_id, billno, date, refno, price, opbal, product, batch, pty, fty, prate, mrp, discount, vat, btype, total, user_id 
+            FROM temp_purchase_entry WHERE user_id='" . $uid . "' and billno='" . $bill_no . "'");
+        $temp_records = $this->db->query("SELECT * FROM temp_purchase_entry WHERE user_id='" . $uid . "' and billno='" . $bill_no . "'")->result_array();
+        if (!empty($temp_records)) {
+            foreach ($temp_records as $row) {
+                /* $stock_details = $this->db->query("SELECT t.supplier_id,t.product, batch FROM temp_purchase_entry t 
+                  JOIN stock s ON t.supplier_id=s.supplier_id AND t.product = s.product AND t.batch =s.batchno"); */
+                $check_stock_data = $this->db->query("select * from stock where supplier_id='" . $row['supplier_id'] . "' 
+                    and product='" . $row['product'] . "' and batchno='" . $row['batch'] . "'")->row_array();
+                if (empty($check_stock_data)) {
+                    $this->db->query("INSERT INTO stock (supplier_id, product, batchno, cstock, price, amount, billno, status) 
+                        SELECT supplier_id, product, batch , pty, mrp, total, billno, '1' FROM temp_purchase_entry where id='" . $row['id'] . "'");
+                } else {
+                    $this->db->query("update stock s 
+                        JOIN temp_purchase_entry t ON t.supplier_id=s.supplier_id AND t.product = s.product AND t.batch =s.batchno 
+                        set s.cstock = (s.cstock+t.pty), status='1',s.amount=t.total,s.price=t.mrp where t.supplier_id='" . $row['supplier_id'] . "'
+                            AND t.product='" . $row['product'] . "' AND t.batch= '" . $row['batch'] . "'");
+                }
+            }
+        }
+        $this->db->where('user_id', $uid)->delete('temp_purchase_entry');
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
+
+    public function get_bill_nos() {
+        return $this->db->distinct()->select('billno')->get('purchase_entry')->result_array();
+        //echo $this->db->last_query();exit;
+    }
+
+    public function get_purchase_details($billno) {
+        $this->db->select('*');
+        $this->db->from('purchase_entry p');
+        $this->db->join('product_master pm', 'p.product=pm.product_id');
+        $this->db->join('purchase_variables pv', 'pm.product_master_id=pv.id');
+        $this->db->where('pv.type', 'product');
+        return $this->db->where('p.billno', $billno)->get()->result_array();
+        //echo $this->db->last_query();exit;
     }
 
 }

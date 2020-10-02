@@ -1,13 +1,12 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <?php //pma($pt_items); ?>
-            <div class="box-header"><h3 class="box-title">Product list:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Product list:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
-                        <label class="control-label">Type:</label>
-                        <select class="form-control" name="type" id="type">
+                        <label class="sr-only">Type:</label>
+                        <select class="form-control select2" data-placeholder="Choose type" name="type" id="type">
                             <option value="">Choose type</option>
                             <?php
                             if (!empty($pt_items)) {
@@ -19,7 +18,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="control-label">Name</label>
+                        <label class="sr-only">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name" autocomplete="off">
                     </div>
                     <div class="form-group col-md-4 align-self-end">
@@ -27,11 +26,14 @@
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-info dropdown-toggle" id="btnGroupDrop3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(36px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    <a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a>
-                                    <a class="dropdown-item" href="#" id="export_to_xls">.xls</a>
-                                </div>
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
+                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
+                                </ul>
                             </div>
                         </div>
                         <a class="btn btn-dark" href="<?php echo base_url('add-product') ?>" type="button" id="add_product" name="add_product" data-backdrop="static" data-keyboard="false"><i class="fa fa-fw fa-lg fa-plus-circle"></i>Add</a>
@@ -51,13 +53,30 @@
         min-width: 40px !important;
         text-align: center;
     }
-    .product_name{
-        max-width: 180px !important;
-        min-width: 180px !important;
+    .dec_num{
+        max-width: 60px !important;
+        min-width: 60px !important;
+        text-align: center;
     }
-    .supplier_name{
+    .date{
+        max-width: 100px !important;
+        min-width: 100px !important;
+    }
+    .product_name{
         max-width: 200px !important;
         min-width: 200px !important;
+    }
+    .supplier_name{
+        max-width: 300px !important;
+        min-width: 300px !important;
+    }
+    .mfr{
+        max-width: 150px !important;
+        min-width: 150px !important;
+    }
+    .category{
+        max-width: 80px !important;
+        min-width: 80px !important;
     }
 </style>
 <script type="text/javascript">
@@ -99,58 +118,51 @@
         },
         {
             title: "MFR",
-            class: "email",
+            class: "mfr",
             data: function (item) {
                 return item.product_mfg;
             }
         },
         {
             title: "Category",
-            class: "email",
+            class: "category",
             data: function (item) {
                 return item.product_type;
             }
         },
         {
             title: "Group",
-            class: "email",
+            class: "category",
             data: function (item) {
                 return item.product_group;
             }
         },
         {
             title: "VAT",
-            class: "email",
+            class: "dec_num",
             data: function (item) {
                 return item.vat;
             }
         },
         {
-            title: "Purchase rate",
-            class: "email",
+            title: "P. rate",
+            class: "dec_num",
             data: function (item) {
                 return item.purchase_rate;
             }
         },
         {
             title: "MRP",
-            class: "email",
+            class: "dec_num",
             data: function (item) {
                 return item.mrp;
             }
         },
         {
-            title: "Selling price",
-            class: "email",
+            title: "S. price",
+            class: "dec_num",
             data: function (item) {
                 return item.sale_rate;
-            }
-        },
-        {
-            title: "Supplier",
-            class: "email",
-            data: function (item) {
-                return item.supplier_id;
             }
         },
         {
@@ -162,28 +174,28 @@
         },
         {
             title: "Reorder point",
-            class: "email",
+            class: "date",
             data: function (item) {
                 return item.reorder_point;
             }
         },
         {
             title: "Weight",
-            class: "email",
+            class: "dec_num",
             data: function (item) {
                 return item.weight;
             }
         },
         {
-            title: "Manufacture date",
-            class: "email",
+            title: "Mfg date",
+            class: "date",
             data: function (item) {
                 return item.manifacture_date;
             }
         },
         {
             title: "Expiry date",
-            class: "email",
+            class: "date",
             data: function (item) {
                 return item.exp_date;
             }

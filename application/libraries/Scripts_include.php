@@ -30,6 +30,7 @@ class Scripts_include {
             '/assets/plugins/jquery-validation/dist/additional-methods.min.js',
             '/assets/plugins/jquery-validation/formValidation.js',
             '/assets/plugins/chosen/chosen.jquery.js',
+            '/node_modules/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js'
         ),
         'datatables' => array(
             '/node_modules/datatables.net/js/jquery.dataTables.min.js',
@@ -63,6 +64,7 @@ class Scripts_include {
             '/assets/bower_components/jquery-ui/jquery-ui.css',
             '/assets/plugins/chosen/bootstrap-chosen.css',
             '/assets/css/myApp.css',
+            '/node_modules/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css'
         ),
         'datatables' => array(
             '/node_modules/datatables.net-bs/css/dataTables.bootstrap.min.css',

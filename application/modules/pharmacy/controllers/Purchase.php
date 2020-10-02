@@ -159,7 +159,7 @@ class Purchase extends SHV_Controller {
             'discount' => 'Discount',
             'reorder_point' => 'Reorder point',
             'weight' => 'Weight',
-            'rack' => 'Rack',
+            'rack' => 'Pack',
             'manifacture_date' => 'Manufacturing date',
             'exp_date' => 'Expiry date'
         );
@@ -201,7 +201,7 @@ class Purchase extends SHV_Controller {
     function get_product_list_by_supplier() {
         $supplier_id = $this->input->post('supplier_id');
         $data['products_list'] = $this->purchase_model->get_products_by_supplier($supplier_id);
-        $data['batch'] = $this->purchase_model->get_product_variables('product_batch');
+        $data['batch'] = $this->purchase_model->get_product_variables('product_batch', array('supplier_id' => $supplier_id));
         echo json_encode($data);
     }
 
@@ -210,6 +210,121 @@ class Purchase extends SHV_Controller {
         $batch = $this->input->post('batch');
         $data['product_info'] = $this->purchase_model->get_product_info($product_id, $batch);
         echo json_encode($data);
+    }
+
+    function add_purchase() {
+        $this->scripts_include->includePlugins(array('jq_validation', 'datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $this->load->model('pharmacy/product_master');
+        $data['suppliers'] = $this->purchase_model->get_purchase_items('SUPPLIER');
+        $data['temp_purchase_data'] = $this->purchase_model->get_temp_purchase_data();
+        $data['bill_nos'] = $this->purchase_model->get_bill_nos();
+        $data['products'] = $this->product_master->fetch_products_list();
+        $data['temp_pdata'] = $this->product_master->fetch_temp_purchase_data();
+        //pma($data['temp_pdata'],1);
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_product_params() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('pharmacy/product_master');
+            $post_values = $this->input->post();
+            $batchs = $this->product_master->filter(array('*'), $post_values);
+            echo json_encode($batchs);
+            exit;
+        } else {
+            echo json_encode(array('error' => 'Invalid request'));
+        }
+    }
+
+    function save_temp_purchase_entry() {
+        if ($this->input->is_ajax_request()) {
+            $user_id = $this->rbac->get_uid();
+            $post_values = $this->input->post();
+            //pma($post_values,1);
+            $insert_array = array(
+                'supplier_id' => $post_values['supplier_id'],
+                'billno' => $post_values['bill_no'],
+                'date' => $post_values['bill_date'],
+                'refno' => $post_values['ref_no'],
+                'price' => $post_values['bill_amount'],
+                'opbal' => $post_values['op_bal'],
+                'product' => $post_values['product_id'],
+                'batch' => $post_values['batch_id'],
+                'pty' => $post_values['purchase_qty'],
+                'fty' => $post_values['f_qty'],
+                'prate' => $post_values['p_rate'],
+                'mrp' => $post_values['mrp'],
+                'discount' => $post_values['discount'],
+                'vat' => $post_values['discount'],
+                'btype' => $post_values['btype'],
+                'total' => $post_values['total'],
+                'total' => $post_values['total'],
+                'user_id' => $user_id
+            );
+            $is_inserted = $this->purchase_model->save_temp_purchase_data($insert_array);
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'ok'));
+            } else {
+                echo json_encode(array('status' => 'failed', 'error' => 'failed to insert'));
+            }
+        } else {
+            echo json_encode(array('error' => 'Invalid request'));
+        }
+    }
+
+    function delete_temp_purchase_data() {
+        if ($this->input->is_ajax_request()) {
+            $id = $this->input->post('id');
+            $this->db->where('id', $id);
+            $is_deleted = $this->db->delete('temp_purchase_entry');
+            if ($is_deleted) {
+                echo json_encode(array('status' => true));
+            } else {
+                echo json_encode(array('status' => false));
+            }
+        } else {
+            echo json_encode(array('error' => 'Invalid request'));
+        }
+    }
+
+    function store_purchase_entry() {
+        $billno = $this->input->post('bill_no');
+        $is_inserted = $this->purchase_model->save_purchase_entry($billno);
+        if ($is_inserted) {
+            echo json_encode(array('status' => true));
+        } else {
+            echo json_encode(array('status' => false));
+        }
+    }
+
+    function export_patients_list_pdf() {
+        $this->load->helper('pdf');
+        $billno = $this->input->post('billno');
+        if (!empty($billno) && $billno != '') {
+            $result = $this->purchase_model->get_purchase_details($billno);
+            $headers = array(
+                'name' => array('name' => 'Product', 'align' => 'L', 'width' => '30'),
+                'batch' => array('name' => 'Batch', 'align' => 'L', 'width' => '20'),
+                'pty' => array('name' => 'P.Qty', 'align' => 'L', 'width' => '7'),
+                'fty' => array('name' => 'F.QTY', 'align' => 'C', 'width' => '7'),
+                'prate' => array('name' => 'P.rate', 'align' => 'L', 'width' => '10'),
+                'mrp' => array('name' => 'MRP', 'align' => 'L', 'width' => '10'),
+                'vat' => array('name' => 'VAT', 'align' => 'L', 'width' => '6'),
+                'discount' => array('name' => 'Discount', 'align' => 'L', 'width' => '10'),
+            );
+            $html = generate_table_pdf($headers, $result);
+            $title = array(
+                'report_title' => 'Purchase details',
+                'extradata' => '<p>Bill no:' . $billno . '</p>'
+            );
+
+            pdf_create($title, $html);
+            exit;
+        } else {
+            show_error('Invalid request. Try again');
+        }
     }
 
 }

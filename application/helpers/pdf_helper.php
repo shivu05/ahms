@@ -31,12 +31,15 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
 
         $top_heading .= '<table width="100%" style="border: none;">';
         $top_heading .= '<tr>';
-        $top_heading .= '<td width="33%">' . $department . '</td><td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td><td width="33%" style="text-align:center;">'
+        $top_heading .= '<td width="33%">' . $department . '</td>
+            <td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td>
+                <td width="33%" style="text-align:center;">'
                 . $from_date .
                 '&nbsp;
       ' . $to_date . '</td>';
         $top_heading .= '</tr>';
         $top_heading .= '</table><br/><br/>';
+        $top_heading .= @$title['extradata'];
     }
 
     //Main content

@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <?php //pma($pt_items); ?>
-            <div class="box-header"><h3 class="box-title"><i class="fa fa-list"></i> Purchase master data list:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Purchase master data list:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
@@ -54,15 +54,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Purchase master data</h4>
+                <h4 class="modal-title"><i class="fa fa-plus"></i> Purchase master data</h4>
             </div>
             <div class="modal-body">
                 <div class="row-fluid">
                     <div class="col-md-12">
                         <form class="form-horizontal" method="POST" name="add_product_form" id="add_product_form" action="<?php echo base_url('add-purchase-type'); ?>">
                             <div class="form-group">
-                                <label class="control-label">Type:</label>
-                                <select class="form-control required select2" name="add_type" id="add_type" style="width: 100%">
+                                <label for="add_type">Type:</label>
+                                <select class="form-control required select2" data-placeholder="Choose type" name="add_type" id="add_type" style="width: 100%">
                                     <option value="">Choose type</option>
                                     <?php
                                     if (!empty($pt_items)) {
@@ -82,8 +82,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm" name="add_btn" id="add_btn">Add</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" name="add_btn" id="add_btn"><i class="fa fa-add"></i> Add</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

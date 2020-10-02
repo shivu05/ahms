@@ -120,4 +120,6 @@ $route['export-duty-doctors-xls'] = 'master/doctors/export_to_excel';
 $route['search-patient'] = 'patient/search_patient';
 $route['add-opd-treatment/(:num)/(:num)'] = 'patient/treatment/add_treatment/$1/$2';
 
+$route['add-purchase'] = 'pharmacy/purchase/add_purchase';
+
 
