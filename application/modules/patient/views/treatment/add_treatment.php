@@ -184,7 +184,7 @@ if (!empty($lab_categories)) {
                                 </div>-->
                             </div>
                             <hr/>
-                            <div class="row">
+                           <!-- <div class="row">
                                 <div class="col-md-4">
                                     <label>Medicine name: <span class="text-danger">*</span></label>
                                     <select name="medicine" id="medicine" class="form-control  required chosen-select">
@@ -221,7 +221,7 @@ if (!empty($lab_categories)) {
                                     <input type="checkbox" name="before_food" id="before_food" class="form-control required numbers-only" />
                                 </div>
                             </div>
-                            <hr/>
+                            <hr/>-->
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Notes: <span class="text-danger">*</span></label>
