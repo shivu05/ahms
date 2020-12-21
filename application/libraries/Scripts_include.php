@@ -46,7 +46,7 @@ class Scripts_include {
             '/assets/plugins/chosen/chosen.jquery.js',
         ),
         'typeahead' => array(
-            '/assets/plugins/typeahead/typeahead.js',
+            '/node_modules/jquery-typeahead/dist/jquery.typeahead.min.js',
         ),
         'chartjs' => array(
         )
@@ -73,7 +73,10 @@ class Scripts_include {
         ),
         'chosen' => array(
             '/assets/plugins/chosen/bootstrap-chosen.css',
-        )
+        ),
+        'typeahead' => array(
+            '/node_modules/jquery-typeahead/dist/jquery.typeahead.min.css',
+        ),
     );
 
     function __construct() {

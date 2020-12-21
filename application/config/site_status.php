@@ -37,7 +37,7 @@ switch (APP_ENV) {
         defined('APP_REQEST_TYPE') OR define('APP_REQEST_TYPE', $_SERVER['REQUEST_SCHEME']); //http/https
         defined('APP_BASE') OR define('APP_BASE', APP_REQEST_TYPE . '://' . APP_HOST . '/' . APP_DOC_ROOT . '/');
         defined('DB_HOST') OR define('DB_HOST', 'localhost');
-        defined('DB_NAME') OR define('DB_NAME', 'ahms_2020');
+        defined('DB_NAME') OR define('DB_NAME', 'ahms_dev_2020');
         defined('DB_USER') OR define('DB_USER', 'root');
         defined('DB_PASS') OR define('DB_PASS', '');
         defined('ENC_KEY') OR define('ENC_KEY', '8F3jdhXYHWv3K3QpmzEF3kVrdtqXEMuR');
