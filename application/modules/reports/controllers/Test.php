@@ -64,19 +64,19 @@ class Test extends SHV_Controller {
         $result = $this->nursing_model->get_xray_data($input_array, true);
 
         $headers = array(
-            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '8'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
-            'name' => array('name' => 'Patient name', 'width' => '20'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Gender', 'width' => '5'),
-            'address' => array('name' => 'Place', 'width' => '10'),
+            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '4'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '6'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '6'),
+            'name' => array('name' => 'Patient name', 'width' => '18'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '4'),
+            'gender' => array('name' => 'Sex', 'width' => '7'),
+            'address' => array('name' => 'Place', 'width' => '8'),
             'department' => array('name' => 'Department', 'width' => '15'),
-            'ID' => array('name' => 'X-Ray No', 'align' => 'C', 'width' => '7'),
-            'partOfXray' => array('name' => 'Part', 'width' => '26'),
-            'filmSize' => array('name' => 'Film size', 'width' => '15'),
-            'refDate' => array('name' => 'Ref.Date', 'align' => 'C', 'width' => '8'),
-            'xrayDate' => array('name' => 'Date', 'align' => 'C', 'width' => '8'),
+            //'ID' => array('name' => 'X-Ray No', 'align' => 'C', 'width' => '8'),
+            'partOfXray' => array('name' => 'Part', 'width' => '15'),
+            'filmSize' => array('name' => 'F.size', 'width' => '7'),
+            ///'refDate' => array('name' => 'Ref.Date', 'align' => 'C', 'width' => '8'),
+            'xrayDate' => array('name' => 'Date', 'align' => 'C', 'width' => '10'),
         );
         $html = generate_table_pdf($headers, $result['data']);
 
@@ -102,6 +102,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_usg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -168,6 +169,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ecg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -197,17 +199,17 @@ class Test extends SHV_Controller {
         $result = $this->nursing_model->get_ecg_data($input_array, true);
 
         $headers = array(
-            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
+            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
             'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
-            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '7'),
+            'name' => array('name' => 'Patient name', 'width' => '18'),
             'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Gender', 'width' => '5'),
+            'gender' => array('name' => 'Sex', 'width' => '5'),
             'address' => array('name' => 'Place', 'width' => '10'),
-            'department' => array('name' => 'Department', 'width' => '12'),
-            'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
-            'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
-            'ecgDate' => array('name' => 'ECG date', 'align' => 'C', 'width' => '6'),
+            'department' => array('name' => 'Department', 'width' => '15'),
+            'refDocName' => array('name' => 'Ref. doctor', 'width' => '19'),
+            //'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'ecgDate' => array('name' => 'ECG date', 'align' => 'C', 'width' => '10'),
         );
         $html = generate_table_pdf($headers, $result['data']);
 

@@ -76,4 +76,15 @@ class Lab_model extends CI_Model {
         return $this->db->get('lab_tests')->result_array();
     }
 
+    function get_lab_data($where) {
+        return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name')
+                        ->from('labregistery lb')
+                        ->join('lab_categories lc', 'lb.lab_test_cat=lc.lab_cat_id')
+                        ->join('lab_investigations li', 'lb.lab_test_type = li.lab_inv_id')
+                        ->join('lab_tests lt', 'lb.testName=lt.lab_test_id')
+                        ->where($where)
+                        ->get()
+                        ->result_array();
+    }
+
 }

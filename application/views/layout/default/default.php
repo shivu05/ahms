@@ -16,6 +16,9 @@
         <![endif]-->
         <?php /* echo CI_VERSION; */ ?>
         <style type="text/css">
+            .pointer{
+                cursor: pointer;
+            }
             .error{
                 color:red;
             }

@@ -9,7 +9,7 @@
                         <input type="hidden" name="tab" id="tab" value="<?= base64_encode('ecgregistery') ?>" />
                         <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                     </form>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-12"></div>
         </div>
@@ -18,6 +18,8 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        var is_admin = '<?= $is_admin ?>';
+
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
@@ -83,14 +85,16 @@
                     return item.ecgDate;
                 }
             },
-            {
+        ];
+        if (is_admin == '1') {
+            columns.push({
                 title: "Action",
                 data: function (item) {
-                    return "<center><input type='checkbox' name='check_del[]' class='check_xray' id='checkbx" + item.ID + "' value='" + item.ID + "'/></center>";
+                    return "<center><input type='checkbox' name='check_del[]' class='check_xray' id='checkbx" + item.ID + "' value='" + item.ID + "'/>" +
+                            "&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit hand_cursor edit_xray' data-id='" + item.ID + "'></i>" + "</center>";
                 }
-            }
-
-        ];
+            });
+        }
         var patient_table;
         function show_patients() {
             patient_table = $('#patient_table').DataTable({

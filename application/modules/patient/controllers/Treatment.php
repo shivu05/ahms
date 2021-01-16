@@ -44,6 +44,7 @@ class Treatment extends SHV_Controller {
         $this->load->model('patient/lab_model');
         $this->load->model('diagnosis');
         $this->load->model('complaints');
+        $this->load->model('purchase_variables');
         $data = array();
         $data['opd'] = $opd;
         $data['treat_id'] = $treat_id;
@@ -59,6 +60,7 @@ class Treatment extends SHV_Controller {
         $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
         $data['diagnosis'] = $this->diagnosis->all();
         $data['complaints'] = $this->complaints->all();
+        $data['medicines'] = $this->purchase_variables->filter(array('name'), array('type' => 'product'));
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -70,7 +72,13 @@ class Treatment extends SHV_Controller {
     function save() {
         $treat_id = $this->input->post('treat_id');
         $is_admit = ($this->input->post('admit') == 'on') ? 'Admit' : 'FollowUp';
+
+        $diagnosis = return_delimeted_string($this->input->post('diagnosis'));
+        $complaints = return_delimeted_string($this->input->post('complaints'));
+        $treatment = return_delimeted_string($this->input->post('treatment'));
+        $is_panchakarma = 'N';
         if ($this->input->post('panchakarma_check') == 'on') {
+            $is_panchakarma = 'Y';
             $post_values = $this->input->post();
             $i = 0;
             foreach ($post_values['pancha_procedure'] as $row) {
@@ -78,7 +86,7 @@ class Treatment extends SHV_Controller {
                 //id, opdno, disease, treatment, procedure, date, docname, treatid, proc_end_date
                 $pancha_data = array(
                     'opdno' => $post_values['opd_no'],
-                    'disease' => @$post_values['diagnosis'],
+                    'disease' => @$diagnosis,
                     'treatment' => $row,
                     'procedure' => $post_values['pancha_sub_procedure'][$i],
                     'date' => $post_values['pancha_proc_start_date'][$i],
@@ -93,10 +101,10 @@ class Treatment extends SHV_Controller {
         if ($this->input->post('add_prescription') == 'on') {
             //Treatment data
             $treatpatientdata = array(
-                'Trtment' => $this->input->post('treatment'),
-                'diagnosis' => $this->input->post('diagnosis'),
-                'complaints' => $this->input->post('complaints'),
-                'procedures' => $this->input->post('panch_procedures'),
+                'Trtment' => $treatment,
+                'diagnosis' => $diagnosis,
+                'complaints' => $complaints,
+                'procedures' => $is_panchakarma,
                 'notes' => $this->input->post('notes'),
                 'InOrOutPat' => $is_admit,
                 'attndedby' => $this->input->post('doctor_name'),

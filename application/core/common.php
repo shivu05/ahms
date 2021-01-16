@@ -341,3 +341,15 @@ if (!function_exists('return_enclosed_string')) {
     }
 
 }
+
+if (!function_exists('return_delimeted_string')) {
+
+    function return_delimeted_string($array, $delimeter = ",") {
+        if (!empty($array)) {
+            return implode($delimeter, $array);
+        } else {
+            return "";
+        }
+    }
+
+}

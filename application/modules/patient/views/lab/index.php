@@ -1,8 +1,10 @@
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-title">Patient's Lab list:</div>
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Patient's Lab list:</h3>
+            </div>
+            <div class="box-body">
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
@@ -13,33 +15,18 @@
     </div>
 </div>
 </div>
-<div class="modal fade" id="test_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="test_modal_box" tabindex="-1" role="dialog" aria-labelledby="default_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 75% !important">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Update Lab details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h4 class="modal-title" id="default_modal_label">Update Lab details</h4>
             </div>
-            <div class="modal-body" id="ecg_modal_body">
+            <div class="modal-body" id="lab_modal_body">
                 <form action="" name="test_form" id="test_form" method="POST">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Test value:</label>
-                        <input class="form-control" id="test_value" name="test_value" type="text" aria-describedby="test_dateHelp" placeholder="Enter Test value">
-                        <small class="form-text text-muted" id="test_dateHelp"></small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Test range:</label>
-                        <input class="form-control" id="test_range" name="test_range" type="text" aria-describedby="test_dateHelp" placeholder="Enter Test range">
-                        <small class="form-text text-muted" id="test_dateHelp"></small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Lab Date:</label>
-                        <input type="hidden" name="test_id" id="test_id" />
-                        <input class="form-control date_picker" id="test_date" name="test_date" type="text" aria-describedby="test_dateHelp" placeholder="Enter Lab date">
-                        <small class="form-text text-muted" id="test_dateHelp"></small>
-                    </div>
+                    <div id="lab_data"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -101,53 +88,53 @@
                     return item.department;
                 }
             },
-            {
-                title: "Test name",
-                data: function (item) {
-                    return item.testName;
-                }
-            },
-            {
-                title: "Test value",
-                data: function (item) {
-                    return item.testvalue;
-                }
-            },
-            {
-                title: "Test range",
-                data: function (item) {
-                    return item.testrange;
-                }
-            },
-            {
-                title: "Test date",
-                data: function (item) {
-                    return item.tested_date;
-                }
-            },
+//            {
+//                title: "Test name",
+//                data: function (item) {
+//                    return item.testName;
+//                }
+//            },
+//            {
+//                title: "Test value",
+//                data: function (item) {
+//                    return item.testvalue;
+//                }
+//            },
+//            {
+//                title: "Test range",
+//                data: function (item) {
+//                    return item.testrange;
+//                }
+//            },
+//            {
+//                title: "Test date",
+//                data: function (item) {
+//                    return item.tested_date;
+//                }
+//            },
             {
                 title: "Action",
                 data: function (item) {
                     if (item.testvalue == '' || item.testvalue == null) {
-                        return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_lab" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                        return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_lab" ' +
+                                ' data-opdno="' + item.OpdNo + '" data-treat_id="' + item.treatID + '" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
                     } else {
                         return '<center><i class="fa fa-pencil-square-o text-primary text-center fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
                     }
                 }
             }
-
         ];
 
         var patient_table = $('#patient_table').DataTable({
             'columns': columns,
             'columnDefs': [
-                {className: "", "targets": [7]}
+                {className: "", "targets": [6]}
             ],
             "bDestroy": true,
             language: {
                 sZeroRecords: "<div class='no_records'>No patients found</div>",
                 sEmptyTable: "<div class='no_records'>No patients found</div>",
-                sProcessing: "<div class='no_records'>Loading</div>",
+                sProcessing: "<div class='no_records'>Loading</div>"
             },
             'searching': true,
             'paging': true,
@@ -173,8 +160,37 @@
         });
 
         $('#patient_table tbody').on('click', '.edit_lab', function () {
+            var date = new Date();
+            var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            $('#lab_data').html('');
             var id = $(this).data('id');
+            var opdno = $(this).data('opdno');
+            var treat_id = $(this).data('treat_id');
             $('#test_modal_box #test_form #test_id').val(id);
+            $('#test_modal_box #test_form #treat_id').val(treat_id);
+            var post_data = {
+                'opdno': opdno,
+                'treat_id': treat_id
+            };
+            $.ajax({
+                url: base_url + 'patient/lab/get_lab_records',
+                type: 'POST',
+                dataType: 'html',
+                data: post_data,
+                success: function (res) {
+                    $('#lab_data').html(res);
+                    $('.date_picker').datepicker({
+                        format: "yyyy-mm-dd",
+                        autoclose: true,
+                        todayHighlight: true,
+                        daysOfWeekHighlighted: "0"
+                    });
+                    $('.date_picker').attr('autocomplete', 'off');
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
             $('#test_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
 
         });

@@ -20,7 +20,7 @@ class Lab extends SHV_Controller {
 
     function index() {
         $this->layout->title = "Lab";
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Laboratory";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
@@ -60,6 +60,18 @@ class Lab extends SHV_Controller {
         } else {
             echo FALSE;
         }
+    }
+
+    public function get_lab_records() {
+        $opdno = $this->input->post('opdno');
+        $treat_id = $this->input->post('treat_id');
+        $where = array(
+            'OpdNo' => $opdno,
+            'treatId' => $treat_id
+        );
+        $data['opd'] = $opdno;
+        $data['records'] = $this->lab_model->get_lab_data($where);
+        echo $this->load->view('patient/lab/get_lab_records', $data);
     }
 
 }
