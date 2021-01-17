@@ -446,18 +446,21 @@ class Nursing_model extends CI_Model {
     }
 
     function get_lab_report($conditions, $export_flag = false) {
-        $columns = array('l.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.deptOpdNo', 't.diagnosis as labdisease',
-            'GROUP_CONCAT(li.lab_test_reference) testrange', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type', 'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat',
-            'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName');
-        $query = "SELECT " . implode(',', $columns) . "
-                FROM labregistery l
-                JOIN patientdata p ON l.OpdNo = p.OpdNo
-                JOIN treatmentdata t ON  l.treatID = t.ID
-                JOIN lab_investigations li ON li.lab_inv_id=l.testName
-                JOIN lab_tests lt ON l.lab_test_type=lt.lab_test_id
-                JOIN lab_categories lc on l.lab_test_cat = lc.lab_cat_id
-                WHERE l.testName <>'' AND l.testDate >='" . $conditions['start_date'] . "' AND  l.testDate <= '" . $conditions['end_date'] . "' order by l.testDate asc
-            ";
+        //'GROUP_CONCAT(li.lab_test_reference) testrange',
+        $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 'p.deptOpdNo',
+            't.diagnosis as labdisease','t.department','l.refDocName',
+           ' GROUP_CONCAT(testrange) testrange','GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
+            'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName','l.tested_date');
+        $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
+                FROM labregistery l,(SELECT @a:= 0) AS a 
+                JOIN patientdata p 
+                JOIN treatmentdata t   
+                JOIN lab_investigations li 
+                JOIN lab_tests lt
+                JOIN lab_categories lc
+                WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName 
+                AND l.lab_test_type=lt.lab_test_id AND l.lab_test_cat = lc.lab_cat_id
+                AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' order by l.tested_date asc";
         $result = $this->db->query($query);
         if ($result->num_rows() > 0) {
             return $result->result(); //if data is true

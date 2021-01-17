@@ -122,4 +122,7 @@ $route['add-opd-treatment/(:num)/(:num)'] = 'patient/treatment/add_treatment/$1/
 
 $route['add-purchase'] = 'pharmacy/purchase/add_purchase';
 
+/* pdf links */
+$route['export-lab-report'] = 'reports/Test/export_lab_report';
+
 
