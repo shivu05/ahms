@@ -1,5 +1,4 @@
 <?php
-
 if (!empty($records)) {
     $table = "<table class='table table-bordered'><thead><tr><th>Category</th><th>Test</th><th>Investigation</th><th>Test value</th><th>Test range</th></tr></thead>";
     $table .= "<tbody>";

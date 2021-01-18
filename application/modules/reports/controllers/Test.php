@@ -573,9 +573,15 @@ class Test extends SHV_Controller {
             'gender' => array('name' => 'Sex', 'width' => '5'),
             'department' => array('name' => 'Department', 'width' => '15'),
             'refDocName' => array('name' => 'Ref. doctor', 'width' => '19'),
-            //'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'testDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '10'),
             'tested_date' => array('name' => 'Lab date', 'align' => 'C', 'width' => '10'),
-            'lab_test_cat' => array('name' => 'Category', 'align' => 'C', 'width' => '15', 'append_next' => true)
+            'extra_row' => array(
+                'lab_test_cat' => array('name' => 'Category', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'lab_test_type' => array('name' => 'Type', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'testName' => array('name' => 'Test', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'testvalue' => array('name' => 'Value', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'testrange' => array('name' => 'Range', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+            )
         );
         $array = json_decode(json_encode($result), true);
         $html = generate_table_pdf($headers, $array, true);

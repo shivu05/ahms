@@ -144,26 +144,45 @@ if (!function_exists('generate_table_pdf')) {
                 $table .= '<thead>';
                 $table .= '<tr>';
                 foreach ($headers as $head => $v) {
-                    $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
-                    $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
-                    $table .= '<th ' . $width . ' ' . $align . '><b>' . $v['name'] . '</b></th>';
+                    if ($head != 'extra_row') {
+                        $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
+                        $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
+                        $table .= '<th ' . $width . ' ' . $align . '><b>' . $v['name'] . '</b></th>';
+                    }
                 }
                 $table .= '</tr>';
                 $table .= '</thead>';
                 $table .= '<tbody>';
                 if (!empty($data)) {
                     foreach ($data as $row) {
-                        $table .= '<tr>';
-                        $extra_row = '';
+                        $extra_row = $td = '';
                         foreach ($headers as $k => $v) {
-                            $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
-                            $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
-                            $table .= '<td ' . $width . ' ' . $align . '>' . $row[$k] . '</td>';
+                            if ($k != 'extra_row') {
+                                $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
+                                $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
+                                $td .= '<td ' . $width . ' ' . $align . ' >' . $row[$k] . '</td>';
+                            }
                         }
-                        $table .= '</tr>';
-                        if($add_extra_row){
-                            $table .='<tr><td>Extra column</td>';
-                            $table .='</tr>';
+                        $table .= '<tr>' . $td . '</tr>';
+                        if ($add_extra_row) {
+                            $cnt = sizeof($headers) - 1;
+                            $table .= '<tr><td colspan="' . $cnt . '">';
+                            $table .= '<table width="100%" class="table table-bordered">';
+                            $table .= '<tr>';
+                            foreach ($headers['extra_row'] as $k => $v) {
+                                $colspan = (isset($v['colspan'])) ? ' colspan="' . $v['colspan'] . '"' : '';
+                                $table .= '<th style="font-weight: bold" ' . $colspan . '>' . $v['name'] . '</th>';
+                            }
+                            $table .= '</tr>';
+                            $table .= '<tr>';
+                            foreach ($headers['extra_row'] as $k => $v) {
+                                $colspan = (isset($v['colspan'])) ? ' colspan="' . $v['colspan'] . '"' : '';
+                                $lab_cat_names = array_from_delimeted_string($row[$k], ",", true);
+                                $table .= '<td ' . $colspan . '>' . $lab_cat_names . '</td>';
+                            }
+                            $table .= '</tr>';
+                            $table .= '</table>';
+                            $table .= '</td></tr>';
                         }
                     }
                 } else {
@@ -173,6 +192,8 @@ if (!function_exists('generate_table_pdf')) {
             }
             $table .= '</table>';
         }
+//        echo $table;
+//        exit;
         return $table;
     }
 

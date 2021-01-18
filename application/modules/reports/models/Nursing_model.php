@@ -448,7 +448,7 @@ class Nursing_model extends CI_Model {
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
         $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 'p.deptOpdNo',
-            't.diagnosis as labdisease','t.department','l.refDocName',
+            't.diagnosis as labdisease','t.department','l.refDocName','l.testDate',
            ' GROUP_CONCAT(testrange) testrange','GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName','l.tested_date');
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
