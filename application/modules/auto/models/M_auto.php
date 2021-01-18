@@ -196,39 +196,14 @@ class M_auto extends CI_Model {
         $this->bcmed = array();
 
 
-        $this->akdiagnosis = array();
-        $this->akcomplaints = array();
-        $this->akprocedure = array();
-        $this->akTreatment = array();
-        $this->akDoc = array();
-        $this->akmed = array();
+        $this->akdiagnosis = $this->akcomplaints = $this->akprocedure = $this->akTreatment = $this->akDoc = $this->akmed = array();
 
         $this->addedby = "";
 
-        $this->countkayachik = 0;
-        $this->countshalakya = 0;
-        $this->countshallya = 0;
-        $this->counttantra = 0;
-        $this->countSwastha = 0;
-        $this->countpanchakar = 0;
-        $this->countbalachik = 0;
-        $this->countemergency = 0;
-        $this->tobeentkayachik = 0;
-        $this->tobeentshalakya = 0;
-        $this->tobeentshallya = 0;
-        $this->tobeenttantra = 0;
-        $this->toBeEntSwastha = 0;
-        $this->tobeentpanchakar = 0;
-        $this->tobeentbalachik = 0;
-        $this->tobeentemergency = 0;
-        $this->kayachikper = 0;
-        $this->shalakyaper = 0;
-        $this->shallyaper = 0;
-        $this->tantraper = 0;
-        $this->swasthaPer = 0;
-        $this->panchakarper = 0;
-        $this->balachikper = 0;
-        $this->emergencyper = 0;
+        $this->countkayachik = $this->countshalakya = $this->countshallya = $this->counttantra = $this->countSwastha = $this->countpanchakar = 0;
+        $this->countbalachik = $this->countemergency = $this->tobeentkayachik = $this->tobeentshalakya = $this->tobeentshallya = $this->tobeenttantra = 0;
+        $this->toBeEntSwastha = $this->tobeentpanchakar = $this->tobeentbalachik = $this->tobeentemergency = $this->kayachikper = $this->shalakyaper = 0;
+        $this->shallyaper = $this->tantraper = $this->swasthaPer = $this->panchakarper = $this->balachikper = $this->emergencyper = 0;
         //new code update
         $this->_dept_percentage_arr = array();
         $this->_entered_records_arr = array();
