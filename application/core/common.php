@@ -136,7 +136,7 @@ if (!function_exists('array_column')) {
 
 if (!function_exists('generate_table_pdf')) {
 
-    function generate_table_pdf($headers, $data = null) {
+    function generate_table_pdf($headers, $data = null, $add_extra_row = false) {
         $table = '';
         if ($headers) {
             $table .= '<table width="100%" class="table table-bordered">';
@@ -154,12 +154,17 @@ if (!function_exists('generate_table_pdf')) {
                 if (!empty($data)) {
                     foreach ($data as $row) {
                         $table .= '<tr>';
+                        $extra_row = '';
                         foreach ($headers as $k => $v) {
                             $align = (isset($v['align']) && $v['align'] == 'C') ? ' align="center"' : '';
                             $width = (isset($v['width'])) ? ' width="' . $v['width'] . '%"' : '';
                             $table .= '<td ' . $width . ' ' . $align . '>' . $row[$k] . '</td>';
                         }
                         $table .= '</tr>';
+                        if($add_extra_row){
+                            $table .='<tr><td>Extra column</td>';
+                            $table .='</tr>';
+                        }
                     }
                 } else {
                     $table .= '<tr><td>No data found</td></tr>';

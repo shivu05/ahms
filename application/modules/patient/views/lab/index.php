@@ -8,7 +8,7 @@
                 <?php //echo $top_form; ?>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-12"></div>
         </div>
@@ -22,7 +22,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="default_modal_label">Update Lab details</h4>
+                <h4 class="modal-title" id="default_modal_label">Update Lab details of OPD: <span id="pat_opd" class="text-warning"></span> </h4>
             </div>
             <div class="modal-body" id="lab_modal_body">
                 <form action="" name="test_form" id="test_form" method="POST">
@@ -178,6 +178,8 @@
                 dataType: 'html',
                 data: post_data,
                 success: function (res) {
+                    var date = new Date();
+                    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                     $('#lab_data').html(res);
                     $('.date_picker').datepicker({
                         format: "yyyy-mm-dd",
@@ -186,11 +188,14 @@
                         daysOfWeekHighlighted: "0"
                     });
                     $('.date_picker').attr('autocomplete', 'off');
+                    $('.date_picker').datepicker('setDate', today);
                 },
                 error: function (err) {
                     console.log(err);
                 }
             });
+
+            $('#test_modal_box #pat_opd').html(opdno);
             $('#test_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
 
         });

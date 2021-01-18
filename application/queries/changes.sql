@@ -57,3 +57,7 @@ CREATE TABLE  `master_panchakarma_sub_procedures` (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 update perm_master set perm_desc='Patient Master',perm_code='PATIENT_MASTER',perm_url='patient-list' where perm_id=5;
+ALTER TABLE `ahms_dev_2020`.`lab_investigations` 
+ADD COLUMN `lab_test_reference` VARCHAR(100) NULL AFTER `lab_test_id`;
+ALTER TABLE `ahms_dev_2020`.`labregistery` 
+CHANGE COLUMN `tested_date` `tested_date` DATE NULL DEFAULT NULL ;

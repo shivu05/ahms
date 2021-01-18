@@ -529,16 +529,68 @@ class Test extends SHV_Controller {
         $this->layout->navDescr = "Laboratory";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'export-lab-report');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function get_lab_records() {
-        $input_array = $this->input->post();
+        $post_data = $this->input->post();
+        $input_array = array();
+        foreach ($post_data as $key => $val) {
+            $input_array[$key] = $val;
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
         $data["patient"] = $this->nursing_model->get_lab_report($input_array);
         $this->load->view('reports/test/lab_report', $data);
+    }
+
+    function export_lab_report() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_lab_report($input_array, true);
+        //pma($result,1);
+        /* 'l.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.deptOpdNo', 't.diagnosis as labdisease',
+          ' GROUP_CONCAT(testrange) testrange','GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
+          'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName'
+         * 
+         */
+        $headers = array(
+            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '7'),
+            'name' => array('name' => 'Patient name', 'width' => '18'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Sex', 'width' => '5'),
+            'department' => array('name' => 'Department', 'width' => '15'),
+            'refDocName' => array('name' => 'Ref. doctor', 'width' => '19'),
+            //'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
+            'tested_date' => array('name' => 'Lab date', 'align' => 'C', 'width' => '10'),
+            'lab_test_cat' => array('name' => 'Category', 'align' => 'C', 'width' => '15', 'append_next' => true)
+        );
+        $array = json_decode(json_encode($result), true);
+        $html = generate_table_pdf($headers, $array, true);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'LAB REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
     }
 
     function lab_count() {

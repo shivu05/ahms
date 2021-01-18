@@ -26,7 +26,7 @@ if (empty($patient)) {
                 echo "<td style='text-align:center;'>" . $count . "</td>";
                 echo "<td style='text-align:center;'>" . $row->OpdNo . "</td>";
                 echo "<td style='text-align:center;'>" . $row->deptOpdNo . "</td>";
-                echo "<td>" . $row->FirstName . ' ' . $row->LastName . "</td>";
+                echo "<td>" . $row->name  . "</td>";
                 echo "<td style='text-align:center;'>" . $row->Age . "</td>";
                 echo "<td style='text-align:center;'>" . $row->gender . "</td>";
                 echo "<td>" . $row->refDocName . "</td>";
@@ -36,7 +36,7 @@ if (empty($patient)) {
                 $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", true);
                 $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", true);
                 $testrange = array_from_delimeted_string($row->testrange, ",", true);
-                //$sizeoftest = $testname['count'];
+                $testvalue = array_from_delimeted_string($row->testvalue, ",", true);
                 echo "</tr>";
                 ?>
                 <tr>
@@ -44,20 +44,20 @@ if (empty($patient)) {
                     <td colspan='7'>
                         <table class="table table-bordered table-condensed" width="100%" style="margin:auto;">
                             <tr>
-                                <td colspan='6' align='center'><b>Test Details:</b></caption></td>
+                                <td colspan='6' align='left'><b>Test Details:</b></caption></td>
                             </tr>
                             <tr>
                                 <th>Category</th>
                                 <th>Type</th>
                                 <th>Name</th>
-                                <th style='text-align:center;'>Value</th>
-                                <th style='text-align:center;'>Range</th>
+                                <th>Value</th>
+                                <th>Range</th>
                             </tr>
                             <tr> 
                                 <td><?= $lab_cat_name ?></td>
                                 <td><?= $lab_test_type ?></td>
                                 <td><?= $testname ?></td>
-                                <td></td>
+                                <td><?= $testvalue ?></td>
                                 <td><?= $testrange ?></td>
                             </tr>
                         </table> 
