@@ -385,7 +385,7 @@ class Treatment extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $this->layout->navIcon = "fa fa-users ";
-        $this->layout->title = "OPD";
+        $this->layout->title = "OPD bill";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Print OPD bills";
@@ -440,9 +440,8 @@ class Treatment extends SHV_Controller {
                     <tr><td colspan=3 width='100%' height='35' style='text-align: right;padding-top:3%;padding-right:2%;'>Receivers sign</td></tr>    
                     </tbody>
                     </table>";
-                $html .= "<div style='margin-bottom:2% !important;'>";
-                $html .= "<div style='width:100% !important;border: 1px solid black;'>
-            " . $header .
+                $html .= "<div>";
+                $html .= "<div style='width:100% !important;border: 1px solid black;'>" . $header .
                         "<div style='width:100%'><h3 align='center'>OPD BILL</h3></div><hr><table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
                     <td width='33.33%' style='text-align: center;'>OPD: <b>" . $opd . "</b></td>
                     <td width='33.33%' style='text-align: right;'>Date: <b>" . format_date($patient['CameOn']) . "</b></td></tr>
@@ -452,8 +451,10 @@ class Treatment extends SHV_Controller {
                 $html .= "</div>";
             }//foreach
         }//if
-        $filename = 'opd_bills_' . $c_date;
-        pdf_create('', $html, $filename, 'P', 'I', FALSE, TRUE);
+        $filename = 'opd_bills_' . 'shi';
+        //echo $html;exit;
+        //pdf_create(array(), $html, $filename, 'P', 'I', FALSE, TRUE, FALSE);
+        generate_pdf($html);
         exit;
     }
 

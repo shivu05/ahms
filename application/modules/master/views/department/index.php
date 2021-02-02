@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border">Department list:</div>
+            <div class="box-header with-border"><h3 class="box-title"> Department list:</h3></div>
             <div class="box-body">
                 <div class="col-md-4">
                     <table class="table table-bordered table-hover table-striped">
@@ -9,8 +9,8 @@
                             <tr>
                                 <th class="text-center">Sl. No</th>
                                 <th>Department name</th>
-                                <th>% required</th>
-                                <th>Action</th>
+                                <!--<th>% required</th>-->
+                                <!--<th>Action</th>-->
                             </tr>
                         </thead>
                         <tbody>
@@ -21,8 +21,8 @@
                                     echo '<tr>';
                                     echo '<td class="text-center">' . $i . '</td>';
                                     echo '<td>' . $dept['department'] . '</td>';
-                                    echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
-                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
+                                    //echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
+                                    //echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
                                     echo '</tr>';
                                     $i++;
                                 }

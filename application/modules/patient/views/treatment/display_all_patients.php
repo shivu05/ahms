@@ -68,6 +68,7 @@
             var formAction = base_url + method;
             //set form action
             $('#search_form').attr('action', formAction);
+            $('#search_form').attr('target', '_blank');
             //submit form
             $('#search_form').submit();
         };

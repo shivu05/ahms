@@ -18,7 +18,7 @@ if (!defined('BASEPATH'))
  * params: Html content, file name, page orientation
  * return: produces pdf file from passed HTML content
  */
-function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $pstyle = NULL, $download_type = 'I') {
+function pdf_create($title = array(), $content = '', $filename = 'ahms_report', $pstyle = NULL, $download_type = 'I', $print_header = true) {
     $CI = & get_instance();
     $config = $CI->db->get('config')->row_array();
     $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
@@ -45,17 +45,18 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     //Main content
     $html = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
     $html .= "<body><div id='content'>" . $top_heading . $content . "</div></body>";
+    
 
     $CI->load->library('pdf');
     //ob_start();
-    $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
+    $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
     // set document information
-    $pdf->SetMargins(5, 32, 10, true);
-    $pdf->setPrintHeader(true);
+    $pdf->SetMargins(5, 0, 10, false);
+    $pdf->setPrintHeader($print_header);
 
     $pdf->SetFont(PDF_FONT, '', 10);
     $pdf->AddPage($orientation);
-    $pdf->SetMargins(5, 32, 10, true);
+    $pdf->SetMargins(5, 2, 10, true);
     $pdf->writeHTML($html, true, false, true, false, '');
     $pdf->SetFooterMargin(1.5);
 

@@ -15,6 +15,8 @@ class Home extends SHV_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->layout->navTitle = true;
+        $this->layout->title = "Home";
     }
 
     function index() {

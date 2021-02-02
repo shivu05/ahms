@@ -17,7 +17,7 @@ class Department extends SHV_Controller {
     }
 
     function index() {
-        $this->layout->navTitleFlag = true;
+        $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Department list";
         $data = array();
         $data['depts'] = $this->get_department_list('array');
