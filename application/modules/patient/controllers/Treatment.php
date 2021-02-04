@@ -427,7 +427,7 @@ class Treatment extends SHV_Controller {
                 $config = $config->row_array();
                 $header = '<div style="width:100%">
                     <div style="width:20%;float:left;padding-left:1%;padding-top:1%;">'
-                        . '<img src="' . base_url('assets/your_logo.png') . '" width="60" height="60" alt="logo">
+                        . '<img src="' . base_url('assets/your_logo.png') . '" width="50" height="50" alt="logo">
                     </div>
                     <div style="width:70%;float:left;padding-left:1%;padding-top:1%;">
                     <h3 align="left">' . $config["college_name"] . '</h3>
@@ -442,19 +442,20 @@ class Treatment extends SHV_Controller {
                     </table>";
                 $html .= "<div>";
                 $html .= "<div style='width:100% !important;border: 1px solid black;'>" . $header .
-                        "<div style='width:100%'><h3 align='center'>OPD BILL</h3></div><hr><table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
+                        "<div style='width:100%;height:10px !important;padding:0px;margin:1px;'><h5 align='center'>OPD BILL</h5></div>"
+                        . "<table width='100%'><tr><td width='33.33%'>No: <b>" . $treat_id . "</b></td>
                     <td width='33.33%' style='text-align: center;'>OPD: <b>" . $opd . "</b></td>
                     <td width='33.33%' style='text-align: right;'>Date: <b>" . format_date($patient['CameOn']) . "</b></td></tr>
                 <tr><td colspan=3 width='100%'>Patient Name: <b>" . $patient['FirstName'] . ' ' . $patient['LastName'] . "</b></td></tr>    
                 </table><br/>" . $content .
                         "</div>";
-                $html .= "</div>";
+                $html .= "</div><br/>";
             }//foreach
         }//if
         $filename = 'opd_bills_' . 'shi';
         //echo $html;exit;
         //pdf_create(array(), $html, $filename, 'P', 'I', FALSE, TRUE, FALSE);
-        generate_pdf($html);
+        generate_pdf($html,'P');
         exit;
     }
 

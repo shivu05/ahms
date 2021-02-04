@@ -45,18 +45,17 @@ function pdf_create($title = array(), $content = '', $filename = 'ahms_report', 
     //Main content
     $html = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
     $html .= "<body><div id='content'>" . $top_heading . $content . "</div></body>";
-    
+
 
     $CI->load->library('pdf');
     //ob_start();
     $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
     // set document information
-    $pdf->SetMargins(5, 0, 10, false);
+    $pdf->SetMargins(5, 32, 10, false);
     $pdf->setPrintHeader($print_header);
-
     $pdf->SetFont(PDF_FONT, '', 10);
     $pdf->AddPage($orientation);
-    $pdf->SetMargins(5, 2, 10, true);
+    $pdf->SetMargins(5, 32, 10, true);
     $pdf->writeHTML($html, true, false, true, false, '');
     $pdf->SetFooterMargin(1.5);
 
