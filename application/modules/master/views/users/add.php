@@ -12,29 +12,29 @@
                             <small class="form-text text-muted" id="nameHelp">Full name of user</small>
                         </div>    
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Email: <span class="form_astrisk">*</span></label>
+                            <label for="email">Email: <span class="form_astrisk">*</span></label>
                             <input class="form-control required" id="email" name="email" type="email" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="off">
                             <small class="form-text text-muted" id="emailHelp">Email will be your username</small>
                         </div>    
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Mobile: <span class="form_astrisk">*</span></label>
+                            <label for="mobile">Mobile: <span class="form_astrisk">*</span></label>
                             <input class="form-control required" id="mobile" name="mobile" type="text" aria-describedby="mobileHelp" placeholder="Enter mobile number" autocomplete="off">
                             <small class="form-text text-muted" id="mobileHelp">10-digit mobile number</small>
                         </div>    
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Password: <span class="form_astrisk">*</span></label>
+                            <label for="user_pass">Password: <span class="form_astrisk">*</span></label>
                             <input class="form-control required" id="user_pass" name="user_pass" type="password" aria-describedby="user_passHelp" placeholder="Enter password" autocomplete="off">
                             <small class="form-text text-muted" id="user_passHelp"></small>
                         </div>    
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Confirm password: <span class="form_astrisk">*</span></label>
+                            <label for="conf_pass">Confirm password: <span class="form_astrisk">*</span></label>
                             <input class="form-control required" id="conf_pass" name="conf_pass" type="password" aria-describedby="conf_passHelp" placeholder="Enter confirm password" autocomplete="off">
                             <small class="form-text text-muted" id="mobileHelp"></small>
                         </div>    
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Role: <span class="form_astrisk">*</span></label>
+                            <label for="user_role">Role: <span class="form_astrisk">*</span></label>
                             <select name="user_role" id="user_role" class="form-control required">
                                 <option value="">Choose user role</option>
                                 <?php
@@ -47,7 +47,7 @@
                             </select>
                         </div>    
                         <div class="col-md-3">
-                            <label for="exampleInputEmail1">Department: <span class="form_astrisk">*</span></label>
+                            <label for="user_dept">Department: <span class="form_astrisk">*</span></label>
                             <select name="user_dept" id="user_dept" class="form-control" disabled="disabled">
                                 <option value="">Choose department</option>
                                 <?php

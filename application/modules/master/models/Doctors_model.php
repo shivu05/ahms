@@ -25,7 +25,7 @@ class Doctors_model extends CI_Model {
         $return = array();
         $columns = array(
             'd.id', 'd.doc_id', 'week_id', 'week_day', 'u.ID as user_id', 'u.user_name',
-            'u.user_email', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'added_date'
+            'u.user_email', 'u.user_department as user_dept', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'added_date'
         );
 
         $where_cond = " WHERE u.ID != 1 AND u.active=1";
@@ -65,7 +65,10 @@ class Doctors_model extends CI_Model {
             JOIN users u on d.doc_id=u.id 
             JOIN i_user_roles ur ON u.id=ur.user_id 
             JOIN week_days w ON w.week_id=d.day,
-        (SELECT @a:= 0) AS a  $where_cond ORDER BY user_department,week_id";
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY serial_number,user_department,week_id";
+        if($export_flag){
+            
+        }
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

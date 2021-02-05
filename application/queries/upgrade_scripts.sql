@@ -453,3 +453,20 @@ ALTER TABLE `labregistery` MODIFY COLUMN `tested_date` DATE;
 
 INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) VALUES (41, 'SEARCH_PATIENT', 'Search patient', '4', '4', '4', '', 'patient/search_patient', 'Active', '', '', '1', CURRENT_TIMESTAMP);
 INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES (NULL, '1', '41', 'Active', '1', CURRENT_TIMESTAMP, '1');
+
+CREATE TABLE `master_bed_info` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `department` VARCHAR(100) NULL,
+  `no_of_beds` INT NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `deptper` 
+ADD COLUMN `bed_count` INT NULL AFTER `dept_unique_code`;
+UPDATE `deptper` SET `bed_count` = '18' WHERE (`ID` = '1');
+UPDATE `deptper` SET `bed_count` = '6' WHERE (`ID` = '2');
+UPDATE `deptper` SET `bed_count` = '12' WHERE (`ID` = '3');
+UPDATE `deptper` SET `bed_count` = '6' WHERE (`ID` = '4');
+UPDATE `deptper` SET `bed_count` = '9' WHERE (`ID` = '5');
+UPDATE `deptper` SET `bed_count` = '9' WHERE (`ID` = '8');
+UPDATE `deptper` SET `bed_count` = '0' WHERE (`ID` = '9');
+UPDATE `deptper` SET `bed_count` = '0' WHERE (`ID` = '10');

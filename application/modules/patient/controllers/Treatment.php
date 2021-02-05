@@ -230,9 +230,9 @@ class Treatment extends SHV_Controller {
 
             $ipd_treatment = array(
                 'ipdno' => $last_ipd_number,
-                'Trtment' => $this->input->post('treatment'),
-                'diagnosis' => $this->input->post('diagnosis'),
-                'complaints' => $this->input->post('complaints'),
+                'Trtment' => $treatment,
+                'diagnosis' => $diagnosis,
+                'complaints' => $complaints,
                 'procedures' => $this->input->post('panch_procedures'),
                 'notes' => $this->input->post('notes'),
                 'AddedBy' => $this->input->post('doctor_name'),

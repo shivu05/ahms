@@ -57,4 +57,34 @@ class Settings extends SHV_Controller {
         redirect('home/Settings', true);
     }
 
+    function reset_beds() {
+        $dept_data = $this->db->get('deptper')->result_array();
+        $this->db->query('TRUNCATE bed_details');
+        $i = $k = 0;
+        foreach ($dept_data as $row) {
+            ++$k;
+            echo $row['department'] . '-' . $row['bed_count'] . '</br>';
+            $n = $row['bed_count'];
+            if ($n == 0) {
+                $data = array(
+                    'department' => trim($row['department']),
+                    'bedno' => $n,
+                    'wardno' => $n,
+                    'bedstatus' => 'Not Available'
+                );
+                $this->db->insert('bed_details', $data);
+            } else {
+                for ($j = 0; $j < $n; $j++) {
+                    $data = array(
+                        'department' => trim($row['department']),
+                        'bedno' => ++$i,
+                        'wardno' => $k,
+                        'bedstatus' => 'Available'
+                    );
+                    $this->db->insert('bed_details', $data);
+                }
+            }
+        }
+    }
+
 }

@@ -67,8 +67,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Doctors duty</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add doctors duty</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="POST" name="add_duty_form" id="add_duty_form" action="<?php echo base_url('add-purchase-type'); ?>">
@@ -336,7 +336,7 @@
                 class: "delete",
                 data: function (item) {
                     console.log(item);
-                    return '<i style="margin-right:15px !important;" data-week_id="' + item.week_id + '" data-dept="' + item.user_department + '" data-name="' + item.user_name + '" data-doc_id="' + item.doc_id + '" class="fa fa-pencil text-primary edit_duty" data-id="' + item.id + '" aria-hidden="true"></i>' +
+                    return '<i style="margin-right:15px !important;" data-week_id="' + item.week_id + '" data-dept="' + item.user_dept + '" data-name="' + item.user_name + '" data-doc_id="' + item.doc_id + '" class="fa fa-pencil text-primary edit_duty" data-id="' + item.id + '" aria-hidden="true"></i>' +
                             '<i class="fa fa-trash-o error delete_duty"  data-id="' + item.id + '" aria-hidden="true"></i>';
                 }
             }
