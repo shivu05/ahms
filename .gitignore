@@ -37,3 +37,4 @@ database/*
 user_guide/*
 vendor/*
 application/config/site_status.php
+node_modules/*
