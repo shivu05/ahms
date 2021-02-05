@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 require_once './vendor/autoload.php';
 
-function generate_pdf($html) {
+function generate_pdf($html, $page_orientation = 'L') {
     $mpdf = new \Mpdf\Mpdf([
         'orientation' => 'L'
     ]);

@@ -9,10 +9,12 @@ class Pdf extends TCPDF {
 
     private $_Report_title = 'Report';
     public $template;
+    private $_ci;
 
     public function __construct($title = NULL) {
         parent::__construct();
         $this->_Report_title = $title;
+        $this->_ci = & get_instance();
     }
 
     function setData($template) {
@@ -57,7 +59,8 @@ class Pdf extends TCPDF {
         $this->SetFont(PDF_FONT, 'B', 16);
         //$this->SetTextColorArray(array(252, 124, 39));
         // Title
-        $this->Cell(0, 20, 'SHARADA AYURVEDIC MEDICAL COLLEGE AND HOSPITAL YADGIR - 585202', 0, 1, 'C');
+        $college_name = $this->_ci->db->select('college_name')->from('config')->get()->row()->college_name;
+        $this->Cell(0, 20, @$college_name, 0, 1, 'C');
         $this->SetFont('helvetica', 'B', 14);
         $this->SetTextColorArray(array(252, 124, 39));
         $this->Cell(0, 4, $this->template['report_title'], 0, 1, 'C');

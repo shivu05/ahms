@@ -227,9 +227,9 @@
             },
             'searching': false,
             'paging': true,
-            'pageLength': 25,
+            'pageLength': 100,
             'lengthChange': true,
-            'aLengthMenu': [10, 25, 50, 100],
+            'aLengthMenu': [100],
             'processing': true,
             'serverSide': true,
             ajax: {

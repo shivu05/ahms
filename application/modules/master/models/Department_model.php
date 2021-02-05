@@ -24,7 +24,7 @@ class Department_model extends CI_Model {
     function get_sub_departments($dept) {
         $this->db->from('sub_department s');
         $this->db->join('deptper d', 's.parent_dept_id=d.ID');
-        $this->db->where('d.dept_unique_code', $dept);
+        $this->db->where('LOWER(d.dept_unique_code)', strtolower($dept));
         return $this->db->get()->result_array();
     }
 

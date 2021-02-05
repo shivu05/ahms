@@ -18,7 +18,8 @@ class Dashboard_model extends CI_Model {
         if ($this->rbac->is_doctor()) {
             $where = " AND t.attndedby='" . $this->rbac->get_name() . "'";
         }
-        $query = "SELECT SUM(case when p.gender='Male' then 1 else 0 end) males,SUM(case when p.gender='Female' then 1 else 0 end) females,
+        $query = "SELECT COALESCE(SUM(case when p.gender='Male' then 1 else 0 end),0) males,
+            COALESCE(SUM(case when p.gender='Female' then 1 else 0 end),0) females,
             count(*) total FROM patientdata p,treatmentdata t WHERE t.OpdNo = p.OpdNo $where;";
         return $this->db->query($query)->result_array();
     }

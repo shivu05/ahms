@@ -15,7 +15,9 @@ class Patient extends SHV_Controller {
     }
 
     function index() {
+        $this->layout->title = "OPD Registration";
         $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('jq_validation'), 'css');
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Add new patient";
@@ -103,8 +105,6 @@ class Patient extends SHV_Controller {
         } else {
             $dept_opd_count = 1;
         }
-
-        $user_id = $this->rbac->get_uid();
         $this->treatment_model->add_patient_for_treatment($this->input->post());
         redirect('patient');
     }

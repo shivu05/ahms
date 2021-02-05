@@ -67,28 +67,54 @@ class Opd extends SHV_Controller {
         $result = $this->opd_model->get_opd_patients($input_array, true);
         $patients = $result['data'];
 
-        $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '5');
-        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
+//        $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '5');
+//        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
+//        if ($input_array['department'] != 1) {
+//            $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
+//        }
+//        $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
+//        $headers['name'] = array('name' => 'Name', 'width' => '20');
+//        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '5');
+//        $headers['gender'] = array('name' => 'Sex', 'width' => '5');
+//        $headers['city'] = array('name' => 'Place', 'width' => '10');
+//        if ($input_array['department'] != 1) {
+//            $headers['diagnosis'] = array('name' => 'Diagnosis', 'width' => '10');
+//            $headers['Trtment'] = array('name' => 'Treatment', 'width' => '17');
+//            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '12');
+//        } else {
+//            $headers['diagnosis'] = array('name' => 'Complaints', 'width' => '17');
+//        }
+//        $headers['department'] = array('name' => 'Department', 'width' => '13');
+//        //$headers['ref_room'] = array('name' => 'Ref. room', 'align' => 'C', 'width' => '3');
+//        $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
         if ($input_array['department'] != 1) {
+            $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '4');
+            $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
             $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
-        }
-        $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
-        $headers['name'] = array('name' => 'Name', 'width' => '20');
-        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '5');
-        $headers['gender'] = array('name' => 'Sex', 'width' => '5');
-        $headers['city'] = array('name' => 'Place', 'width' => '10');
-        if ($input_array['department'] != 1) {
+            $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '4');
+            $headers['name'] = array('name' => 'Name', 'width' => '15');
+            $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '3');
+            $headers['gender'] = array('name' => 'Sex', 'width' => '5');
+            //$headers['city'] = array('name' => 'Place', 'width' => '10');
             $headers['diagnosis'] = array('name' => 'Diagnosis', 'width' => '10');
             $headers['Trtment'] = array('name' => 'Treatment', 'width' => '17');
-            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '12');
+            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '10');
+            $headers['department'] = array('name' => 'Department', 'width' => '11');
+            $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
         } else {
+            $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '5');
+            $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
+            $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
+            $headers['name'] = array('name' => 'Name', 'width' => '20');
+            $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '5');
+            $headers['gender'] = array('name' => 'Sex', 'width' => '5');
+            $headers['city'] = array('name' => 'Place', 'width' => '10');
             $headers['diagnosis'] = array('name' => 'Complaints', 'width' => '17');
+            $headers['department'] = array('name' => 'Department', 'width' => '13');
+            $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
         }
-        $headers['department'] = array('name' => 'Department', 'width' => '13');
-        //$headers['ref_room'] = array('name' => 'Ref. room', 'align' => 'C', 'width' => '3');
-        $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
 
-        
+
         $html = generate_table_pdf($headers, $patients);
         $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp

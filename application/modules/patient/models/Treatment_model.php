@@ -37,6 +37,7 @@ class treatment_model extends CI_Model {
             'deptOpdNo' => $dept_opd_count,
             'PatType' => NEW_PATIENT,
             'department' => $post_values['department'],
+            'sub_department' => $post_values['sub_department'],
             'AddedBy' => $post_values['doctor'],
             'CameOn' => $post_values['consultation_date']
         );
@@ -93,7 +94,7 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond order by t.ID DESC";
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

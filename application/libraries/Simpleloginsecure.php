@@ -241,7 +241,7 @@ class Simpleloginsecure {
             $this->CI->db->simple_query('UPDATE ' . $this->user_table . ' SET user_last_login = "' . date('c') . '" WHERE user_id = ' . $user_data['ID']);
 
             //Set session data
-            unset($user_data['user_pass']);
+            unset($user_data['user_password']);
             $user_data['user'] = $user_data['user_email']; // for compatibility with Simplelogin
             $user_data['id'] = $user_data['ID'];
             $user_data['role_code'] = $user_data['role_code'];
