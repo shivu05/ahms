@@ -386,9 +386,9 @@ class Nursing_model extends CI_Model {
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date');
 
-       /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
-            AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
-             //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) ";*/
+        /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
+          AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
+          //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) "; */
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND (l.date >='" . $conditions['start_date'] . "' 
             AND l.proc_end_date <='" . $conditions['end_date'] . "') ";
 
@@ -455,9 +455,9 @@ class Nursing_model extends CI_Model {
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
         $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 'p.deptOpdNo',
-            't.diagnosis as labdisease','t.department','l.refDocName','l.testDate',
-           ' GROUP_CONCAT(testrange) testrange','GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
-            'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName','l.tested_date');
+            't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
+            ' GROUP_CONCAT(testrange) testrange', 'GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
+            'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
                 FROM labregistery l,(SELECT @a:= 0) AS a 
                 JOIN patientdata p 
@@ -477,10 +477,16 @@ class Nursing_model extends CI_Model {
     }
 
     function get_lab_report_count($conditions, $export_flag = false) {
-        $query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
+        //$query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
+        $query = "SELECT lab_inv_name, lab_cat_name,count(lab_inv_name) as ccount 
+                  FROM labregistery l 
+                  JOIN lab_investigations li ON li.lab_inv_id=l.testName 
+                  JOIN lab_tests lt ON l.lab_test_type=lt.lab_test_id 
+                  JOIN lab_categories lc ON l.lab_test_cat = lc.lab_cat_id 
+                  GROUP BY lab_inv_name";
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
-            return $query->result(); //if data is true
+            return $query->result_array(); //if data is true
         } else {
             return false; //if data is wrong
         }
@@ -495,7 +501,7 @@ class Nursing_model extends CI_Model {
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 'p.gender', 't.AddedBy',
             'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 't.department', 't.procedures', 'sub_dept', 'IpNo');
 
-        $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('Shalakya Tantra') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";
         $limit = '';
         if (!$export_flag) {

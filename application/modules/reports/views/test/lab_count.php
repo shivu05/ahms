@@ -6,7 +6,7 @@
                 <?php echo $top_form; ?>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-md-12"></div>
         </div>

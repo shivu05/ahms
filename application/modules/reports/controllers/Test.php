@@ -233,6 +233,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Birth";
         $this->layout->navDescr = "Birth register";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_birth_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -299,6 +300,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Diet";
         $this->layout->navDescr = "Diet register";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -631,8 +633,9 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Lab";
         $this->layout->navDescr = "Laboratory test count";
         $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/lab_count_print');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -642,6 +645,23 @@ class Test extends SHV_Controller {
         $input_array = $this->input->post();
         $data["patient"] = $this->nursing_model->get_lab_report_count($input_array);
         $this->load->view('reports/test/lab_report_count', $data);
+    }
+
+    function lab_count_print() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_lab_report_count($input_array);
+        $html = $this->load->view('reports/test/lab_report_count', $data, true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'LAB COUNT',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
     }
 
     function delete_records() {
@@ -661,6 +681,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Kriyakalpa";
         $this->layout->navDescr = "Kriyakalpa";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count', true);
         $data['dept_list'] = $this->get_department_list('array');
