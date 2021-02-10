@@ -1,6 +1,6 @@
 <?php
 
-class perm_master extends CI_Model {
+class Perm_master extends CI_Model {
 
     private $_uid;
 
