@@ -188,7 +188,7 @@ if (!empty($lab_categories)) {
                                     <label>Panchakarma procedures: <span class="text-danger">*</span></label>
                                     <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
                                 </div-->
-                                 <div class="col-md-6 col-sm-12">
+                                <div class="col-md-6 col-sm-12">
                                     <label>Notes: <span class="text-danger">*</span></label>
                                     <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
                                 </div>
@@ -246,8 +246,8 @@ if (!empty($lab_categories)) {
                                         if (!empty($doctors)) {
                                             $selected_doc = $current_treatment['AddedBy'];
                                             foreach ($doctors as $doctor) {
-                                                $selected = (strtolower($selected_doc) == strtolower($doctor['doctorname'])) ? 'selected="selected"' : '';
-                                                echo '<option value="' . $doctor['doctorname'] . '" ' . $selected . '>' . $doctor['doctorname'] . '</option>';
+                                                $selected = (strtolower($selected_doc) == strtolower($doctor['user_name'])) ? 'selected="selected"' : '';
+                                                echo '<option value="' . $doctor['user_name'] . '" ' . $selected . '>' . $doctor['user_name'] . '</option>';
                                             }
                                         }
                                         ?>
@@ -559,6 +559,7 @@ if (!empty($lab_categories)) {
                                     foreach ($wards as $ward) {
                                         $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
                                         $beds = explode(',', $ward['beds']);
+                                        asort($beds);
                                         if (!empty($beds)) {
                                             foreach ($beds as $bed) {
                                                 $bed_select .= '<option value="' . $bed . '">' . $bed . '</option>';

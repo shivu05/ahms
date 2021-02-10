@@ -99,6 +99,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "USG";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_usg_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -132,17 +133,17 @@ class Test extends SHV_Controller {
         $result = $this->nursing_model->get_usg_data($input_array, true);
 
         $headers = array(
-            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '5'),
-            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
+            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '6'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '6'),
+            'name' => array('name' => 'Patient name', 'width' => '18'),
             'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Gender', 'width' => '5'),
-            'address' => array('name' => 'Place', 'width' => '10'),
-            'department' => array('name' => 'Department', 'width' => '12'),
+            'gender' => array('name' => 'Sex', 'width' => '5'),
+            'address' => array('name' => 'Place', 'width' => '15'),
+            'department' => array('name' => 'Department', 'width' => '15'),
             'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
-            'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
-            'usgDate' => array('name' => 'USG date', 'align' => 'C', 'width' => '6'),
+            //'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '7'),
+            'usgDate' => array('name' => 'USG date', 'align' => 'C', 'width' => '10'),
         );
         $html = generate_table_pdf($headers, $result['data']);
 
@@ -324,6 +325,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Ksharasutra";
         $this->layout->navDescr = "Ksharasutra register";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra');
         $data['dept_list'] = $this->get_department_list('array');
@@ -347,88 +349,39 @@ class Test extends SHV_Controller {
     function export_ksharasutra() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
-        $data = array();
         $input_array = array();
-        $head = array(
-            'serial_number' => array('name' => 'Sl. No', 'width' => 10, 'align' => 'C'),
-            'OpdNo' => array('name' => 'C.OPD', 'width' => 12),
-            'name' => array('name' => 'Patient', 'width' => 40),
-            'diagnosis' => array('name' => 'Diagnosis', 'width' => 30),
-            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => 43, 'breakat' => 20),
-            'ksharsType' => array('name' => 'Type of Ksharasutra', 'width' => 42),
-            'surgeon' => array('name' => 'Surgeon', 'width' => 30, 'breakat' => 12),
-            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => 30, 'breakat' => 16),
-            'anaesthetic' => array('name' => 'Anesthetist', 'width' => 30, 'breakat' => 12),
-            'ksharsDate' => array('name' => 'Date', 'width' => 20),
-        );
-
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
 
         $result = $this->nursing_model->get_ksharasutra_data($input_array, true);
-        $patients = $result['data'];
 
-        $this->load->library('pdf');
-
-        $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
-        $rep_meta_data = array(
-            'report_title' => 'KSHARASUTRA REPORT',
+        $headers = array(
+            'serial_number' => array('name' => '#', 'width' => '5', 'align' => 'C'),
+            'OpdNo' => array('name' => 'C.OPD', 'width' => '6', 'align' => 'C'),
+            'name' => array('name' => 'Patient', 'width' => '13'),
+            'diagnosis' => array('name' => 'Diagnosis', 'width' => '10'),
+            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => '12'),
+            'ksharsType' => array('name' => 'Type of Ksharasutra', 'width' => '10'),
+            'surgeon' => array('name' => 'Surgeon', 'width' => '12'),
+            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => '12'),
+            'anaesthetic' => array('name' => 'Anesthetist', 'width' => '12'),
+            'ksharsDate' => array('name' => 'Date', 'width' => '10')
         );
-        $pdf->setData($rep_meta_data);
 
-        // set document information
-        $pdf->setPrintHeader(TRUE);
-        // set header and footer fonts
-        $pdf->SetFont('helveticaB', '', 9);
-// ---------------------------------------------------------
-        // add a page
-        // set some text to print
-        // print a block of text using Write()
-        $pdf->SetFillColor(140, 142, 145);
-        $pdf->SetTextColor(255);
-        $pdf->SetDrawColor(140, 142, 145);
-        $pdf->SetLineWidth(0.3);
-        $pdf->SetFont('', 'B');
-        $pdf->SetMargins(5, 32, 10, true);
-        $pdf->AddPage('L');
-        foreach ($head as $h) {
-            $pdf->cell($h['width'], 6, $h['name'], 1, 0, 'C', 1);
-        }
-        $pdf->Ln();
-        $pdf->SetFillColor(224, 235, 255);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('helveticaB', '', 8);
-        // Data
-        $fill = 0;
-        foreach ($patients as $patient) {
-            foreach ($head as $h => $v) {
-                if ($pdf->gety() == 176) {
-                    $pdf->AddPage();
-                }
-                $c_width = 20; // cell width 
-                $c_height = 12; // cell height 
-                $x_axis = $pdf->getx(); // now get current pdf x axis value
-                $breakat = NULL;
-                if (isset($v['breakat'])) {
-                    $breakat = $v['breakat'];
-                }
-                $align = 'L';
-                if (isset($v['align'])) {
-                    $align = $v['align'];
-                }
-                $text = $patient[$h];
-                if ($h == 'gender') {
-                    $text = get_short_gender($patient[$h]);
-                }
-                $pdf->vcell($v['width'], $c_height, $x_axis, $text, $breakat, $align);
-            }
-            $pdf->Ln();
-            $fill = !$fill;
-        }
-        $pdf->Ln();
-        ob_end_clean();
-        return $pdf->Output('opd_report.pdf', 'I');
+
+        $html = generate_table_pdf($headers, $result['data']);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'KSHARASUTRA REPORT',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
     }
 
     function surgery() {
@@ -437,6 +390,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Surgery";
         $this->layout->navDescr = "Surgery register";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery');
         $data['dept_list'] = $this->get_department_list('array');
@@ -463,8 +417,9 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma register";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma_report');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -483,14 +438,67 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function export_panchakarma_report() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->nursing_model->get_panchakarma_data($input_array, true);
+        //pma($result,1);
+        /*
+         * 'l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+          'p.deptOpdNo', 'p.dept', 'GROUP_CONCAT(disease) as disease', 'GROUP_CONCAT(treatment) as treatment',
+          'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'GROUP_CONCAT(docname) as docname',
+          'GROUP_CONCAT(proc_end_date) as proc_end_date'
+         */
+        $headers = array(
+            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
+            'opdno' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
+            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '7'),
+            'name' => array('name' => 'Patient name', 'width' => '20'),
+            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
+            'gender' => array('name' => 'Sex', 'width' => '5'),
+            'dept' => array('name' => 'Department', 'width' => '18'),
+            'docname' => array('name' => 'Ref. doctor', 'width' => '20'),
+            'disease' => array('name' => 'Diesease', 'align' => 'C', 'width' => '15'),
+            //'testDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '10'),
+            //'tested_date' => array('name' => 'Lab date', 'align' => 'C', 'width' => '10'),
+            'extra_row' => array(
+                'treatment' => array('name' => 'Treatment', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'procedure' => array('name' => 'Procedure name', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'date' => array('name' => 'Start date', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+                'proc_end_date' => array('name' => 'End date', 'align' => 'C', 'width' => '15', 'colspan' => 2),
+            )
+        );
+        //$array = json_decode(json_encode($result), true);
+        $html = generate_table_pdf($headers, $result['data'], true);
+
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'PANCHAKARMA REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
+    }
+
     function panchakarma_proc_count() {
         $this->layout->title = "Panchakarma procedures";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Panchakarma";
         $this->layout->navDescr = "Panchakarma procedure count";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/panchakarma_procedure_count_print');
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -499,8 +507,25 @@ class Test extends SHV_Controller {
     function get_panchakarma_procedure_count() {
         $input_array = $this->input->post();
         $data["patient"] = $this->nursing_model->get_panchakarma_procedure_count($input_array);
-        $data['pancha_proces'] = $this->get_panchakarma_procedures();
+        //$data['pancha_proces'] = $this->get_panchakarma_procedures();
         $this->load->view('reports/test/panchakarma_proc_count_ajax', $data);
+    }
+
+    function panchakarma_procedure_count_print() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_panchakarma_procedure_count($input_array);
+        $html = $this->load->view('reports/test/panchakarma_proc_count_ajax', $data, true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'PANCHAKARMA PROCEDURE COUNT',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        pdf_create($title, $html);
+        exit;
     }
 
     function surgery_count() {
@@ -528,6 +553,7 @@ class Test extends SHV_Controller {
         $this->layout->navTitle = "Lab";
         $this->layout->navDescr = "Laboratory";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'export-lab-report');
         $data['dept_list'] = $this->get_department_list('array');

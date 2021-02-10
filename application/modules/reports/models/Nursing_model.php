@@ -17,7 +17,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', '(t.department) as department', 'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
+            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) as department', 'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -69,7 +69,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', '(t.department) as department');
+            'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', '(REPLACE(ucfirst(t.department),"_"," ")) as department');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -114,7 +114,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(t.department) as department');
+            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE(ucfirst(t.department),"_"," ")) as department');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
@@ -381,11 +381,16 @@ class Nursing_model extends CI_Model {
 
     function get_panchakarma_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.MidName', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
-            'p.deptOpdNo', 'p.dept', 'l.disease', 'l.treatment', 'l.procedure', 'l.date', 't.notes', 'l.docname');
+        $columns = array('l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+            't.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) dept', 'disease', 'GROUP_CONCAT(treatment) as treatment',
+            'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
+            'GROUP_CONCAT(proc_end_date) as proc_end_date');
 
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' AND l.proc_end_date >='" . $conditions['end_date'] . "')
-             OR (l.proc_end_date <='" . $conditions['end_date'] . "')) ";
+       /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
+            AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
+             //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) ";*/
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND (l.date >='" . $conditions['start_date'] . "' 
+            AND l.proc_end_date <='" . $conditions['end_date'] . "') ";
 
         $limit = '';
         if (!$export_flag) {
@@ -420,15 +425,17 @@ class Nursing_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
         return $return;
     }
 
     function get_panchakarma_procedure_count($conditions, $export_flag = false) {
-        $query = "SELECT * from panchaprocedure p WHERE p.date >='" . $conditions['start_date'] . "' AND p.date <= '" . $conditions['end_date'] . "'";
+        $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p 
+             WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`";
         $query = $this->db->query($query);
+        //echo $this->db->last_query();exit;
         if ($query->num_rows() > 0) {
-            return $query->result(); //if data is true
+            return $query->result_array(); //if data is true
         } else {
             return false; //if data is wrong
         }

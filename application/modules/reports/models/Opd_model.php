@@ -68,7 +68,7 @@ class Opd_model extends CI_Model {
         $return = array();
         $columns = array('t.OpdNo', 'CASE WHEN t.PatType="Old Patient" THEN "OLD" WHEN t.PatType="New Patient" THEN "New" END as PatType', 
             't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'Age', 'gender', 't.AddedBy',
-            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby', 't.department');
+            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department');
 
         $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";

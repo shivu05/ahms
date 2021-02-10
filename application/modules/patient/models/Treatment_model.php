@@ -131,8 +131,8 @@ class treatment_model extends CI_Model {
             'attndedon' => NULL,
         );
         $return['treatment_data'] = $this->db->get_where('treatmentdata', $where)->row_array();
-        $query = "SELECT d.id,doctorname FROM doctors d JOIN treatmentdata t ON t.department=d.doctortype 
-            WHERE t.ID=$treat_id GROUP BY doctorname";
+        $query = "SELECT d.id,d.user_name FROM users d JOIN treatmentdata t ON t.department=d.user_department 
+            WHERE t.ID=$treat_id GROUP BY user_name";
         $return['doctors'] = $this->db->query($query)->result_array();
         return $return;
     }
@@ -310,7 +310,7 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department $where_cond ORDER BY OpdNo DESC";
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond ORDER BY OpdNo DESC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
