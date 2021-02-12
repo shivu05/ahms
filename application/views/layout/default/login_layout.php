@@ -10,7 +10,7 @@
         echo $this->scripts_include->preJs();
         ?>
     </head>
-    <body class="hold-transition login-page">
+    <body class="hold-transition login-page" style="background-image: url('<?php echo base_url('/assets/ayush_bg.png') ?>'); background-repeat: no-repeat, repeat;">
         <div class="login-box">
             <div class="login-logo">
                 <img src="<?= base_url('assets/your_logo.png') ?>" class="logo-mini" style="background-color: white;" height="120px" width="120px" />

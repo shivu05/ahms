@@ -1545,9 +1545,12 @@ class M_auto extends CI_Model {
     }
 
     function get_day_doctor($date = "", $dept = "") {
+        /*$query = "SELECT u.ID,user_name FROM users u 
+            JOIN doctorsduty d ON u.ID=d.doc_id JOIN week_days wd ON d.day=wd.week_id 
+            WHERE LOWER(u.user_department)=LOWER('$dept') AND wd.week_day=DAYNAME(STR_TO_DATE('$date','%Y-%m-%d')) ORDER BY RAND() LIMIT 1;";*/
         $query = "SELECT u.ID,user_name FROM users u 
             JOIN doctorsduty d ON u.ID=d.doc_id JOIN week_days wd ON d.day=wd.week_id 
-            WHERE LOWER(u.user_department)=LOWER('$dept') AND wd.week_day=DAYNAME(STR_TO_DATE('$date','%Y-%m-%d')) ORDER BY RAND() LIMIT 1;";
+            WHERE UPPER(u.user_department)=UPPER(replace('$dept',' ','_')) AND wd.week_day=DAYNAME(STR_TO_DATE('$date','%Y-%m-%d')) ORDER BY RAND() LIMIT 1;";
         $result = $this->db->query($query)->row_array();
         return $result['user_name'];
     }
