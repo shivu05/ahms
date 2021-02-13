@@ -90,6 +90,7 @@ $route['birth'] = "reports/Test/birth";
 $route['kriyakalp'] = "reports/Test/kriyakalp";
 
 $route['search-data'] = "auto/index";
+$route['analyse-data'] = "auto/move";
 
 // Purchase
 $route['show-purchase-type'] = "pharmacy/purchase/purchase_items";

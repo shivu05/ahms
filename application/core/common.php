@@ -379,3 +379,12 @@ if (!function_exists('return_delimeted_string')) {
     }
 
 }
+
+if (!function_exists('get_department_dropdown')) {
+
+    function get_department_dropdown() {
+        $ci = & get_instance();
+        $this->$ci->db->get('');
+    }
+
+}

@@ -26,7 +26,7 @@ class Auto extends SHV_Controller {
     }
 
     function move() {
-        $data['title'] = "AUTO GEN";
+        $data['title'] = "Analysis";
         $target = $this->input->post('target');
         $cdate = $this->input->post('cdate');
         $newpatient = $this->input->post('newpatient');

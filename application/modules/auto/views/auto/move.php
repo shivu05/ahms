@@ -4,7 +4,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Record analysis:</h3>
             </div>
-            <form action="<?php echo base_url('auto/move'); ?>" method="POST">
+            <form action="<?php echo base_url('analyse-data'); ?>" method="POST">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-12 text-success">
@@ -40,11 +40,8 @@
                         </div>
                         <div class="col-md-4">
                             <label class="control-label" for="singlebutton"></label>
-                            <div class="">
-
-                            </div>
+                            <div class=""></div>
                         </div>
-
                     </div>
                 </div>
                 <div class="box-footer">

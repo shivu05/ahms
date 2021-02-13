@@ -66,7 +66,7 @@
                                 <div class="form-group">
                                     <div class="col-md-10">
                                         <label for="last_name">Last name: </label>
-                                        <input class="form-control required" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
+                                        <input class="form-control" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
                                         <small class="form-text text-muted" id="last_nameHelp"></small>
                                     </div>
                                 </div>
