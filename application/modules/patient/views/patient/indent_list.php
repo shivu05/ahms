@@ -4,9 +4,10 @@
     }
 </style>
 <div class="row">
-    <div class="col-12">
-        <div class="tile">
-            <div class="tile-body">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border"><h3 class="box-title">Nursing indent</h3></div>
+            <div class="box-body">
                 <?php
                 if (!empty($this->session->flashdata('noty_msg'))) {
                     ?>

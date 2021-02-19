@@ -141,55 +141,55 @@ if (!empty($lab_categories)) {
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Complaints: <span class="text-danger">*</span></label>
-                                    <select class="form-control select2 prescription_inputs" name="complaints[]" id="complaints" multiple="multiple" data-placeholder="Choose complaints">
+                                    <!--<select class="form-control select2 prescription_inputs" name="complaints[]" id="complaints" multiple="multiple" data-placeholder="Choose complaints">
                                         <option value="">choose complaints</option>
-                                        <?php
-                                        if (!empty($complaints)) {
-                                            foreach ($complaints as $row) {
-                                                echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
-                                            }
+                                    <?php
+                                    if (!empty($complaints)) {
+                                        foreach ($complaints as $row) {
+                                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
                                         }
-                                        ?>
-                                    </select>
-                                   <!-- <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>-->
+                                    }
+                                    ?>
+                                    </select>-->
+                                    <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();" name="complaints" id="complaints"></textarea>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <label>Diagnosis: <span class="text-danger">*</span></label>
-                                    <select class="form-control select2 prescription_inputs" name="diagnosis[]" id="diagnosis" multiple="multiple" data-placeholder="Choose diagnosis">
+                                    <!--<select class="form-control select2 prescription_inputs" name="diagnosis[]" id="diagnosis" multiple="multiple" data-placeholder="Choose diagnosis">
                                         <option value="">choose diagnosis</option>
-                                        <?php
-                                        if (!empty($diagnosis)) {
-                                            foreach ($diagnosis as $row) {
-                                                echo '<option value="' . $row['diagnosis_name'] . '">' . $row['diagnosis_name'] . '</option>';
-                                            }
+                                    <?php
+                                    if (!empty($diagnosis)) {
+                                        foreach ($diagnosis as $row) {
+                                            echo '<option value="' . $row['diagnosis_name'] . '">' . $row['diagnosis_name'] . '</option>';
                                         }
-                                        ?>
-                                    </select>
-                                    <!--<textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>-->
+                                    }
+                                    ?>
+                                    </select>-->
+                                    <textarea class="form-control prescription_inputs"  onkeyup="this.value = this.value.toUpperCase();" name="diagnosis" id="diagnosis"></textarea>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Treatment: <span class="text-danger">*</span></label>
-                                    <select class="form-control select2 prescription_inputs" name="treatment[]" id="treatment" multiple="multiple" data-placeholder="Choose Medicines">
+                                   <!-- <select class="form-control select2 prescription_inputs" name="treatment[]" id="treatment" multiple="multiple" data-placeholder="Choose Medicines">
                                         <option value="">choose medicine</option>
-                                        <?php
-                                        if (!empty($medicines)) {
-                                            foreach ($medicines as $row) {
-                                                echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
-                                            }
+                                    <?php
+                                    if (!empty($medicines)) {
+                                        foreach ($medicines as $row) {
+                                            echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
                                         }
-                                        ?>
-                                    </select>
-                                    <!--<textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>-->
+                                    }
+                                    ?>
+                                    </select>-->
+                                    <textarea class="form-control prescription_inputs"  onkeyup="this.value = this.value.toUpperCase();" name="treatment" id="treatment"></textarea>
                                 </div>
                                 <!--<div class="col-md-6 col-sm-12">
                                     <label>Panchakarma procedures: <span class="text-danger">*</span></label>
                                     <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
                                 </div-->
                                 <div class="col-md-6 col-sm-12">
-                                    <label>Notes: <span class="text-danger">*</span></label>
+                                    <label>Notes:</label>
                                     <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
                                 </div>
                                 <!--<div class="col-md-2 col-sm12">

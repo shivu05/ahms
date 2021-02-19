@@ -53,21 +53,22 @@
                             <label>Treatment: <span class="text-danger">*</span></label>
                             <textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>
                         </div>
-                        <div class="col-md-4 col-sm-12">
+                        <!--<div class="col-md-4 col-sm-12">
                             <label>Panchakarma procedures: <span class="text-danger">*</span></label>
                             <textarea class="form-control prescription_inputs" name="panch_procedures" id="panch_procedures"></textarea>
                         </div>
                         <div class="col-md-2 col-sm12">
                             <label>Days</label>
                             <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control prescription_inputs" value="7"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
+                        </div>-->
                         <div class="col-md-6 col-sm-12">
                             <label>Notes: <span class="text-danger">*</span></label>
                             <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
                         </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+
                         <div class="col-md-3 col-sm-12">
                             <label>Doctor: </label>
                             <input type="text" name="doctor_name" id="doctor_name" value="<?php echo $patient_details['Doctor'] ?>" class="form-control prescription_inputs"/>

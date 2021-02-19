@@ -73,9 +73,12 @@ class Treatment extends SHV_Controller {
         $treat_id = $this->input->post('treat_id');
         $is_admit = ($this->input->post('admit') == 'on') ? 'Admit' : 'FollowUp';
 
-        $diagnosis = return_delimeted_string($this->input->post('diagnosis'));
-        $complaints = return_delimeted_string($this->input->post('complaints'));
-        $treatment = return_delimeted_string($this->input->post('treatment'));
+//        $diagnosis = return_delimeted_string($this->input->post('diagnosis'));
+//        $complaints = return_delimeted_string($this->input->post('complaints'));
+//        $treatment = return_delimeted_string($this->input->post('treatment'));
+        $diagnosis = $this->input->post('diagnosis');
+        $complaints = $this->input->post('complaints');
+        $treatment = $this->input->post('treatment');
         $is_panchakarma = 'N';
         if ($this->input->post('panchakarma_check') == 'on') {
             $is_panchakarma = 'Y';
@@ -210,7 +213,7 @@ class Treatment extends SHV_Controller {
                 'bedstatus' => 'Not Available',
                 'treatId' => $treat_id,
             );
-            $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
+//            $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
 
             $inpatientdata = array(
                 'OpdNo' => $this->input->post('opd_no'),
@@ -226,20 +229,22 @@ class Treatment extends SHV_Controller {
                 'WardNo' => '',
                 'treatId' => $treat_id
             );
-            $last_ipd_number = $this->treatment_model->add_patient_to_ipd($inpatientdata);
+            //pma($inpatientdata, 1);
+            //$last_ipd_number = $this->treatment_model->add_patient_to_ipd($inpatientdata);
+            $last_ipd_number = $this->treatment_model->admit_patient($inpatientdata);
 
-            $ipd_treatment = array(
-                'ipdno' => $last_ipd_number,
-                'Trtment' => $treatment,
-                'diagnosis' => $diagnosis,
-                'complaints' => $complaints,
-                'procedures' => $this->input->post('panch_procedures'),
-                'notes' => $this->input->post('notes'),
-                'AddedBy' => $this->input->post('doctor_name'),
-                'attndedon' => $this->input->post('admit_date'),
-            );
-
-            $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
+//            $ipd_treatment = array(
+//                'ipdno' => $last_ipd_number,
+//                'Trtment' => $treatment,
+//                'diagnosis' => $diagnosis,
+//                'complaints' => $complaints,
+//                'procedures' => $this->input->post('panch_procedures'),
+//                'notes' => $this->input->post('notes'),
+//                'AddedBy' => $this->input->post('doctor_name'),
+//                'attndedon' => $this->input->post('admit_date'),
+//            );
+//
+//            $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
         }
         redirect('patient/treatment/show_patients', 'refresh');
     }
@@ -455,7 +460,7 @@ class Treatment extends SHV_Controller {
         $filename = 'opd_bills_' . 'shi';
         //echo $html;exit;
         //pdf_create(array(), $html, $filename, 'P', 'I', FALSE, TRUE, FALSE);
-        generate_pdf($html,'P');
+        generate_pdf($html, 'P');
         exit;
     }
 

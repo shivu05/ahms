@@ -43,6 +43,11 @@ class treatment_model extends CI_Model {
         );
         $this->db->insert('treatmentdata', $treat_data);
         $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     function get_patients($conditions, $export_flag = FALSE) {
@@ -179,9 +184,28 @@ class treatment_model extends CI_Model {
 
     public function add_patient_to_ipd($inpatientdata) {
         $this->db->query("INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId) "
-                . " SELECT OpdNo,deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,'" . $inpatientdata['department'] . "','" . $inpatientdata['BedNo'] . "','" . $inpatientdata['diagnosis'] . "','" . $inpatientdata['DoAdmission'] . "','" . $inpatientdata['Doctor'] . "','" . $inpatientdata['treatId'] . "' FROM patientdata WHERE OpdNo='" . $inpatientdata['OpdNo'] . "'");
+                . " SELECT OpdNo,deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,'" . $inpatientdata['department'] . "','" . $inpatientdata['BedNo'] . "',
+                    '" . $inpatientdata['diagnosis'] . "','" . $inpatientdata['DoAdmission'] . "','" . $inpatientdata['Doctor'] . "','" . $inpatientdata['treatId'] . "' FROM patientdata WHERE OpdNo='" . $inpatientdata['OpdNo'] . "'");
         $insert_id = $this->db->insert_id();
         return $insert_id;
+    }
+
+    public function admit_patient($inpatientdata) {
+        if (!empty($inpatientdata)) {
+            $query = "INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId) 
+                SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.attndedby,'" . $inpatientdata['treatId'] . "' 
+                    FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
+            $this->db->query($query);
+            $insert_id = $this->db->insert_id();
+            if ($insert_id) {
+                $tquery = "INSERT INTO ipdtreatment (ipdno, AddedBy, Trtment, diagnosis, complaints, department, procedures, notes, attndedon, status) 
+                    SELECT $insert_id,T.attndedby,T.Trtment,T.diagnosis,T.complaints,T.department,T.procedures,T.notes,'" . $inpatientdata['DoAdmission'] . "','nottreated' 
+                        FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
+                return $this->db->query($tquery);
+            }
+            return $insert_id;
+        }
+        return false;
     }
 
     public function add_ipd_treatment_data($post_data) {

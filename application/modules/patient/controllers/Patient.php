@@ -105,7 +105,12 @@ class Patient extends SHV_Controller {
         } else {
             $dept_opd_count = 1;
         }
-        $this->treatment_model->add_patient_for_treatment($this->input->post());
+        $is_inserted = $this->treatment_model->add_patient_for_treatment($this->input->post());
+//        if ($is_inserted) {
+//            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
+//        } else {
+//            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
+//        }
         redirect('patient');
     }
 
@@ -273,13 +278,13 @@ class Patient extends SHV_Controller {
         $this->db->join('inpatientdetails ip', 'it.ipdno=ip.IpNo');
         $this->db->where('it.ipdno', $ipd);
         $treat_data = $this->db->get()->result_array();
-
+        
         foreach ($treat_data as $treat) {
             $products = explode(',', $treat['Trtment']);
             $days = $treat['NofDays'];
             $doa = $treat['DoAdmission'];
             foreach ($products as $product) {
-                if (strpos($product, 'BD')) {
+                if (strpos($product, 'BD') || strpos($product, 'BID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
                         $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i) . ' days'));
@@ -296,7 +301,7 @@ class Patient extends SHV_Controller {
                         );
                         $this->db->insert('indent', $form_data);
                     }
-                } else if (strpos($product, 'TD')) {
+                } else if (strpos($product, 'TD') || strpos($product, 'TID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
                         $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i + 1) . ' days'));
@@ -324,7 +329,8 @@ class Patient extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $this->layout->data = $data;
         $this->layout->render();
