@@ -5,9 +5,9 @@
   "main": "index.php",
   "dependencies": {
     "bootstrap3-dialog": "^1.35.4",
-    "datatables.net-bs": "^1.10.21",
-    "datatables.net-fixedheader-bs": "^3.1.7",
-    "datatables.net-responsive-bs": "^2.2.5",
+    "datatables.net-bs": "^1.10.23",
+    "datatables.net-fixedheader-bs": "^3.1.8",
+    "datatables.net-responsive-bs": "^2.2.7",
     "jquery-typeahead": "^2.11.1"
   },
   "devDependencies": {},
