@@ -1,5 +1,5 @@
 ###################
-AHMS
+VHMS
 ###################
 
-AHMS is Hospital Management Software
+Vedic Hospital Management System
