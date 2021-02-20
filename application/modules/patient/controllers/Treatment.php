@@ -213,7 +213,7 @@ class Treatment extends SHV_Controller {
                 'bedstatus' => 'Not Available',
                 'treatId' => $treat_id,
             );
-//            $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
+            $this->treatment_model->update_bed_info($beddata, $this->input->post('bed_no'));
 
             $inpatientdata = array(
                 'OpdNo' => $this->input->post('opd_no'),
@@ -231,7 +231,7 @@ class Treatment extends SHV_Controller {
             );
             //pma($inpatientdata, 1);
             //$last_ipd_number = $this->treatment_model->add_patient_to_ipd($inpatientdata);
-            $last_ipd_number = $this->treatment_model->admit_patient($inpatientdata);
+            $this->treatment_model->admit_patient($inpatientdata);
 
 //            $ipd_treatment = array(
 //                'ipdno' => $last_ipd_number,
@@ -254,28 +254,59 @@ class Treatment extends SHV_Controller {
      */
 
     function add_ipd_treatment($ipd = NULL) {
+        $this->scripts_include->includePlugins(array('chosen', 'typeahead'), 'js');
+        $this->scripts_include->includePlugins(array('chosen'), 'css');
         $this->layout->navIcon = "fa fa-user-md ";
         $this->layout->title = "IPD Treatment";
         $this->layout->navTitleFlag = true;
         $this->layout->navTitle = "IPD Treatment";
         $this->layout->navDescr = "In Patient Department";
-
+        $this->load->model('patient/lab_model');
+        $this->load->model('diagnosis');
+        $this->load->model('complaints');
+        $this->load->model('purchase_variables');
         $data = array();
         $data['ipd'] = $ipd;
         $opd_data = $this->treatment_model->get_opd_by_ipd($ipd);
         $opd = $opd_data['OpdNo'];
         $data['patient_details'] = $this->treatment_model->get_ipd_patient_basic_details($opd, $ipd);
-        $data['treatment_details'] = $this->treatment_model->get_treatment_history($ipd);
+        //$data['treatment_details'] = $this->treatment_model->get_treatment_history($ipd);
+        $data['treatment_details'] = $this->treatment_model->get_ipd_treatment_history($ipd);
+        $data['lab_categories'] = $this->lab_model->get_lab_categories();
+        $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
         /*  $data['wards'] = $this->treatment_model->getBedno();
           $treatment_details = $this->treatment_model->get_current_treatment_info($opd, $treat_id);
           $data['current_treatment'] = $treatment_details['treatment_data'];
           $data['doctors'] = $treatment_details['doctors']; */
+
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function ipd_save() {
         $treat_id = NULL;
+        $is_panchakarma = 'N';
+        if ($this->input->post('panchakarma_check') == 'on') {
+            $is_panchakarma = 'Y';
+            $post_values = $this->input->post();
+            $i = 0;
+            foreach ($post_values['pancha_procedure'] as $row) {
+
+                //id, opdno, disease, treatment, procedure, date, docname, treatid, proc_end_date
+                $pancha_data = array(
+                    'opdno' => $post_values['opd_no'],
+                    'disease' => $this->input->post('diagnosis'),
+                    'treatment' => $row,
+                    'procedure' => $post_values['pancha_sub_procedure'][$i],
+                    'date' => $post_values['pancha_proc_start_date'][$i],
+                    'proc_end_date' => $post_values['pancha_proc_end_date'][$i],
+                    'docname' => $post_values['doctor_name'],
+                    'treatid' => $post_values['treat_id'],
+                );
+                $i++;
+                $this->db->insert('panchaprocedure', $pancha_data);
+            }
+        }
         if ($this->input->post('add_prescription') == 'on') {
             $treatment_data = array(
                 'ipdno' => $this->input->post('ipd_no'),
@@ -290,8 +321,11 @@ class Treatment extends SHV_Controller {
             );
             $last_ipd_id = $this->treatment_model->store_ipd_treatment($treatment_data);
             $treat_id = $last_ipd_id;
+            $this->add_pharmcy($treat_id);
+        } else {
+            $treat_id = $this->input->post('treat_id');
         }
-        $this->add_pharmcy($treat_id);
+
         if ($this->input->post('birth_check') == 'on') {
             $birth_data = array(
                 'OpdNo' => $this->input->post('opd_no'),
@@ -370,15 +404,29 @@ class Treatment extends SHV_Controller {
         }
 
         if ($this->input->post('lab_check') == 'on') {
-            $labdata = array(
-                'OpdNo' => $this->input->post('opd_no'),
-                'refDocName' => $this->input->post('labdocname'),
-                'testName' => $this->input->post('testname'),
-                'testrange' => $this->input->post('testrange'),
-                'testvalue' => $this->input->post('testvalue'),
-                'testDate' => $this->input->post('testdate'),
-                'treatID' => $treat_id
-            );
+            $lab_cats = $this->input->post('lab_category');
+            $lab_test = $this->input->post('lab_test');
+            $lab_investigation = $this->input->post('lab_investigations');
+            $ref_doc = $this->input->post('labdocname');
+            $labdata = array();
+
+            if (count($lab_investigation) > 0) {
+                $i = 0;
+                foreach ($lab_investigation as $cat) {
+                    if ($cat != ' ') {
+                        $labdata[] = array(
+                            'OpdNo' => $this->input->post('opd_no'),
+                            'refDocName' => $ref_doc,
+                            'lab_test_cat' => $lab_cats[$i],
+                            'lab_test_type' => $lab_test[$i],
+                            'testName' => $cat,
+                            'testDate' => $this->input->post('testdate'),
+                            'treatID' => $treat_id
+                        );
+                        $i++;
+                    }
+                }
+            }
             $this->treatment_model->add_lab_info($labdata);
         }
 

@@ -86,6 +86,65 @@ if (!function_exists('pma')) {
 
 }
 
+if (!function_exists('flattenArray')) {
+
+    /**
+     * flattenArray
+     *
+     * Remove inner array and add all indexes in main array
+     *
+     * @method: flattenArray
+     * @param	array	$array	Array to be flattened
+     * @return	array	Flattened array
+     * @desc Convert a multi-dimensional array to a simple 1-dimensional array
+     * @note in case of useing $callback, used only single parameterisez callable functions
+     * @TODO Need to make support recursive
+     * @author ShivarajB <shivaraj2badiger@gmail.com>
+     */
+    function flattenArray($array, $callback = null, $group_function = null, $check_blank = null) {
+        if (!is_array($array)) {
+            return (array) $array;
+        }
+
+        $arrayValues = array();
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                foreach ($value as $val) {
+                    if (is_array($val)) {
+                        foreach ($val as $v) {
+                            if ($check_blank) {
+                                if ($v)
+                                    $arrayValues[] = is_callable($callback, $v);
+                            } else {
+                                $arrayValues[] = is_callable($callback, $v);
+                            }
+                        }
+                    } else {
+                        if ($check_blank) {
+                            if ($val)
+                                $arrayValues[] = is_callable($callback, $val);
+                        } else {
+                            $arrayValues[] = is_callable($callback, $val);
+                        }
+                    }
+                }
+            } else {
+                if ($check_blank) {
+                    if ($value)
+                        $arrayValues[] = is_callable($callback, $value);
+                } else {
+                    $arrayValues[] = is_callable($callback, $value);
+                }
+            }
+        }
+        if ($group_function) {
+            return is_callable($group_function, $arrayValues);
+        }
+        return $arrayValues;
+    }
+
+}
+
 if (!function_exists('in_array_r')) {
 
     function in_array_r($needle, $haystack) {

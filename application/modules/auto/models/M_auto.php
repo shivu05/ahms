@@ -197,6 +197,8 @@ class M_auto extends CI_Model {
             } else {
                 $this->session->set_flashdata('noty_msg', $count . " records are entered and Target is reached");
             }
+        } else {
+            $this->session->set_flashdata('noty_msg', 'Already ' . $count . " Records present for " . $cdate);
         }
     }
 
@@ -462,7 +464,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->kayaDoc = $this->get_day_doctor($this->input->post('cdate'), "KAYACHIKITSA");
                 array_push($this->kayamed, $row->medicines);
@@ -474,7 +477,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
 
                 $this->shalyaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALYA_TANTRA");
@@ -486,7 +490,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->shalkayaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALAKYA_TANTRA");
             }
@@ -497,7 +502,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->tantraDoc = $this->get_day_doctor($this->input->post('cdate'), "PRASOOTI_&_STRIROGA");
             }
@@ -508,7 +514,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->swasthaDoc = $this->get_day_doctor($this->input->post('cdate'), "SWASTHAVRITTA");
             }
@@ -519,7 +526,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->pkDoc = $this->get_day_doctor($this->input->post('cdate'), "PANCHAKARMA");
             }
@@ -530,7 +538,8 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->bcDoc = $this->get_day_doctor($this->input->post('cdate'), "BALAROGA");
             }
@@ -541,11 +550,14 @@ class M_auto extends CI_Model {
                     'complaints' => $row->complaints,
                     'treatment' => $row->Trtment,
                     'procedure' => $row->procedures,
-                    'medicines' => $row->medicines
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept
                 );
                 $this->akDoc = $this->get_day_doctor($this->input->post('cdate'), "AATYAYIKACHIKITSA");
             }
         }
+//        echo count($this->_treatment_data) . '<br/>';
+//        pma($this->_treatment_data, 1);
         $this->shuffle();
         //main logic starts
         $depts = array_keys($this->_entered_records_arr);
@@ -628,45 +640,61 @@ class M_auto extends CI_Model {
         return null;
     }
 
+    private function _check_valid_index($index, $dept = '') {
+        if ($index >= count($this->femfirstname) ||
+                ($index >= count($this->femLastName)) ||
+                ($index >= count($this->femoccp)) || ( $index >= count($this->age)) ||
+                ($dept == 'BALAROGA' && $index >= count($this->childage)) ||
+                ($dept == 'PRASOOTI_&_STRIROGA' && $index >= count($this->Prasootiage))) {
+            $index = 0;
+            $this->shuffle();
+            return $index;
+        }
+        return $index;
+    }
+
     function enter_prasooti_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'PRASOOTI_&_STRIROGA';
         if (strtolower($arr[0]) != strtolower('old')) {
-            $getDeptNum = $this->getDeptNoForNewPatient('PRASOOTI_&_STRIROGA');
+            $getDeptNum = $this->getDeptNoForNewPatient($dept_name);
+
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
                 $data = array(
                     "deptOpdNo" => $deptNum,
-                    "FirstName" => $this->_get_random_data($this->_index, $this->femfirstname),
-                    "MidName" => $this->_get_random_data($this->_index, $this->midname),
-                    "LastName" => $this->_get_random_data($this->_index, $this->femLastName),
-                    "Age" => $this->_get_random_data($this->_index, $this->Prasootiage),
+                    "FirstName" => $this->femfirstname[$this->_index],
+                    "MidName" => $this->midname[$this->_index],
+                    "LastName" => $this->femLastName[$this->_index],
+                    "Age" => $this->Prasootiage[$this->_index],
                     "gender" => "Female",
-                    "occupation" => $this->_get_random_data($this->_index, $this->femoccp),
+                    "occupation" => $this->femoccp[$this->_index],
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'PRASOOTI_&_STRIROGA'
+                    "dept" => $dept_name
                 );
 
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                $this->_treatment_data['PRASOOTI_&_STRIROGA'];
-                if (count($this->_treatment_data['PRASOOTI_&_STRIROGA']) < $this->_index) {
+                $this->_treatment_data[$dept_name];
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['PRASOOTI_&_STRIROGA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['PRASOOTI_&_STRIROGA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->tantraDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['PRASOOTI_&_STRIROGA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['PRASOOTI_&_STRIROGA'][$this->_index]['complaints'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
                     "department" => 'PRASOOTI_&_STRIROGA',
-                    "procedures" => $this->_treatment_data['PRASOOTI_&_STRIROGA'][$this->_index]['procedure'],
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -695,7 +723,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $val->OpdNo,
                     "diagnosis" => $val->diagnosis,
                     "complaints" => $val->complaints,
-                    "department" => 'PRASOOTI_&_STRIROGA',
+                    "department" => $dept_name,
                     "procedures" => $val->procedures,
                     "InOrOutPat" => $val->InOrOutPat,
                     "attndedby" => $val->attndedby,
@@ -713,7 +741,7 @@ class M_auto extends CI_Model {
                 $labdisease = $val->diagnosis;
                 $docname = $val->AddedBy;
                 //insert_lexu
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'PRASOOTI_&_STRIROGA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
             }
             $this->_index++;
         }
@@ -721,51 +749,52 @@ class M_auto extends CI_Model {
 
     function enter_balaroga_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'BALAROGA';
         if (strtolower($arr[0]) != strtolower('old')) {
-
-            $getDeptNum = $this->getDeptNoForNewPatient('BALAROGA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->getDeptNoForNewPatient($dept_name);
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = "Male";
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $sex = "Female";
                 }
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->childage),
-                    "gender" => $gen,
+                    "Age" => $this->childage[$this->_index],
+                    "gender" => $sex,
                     "occupation" => 'School',
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'BALAROGA'
+                    "dept" => $dept_name
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['BALAROGA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['BALAROGA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['BALAROGA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->bcDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['BALAROGA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['BALAROGA'][$this->_index]['complaints'],
-                    "department" => 'BALAROGA',
-                    "procedures" => $this->_treatment_data['BALAROGA'][$this->_index]['procedure'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -774,13 +803,9 @@ class M_auto extends CI_Model {
                     "patType" => "New Patient");
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
-
                 $this->add_to_pharmacy($treatid);
-
                 $labdisease = trim($diagnosis);
-
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'BALAROGA');
-
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
         } else {
@@ -793,7 +818,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $val->OpdNo,
                     "diagnosis" => $val->diagnosis,
                     "complaints" => $val->complaints,
-                    "department" => 'BALAROGA',
+                    "department" => $dept_name,
                     "procedures" => $val->procedures,
                     "InOrOutPat" => $val->InOrOutPat,
                     "attndedby" => $val->attndedby,
@@ -811,7 +836,7 @@ class M_auto extends CI_Model {
                 $last_id = $val->OpdNo;
                 $docname = $val->AddedBy;
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'BALAROGA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
             }
             $this->_index++;
         }
@@ -819,22 +844,24 @@ class M_auto extends CI_Model {
 
     function enter_kayachikitsa_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'KAYACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
-            $getDeptNum = $this->m_auto->getDeptNoForNewPatient('KAYACHIKITSA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
 
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = "Male";
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
 
                 $data = array(
@@ -842,31 +869,31 @@ class M_auto extends CI_Model {
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'KAYACHIKITSA'
+                    "dept" => $dept_name
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['KAYACHIKITSA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['KAYACHIKITSA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['KAYACHIKITSA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->kayaDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['KAYACHIKITSA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['KAYACHIKITSA'][$this->_index]['complaints'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
                     "department" => 'KAYACHIKITSA',
-                    "procedures" => $this->_treatment_data['KAYACHIKITSA'][$this->_index]['procedure'],
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -878,10 +905,8 @@ class M_auto extends CI_Model {
                 $treatid = $this->db->insert_id();
 
                 $this->add_to_pharmacy($treatid);
-
                 $labdisease = trim($diagnosis);
-
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'KAYACHIKITSA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
 
                 $this->_index++;
             }
@@ -924,56 +949,58 @@ class M_auto extends CI_Model {
 
     function enter_shalakya_tantra_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'SHALAKYA_TANTRA';
         if (strtolower($arr[0]) != strtolower('old')) {
-            $getDeptNum = $this->m_auto->getDeptNoForNewPatient('SHALAKYA_TANTRA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
 
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = "Male";
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
-
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
+                    $this->_index = 0;
+                    shuffle($this->_treatment_data[$dept_name]);
+                }
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'SHALAKYA_TANTRA',
-                    "sub_dept" => $this->_get_random_data($this->_index, $this->shalakyaSubBranch)
+                    "dept" => $dept_name,
+                    "sub_dept" => $this->_treatment_data[$dept_name][$this->_index]['sub_dept']
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['SHALAKYA_TANTRA']) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data['SHALAKYA_TANTRA']);
-                }
-                $diagnosis = $this->_treatment_data['SHALAKYA_TANTRA'][$this->_index]['diagnosis'];
+
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->shalkayaDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['SHALAKYA_TANTRA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['SHALAKYA_TANTRA'][$this->_index]['complaints'],
-                    "department" => 'SHALAKYA_TANTRA',
-                    "procedures" => $this->_treatment_data['SHALAKYA_TANTRA'][$this->_index]['procedure'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -989,7 +1016,7 @@ class M_auto extends CI_Model {
 
                 $labdisease = trim($diagnosis);
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SHALAKYA_TANTRA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
         } else {
@@ -1027,23 +1054,26 @@ class M_auto extends CI_Model {
 
     function enter_shalya_tantra_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'SHALYA_TANTRA';
+
         if (strtolower($arr[0]) != strtolower('old')) {
-            $getDeptNum = $this->m_auto->getDeptNoForNewPatient('SHALYA_TANTRA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
 
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = "Male";
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
 
                 $data = array(
@@ -1052,32 +1082,32 @@ class M_auto extends CI_Model {
                     "MidName" => '',
                     "LastName" => $lname,
                     "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'SHALYA_TANTRA'
+                    "dept" => $dept_name
                 );
 
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
 
-                if (count($this->_treatment_data['SHALYA_TANTRA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['SHALYA_TANTRA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
                 $docname = $this->shalyaDoc;
-                $diagnosis = $this->_treatment_data['SHALYA_TANTRA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['SHALYA_TANTRA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['SHALYA_TANTRA'][$this->_index]['complaints'],
-                    "department" => 'SHALYA_TANTRA',
-                    "procedures" => $this->_treatment_data['SHALYA_TANTRA'][$this->_index]['procedure'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -1093,7 +1123,7 @@ class M_auto extends CI_Model {
 
                 $labdisease = trim($diagnosis);
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SHALYA_TANTRA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
 
                 $this->_index++;
             }
@@ -1108,7 +1138,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $val->OpdNo,
                     "diagnosis" => $val->diagnosis,
                     "complaints" => $val->complaints,
-                    "department" => 'SHALYA_TANTRA',
+                    "department" => $dept_name,
                     "procedures" => $val->procedures,
                     "InOrOutPat" => $val->InOrOutPat,
                     "attndedby" => $val->attndedby,
@@ -1126,7 +1156,7 @@ class M_auto extends CI_Model {
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SHALYA_TANTRA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
             }
 
             $this->_index++;
@@ -1135,30 +1165,32 @@ class M_auto extends CI_Model {
 
     function enter_swasthavritta_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'SWASTHAVRITTA';
         if (strtolower($arr[0]) != strtolower('old')) {
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('SWASTHAVRITTA');
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = "Male";
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
@@ -1168,20 +1200,20 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['SWASTHAVRITTA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['SWASTHAVRITTA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['SWASTHAVRITTA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->swasthaDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['SWASTHAVRITTA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['SWASTHAVRITTA'][$this->_index]['complaints'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
                     "department" => 'SWASTHAVRITTA',
-                    "procedures" => $this->_treatment_data['SWASTHAVRITTA'][$this->_index]['procedure'],
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -1194,7 +1226,7 @@ class M_auto extends CI_Model {
 
                 $labdisease = trim($diagnosis);
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SWASTHAVRITTA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
         } else {
@@ -1208,7 +1240,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $val->OpdNo,
                     "diagnosis" => $val->diagnosis,
                     "complaints" => $val->complaints,
-                    "department" => 'SWASTHAVRITTA',
+                    "department" => $dept_name,
                     "procedures" => $val->procedures,
                     "InOrOutPat" => $val->InOrOutPat,
                     "attndedby" => $val->attndedby,
@@ -1224,7 +1256,7 @@ class M_auto extends CI_Model {
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SWASTHAVRITTA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
             }
 
             $this->_index++;
@@ -1233,24 +1265,24 @@ class M_auto extends CI_Model {
 
     function enter_panchakarma_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'PANCHAKARMA';
         if (strtolower($arr[0]) != strtolower('old')) {
-
-            $getDeptNum = $this->m_auto->getDeptNoForNewPatient('PANCHAKARMA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
-
                 $deptNum = $getDeptNum + 1;
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = 'Male';
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
 
                 $data = array(
@@ -1258,31 +1290,31 @@ class M_auto extends CI_Model {
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'PANCHAKARMA'
+                    "dept" => $dept_name
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['PANCHAKARMA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['PANCHAKARMA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['PANCHAKARMA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->pkDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['PANCHAKARMA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['PANCHAKARMA'][$this->_index]['complaints'],
-                    "department" => 'PANCHAKARMA',
-                    "procedures" => $this->_treatment_data['PANCHAKARMA'][$this->_index]['procedure'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -1298,7 +1330,7 @@ class M_auto extends CI_Model {
 
                 $labdisease = trim($diagnosis);
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'PANCHAKARMA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
         } else {
@@ -1311,7 +1343,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $val->OpdNo,
                     "diagnosis" => $val->diagnosis,
                     "complaints" => $val->complaints,
-                    "department" => 'PANCHAKARMA',
+                    "department" => $dept_name,
                     "procedures" => $val->procedures,
                     "InOrOutPat" => $val->InOrOutPat,
                     "attndedby" => $val->attndedby,
@@ -1328,7 +1360,7 @@ class M_auto extends CI_Model {
                 $labdisease = $val->diagnosis;
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'PANCHAKARMA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
             }
 
             $this->_index++;
@@ -1337,53 +1369,55 @@ class M_auto extends CI_Model {
 
     function enter_aatyayikachikitsa_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'AATYAYIKACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
-            $getDeptNum = $this->m_auto->getDeptNoForNewPatient('AATYAYIKACHIKITSA');
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
-                $gender = $this->_get_random_data($this->_index, $this->gender);
+                $gender = $this->gender[$this->_index];
+                $sex = 'Male';
                 if ($gender != "Female") {
-                    $fname = $this->_get_random_data($this->_index, $this->firstname);
-                    $lname = $this->_get_random_data($this->_index, $this->lastname);
-                    $occ = $this->_get_random_data($this->_index, $this->occupation);
-                    $gen = "Male";
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
                 } else {
-                    $fname = $this->_get_random_data($this->_index, $this->femfirstname);
-                    $lname = $this->_get_random_data($this->_index, $this->femLastName);
-                    $occ = $this->_get_random_data($this->_index, $this->femoccp);
-                    $gen = "Female";
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
                 }
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
                     "MidName" => '',
                     "LastName" => $lname,
-                    "Age" => $this->_get_random_data($this->_index, $this->age),
-                    "gender" => $gen,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
                     "occupation" => $occ,
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'AATYAYIKACHIKITSA'
+                    "dept" => $dept_name
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data['AATYAYIKACHIKITSA']) < $this->_index) {
+                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
                     $this->_index = 0;
-                    shuffle($this->_treatment_data['AATYAYIKACHIKITSA']);
+                    shuffle($this->_treatment_data[$dept_name]);
                 }
-                $diagnosis = $this->_treatment_data['AATYAYIKACHIKITSA'][$this->_index]['diagnosis'];
+                $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->akDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
-                    "Trtment" => $this->_treatment_data['AATYAYIKACHIKITSA'][$this->_index]['treatment'],
+                    "Trtment" => $this->_treatment_data[$dept_name][$this->_index]['treatment'],
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
-                    "complaints" => $this->_treatment_data['AATYAYIKACHIKITSA'][$this->_index]['complaints'],
-                    "department" => 'AATYAYIKACHIKITSA',
-                    "procedures" => $this->_treatment_data['AATYAYIKACHIKITSA'][$this->_index]['procedure'],
+                    "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
                     "CameOn" => $cdate,
@@ -1398,7 +1432,7 @@ class M_auto extends CI_Model {
 
                 $labdisease = trim($diagnosis);
 
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'AATYAYIKACHIKITSA');
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
         }

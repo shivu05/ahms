@@ -1,13 +1,29 @@
+<?php
+$panchakarma_markup = "";
+if (!empty($pancha_procedures)) {
+    foreach ($pancha_procedures as $proc) {
+        $panchakarma_markup .= "<option value='" . $proc['proc_name'] . "'>" . $proc['proc_name'] . "</option>";
+    }
+}
+$lab_categories_markup = "";
+if (!empty($lab_categories)) {
+    foreach ($lab_categories as $cat) {
+        $lab_categories_markup .= '<option value="' . $cat['lab_cat_id'] . '">' . $cat['lab_cat_name'] . '</option>';
+    }
+}
+?>
+
 <div class="row">
     <div class="col-md-3 col-sm-12">
         <div class="box box-primary" style="border-top: 5px solid #009688;">
             <div class="box-body">
                 <div class="text-center">
-                    <img class="img-responsive rounded" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
+                    <img class="img-responsive rounded" style="text-align: center;margin: auto" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
                 </div>
                 <h4 style="margin-top: 2%;" class="text-center"><?php echo $patient_details['FirstName'] . ' ' . $patient_details['LastName']; ?></h4>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">OPD: <span class="pull-right"><?php echo $patient_details['OpdNo']; ?></span></li>
+                    <li class="list-group-item">IPD: <span class="pull-right"><?php echo $patient_details['IpNo']; ?></span></li>
                     <li class="list-group-item">Age: <span class="pull-right"><?php echo $patient_details['Age']; ?></span></li>
                     <li class="list-group-item">Gender: <span class="pull-right"><?php echo $patient_details['gender']; ?></span></li>
                     <li class="list-group-item">Place: <span class="pull-right"><?php echo $patient_details['city']; ?></span></li>
@@ -32,6 +48,41 @@
                     </h6>
                     <hr/>
                     <div class="row">
+                        <div class="col-md-12 col-lg-12 col-sm-12">
+                            <h5>Followup details:</h5>
+                            <table class="table table-bordered dataTable">
+                                <tr style="background-color: grey;color:#FFFFFF">
+                                    <th>Sl.No</th>
+                                    <th>C.IPD</th>
+                                    <th>Treatment</th>
+                                    <th>Diagnosis</th>
+                                    <th>Complaints</th>
+                                    <th>Notes</th>
+                                    <th>Follow up date</th>
+                                </tr>
+                                <?php
+                                $i = 0;
+                                $tr = '';
+                                foreach ($treatment_details as $row) {
+                                    $i++;
+                                    $tr .= '<tr>';
+                                    $tr .= '<td>' . $i . '</td>';
+                                    $tr .= '<td>' . $row['ipdno'] . '</td>';
+                                    $tr .= '<td>' . $row['Trtment'] . '</td>';
+                                    $tr .= '<td>' . $row['diagnosis'] . '</td>';
+                                    $tr .= '<td>' . $row['complaints'] . '</td>';
+                                    $tr .= '<td>' . $row['notes'] . '</td>';
+                                    $tr .= '<td>' . $row['attndedon'] . '</td>';
+                                    $tr .= '</tr>';
+                                }
+
+                                echo $tr;
+                                ?>
+                            </table>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
                             <label>Add prescription: <span class="text-danger">*</span></label>
@@ -39,19 +90,25 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
+                            <?php
+                            end($treatment_details);
+                            $latest_data = key($treatment_details);
+                            ?> 
                             <label>Complaints: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="complaints" id="complaints"></textarea>
+                            <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();"  name="complaints" id="complaints"><?= $treatment_details[$latest_data]['complaints'] ?></textarea>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <label>Diagnosis: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="diagnosis" id="diagnosis"></textarea>
+                            <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();"  name="diagnosis" id="diagnosis"><?= $treatment_details[$latest_data]['diagnosis'] ?></textarea>
                         </div>
                     </div>
                     <hr/>
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <label>Treatment: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="treatment" id="treatment"></textarea>
+                            <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();"  name="treatment" id="treatment"><?= $treatment_details[$latest_data]['Trtment'] ?></textarea>
+                            <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treatment_details[$latest_data]['ID']; ?>" />
+                            <input type="hidden" name="doctor_name" id="doctor_name" value="<?php echo $treatment_details[$latest_data]['AddedBy']; ?>" />
                         </div>
                         <!--<div class="col-md-4 col-sm-12">
                             <label>Panchakarma procedures: <span class="text-danger">*</span></label>
@@ -63,12 +120,11 @@
                         </div>-->
                         <div class="col-md-6 col-sm-12">
                             <label>Notes: <span class="text-danger">*</span></label>
-                            <textarea class="form-control prescription_inputs" name="notes" id="notes"></textarea>
+                            <textarea class="form-control prescription_inputs" name="notes" id="notes"><?= $treatment_details[0]['notes'] ?></textarea>
                         </div>
                     </div>
                     <hr/>
                     <div class="row">
-
                         <div class="col-md-3 col-sm-12">
                             <label>Doctor: </label>
                             <input type="text" name="doctor_name" id="doctor_name" value="<?php echo $patient_details['Doctor'] ?>" class="form-control prescription_inputs"/>
@@ -92,6 +148,7 @@
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kshara">Ksharasutra</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
                                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade" id="birth">
@@ -337,27 +394,99 @@
                                     <div class="tab-pane fade" id="lab">
                                         <div id="Lab" style="margin-top: 2%;">
                                             <h4><input type="checkbox" name="lab_check" id="lab_check" /> Laboratory Register</h4>
-                                            <div class="control-group col-4">
+                                            <div class="control-group col-6">
                                                 <label class="control-label" for="labdocname">Referred Doctor Name:</label>
                                                 <div class="controls">
                                                     <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                    <input type="hidden" name="tab_lab_row_count" id="tab_lab_row_count" value="1" />
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
-                                                <label class="control-label" for="testname">Name of Test:</label>
-                                                <div class="controls">
-                                                    <input id="treatment" type="text" name="testname" class="form-control lab_inputs" placeholder="Enter Test Name" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->	
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group col-4">											
+                                            <div class="col-12" id="lab_cats">
+                                                <table class="table table-borderless" id="lab_cat_table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <th>Test</th>
+                                                            <th>Investigations</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <select name="lab_category[]" id="lab_category" class="form-control lab_category chosen-select" data-placeholder="Select Category">
+                                                                    <option value="">Choose Category</option>
+                                                                    <?= $lab_categories_markup ?>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select name="lab_test[]" id="lab_test" class="form-control lab_test chosen-select" data-placeholder="Choose test"></select>
+                                                            </td>
+                                                            <td>
+                                                                <select name="lab_investigations[]" id="lab_investigations" class="lab_investigations form-control chosen-select" data-placeholder="Choose investigation"></select>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="2">&nbsp;</td>
+                                                            <td class="pull-right">
+                                                                <button type="button" name="add_lab_row" id="add_lab_row" class="btn btn-sm btn-primary">
+                                                                    <i class="fa fa-plus"></i> Add more</button>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                            <div class="control-group col-6">											
                                                 <label class="control-label" for="testname">Referred Date:</label>
                                                 <div class="controls">
-                                                    <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs" placeholder="Enter Date" autocomplete="off">
+                                                    <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs required" placeholder="Enter Date" autocomplete="off">
                                                     <p class="help-block"></p>
                                                 </div> <!-- /controls -->				
                                             </div> <!-- /control-group -->
+                                        </div>
+                                    </div>
+                                    <div  class="tab-pane fade" id="panchakarma_treatment">
+                                        <div id="panchakarma_div" style="margin-top: 2%;">
+                                            <h4><input type="checkbox" name="panchakarma_check" id="panchakarma_check" /> Refer for Panchakarma</h4>
+                                            <input type="hidden" name="tab_row_count" id="tab_row_count" value="1" />
+                                            <table class="table table-borderless" id="panchakarma_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 30% !important;">Procedure</th>
+                                                        <th style="width: 30% !important;">Sub procedure</th>
+                                                        <th style="width: 20% !important;">Start date</th>
+                                                        <th style="width: 20% !important;">End date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_1">
+                                                                <option value="">Choose procedure</option>
+                                                                <?= $panchakarma_markup ?>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
+                                                                <option value="">Choose sub procedure</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
+                                                        <td><input type="text" class="form-control date_picker" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3">&nbsp;</td>
+                                                        <td class="pull-right">
+                                                            <button type="button" name="" id="add_row" class="btn btn-sm btn-primary">
+                                                                <i class="fa fa-plus"></i> Add more procedure</button>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -369,7 +498,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 text-center">
                         <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> Save</button>
-                        <button class="btn btn-danger"><i class="fa fa-refresh"></i> Reset</button>
+                        <button class="btn btn-danger" type="reset" id="reset" name="reset"><i class="fa fa-refresh"></i> Reset</button>
                     </div>
                 </div>
             </div>
@@ -377,6 +506,10 @@
     </div><!-- col-9 -->
 </div>
 <script type="text/javascript">
+    $(function () {
+        $('.chosen-select').chosen({width: '100%'});
+        $('.chosen-select-deselect').chosen({allow_single_deselect: true});
+    });
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
 
     $(document).ready(function () {
@@ -459,6 +592,142 @@
             } else if ($(this).is(":not(:checked)")) {
                 $('#admit_form').hide();
             }
+        });
+
+        $('#lab_cat_table').on('change', '.lab_category', function () {
+            var dom = $(this);
+            $.ajax({
+                url: base_url + 'common_methods/fetch_laboratory_test_list',
+                type: 'POST',
+                data: {category: $(this).val()},
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        var list = res.data;
+                        var options = '<option value="">Choose test</option>';
+                        $.each(list, function (i, item) {
+                            options += '<option value="' + item.lab_test_id + '">' + item.lab_test_name + '</option>';
+                        });
+                        dom.closest('td').next('td').find('.lab_test').html(options);
+                        dom.closest('td').next('td').find('.lab_test').trigger("chosen:updated");
+                    } else {
+                        alert('something went wrong try again');
+                    }
+                },
+                error: function (error) {
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $('#lab_cat_table').on('change', '.lab_test', function () {
+            var dom = $(this);
+            $.ajax({
+                url: base_url + 'common_methods/fetch_laboratory_investigation_list',
+                type: 'POST',
+                data: {tests: $(this).val()},
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status) {
+                        var list = res.data;
+                        var options = '<option value="">Choose Investigations</option>';
+                        $.each(list, function (i, item) {
+                            options += '<option value="' + item.lab_inv_id + '">' + item.lab_inv_name + '</option>';
+                        });
+                        dom.closest('td').next('td').find('.lab_investigations').html(options);
+                        dom.closest('td').next('td').find('.lab_investigations').trigger("chosen:updated");
+                    } else {
+                        alert('something went wrong try again');
+                    }
+                },
+                error: function (error) {
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $('#panchakarma_table').on('change', '.pancha_procedure', function () {
+            var panchaprocedure = $(this).val();
+            var dom = $(this);
+            $.ajax({
+                url: base_url + 'master/panchakarma/fetch_sub_procedures',
+                data: {'proc_name': panchaprocedure},
+                dataType: 'json',
+                type: 'POST',
+                success: function (response) {
+                    var sub_proc_options = '<option value="">choose sub procedure</option>';
+                    if (response.status) {
+                        var sub_proc = response.data;
+                        $.each(sub_proc, function (i) {
+                            sub_proc_options += '<option value="' + sub_proc[i].sub_proc_name + '">' + sub_proc[i].sub_proc_name + '</option>';
+                        });
+                        dom.closest('td').next('td').find('.pancha_sub_procedure').html(sub_proc_options);
+                        dom.closest('td').next('td').find('.pancha_sub_procedure').trigger("chosen:updated");
+                    }
+                },
+                error: function (xhr, errorType, exception) {
+                    console.log('ERROR! ');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+
+        $('#add_row').on('click', function () {
+            var n = $('#tab_row_count').val();
+            $('#tab_row_count').val(n + 1);
+            var markup = '<tr>' + '<td>' +
+                    '<select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_' + (n + 1) + '">' +
+                    '<option value="">Choose procedure</option>' +
+                    panchakarma_markup +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">' +
+                    '<option value="">Choose sub procedure</option>' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_start_date[]" id = "pancha_proc_start_date" />' + '</td>' +
+                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_end_date[]" pancha_proc_end_date />' + '</td>' +
+                    '</tr>';
+            $('#panchakarma_table').append(markup);
+            $(".pancha_procedure").chosen({width: '100%'});
+            $(".pancha_sub_procedure").chosen({width: '100%'});
+            $('.date_picker').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true,
+                daysOfWeekHighlighted: "0"
+            });
+            $('.date_picker').attr('autocomplete', 'off');
+        });
+        var lab_cat_markup = '<?= $lab_categories_markup ?>';
+
+        $('#add_lab_row').on('click', function () {
+            var n = $('#tab_lab_row_count').val();
+            $('#tab_lab_row_count').val(n + 1);
+            var markup = '<tr>' + '<td>' +
+                    '<select class="form-control chosen-select lab_category" name="lab_category[]" id="lab_category_' + (n + 1) + '">' +
+                    '<option value="">Choose Category</option>' +
+                    lab_cat_markup +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control lab_test chosen-select" name="lab_test[]" id="lab_test_' + (n + 1) + '">' +
+                    '<option value="">Choose Test</option>' +
+                    '</select>' +
+                    '</td>' +
+                    '<td>' +
+                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" id="lab_investigations_' + (n + 1) + '">' +
+                    '<option value="">Choose Investigations</option>' +
+                    '</select>'
+                    + '</td>' +
+                    '</tr>';
+            $('#lab_cat_table').append(markup);
+            $(".lab_category").chosen({width: '100%'});
+            $(".lab_test").chosen({width: '100%'});
+            $(".lab_investigations").chosen({width: '100%'});
         });
 
     });

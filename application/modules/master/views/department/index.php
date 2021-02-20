@@ -9,8 +9,8 @@
                             <tr>
                                 <th class="text-center">Sl. No</th>
                                 <th>Department name</th>
-                                <!--<th>% required</th>-->
-                                <!--<th>Action</th>-->
+                                <th>% required</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -21,8 +21,8 @@
                                     echo '<tr>';
                                     echo '<td class="text-center">' . $i . '</td>';
                                     echo '<td>' . $dept['department'] . '</td>';
-                                    //echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
-                                    //echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
+                                    echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
+                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
                                     echo '</tr>';
                                     $i++;
                                 }
