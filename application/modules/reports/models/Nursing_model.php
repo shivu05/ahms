@@ -421,7 +421,7 @@ class Nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
-        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond ORDER BY date ASC";
+        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond group by l.treatid ORDER BY date ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

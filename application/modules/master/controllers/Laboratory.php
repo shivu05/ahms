@@ -27,6 +27,27 @@ class Laboratory extends SHV_Controller {
         $this->layout->render();
     }
 
+    function pancha_set() {
+        $result = $this->db->get('vedic_soft_bamch_2021.panchaprocedure')->result_array();
+        $this->db->query("TRUNCATE panchaprocedure");
+        //pma($result);
+        foreach ($result as $row) {
+            $i = 0;
+            $treatment = explode(',', $row['treatment']);
+            $procs = explode(',', $row['procedure']);
+            foreach ($procs as $test) {
+
+                $query = "select * from master_panchakarma_sub_procedures where sub_proc_name  = '$test'";
+                $res = $this->db->query($query)->row_array();
+                //echo $this->db->last_query();
+                $this->db->query("INSERT INTO panchaprocedure (opdno, disease, treatment, `procedure`, `date`, docname, treatid)
+                     VALUES('" . $row['opdno'] . "','" . $row['opdno'] . "','" . $treatment[$i] . "','" . $procs[$i] . "','" . $row['date'] . "','" . $row['docname'] . "','" . $row['treatid'] . "')");
+                //pma($res);
+                $i++;
+            }
+        }
+    }
+
     function insert_lab() {
         $result = $this->db->get('vedic_soft_bamch_2021.labregistery')->result_array();
         //pma($result);
@@ -38,7 +59,7 @@ class Laboratory extends SHV_Controller {
             $testVal = explode(',', $row['testvalue']);
             $testRange = explode(',', $row['testrange']);
             //pma($testName);
-            $j=0;
+            $j = 0;
             foreach ($testName as $test) {
                 $i++;
                 $key = explode(" ", trim($test));
@@ -49,7 +70,7 @@ class Laboratory extends SHV_Controller {
                 $d = $this->db->query('SELECT * FROM lab_investigations WHERE lab_inv_name="' . $s . '"')->row_array();
                 if (!empty($d)) {
                     $query = "INSERT INTO labregistery ( OpdNo, refDocName, lab_test_cat, lab_test_type, testName, testDate, treatID, testrange, testvalue, labdisease, tested_date)
-                         VALUES('" . $row['OpdNo'] . "','" . $row['refDocName'] . "',NULL,NULL,'" . $d['lab_inv_id'] . "','" . $row['testDate'] . "','" . $row['treatID'] . "','".$testRange[$j]."','".$testVal[$j]."','" . $row['labdisease'] . "','" . $row['testDate'] . "')";
+                         VALUES('" . $row['OpdNo'] . "','" . $row['refDocName'] . "',NULL,NULL,'" . $d['lab_inv_id'] . "','" . $row['testDate'] . "','" . $row['treatID'] . "','" . $testRange[$j] . "','" . $testVal[$j] . "','" . $row['labdisease'] . "','" . $row['testDate'] . "')";
                     $this->db->query($query);
                     echo $test . ' exists</br>';
                 }

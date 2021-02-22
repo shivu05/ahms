@@ -171,13 +171,13 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) 
     }
 
     function get_month_wise_ipd_report() {
-        $dept_res = $this->db->select('department')->get('deptper');
+        $dept_res = $this->db->select('dept_unique_code')->get('deptper');
         $dept_res = $dept_res->result_array();
         if (!empty($dept_res)) {
             $deptwise_ipd_arr = array();
             foreach ($dept_res as $dept) {
-                $dept_ipd_res = $this->db->query("call get_ipd_patient_count_dept_wise('" . $dept['department'] . "');");
-                $deptwise_ipd_arr[$dept['department']] = $dept_ipd_res->result_array();
+                $dept_ipd_res = $this->db->query("call get_ipd_patient_count_dept_wise('" . $dept['dept_unique_code'] . "');");
+                $deptwise_ipd_arr[$dept['dept_unique_code']] = $dept_ipd_res->result_array();
                 mysqli_next_result($this->db->conn_id); //imp
             }
             return $deptwise_ipd_arr;

@@ -537,7 +537,8 @@ class Ipd extends SHV_Controller {
         $this->layout->navTitle = "IPD Report";
         $this->layout->navDescr = "Monthly IPD report";
         $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
         $data['dept_list'] = $this->get_department_list('array');
@@ -551,9 +552,11 @@ class Ipd extends SHV_Controller {
         $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
         $data['show_date'] = 0;
         $table = "<h3 align='center'>MONTHLY IPD PATIENT'S REGISTER</h3>";
-        $this->load->helper('pdf');
+        $this->load->helper('mpdf');
         $content = $this->load->view('reports/ipd/yearly_ipd_count_report_print', $data, true);
-        pdf_create($table, $content, 'ahms_monthly_ipd_report', 'L');
+        generate_pdf($content, 'L');
+        exit;
+        //pdf_create($table, $content, 'ahms_monthly_ipd_report', 'L');
     }
 
     function monthly_ipd_opd_report_pdf() {

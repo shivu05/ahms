@@ -74,4 +74,25 @@ class Panchakarma extends SHV_Controller {
         }
     }
 
+    function update_sub_procedure() {
+        if ($this->input->is_ajax_request()) {
+            $edit_sub_proc_id = $this->input->post('edit_sub_proc_id');
+            $edit_sub_proc_name = $this->input->post('edit_sub_proc_name');
+            $edit_no_of_treatment_days = $this->input->post('edit_no_of_treatment_days');
+            $input_array = array(
+                'sub_proc_name' => $edit_sub_proc_name,
+                'no_of_treatment_days' => $edit_no_of_treatment_days
+            );
+            $where = array(
+                'id' => $edit_sub_proc_id
+            );
+            $is_updated = $this->panchakarma_model->update_sub_procedure($input_array, $where);
+            if ($is_updated) {
+                echo json_encode(array('status_code' => 200, 'status' => true));
+            } else {
+                echo json_encode(array('status_code' => 200, 'status' => false));
+            }
+        }
+    }
+
 }

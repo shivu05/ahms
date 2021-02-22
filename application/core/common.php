@@ -295,13 +295,14 @@ if (!function_exists('prepare_pancha_table')) {
         if (!empty($data)) {
             $arr = explode(',', $data['sub_grp_name']);
             $daysarr = explode(',', $data['tdays']);
+            $sub_ids = explode(',', $data['sub_ids']);
             $table = "<table class='table table-bordered'>";
             if (count($arr) > 0) {
                 $i = 0;
                 foreach ($arr as $row) {
                     $table .= '<tr><td width="60%">' . $row . '</td>';
                     $table .= '<td width="20%">' . $daysarr[$i] . '</td>';
-                    $table .= '<td width="20%" align="right"><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
+                    $table .= '<td width="20%" align="right"><i data-sub_proc="' . $row . '" data-days="' . $daysarr[$i] . '" data-id="' . $sub_ids[$i] . '" class="fa fa-edit hand_cursor sub_proc_edit text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
                     $i++;
                 }
             }

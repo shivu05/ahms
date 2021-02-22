@@ -116,6 +116,7 @@ $route['print-opd-prescription'] = 'patient/Treatment/print_prescription';
 
 $route['patient-list'] = 'patient/patient_list';
 $route['procedure-list'] = 'master/panchakarma/list_procedures';
+$route['sub-procedure-save'] = 'master/panchakarma/update_sub_procedure';
 $route['export-duty-doctors-xls'] = 'master/doctors/export_to_excel';
 
 $route['search-patient'] = 'patient/search_patient';

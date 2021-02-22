@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Panchakarma_model
  *
@@ -39,6 +33,11 @@ class Panchakarma_model extends CI_Model {
 
     public function save_sub_pancha_procedure($input_arr) {
         return $this->db->insert($this->_panchkarmasubProcTable, $input_arr);
+    }
+
+    public function update_sub_procedure($input_arr, $where) {
+        $this->db->where($where);
+        return $this->db->update($this->_panchkarmasubProcTable, $input_arr);
     }
 
 }

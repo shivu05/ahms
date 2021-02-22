@@ -28,7 +28,7 @@
                                 $tbody .= '<td>' . $proc['proc_name'] . '</td>';
                                 $tbody .= '<td width="30%;">' . prepare_pancha_table($proc) . '</td>';
                                 $tbody .= '<td>' . $proc['last_modified_date'] . '</td>';
-                                $tbody .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td>';
+                                $tbody .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i disabled="disabled" class="fa fa-trash text-danger hand_cursor disabled"></i></td>';
 
                                 $tbody .= '</tr>';
                             }
@@ -40,6 +40,37 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade in" id="modal-edit-sub-procedure">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Edit Panchakarma sub procedure</h4>
+            </div>
+            <div class="modal-body">
+                <form name="sub_panchakarma_proc_form" id="sub_panchakarma_proc_form" method="POST">
+                    <div class="form-group">
+                        <label for="edit_sub_proc_name">Sub Procedure name:</label>
+                        <input type="text" class="form-control required" name="edit_sub_proc_name" id="edit_sub_proc_name" placeholder="Sub procedure name">
+                        <input type="hidden" class="form-control required" name="edit_sub_proc_id" id="edit_sub_proc_id">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_no_of_treatment_days">No.of treatment days:</label>
+                        <input type="text" name="edit_no_of_treatment_days" id="edit_no_of_treatment_days" class="form-control required" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="update_sub_proc_main">Update changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <div class="modal fade in" id="modal-add-main-procedure">
@@ -183,5 +214,28 @@
                 });
             }
         });
-    });
+        $('.sub_proc_edit').on('click', function () {
+            var sub_proc = $(this).data('sub_proc');
+            var days = $(this).data('days');
+            var id = $(this).data('id');
+            $('#modal-edit-sub-procedure #edit_sub_proc_id').val(id);
+            $('#modal-edit-sub-procedure #edit_sub_proc_name').val(sub_proc);
+            $('#modal-edit-sub-procedure #edit_no_of_treatment_days').val(days);
+            $('#modal-edit-sub-procedure').modal('show');
+        });
+        var edit_form = $('#modal-edit-sub-procedure #sub_panchakarma_proc_form').validate();
+        $('#modal-edit-sub-procedure #update_sub_proc_main').on('click', function () {
+            var formdata = $('#modal-edit-sub-procedure #sub_panchakarma_proc_form').serializeArray();
+            $.ajax({
+                url: base_url + 'sub-procedure-save',
+                type: 'POST',
+                data: formdata,
+                dataType: 'json',
+                success: function (res) {
+                    window.location.reload();
+                }
+            });
+        });
+
+    });//document ready
 </script>
