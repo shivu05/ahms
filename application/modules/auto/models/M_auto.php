@@ -345,7 +345,7 @@ class M_auto extends CI_Model {
         if (strtolower($dept) == strtolower('Panchakarma')) {
             $j = $this->db->get('panchaprocedure')->num_rows();
             if ($j <= $this->_pancha_count) {
-                $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
+                //$this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
             }
         }
     }

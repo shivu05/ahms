@@ -17,7 +17,7 @@ class Auto extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Patients";
         $this->layout->title = "Record analysis";
-        if (md5($this->input->post('key_word')) == "d6ca3fd0c3a3b462ff2b83436dda495e") {
+        if (md5($this->input->post('key_word')) == "9eb80e31381f8509f062dd01a8b2b758") {
             $this->layout->render(array('view' => 'auto/auto/move'));
         } else {
             echo "No Results Found";

@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Record analysis:</h3>
+                <h3 class="box-title"><i class="fa fa-database"></i> Record analysis:</h3>
             </div>
             <form action="<?php echo base_url('analyse-data'); ?>" method="POST">
                 <div class="box-body">
@@ -32,10 +32,10 @@
                                 <input name="newpatient" type="text" class="form-control required" id="newpatient" placeholder="Enter New Patient %" required="required" />
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" style="display: none;">
                             <label class="control-label" for="textinput">Panchakarma procedure count:</label>
                             <div class="">
-                                <input name="pancha_count" type="text" class="form-control required" id="pancha_count" placeholder="Enter New Patient %" required="required" value="5"/>
+                                <input name="pancha_count" disabled="disabled" type="text" class="form-control required disabled" id="pancha_count" placeholder="Enter New Patient %" required="required" value="5"/>
                             </div>
                         </div>
                         <div class="col-md-4">
