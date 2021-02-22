@@ -122,6 +122,7 @@ $route['search-patient'] = 'patient/search_patient';
 $route['add-opd-treatment/(:num)/(:num)'] = 'patient/treatment/add_treatment/$1/$2';
 
 $route['add-purchase'] = 'pharmacy/purchase/add_purchase';
+$route['lab-list'] = 'master/laboratory';
 
 /* pdf links */
 $route['export-lab-report'] = 'reports/Test/export_lab_report';

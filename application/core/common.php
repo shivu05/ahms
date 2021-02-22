@@ -299,9 +299,9 @@ if (!function_exists('prepare_pancha_table')) {
             if (count($arr) > 0) {
                 $i = 0;
                 foreach ($arr as $row) {
-                    $table .= '<tr><td width="45%">' . $row . '</td>';
-                    $table .= '<td width="40%">' . $daysarr[$i] . '</td>';
-                    $table .= '<td><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
+                    $table .= '<tr><td width="60%">' . $row . '</td>';
+                    $table .= '<td width="20%">' . $daysarr[$i] . '</td>';
+                    $table .= '<td width="20%" align="right"><i class="fa fa-edit hand_cursor text-primary"></i> | <i class="fa fa-trash text-danger hand_cursor"></i></td></tr>';
                     $i++;
                 }
             }

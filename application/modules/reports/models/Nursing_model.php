@@ -467,8 +467,9 @@ class Nursing_model extends CI_Model {
                 JOIN lab_categories lc
                 WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName 
                 AND l.lab_test_type=lt.lab_test_id AND l.lab_test_cat = lc.lab_cat_id
-                AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' order by l.tested_date asc";
+                AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' group by l.treatID order by l.tested_date asc";
         $result = $this->db->query($query);
+        //echo $this->db->last_query();exit;
         if ($result->num_rows() > 0) {
             return $result->result(); //if data is true
         } else {
