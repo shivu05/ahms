@@ -88,30 +88,6 @@
                     return item.department;
                 }
             },
-//            {
-//                title: "Test name",
-//                data: function (item) {
-//                    return item.testName;
-//                }
-//            },
-//            {
-//                title: "Test value",
-//                data: function (item) {
-//                    return item.testvalue;
-//                }
-//            },
-//            {
-//                title: "Test range",
-//                data: function (item) {
-//                    return item.testrange;
-//                }
-//            },
-//            {
-//                title: "Test date",
-//                data: function (item) {
-//                    return item.tested_date;
-//                }
-//            },
             {
                 title: "Action",
                 data: function (item) {
