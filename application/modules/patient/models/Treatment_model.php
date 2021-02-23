@@ -193,7 +193,7 @@ class treatment_model extends CI_Model {
     public function admit_patient($inpatientdata) {
         if (!empty($inpatientdata)) {
             $query = "INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId) 
-                SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.attndedby,'" . $inpatientdata['treatId'] . "' 
+                SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',LastName) as name,Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.attndedby,'" . $inpatientdata['treatId'] . "' 
                     FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
             $this->db->query($query);
             $insert_id = $this->db->insert_id();
