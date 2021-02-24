@@ -500,7 +500,7 @@ class Nursing_model extends CI_Model {
     function get_kriyakalp_data($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 'p.gender', 't.AddedBy',
-            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 't.department', 't.procedures', 'sub_dept', 'IpNo');
+            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'IpNo');
 
         $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";

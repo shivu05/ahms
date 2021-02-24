@@ -30,6 +30,8 @@ class Treatment extends SHV_Controller {
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
         }
+        $search_key = $this->input->post('search');
+        $input_array['keyword'] = $search_key['value'];
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');

@@ -89,6 +89,10 @@ class treatment_model extends CI_Model {
                     case 'date':
                         $where_cond .= " AND t.CameOn='$val'";
                         break;
+                    case 'keyword':
+                        $val = strtoupper(str_replace(' ', '_', $val));
+                        $where_cond .= " AND t.department like '%$val%'";
+                        break;
                     default:
                         $where_cond .= " AND $col = '$val'";
                 endswitch;
