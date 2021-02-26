@@ -86,7 +86,7 @@
         $('#test_modal_box').on('click', '#btn-ok', function () {
             var form_data = $('#test_form').serializeArray();
             $.ajax({
-                url: base_url + '',
+                url: base_url + 'master/laboratory/update_lab_reference',
                 type: 'POST',
                 dataType: 'json',
                 data: form_data,

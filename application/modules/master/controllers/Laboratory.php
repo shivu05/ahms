@@ -27,6 +27,22 @@ class Laboratory extends SHV_Controller {
         $this->layout->render();
     }
 
+    function update_lab_reference() {
+        if ($this->input->is_ajax_request()) {
+            $test_range = $this->input->post('test_range');
+            $inv_id = $this->input->post('inv_id');
+            $update_arr = array(
+                'lab_test_reference' => $test_range
+            );
+            $is_updated = $this->lab_investigations->update($update_arr, $inv_id);
+            if ($is_updated) {
+                echo json_encode(array('status' => true));
+            } else {
+                echo json_encode(array('status' => false));
+            }
+        }
+    }
+
     function pancha_set() {
         $result = $this->db->get('vedic_soft_bamch_2021.panchaprocedure')->result_array();
         $this->db->query("TRUNCATE panchaprocedure");

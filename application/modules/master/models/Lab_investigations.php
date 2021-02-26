@@ -14,4 +14,9 @@ class Lab_investigations extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
+    public function update($update, $id) {
+        $this->db->where('lab_inv_id', $id);
+        return $this->db->update('lab_investigations', $update);
+    }
+
 }
