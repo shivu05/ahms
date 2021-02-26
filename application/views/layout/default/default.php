@@ -6,6 +6,10 @@
         <title><?= $this->layout->title ?> - AYUSH</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon_io/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_io/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon_io/favicon-16x16.png">
+        <link rel="manifest" href="/assets/favicon_io/site.webmanifest">
         <?= $this->scripts_include->preJs() ?>
         <?= $this->scripts_include->includeCss() ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

@@ -65,7 +65,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Last name:</label>
-                            <input type="text" name="LastName" id="LastName" class="form-control required"/>
+                            <input type="text" name="LastName" id="LastName" class="form-control"/>
                         </div>
                     </div>
                 </div>
