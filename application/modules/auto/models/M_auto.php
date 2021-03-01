@@ -342,12 +342,12 @@ class M_auto extends CI_Model {
             $this->InsertECGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
         }
 
-        if (strtolower($dept) == strtolower('Panchakarma')) {
-            $j = $this->db->get('panchaprocedure')->num_rows();
-            if ($j <= $this->_pancha_count) {
-                //$this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
-            }
-        }
+        /* if (strtolower($dept) == strtolower('Panchakarma')) {
+          $j = $this->db->get('panchaprocedure')->num_rows();
+          if ($j <= $this->_pancha_count) {
+          //$this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname, $docname);
+          }
+          } */
     }
 
     private $_department_data = array();
@@ -1481,6 +1481,7 @@ class M_auto extends CI_Model {
     }
 
     function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+        return true;
         $query = "SELECT * FROM ref_lab_reg_tab WHERE lab_disease='" . $labdisease . "' ORDER BY RAND() LIMIT 1";
         $query = $this->db->query($query);
         $is_inserted = false;
