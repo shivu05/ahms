@@ -66,7 +66,7 @@ class Doctors_model extends CI_Model {
             JOIN i_user_roles ur ON u.id=ur.user_id 
             JOIN week_days w ON w.week_id=d.day,
         (SELECT @a:= 0) AS a  $where_cond ORDER BY serial_number,user_department,week_id";
-        if($export_flag){
+        if ($export_flag) {
             
         }
         $result = $this->db->query($query . ' ' . $limit);
@@ -102,7 +102,8 @@ class Doctors_model extends CI_Model {
     function edit_doctors_duty($post_values) {
         //$this->db->trans_start();
         $this->db->where('id', $post_values['edit_duty_id']);
-        return $this->db->update('doctorsduty', array('day' => $post_values['week_day']));
+        return $this->db->update('doctorsduty', array('day' => $post_values['week_day'], 'doc_id' => $post_values['doctor_name']));
+        
         //$this->db->trans_complete();
     }
 
