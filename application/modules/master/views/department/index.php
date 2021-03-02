@@ -3,13 +3,14 @@
         <div class="box box-primary">
             <div class="box-header with-border"><h3 class="box-title"> Department list:</h3></div>
             <div class="box-body">
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-6 col-sm-12">
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
                                 <th class="text-center">Sl. No</th>
                                 <th>Department name</th>
                                 <th>% required</th>
+                                <th>Bed count</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -21,8 +22,10 @@
                                     echo '<tr>';
                                     echo '<td class="text-center">' . $i . '</td>';
                                     echo '<td>' . $dept['department'] . '</td>';
-                                    echo '<td style="text-align:right;">' . $dept['percentage'] . '</td>';
-                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
+                                    echo '<td style="text-align:center;">' . $dept['percentage'] . '</td>';
+                                    echo '<td style="text-align:center;">' . $dept['bed_count'] . '</td>';
+                                    echo '<td><center><i style="margin-right:15px !important; cursor:pointer;" data-name="' . $dept['department'] . '" data-per="' . $dept['percentage'] . '" 
+                                        data-bc="' . $dept['bed_count'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
                                     echo '</tr>';
                                     $i++;
                                 }
@@ -51,9 +54,13 @@
                         <input type="text" name="dept_name" id="dept_name" readonly="readonly" class="form-control"/>
                     </div>
                     <div class="form-group">
-                        <label for="week_day">Percentage:</label>
+                        <label for="dept_id">Percentage:</label>
                         <input type="type" name="perc" id="perc" class="form-control"/>
                         <input type="hidden" name="dept_id" id="dept_id" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="bed_count">Bed count:</label>
+                        <input type="type" name="bed_count" id="bed_count" class="form-control"/>
                     </div>
                 </form>
             </div>
@@ -72,6 +79,7 @@
             $('#perc').val(per);
             $('#dept_id').val($(this).data('id'));
             $('#dept_name').val($(this).data('name'));
+            $('#bed_count').val($(this).data('bc'));
             $('#edit_modal_box').modal('show');
         });
         $('#edit_modal_box').on('click', '#edit_btn', function () {

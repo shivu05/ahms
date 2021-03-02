@@ -15,7 +15,6 @@
         </div>
     </div>
 </div>
-</div>
 <script type="text/javascript">
     $(document).ready(function () {
         var is_admin = '<?= $is_admin ?>';
