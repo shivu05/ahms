@@ -217,7 +217,8 @@ class Patient extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $this->layout->data = $data;
         $this->layout->render();
@@ -229,6 +230,8 @@ class Patient extends SHV_Controller {
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
         }
+        $search_key = $this->input->post('search');
+        $input_array['keyword'] = $search_key['value'];
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
@@ -278,7 +281,7 @@ class Patient extends SHV_Controller {
         $this->db->join('inpatientdetails ip', 'it.ipdno=ip.IpNo');
         $this->db->where('it.ipdno', $ipd);
         $treat_data = $this->db->get()->result_array();
-        
+
         foreach ($treat_data as $treat) {
             $products = explode(',', $treat['Trtment']);
             $days = $treat['NofDays'];

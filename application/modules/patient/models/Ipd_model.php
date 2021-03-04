@@ -20,13 +20,14 @@ class Ipd_model extends CI_Model {
     public function get_patients($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array(
-            'IpNo', 'OpdNo', 'FName', 'Age', 'Gender', 'department', 'WardNo', 'BedNo', 'DoAdmission', 'Doctor'
+            'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(ip.department),"_"," ")) department', 'WardNo', 'BedNo',
+            'DoAdmission', 'Doctor', 't.diagnosis'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
             $user_dept_cond = " AND LOWER(department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
         }
-        $where_cond = " WHERE status='stillin' $user_dept_cond ";
+        $where_cond = " WHERE ip.status='stillin' $user_dept_cond ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -48,17 +49,23 @@ class Ipd_model extends CI_Model {
                     case 'name':
                         $where_cond .= " AND FName LIKE '%$val%'";
                         break;
+                    case 'keyword':
+                        $val = strtoupper(str_replace(' ', '_', $val));
+                        $where_cond .= " AND ( ip.department like '%$val%' OR t.diagnosis like '%$val%' OR FName LIKE '%$val%') ";
+                        break;
                     default:
                         $where_cond .= " AND $col = '$val'";
                 endswitch;
             }
         }
 
-        $query = "SELECT " . join(',', $columns) . " FROM inpatientdetails $where_cond order by IpNo desc";
+        $query = "SELECT " . join(',', $columns) . " FROM inpatientdetails ip 
+            JOIN ipdtreatment t ON t.ipdno = ip.IpNo  $where_cond order by ip.IpNo desc";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query("select * from inpatientdetails where IpNo is not null $user_dept_cond")->num_rows();
+        $return['total_rows'] = $this->db->query("select * from inpatientdetails ip 
+            JOIN ipdtreatment t ON t.ipdno = ip.IpNo where IpNo is not null $user_dept_cond")->num_rows();
         return $return;
     }
 

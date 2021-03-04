@@ -37,8 +37,8 @@ class Users_model extends CI_Model {
     function get_users_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile', 'u.user_type', '(u.user_department) as user_department', 'u.user_date', 'u.user_modified',
-            'u.active', 'rm.role_name'
+        $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile',
+            'u.user_type', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'u.user_date', 'u.user_modified', 'u.active', 'rm.role_name'
         );
 
         $where_cond = " WHERE u.ID != 1 ";
@@ -65,6 +65,10 @@ class Users_model extends CI_Model {
                     case 'department':
                         $where_cond .= ($val != 1) ? " AND UPPER(replace(t.department,' ','_')) = '$val'" : '';
                         break;
+                    case 'keyword':
+                        $val = strtoupper(str_replace(' ', '_', $val));
+                        $where_cond .= " AND ( u.user_department like '%$val%' OR user_name like '%$val%' OR user_email like '%$val%') ";
+                        break;
                     default:
                         $where_cond .= " AND $col = '$val'";
                 endswitch;
@@ -79,6 +83,12 @@ class Users_model extends CI_Model {
         $return['total_rows'] = $this->db->query('SELECT * FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id WHERE u.ID !=1')->num_rows();
 
         return $return;
+    }
+
+    function update($update, $where) {
+        $this->db->where($where);
+        return $this->db->update('users', $update);
+        //echo $this->db->last_query();
     }
 
 }

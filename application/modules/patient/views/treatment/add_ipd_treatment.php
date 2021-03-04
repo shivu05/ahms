@@ -43,7 +43,7 @@ if (!empty($lab_categories)) {
                 <div class="box-body">
                     <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $patient_details['department']))); ?></span>
                         <span class="pull-right">Admission date: <span class="text-warning"> <?php echo $patient_details['DoAdmission']; ?></span> 
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-info btn-sm" style="color:white;"><i class="fa fa-backward"></i> Back</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-info btn-sm" style="color:white;" href="<?= base_url('patient/patient/ipd_list'); ?>"><i class="fa fa-backward"></i> Back</a>
                         </span>
                     </h6>
                     <hr/>

@@ -1,6 +1,7 @@
 <style type="text/css">
     .ipd_no,.opd_no{
         text-align: right;
+        cursor: pointer;
     }
 </style>
 <div class="row">
@@ -132,7 +133,7 @@
                 title: "IPD",
                 class: "ipd_no",
                 data: function (item) {
-                    return '<span class="badge badge-info" data-ipd_no=' + item.IpNo + '>' + item.IpNo + '</span>';
+                    return '<span class="badge badge-danger" data-ipd_no=' + item.IpNo + '>' + item.IpNo + '</span>';
                 }
             },
             {
@@ -164,6 +165,12 @@
                 title: "Department",
                 data: function (item) {
                     return item.department;
+                }
+            },
+            {
+                title: "Diagnosis",
+                data: function (item) {
+                    return item.diagnosis;
                 }
             },
             {
@@ -208,7 +215,7 @@
                 sEmptyTable: "<div class='no_records'>No patients found</div>",
                 sProcessing: "<div class='no_records'>Loading</div>",
             },
-            'searching': false,
+            'searching': true,
             'paging': true,
             'pageLength': 25,
             'lengthChange': true,
@@ -227,7 +234,8 @@
             },
             order: [[0, 'desc']],
             info: true,
-            sScrollX: true
+            sScrollX: true,
+            "ordering": false
         });
 
         $('#patient_table tbody').on('click', '.ipd_no', function () {

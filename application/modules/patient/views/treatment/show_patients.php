@@ -1,3 +1,8 @@
+<style type="text/css">
+    .opd_no{
+        cursor: pointer;
+    }
+</style>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
@@ -126,6 +131,12 @@
                 }
             },
             {
+                title: "Diagnosis",
+                data: function (item) {
+                    return item.diagnosis;
+                }
+            },
+            {
                 title: "Department",
                 data: function (item) {
                     return item.department;
@@ -185,7 +196,7 @@
             info: true,
             sScrollX: true
         });
-        $('#patient_table tbody').on('click', 'tr', function () {
+        $('#patient_table tbody').on('click', 'tr td.opd_no', function () {
             var data = patient_table.row(this).data();
             window.location.href = base_url + 'add-opd-treatment/' + data.OpdNo + '/' + data.ID;
         });

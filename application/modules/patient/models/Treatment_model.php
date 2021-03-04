@@ -63,7 +63,8 @@ class treatment_model extends CI_Model {
             $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
         }
         $cur_date = date('Y-m-d');
-        $where_cond = " WHERE (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) $user_dept_cond";
+        $cur_date_condition = ($display_all) ? '' : " (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) ";
+        $where_cond = " WHERE $cur_date_condition $user_dept_cond";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -74,7 +75,7 @@ class treatment_model extends CI_Model {
         if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
             $display_all = TRUE;
         }
-
+        unset($conditions['all_patients']);
 
         foreach ($conditions as $col => $val) {
             $val = trim($val);
@@ -91,15 +92,12 @@ class treatment_model extends CI_Model {
                         break;
                     case 'keyword':
                         $val = strtoupper(str_replace(' ', '_', $val));
-                        $where_cond .= " AND t.department like '%$val%'";
+                        $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%') ";
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
                 endswitch;
             }
-        }
-        if ($display_all) {
-            $where_cond = " WHERE 1=1 $user_dept_cond";
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "

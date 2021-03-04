@@ -49,6 +49,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal modal fade" id="user_edit_modal_box" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update user details:</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" name="user_edit" id="user_edit">
+                    <div class="form-group">
+                        <label for="user_name">Name</label>
+                        <input type="text" class="form-control required" id="user_name" name="user_name" placeholder="Name">
+                        <input type="hidden" class="form-control" id="id" name="id">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" name="update_btn" id="update_btn">Update</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <style type="text/css">
     .status{
         width: 50px !important;
@@ -121,11 +146,41 @@
                 title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o text-primary" style="font-size:16px" aria-hidden="true"></i>';
+                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>';
                 }
             }
         ];
-
+        $('#user_edit').validate();
+        $('#users_table').on('click', '.edit-user', function () {
+            $('#user_edit_modal_box #user_name').val($(this).data('name'));
+            $('#user_edit_modal_box #id').val($(this).data('id'));
+            $('#user_edit_modal_box').modal('show');
+        });
+        $('#user_edit_modal_box').on('click', '#update_btn', function () {
+            if ($('#user_edit').valid()) {
+                var form_data = $('#user_edit_modal_box #user_edit').serializeArray();
+                $.ajax({
+                    url: base_url + 'master/users/update',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (response) {
+                        $('#user_edit_modal_box').modal('hide');
+                        user_table.clear();
+                        user_table.draw();
+                        // if (response.status == 'Success') {
+                        $.notify({
+                            title: response.status,
+                            message: response.msg,
+                            icon: 'fa fa-check'
+                        }, {
+                            type: response.p_class
+                        });
+                        //}
+                    }
+                });
+            }
+        });
 
         var user_table = $('#users_table').DataTable({
             'columns': columns,
@@ -137,7 +192,7 @@
                 sEmptyTable: "<div class='no_records'>No users found</div>",
                 sProcessing: "<div class='no_records'>Loading</div>",
             },
-            'searching': false,
+            'searching': true,
             'paging': true,
             'pageLength': 25,
             'lengthChange': true,
@@ -156,7 +211,8 @@
             },
             order: [[0, 'desc']],
             info: true,
-            sScrollX: true
+            sScrollX: true,
+            ordering: false
         });
     });
 </script>

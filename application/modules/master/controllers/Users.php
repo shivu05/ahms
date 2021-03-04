@@ -22,6 +22,8 @@ class Users extends SHV_Controller {
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
         }
+        $search_key = $this->input->post('search');
+        $input_array['keyword'] = $search_key['value'];
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
@@ -61,6 +63,26 @@ class Users extends SHV_Controller {
             echo 'false';
         } else {
             echo 'true';
+        }
+    }
+
+    function update() {
+        if ($this->input->is_ajax_request()) {
+            $user_name = $this->input->post('user_name');
+            $id = $this->input->post('id');
+            $update = array(
+                'user_name' => $user_name
+            );
+            $where = array(
+                'ID' => $id
+            );
+
+            $is_updated = $this->users_model->update($update, $where);
+            if ($is_updated) {
+                echo json_encode(array('status' => 'Success', 'msg' => 'Updated successfully', 'p_class' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'Failed to Update', 'p_class' => 'danger'));
+            }
         }
     }
 
