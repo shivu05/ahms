@@ -203,7 +203,6 @@ class M_auto extends CI_Model {
     }
 
     private function insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept) {
-        return true;
         if (strtolower(trim($labdisease)) == strtolower("AMAVATA")) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
