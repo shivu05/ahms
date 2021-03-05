@@ -59,7 +59,8 @@ class Settings extends SHV_Controller {
 
     function reset_beds() {
         $dept_data = $this->db->get('deptper')->result_array();
-        $this->db->query('TRUNCATE bed_details');
+        $this->db->query('DELETE FROM bed_details');
+		$this->db->query('ALTER TABLE bed_details AUTO_INCREMENT = 1');
         $i = $k = 0;
         foreach ($dept_data as $row) {
             ++$k;
