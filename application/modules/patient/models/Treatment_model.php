@@ -66,7 +66,7 @@ class treatment_model extends CI_Model {
         if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
             $display_all = TRUE;
         }
-        $cur_date_condition = ($display_all) ? '' : " (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) ";
+        $cur_date_condition = ($display_all) ? '' : " AND (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) ";
         $where_cond = " WHERE 1=1 $cur_date_condition $user_dept_cond";
 
         $limit = '';
