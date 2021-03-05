@@ -63,8 +63,12 @@ class treatment_model extends CI_Model {
             $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
         }
         $cur_date = date('Y-m-d');
+        if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
+            $display_all = TRUE;
+        }
         $cur_date_condition = ($display_all) ? '' : " (attndedon = '$cur_date' AND InOrOutPat ='FollowUp') OR (attndedon is null AND InOrOutPat is null) ";
-        $where_cond = " WHERE $cur_date_condition $user_dept_cond";
+        $where_cond = " WHERE 1=1 $cur_date_condition $user_dept_cond";
+
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -72,9 +76,7 @@ class treatment_model extends CI_Model {
             $limit = ' LIMIT ' . $start . ',' . ($length);
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
-        if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
-            $display_all = TRUE;
-        }
+
         unset($conditions['all_patients']);
 
         foreach ($conditions as $col => $val) {

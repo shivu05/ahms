@@ -64,3 +64,7 @@ CHANGE COLUMN `tested_date` `tested_date` DATE NULL DEFAULT NULL ;
 
 ALTER TABLE `lab_investigations` 
 CHANGE COLUMN `lab_test_reference` `lab_test_reference` VARCHAR(250) NULL DEFAULT NULL ;
+
+ALTER TABLE `xray_ref` 
+CHANGE COLUMN `xraypart` `xraypart` VARCHAR(200) NULL DEFAULT NULL ,
+CHANGE COLUMN `filmsize` `filmsize` VARCHAR(200) NULL DEFAULT NULL ;

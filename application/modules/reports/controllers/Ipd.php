@@ -489,6 +489,7 @@ class Ipd extends SHV_Controller {
             }
             array_push($data_bed, array($month => $dept_counts));
         }
+        //pma($data_bed, 1);
         $data['deptbed'] = $data_bed;
         $this->layout->data = $data;
         $this->layout->render();

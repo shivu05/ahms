@@ -144,7 +144,7 @@ OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) 
     }
 
     function get_monthwise_bed_occupancy($month, $dept) {
-        $query = $this->db->query("SELECT sum(nofDays) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
+        $query = $this->db->query("SELECT coalesce(sum(nofDays),0) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
         return $query->result();
     }
 
