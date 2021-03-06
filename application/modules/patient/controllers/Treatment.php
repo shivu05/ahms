@@ -81,6 +81,25 @@ class Treatment extends SHV_Controller {
         $diagnosis = $this->input->post('diagnosis');
         $complaints = $this->input->post('complaints');
         $treatment = $this->input->post('treatment');
+
+        if ($this->input->post('birth_check') == 'on') {
+            $birth_data = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'deliveryDetail' => $this->input->post('delivery'),
+                'babyBirthDate' => $this->input->post('birthdate') . ' - ' . $this->input->post('birthtime'),
+                'babyWeight' => $this->input->post('weight'),
+                'treatby' => $this->input->post('surgeonname'),
+                'babygender' => $this->input->post('babygender'),
+                'babyblood' => $this->input->post('babyblood'),
+                'fatherName' => $this->input->post('fathername'),
+                'motherblood' => $this->input->post('motherblood'),
+                'anaesthetic' => $this->input->post('anaesthetic'),
+                'deliverytype' => $this->input->post('deliverytype'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
+                'treatId' => $this->input->post('treat_id')
+            );
+            $this->treatment_model->store_birth_info($birth_data);
+        }
         $is_panchakarma = 'N';
         if ($this->input->post('panchakarma_check') == 'on') {
             $is_panchakarma = 'Y';
@@ -163,6 +182,7 @@ class Treatment extends SHV_Controller {
                 'anaesthetic' => $this->input->post('ksharaanaesthetist'),
                 'asssurgeon' => $this->input->post('assksharasurgeonname'),
                 'ksharsDate' => $this->input->post('ksharadate'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
                 'treatId' => $treat_id
             );
             $this->treatment_model->add_kshara_info($ksharadata);
@@ -177,6 +197,7 @@ class Treatment extends SHV_Controller {
                 'treatId' => $treat_id,
                 'anaesthetic' => $this->input->post('surganaesthetist'),
                 'asssurgeon' => $this->input->post('AssSurgeryDocname'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
                 'surgeryname' => $this->input->post('surgeryname'),
             );
             $this->treatment_model->add_surgery_info($surgerydata);
@@ -341,6 +362,7 @@ class Treatment extends SHV_Controller {
                 'motherblood' => $this->input->post('motherblood'),
                 'anaesthetic' => $this->input->post('anaesthetic'),
                 'deliverytype' => $this->input->post('deliverytype'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
             );
             $this->treatment_model->store_birth_info($birth_data);
         }
@@ -386,6 +408,7 @@ class Treatment extends SHV_Controller {
                 'anaesthetic' => $this->input->post('ksharaanaesthetist'),
                 'asssurgeon' => $this->input->post('assksharasurgeonname'),
                 'ksharsDate' => $this->input->post('ksharadate'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
                 'treatId' => $treat_id
             );
             $this->treatment_model->add_kshara_info($ksharadata);
@@ -401,6 +424,7 @@ class Treatment extends SHV_Controller {
                 'anaesthetic' => $this->input->post('surganaesthetist'),
                 'asssurgeon' => $this->input->post('AssSurgeryDocname'),
                 'surgeryname' => $this->input->post('surgeryname'),
+                'anesthesia_type' => $this->input->post('anesthesia_type'),
             );
             $this->treatment_model->add_surgery_info($surgerydata);
         }

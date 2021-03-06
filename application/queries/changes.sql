@@ -68,3 +68,16 @@ CHANGE COLUMN `lab_test_reference` `lab_test_reference` VARCHAR(250) NULL DEFAUL
 ALTER TABLE `xray_ref` 
 CHANGE COLUMN `xraypart` `xraypart` VARCHAR(200) NULL DEFAULT NULL ,
 CHANGE COLUMN `filmsize` `filmsize` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `birthregistery` 
+ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `birthtime`;
+
+ALTER TABLE `ksharsutraregistery` 
+ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `anaesthetic`;
+
+ALTER TABLE `surgeryregistery` 
+ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `surgeryname`;
+
+
+
+

@@ -236,15 +236,20 @@ if (!empty($lab_categories)) {
                                  </div>
                              </div>
                              <hr/>-->
+                            <?php
+                            end($treatment_details);
+                            $latest_data = key($treatment_details);
+                            ?> 
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <label>Doctor: </label>
                                     <!--<input type="text" class="form-control" name="doctor_name" id="doctor_name" value="<?= $current_treatment['AddedBy']; ?>" readonly="readonly"/>-->
                                     <select class="form-control " name="doctor_name" id="doctor_name" readonly="readonly">
-                                        <option>Choose doctor</option>
+                                        <option value="">Choose doctor</option>
                                         <?php
                                         if (!empty($doctors)) {
-                                            $selected_doc = $current_treatment['AddedBy'];
+                                            $selected_doc = ($current_treatment['AddedBy'] == "") ? $treatment_details[$latest_data]['AddedBy'] : $current_treatment['AddedBy'];
+
                                             foreach ($doctors as $doctor) {
                                                 $selected = (strtolower($selected_doc) == strtolower($doctor['user_name'])) ? 'selected="selected"' : '';
                                                 echo '<option value="' . $doctor['user_name'] . '" ' . $selected . '>' . $doctor['user_name'] . '</option>';
@@ -277,7 +282,113 @@ if (!empty($lab_categories)) {
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade" id="birth">
-                                                <p>Birth register</p>
+                                                <div id="Birth">
+                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="birth_check" id="birth_check"/> Birth Register</h5>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">		
+                                                            <label class="control-label" for="delivery">Details of delivery:</label>
+                                                            <div class="controls">
+                                                                <textarea id="delivery" type="text" name="delivery" placeholder="Delivery details" class="form-control birth_input" ></textarea>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">
+                                                            <label class="control-label" for="birthdate">Birth Date/Time Of Baby:</label>
+                                                            <div class="controls">
+                                                                <input id="birthdate" type="text" name="birthdate" class="form-control birth_input date_picker" placeholder="Birth date" autocomplete="off">
+                                                                <br>
+                                                                <input id="birthtime" placeholder="Time __:__" type="text" name="birthtime" class="form-control birth_input" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">									
+                                                            <label class="control-label" for="weight">Baby weight:</label>
+                                                            <div class="controls">
+                                                                <input id="weight" type="text" name="weight" class="form-control birth_input" placeholder="Baby weight" >
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="weight">Baby Gender:</label>
+                                                            <div class="controls">
+                                                                <select class="form-control birth_input" id="babygender" name="babygender">
+                                                                    <option value="">Choose one</option>
+                                                                    <option value="Male">Male</option>
+                                                                    <option value="Female">Female</option>
+                                                                    <option value="others">others</option>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="babyblood">Baby Blood Group:</label>
+                                                            <div class="controls">
+                                                                <input id="babyblood" type="text" name="babyblood" class="form-control birth_input" placeholder="Baby blood group">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="motherblood">Mother Blood Group:</label>
+                                                            <div class="controls">
+                                                                <input id="motherblood" type="text" name="motherblood" placeholder="Mother blood group" class="form-control birth_input">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="fathername">Father Name:</label>
+                                                            <div class="controls">
+                                                                <input id="fathername" type="text" name="fathername" placeholder="Father name" class="form-control birth_input" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="surgeonname">Name Of Surgeon:</label>
+                                                            <div class="controls">
+                                                                <input id="surgeonname" value="" type="text" name="surgeonname" placeholder="surgeon name" class="form-control birth_input" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="anaesthetic">Name Of Anesthetic:</label>
+                                                            <div class="controls">
+                                                                <input id="anaesthetic" type="text" name="anaesthetic" placeholder="Anesthetic" class="form-control birth_input" />
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
+                                                            <div class="controls">
+                                                                <select class="form-control birth_input" name="anesthesia_type" id="anesthesia_type">
+                                                                    <option value="">Choose one</option>
+                                                                    <option value="LOCAL">LOCAL</option>
+                                                                    <option value="SPINAL">SPINAL</option>
+                                                                    <option value="GENERAL">GENERAL</option>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="anaesthetic">Delivery Type:</label>
+                                                            <div class="controls">
+                                                                <select class="form-control birth_input" name="deliverytype" id="deliverytype">
+                                                                    <option value="normal">Normal</option>
+                                                                    <option value="LSCS">LSCS</option>
+                                                                    <option value="cesarean">cesarean</option>
+                                                                    <option value="Forceps">Forceps</option>
+                                                                    <option value="Vacuum">Vacuum</option>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="tab-pane fade" id="ecg">
                                                 <div id="ECG">
@@ -353,95 +464,133 @@ if (!empty($lab_categories)) {
                                             <div class="tab-pane fade" id="kshara">
                                                 <div id="Kshara" style="margin-top: 2%">
                                                     <h4><input type="checkbox" name="kshara_check" id="kshara_check" /> Ksharasutra Register</h4>
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharatype">Type of Ksharasutra:</label>
-                                                        <div class="controls">
-                                                            <input id="ksharatype" type="text" name="ksharatype" class="form-control kshara_inputs" placeholder="Enter Type of ksharasutra" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharatype">Name of Ksharasutra:</label>
-                                                        <div class="controls">
-                                                            <input id="ksharaname" type="text" name="ksharaname" class="form-control kshara_inputs" placeholder="Enter Name of ksharasutra" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
-                                                        <div class="controls">
-                                                            <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharasurgeonname">Name Of Asst. Surgeon:</label>
-                                                        <div class="controls">
-                                                            <input id="assksharasurgeonname" type="text" name="assksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharaanaesthetist">Name Of Anaesthetist:</label>
-                                                        <div class="controls">
-                                                            <input id="ksharaanaesthetist" type="text" name="ksharaanaesthetist" class="form-control kshara_inputs" placeholder="Enter Name " autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="ksharadate">Ksharasutra Date:</label>
-                                                        <div class="controls">
-                                                            <input id="ksharadate" type="text" name="ksharadate" class="form-control date_picker kshara_inputs" placeholder="Enter Date" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharatype">Type of Ksharasutra:</label>
+                                                            <div class="controls">
+                                                                <input id="ksharatype" type="text" name="ksharatype" class="form-control kshara_inputs" placeholder="Enter Type of ksharasutra" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharatype">Name of Ksharasutra:</label>
+                                                            <div class="controls">
+                                                                <input id="ksharaname" type="text" name="ksharaname" class="form-control kshara_inputs" placeholder="Enter Name of ksharasutra" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
+                                                            <div class="controls">
+                                                                <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharasurgeonname">Name Of Asst. Surgeon:</label>
+                                                            <div class="controls">
+                                                                <input id="assksharasurgeonname" type="text" name="assksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharaanaesthetist">Name Of Anesthetist:</label>
+                                                            <div class="controls">
+                                                                <input id="ksharaanaesthetist" type="text" name="ksharaanaesthetist" class="form-control kshara_inputs" placeholder="Enter Name " autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
+                                                            <div class="controls">
+                                                                <select class="form-control birth_input" name="anesthesia_type" id="anesthesia_type">
+                                                                    <option value="">Choose one</option>
+                                                                    <option value="LOCAL">LOCAL</option>
+                                                                    <option value="SPINAL">SPINAL</option>
+                                                                    <option value="GENERAL">GENERAL</option>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="ksharadate">Ksharasutra Date:</label>
+                                                            <div class="controls">
+                                                                <input id="ksharadate" type="text" name="ksharadate" class="form-control date_picker kshara_inputs" placeholder="Enter Date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="surgery">
                                                 <div id="Surgery" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="surgery_check" id="surgery_check" /> Surgery Register</h4>
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="SurgeryDocname">Name of Surgeon:</label>
-                                                        <div class="controls">
-                                                            <input id="SurgeryDocname" value="" type="text" name="SurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Surgeon Name" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="AssSurgeryDocname">Name of Assistant Surgeon:</label>
-                                                        <div class="controls">
-                                                            <input id="AssSurgeryDocname" type="text" name="AssSurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Assistant Surgeon Name" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="surganaesthetist">Name of anaesthetist:</label>
-                                                        <div class="controls">
-                                                            <input id="surganaesthetist" type="text" name="surganaesthetist" class="form-control surgery_inputs" placeholder="Enter Anaesthetist" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="surgeryname">Name of surgery:</label>
-                                                        <div class="controls">
-                                                            <input id="surgeryname" type="text" name="surgeryname" class="form-control surgery_inputs" placeholder="Enter Name" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="surgerytype">Type of surgery:</label>
-                                                        <div class="controls">
-                                                            <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
-                                                        <label class="control-label" for="surgerydate">Date of surgery:</label>
-                                                        <div class="controls">
-                                                            <input id="surgerydate" type="text" name="surgerydate" class="form-control date_picker surgery_inputs" placeholder="Enter Date" autocomplete="off">
-                                                            <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
-                                                    </div> <!-- /control-group -->
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="SurgeryDocname">Name of Surgeon:</label>
+                                                            <div class="controls">
+                                                                <input id="SurgeryDocname" value="" type="text" name="SurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Surgeon Name" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="AssSurgeryDocname">Name of Assistant Surgeon:</label>
+                                                            <div class="controls">
+                                                                <input id="AssSurgeryDocname" type="text" name="AssSurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Assistant Surgeon Name" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="surganaesthetist">Name of Anesthetist:</label>
+                                                            <div class="controls">
+                                                                <input id="surganaesthetist" type="text" name="surganaesthetist" class="form-control surgery_inputs" placeholder="Enter Anaesthetist" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
+                                                            <div class="controls">
+                                                                <select class="form-control birth_input" name="anesthesia_type" id="anesthesia_type">
+                                                                    <option value="">Choose one</option>
+                                                                    <option value="LOCAL">LOCAL</option>
+                                                                    <option value="SPINAL">SPINAL</option>
+                                                                    <option value="GENERAL">GENERAL</option>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="surgeryname">Name of surgery:</label>
+                                                            <div class="controls">
+                                                                <input id="surgeryname" type="text" name="surgeryname" class="form-control surgery_inputs" placeholder="Enter Name" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="surgerytype">Type of surgery:</label>
+                                                            <div class="controls">
+                                                                <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-6">											
+                                                            <label class="control-label" for="surgerydate">Date of surgery:</label>
+                                                            <div class="controls">
+                                                                <input id="surgerydate" type="text" name="surgerydate" class="form-control date_picker surgery_inputs" placeholder="Enter Date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="lab">
@@ -568,7 +717,7 @@ if (!empty($lab_categories)) {
                                     }
                                 }
                                 ?>
-                                <div id="admit_form" style="display: none;margin-left: 2%;">
+                                <div id="admit_form" class="well well" style="display: none;margin-left: 2%;">
                                     <div class="row">
                                         <div class="col-md-4 col-sm-12">
                                             <select class="form-control" name="bed_no" id="bed_no">
@@ -605,7 +754,7 @@ if (!empty($lab_categories)) {
         $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['prescription_inputs', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
@@ -626,6 +775,15 @@ if (!empty($lab_categories)) {
                 copy_input_text('#doctor_name', '#ecgdocname');
             } else if ($(this).is(":not(:checked)")) {
                 $('.ecg_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#birth_check').click(function () {
+            if ($(this).is(":checked")) {
+                $('.birth_input').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#ecgdocname');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.birth_input').attr('disabled', 'disabled');
             }
         });
 
