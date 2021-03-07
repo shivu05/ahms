@@ -111,12 +111,12 @@
                     return item.department;
                 }
             },
-            /*{
-             title: "X-Ray No",
-             data: function (item) {
-             return item.xrayNo;
-             }
-             },*/
+            {
+                title: "Diagnosis",
+                data: function (item) {
+                    return item.diagnosis;
+                }
+            },
             {
                 title: "Part of X-Ray",
                 data: function (item) {
@@ -144,7 +144,7 @@
         ];
         if (is_admin == '1') {
             columns.push({
-                title: "Action",
+                title: 'Action | <input type="checkbox" name="check_all" class="check_all" id="check_all" onclick="toggle(this)"/>',
                 data: function (item) {
                     return "<center><input type='checkbox' name='check_del[]' class='check_xray' id='checkbx" + item.ID + "' value='" + item.ID + "'/>" +
                             "&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit hand_cursor edit_xray' data-id='" + item.ID + "'></i>" + "</center>";
@@ -169,6 +169,7 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'reports/Test/get_xray_patients_list',
                 'type': 'POST',
@@ -240,24 +241,33 @@
             if (num == 0) {
                 alert('Please select atleast one records');
             } else {
-                var form_data = $('#test_form').serializeArray();
-                $.ajax({
-                    url: base_url + 'reports/Test/delete_records',
-                    type: 'POST',
-                    data: form_data,
-                    dataType: 'json',
-                    success: function (res) {
-                        alert('Deleted successfully');
-                        $('#search_form search').trigger('click');
-                        patient_table.clear();
-                        patient_table.draw();
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                })
+                if (confirm('Are you sure want to delete?')) {
+                    var form_data = $('#test_form').serializeArray();
+                    $.ajax({
+                        url: base_url + 'reports/Test/delete_records',
+                        type: 'POST',
+                        data: form_data,
+                        dataType: 'json',
+                        success: function (res) {
+                            alert('Deleted successfully');
+                            $('#search_form search').trigger('click');
+                            patient_table.clear();
+                            patient_table.draw();
+                        },
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
+                }
             }
+
         });
+
+    });
+    var clicked = false;
+    function toggle(source) {
+        //console.log($(".skip_script:checked").length+'check');
+        $(".check_xray").prop("checked", !clicked);
+        clicked = !clicked;
     }
-    );
 </script>

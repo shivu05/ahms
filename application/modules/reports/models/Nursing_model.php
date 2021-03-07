@@ -11,7 +11,9 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) as department', 'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize', 't.deptOpdNo');
+            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) as department',
+            'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize',
+            't.deptOpdNo', 't.diagnosis');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -63,7 +65,8 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate', '(REPLACE(ucfirst(t.department),"_"," ")) as department');
+            'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
+            '(REPLACE(ucfirst(t.department),"_"," ")) as department','t.diagnosis');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -108,7 +111,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE(ucfirst(t.department),"_"," ")) as department');
+            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE(ucfirst(t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
