@@ -6,12 +6,11 @@
                 <?php echo $top_form; ?>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
-</div>
 </div>
 <style>
     .patient{
@@ -106,8 +105,20 @@
                 }
             }
         ];
+        var patient_table;
+        function add_child(d) {
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Proc name:</td>' +
+                    '<td>' + d.procedure + '</td>' +
+                    '</tr>' +
+                    '</table>';
+        }
         function show_patients() {
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
+                "rowCallback": function (row, data) {
+                    // row.add(add_child(data)).show();
+                },
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
@@ -140,8 +151,25 @@
                 info: true,
                 sScrollX: "100%",
                 sScrollXInner: "150%",
-                "bScrollCollapse": true
+                bScrollCollapse: true,
+                responsive: {
+                    details: {
+                        renderer: function (api, rowIdx, columns) {
+                            var data = $.map(columns, function (col, i) {
+                                return col.hidden ?
+                                        '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                        '<td>' + col.procedure + ':' + '</td> ' +
+                                        '<td>' + col.date + '</td>' +
+                                        '</tr>' :
+                                        '';
+                            }).join('');
 
+                            return data ?
+                                    $('<table/>').append(data) :
+                                    false;
+                        }
+                    }
+                }
             });
         }
     }

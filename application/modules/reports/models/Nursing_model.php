@@ -386,7 +386,8 @@ class Nursing_model extends CI_Model {
         /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
           AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
           //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) "; */
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND (l.proc_end_date >='" . $conditions['start_date'] . "' 
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  
+            AND (l.date >='" . $conditions['start_date'] . "' 
             AND l.proc_end_date <='" . $conditions['end_date'] . "') ";
 
         $limit = '';

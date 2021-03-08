@@ -53,7 +53,7 @@
                         $table .= "<tbody>";
                         foreach ($dept_wise_data as $pdata) {
                             $table .= "<tr>";
-                            $table .= "<td>" . $pdata['department'] . "</td>";
+                            $table .= "<td>" . ucfirst(strtolower(str_replace('_', ' ', $pdata['department']))) . "</td>";
                             $table .= "<td style='text-align: right;'>" . $pdata['OLD'] . "</td>";
                             $table .= "<td style='text-align: right;'>" . $pdata['NEW'] . "</td>";
                             $table .= "<td style='text-align: right;'>" . $pdata['Total'] . "</td>";
@@ -84,6 +84,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     var graph = '<?php echo json_encode($graph); ?>';
     graph = $.parseJSON(graph);
@@ -92,13 +93,20 @@
         labels: ["Aatyayikachikitsa", "Balaroga", "KayaChikitsa", "Panchakarma", "Prasooti & Striroga", "Shalakya Tantra", "Shalya Tantra", "Swasthavritta"],
         datasets: [
             {
-                fillColor: "rgba(220,220,220,0.5)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
+                fillColor: "rgba(51,204,255,0.5)",
+                strokeColor: "rgba(51,204,255,1)",
+                pointColor: "rgba(51,204,255,1)",
                 pointStrokeColor: "#fff",
-                data: [parseInt(graph[0].aatyayikachikitsa), parseInt(graph[1].balaroga), parseInt(graph[2].kayachikitsa), parseInt(graph[3].panchakarma),
-                    parseInt(graph[4].prasooti_striroga), parseInt(graph[5].shalakya_tantra), parseInt(graph[6].shalya_tantra),
-                    parseInt(graph[7].swasthavritta)]
+                data: [
+                    parseInt(graph[0].aatyayikachikitsa),
+                    parseInt(graph[1].balaroga),
+                    parseInt(graph[2].kayachikitsa),
+                    parseInt(graph[3].panchakarma),
+                    parseInt(graph[4].prasooti__striroga),
+                    parseInt(graph[5].shalakya_tantra),
+                    parseInt(graph[6].shalya_tantra),
+                    parseInt(graph[7].swasthavritta)
+                ]
             }
         ]
 
