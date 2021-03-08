@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"> Department list:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list-alt"></i> Department list:</h3></div>
             <div class="box-body">
                 <div class="col-md-6 col-lg-6 col-sm-12">
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
-                            <tr>
+                            <tr style="background: grey;color:white;">
                                 <th class="text-center">Sl. No</th>
                                 <th>Department name</th>
                                 <th>% required</th>
@@ -18,6 +18,7 @@
                             <?php
                             if (!empty($depts)) {
                                 $i = 1;
+                                $total_per = $total_bed_count = 0;
                                 foreach ($depts as $dept) {
                                     echo '<tr>';
                                     echo '<td class="text-center">' . $i . '</td>';
@@ -28,10 +29,13 @@
                                         data-bc="' . $dept['bed_count'] . '" class="fa fa-pencil text-primary edit_dept" data-id="' . $dept['ID'] . '" aria-hidden="true"></i></center></td>';
                                     echo '</tr>';
                                     $i++;
+                                    $total_per = $total_per + $dept['percentage'];
+                                    $total_bed_count = $total_bed_count + $dept['bed_count'];
                                 }
                             } else {
                                 echo '<tr><td colspan=2>No departments found</td></tr>';
                             }
+                            echo '<tr style="background:grey;color:white"><td colspan=2 align="right">Total:</td><td align="center">' . $total_per . '</td><td align="center">' . $total_bed_count . '</td><td></td></tr>'
                             ?>
                         </tbody>
                     </table>

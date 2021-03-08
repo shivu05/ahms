@@ -159,6 +159,12 @@
                         return '';
                     }
                 }
+            },
+            {
+                title: "Case sheet",
+                data: function (item) {
+                    return '<i class="fa fa-download hand_cursor download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
+                }
             }
         ];
         var patient_table = $('#patient_table').DataTable({
@@ -199,6 +205,11 @@
         $('#patient_table tbody').on('click', 'tr td.opd_no', function () {
             var data = patient_table.row(this).data();
             window.location.href = base_url + 'add-opd-treatment/' + data.OpdNo + '/' + data.ID;
+        });
+        $('#patient_table tbody').on('click', '.download_case_sheet', function () {
+            var opd = $(this).data('opd');
+            var treat_id = $(this).data('treat_id');
+            window.location.href = base_url + 'patient/Treatment/print_case_sheet/' + opd + '/' + treat_id;
         });
 
         $('#default_modal_box').on('change', '#department', function () {

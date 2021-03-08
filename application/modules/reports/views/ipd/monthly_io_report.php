@@ -33,7 +33,16 @@
                                 if (!empty($result['ipd'][$dept_data][$count]['total'])) {
                                     $ipd_count = $result['ipd'][$dept_data][$count]['total'];
                                 }
-                                echo "<tr nobr='true'><td></td><td>" . $val['month'] . "</td><td>" . $val['NEW'] . "</td><td>" . $val['OLD'] . "</td><td>" . $val['total'] . "</td><td>" . $ipd_count . "</td><td>" . $val['Male'] . "</td><td>" . $val['Female'] . "</td></tr>";
+                                $tr = "<tr nobr='true'>";
+                                $tr .= "<td></td>";
+                                $tr .= "<td>" . $val['month'] . "</td>";
+                                $tr .= "<td>" . $val['NEW'] . "</td>";
+                                $tr .= "<td>" . $val['OLD'] . "</td>";
+                                $tr .= "<td>" . $val['total'] . "</td>";
+                                $tr .= "<td>" . $ipd_count . "</td>";
+                                $tr .= "<td>" . $val['Male'] . "</td>";
+                                $tr .= "<td>" . $val['Female'] . "</td>";
+                                $tr .= "</tr>";
 
                                 $total = $total + $val['total'];
                                 $male = $male + $val['Male'];

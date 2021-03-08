@@ -146,6 +146,18 @@ class treatment_model extends CI_Model {
         return $return;
     }
 
+    function get_patient_treatment($opd, $treat_id) {
+        $where = array(
+            'it.OpdNo' => $opd,
+            'it.ID' => $treat_id
+        );
+        return $this->db->from('patientdata p')
+                        ->join('treatmentdata it', 'p.OpdNo=it.OpdNo')
+                        ->where($where)
+                        ->get()
+                        ->row_array();
+    }
+
     public function getBedno() {
         $query = "SELECT id,department,wardno,group_concat(bedno) as beds 
             FROM bed_details b where b.bedstatus='Available' 

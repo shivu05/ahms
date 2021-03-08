@@ -89,6 +89,12 @@
                 }
             },
             {
+                title: "Diagnosis",
+                data: function (item) {
+                    return item.diagnosis;
+                }
+            },
+            {
                 title: "Action",
                 data: function (item) {
                     if (item.testvalue == '' || item.testvalue == null) {

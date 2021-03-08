@@ -24,7 +24,8 @@ class Lab_model extends CI_Model {
     function get_pending_labs($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array(
-            'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name', 't.department'
+            'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
+            't.department', 't.diagnosis'
         );
 
         $cur_date = date('Y-m-d');

@@ -35,8 +35,9 @@ class Scripts_include {
         'datatables' => array(
             '/node_modules/datatables.net/js/jquery.dataTables.min.js',
             '/node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+            '/node_modules/datatables.net-buttons/js/dataTables.buttons.js',
+            '/node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.min.js',
             '/node_modules/datatables.net-fixedheader-bs/js/fixedHeader.bootstrap.js',
-            '/node_modules/datatables.net-responsive-bs/js/responsive.bootstrap.min.js'
         ),
         'jq_validation' => array(
             '/assets/plugins/jq_validation/jquery.validate.js',
@@ -67,9 +68,9 @@ class Scripts_include {
             '/node_modules/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css'
         ),
         'datatables' => array(
-            '/node_modules/datatables.net-bs/css/dataTables.bootstrap.min.css',
             '/node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.min.css',
-            '/node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css'
+            '/node_modules/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.css',
+            '/node_modules/datatables.net-bs/css/dataTables.bootstrap.min.css',
         ),
         'chosen' => array(
             '/assets/plugins/chosen/bootstrap-chosen.css',
