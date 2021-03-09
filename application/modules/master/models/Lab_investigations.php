@@ -19,4 +19,20 @@ class Lab_investigations extends CI_Model {
         return $this->db->update('lab_investigations', $update);
     }
 
+    public function get_lab_categories() {
+        return $this->db->get('lab_categories')->result_array();
+    }
+
+    public function get_lab_test_by_cat($cat_id) {
+        $this->db->where('lab_cat_id', $cat_id);
+        return $this->db->get('lab_tests')->result_array();
+    }
+
+    public function insert_lab_tests($inser_arr) {
+        return $this->db->insert_batch('lab_tests', $inser_arr);
+    }
+    public function insert_lab_invs($inser_arr) {
+        return $this->db->insert_batch('lab_investigations', $inser_arr);
+    }
+
 }

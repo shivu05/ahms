@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_opd_patients_count`(`flag` VARCHAR(70), `from_date` VARCHAR(50), `to_date` VARCHAR(50))
+CREATE PROCEDURE `get_opd_patients_count`(`flag` VARCHAR(70), `from_date` VARCHAR(50), `to_date` VARCHAR(50))
 BEGIN
 
 SELECT department,OLD,NEW,Total,Male,Female,NRV,KNMDV from(

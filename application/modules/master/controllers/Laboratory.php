@@ -18,6 +18,7 @@ class Laboratory extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
         $data['result_set'] = $this->lab_investigations->get_lab_data();
+        $data['categories'] = $this->lab_investigations->get_lab_categories();
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -87,6 +88,87 @@ class Laboratory extends SHV_Controller {
                 }
                 $j++;
             }
+        }
+    }
+
+    function add_lab_category() {
+        if ($this->input->is_ajax_request()) {
+            $is_inserted = false;
+            $lab_cat = $this->input->post('lab_cat');
+            if (trim($lab_cat) != '') {
+                $is_inserted = $this->db->insert('lab_categories', array('lab_cat_name' => $lab_cat, 'status' => 'ACTIVE'));
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'ok'));
+            } else {
+                echo json_encode(array('status' => 'failed'));
+            }
+        }
+    }
+
+    function add_lab_tests() {
+        if ($this->input->is_ajax_request()) {
+            $is_inserted = false;
+            $n = $this->input->post('no_of_tests');
+            if ($n > 0) {
+                $insert_array = array();
+                for ($i = 0; $i < $n; $i++) {
+                    $test_name = $this->input->post('lab_test_' . $i);
+                    if (trim($test_name) != "") {
+                        $insert_array[] = array(
+                            'lab_cat_id' => $this->input->post('lab_cat'),
+                            'lab_test_name' => $test_name,
+                            'status' => 'ACTIVE'
+                        );
+                    }
+                }
+                $is_inserted = $this->lab_investigations->insert_lab_tests($insert_array);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => TRUE, 'msg' => 'Successfully added details', 'type' => 'success', 'title' => 'Success'));
+            } else {
+                echo json_encode(array('status' => FALSE, 'msg' => 'Failed to add details', 'type' => 'danger', 'title' => 'Failed'));
+            }
+        }
+    }
+
+    function add_lab_investigations() {
+        if ($this->input->is_ajax_request()) {
+            $is_inserted = false;
+            $n = $this->input->post('no_of_invs');
+            if ($n > 0) {
+                $insert_array = array();
+                for ($i = 0; $i < $n; $i++) {
+                    $test_name = $this->input->post('lab_invs_' . $i);
+                    if (trim($test_name) != "") {
+                        $insert_array[] = array(
+                            'lab_test_id' => $this->input->post('lab_test'),
+                            'lab_inv_name' => $test_name
+                        );
+                    }
+                }
+                $is_inserted = $this->lab_investigations->insert_lab_invs($insert_array);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => TRUE, 'msg' => 'Successfully added details', 'type' => 'success', 'title' => 'Success'));
+            } else {
+                echo json_encode(array('status' => FALSE, 'msg' => 'Failed to add details', 'type' => 'danger', 'title' => 'Failed'));
+            }
+        }
+    }
+
+    function fetch_lab_tests_by_category() {
+        if ($this->input->is_ajax_request()) {
+            $cat_id = $this->input->post('lab_cat');
+            $data = $this->lab_investigations->get_lab_test_by_cat($cat_id);
+
+            $options = '<option value="">Choose one</option>';
+            if (!empty($data)) {
+                foreach ($data as $row) {
+                    $options .= '<option value="' . $row['lab_test_id'] . '">' . $row['lab_test_name'] . '</option>';
+                }
+            }
+            echo json_encode(array('data' => $options));
         }
     }
 

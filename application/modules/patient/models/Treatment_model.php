@@ -94,7 +94,7 @@ class treatment_model extends CI_Model {
                         break;
                     case 'keyword':
                         $val = strtoupper(str_replace(' ', '_', $val));
-                        $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%') ";
+                        $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%' OR t.OpdNo='$val' OR CONCAT(p.FirstName,' ',p.LastName) LIKE '%$val%') ";
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
@@ -364,6 +364,20 @@ class treatment_model extends CI_Model {
         $this->db->join('patientdata p', 'p.OpdNo=t.OpdNo');
         $this->db->where($where);
         return $this->db->get()->row_array();
+    }
+
+    public function update_opd_treatment_data($post_values) {
+        if ($post_values['treat_id']) {
+            $update_array = array(
+                'Trtment' => $post_values['pat_treatment'],
+                'diagnosis' => $post_values['pat_diagnosis'],
+            );
+            $this->db->where('OpdNo', $post_values['opd']);
+            $this->db->where('ID', $post_values['treat_id']);
+            return $this->db->update('treatmentdata', $update_array);
+        } else {
+            return false;
+        }
     }
 
 }

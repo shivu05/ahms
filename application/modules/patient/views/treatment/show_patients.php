@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-check" style="padding-top: 5% !important">
-                                <input class="form-check-input" type="checkbox" value="1" name="all_patients" id="all_patients">
+                                <input class="form-check-input" type="checkbox" value="1" checked="checked" name="all_patients" id="all_patients">
                                 <label class="form-check-label" for="all_patients">
                                     Display all patients
                                 </label>
@@ -52,6 +52,43 @@
                     <p class="text-warning">Note: OPD number with green label indicated treatment is completed and OPD with red color indicated treatment is pending</p>
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="treatment_edit_modal" data-backdrop="static" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="treatment_edit_modal_title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="treatment_edit_modal_title">Edit treatment details: <span id="pat_opd" class="text-warning"></span> </h4>
+            </div>
+            <div class="modal-body" id="lab_modal_body">
+                <h5 class="text-primary" id="OPD_NUM"></h5>
+                <form method="POST" name="treatment_edit_form" id="treatment_edit_form">
+                    <div class="control-group">
+                        <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
+                            <input type="hidden" id="treat_id" name="treat_id" />
+                            <input type="hidden" id="opd" name="opd" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="pat_treatment">Treatment:</label>
+                        <span class="error">Note: Please separate each medicine with <b>,</b>(comma) </span>
+                        <div class="controls">
+                            <textarea name="pat_treatment" class="form-control" id="pat_treatment" rows="3" style="width: 100%" placeholder="Teatment should be seperated by comma"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-update">Save changes</button>
             </div>
         </div>
     </div>
@@ -165,6 +202,12 @@
                 data: function (item) {
                     return '<i class="fa fa-download hand_cursor download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
                 }
+            },
+            {
+                title: "Action",
+                data: function (item) {
+                    return '<i class="fa fa-edit hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
+                }
             }
         ];
         var patient_table = $('#patient_table').DataTable({
@@ -188,6 +231,7 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'patient/treatment/get_patients_for_treatment',
                 'type': 'POST',
@@ -200,7 +244,7 @@
             },
             order: [[0, 'desc']],
             info: true,
-            sScrollX: true
+            "scrollX": true
         });
         $('#patient_table tbody').on('click', 'tr td.opd_no', function () {
             var data = patient_table.row(this).data();
@@ -255,6 +299,57 @@
                 dataType: 'json',
                 success: function (res) {
                     console.log(res);
+                }
+            });
+        });
+
+        $('#patient_table tbody').on('click', '.edit_treatment_data', function () {
+            var opd = $(this).data('opd');
+            var treat_id = $(this).data('treat_id');
+            $.ajax({
+                url: base_url + 'patient/treatment/fetch_treatment_data',
+                type: 'POST',
+                data: {'opd': opd, 'treat_id': treat_id},
+                dataType: 'json',
+                success: function (response) {
+                    $('#treatment_edit_form #pat_treatment').val(response.data.Trtment);
+                    $('#treatment_edit_form #treat_id').val(response.data.ID);
+                    $('#treatment_edit_form #opd').val(response.data.OpdNo);
+                    $('#treatment_edit_form #pat_diagnosis').val(response.data.diagnosis);
+                }
+            });
+            $('#treatment_edit_modal #OPD_NUM').html("Center OPD: " + opd);
+            $('#treatment_edit_modal').modal('show');
+        });
+
+        $('#treatment_edit_modal').on('click', '#btn-update', function () {
+
+            var form_data = $('#treatment_edit_modal #treatment_edit_form').serializeArray();
+            $.ajax({
+                url: base_url + 'patient/treatment/update_treatment_details',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $('#treatment_edit_modal').modal('hide');
+                    if (response.status == true) {
+                        $.notify({
+                            title: "Treatment:",
+                            message: "Updated successfully",
+                            icon: 'fa fa-check',
+                        }, {
+                            type: "success",
+                        });
+                    } else {
+                        $.notify({
+                            title: "Treatment:",
+                            message: "Failed to update",
+                            icon: 'fa fa-check',
+                        }, {
+                            type: "danger",
+                        });
+                    }
+                    $('#search_form #search').trigger('click');
                 }
             });
         });

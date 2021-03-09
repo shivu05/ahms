@@ -837,8 +837,24 @@ class Treatment extends SHV_Controller {
             $treat_table .= "</tr>";
             $treat_table .= "</table><hr style='border-top: 2px dotted black'/>";
             $html = $pat_table . $treat_table . '</div>';
-            generate_pdf($html, 'P', '', 'opd_case_sheet_' . $treat_data['OpdNo'].'_'.$treat_data['CameOn'], false, false);
+            generate_pdf($html, 'P', '', 'opd_case_sheet_' . $treat_data['OpdNo'] . '_' . $treat_data['CameOn'], false, false);
             exit;
+        }
+    }
+
+    function fetch_treatment_data() {
+        $opd = $this->input->post('opd');
+        $treat_id = $this->input->post('treat_id');
+        $data = $this->treatment_model->get_patient_treatment($opd, $treat_id);
+        echo json_encode(array('data' => $data, 'status' => true));
+    }
+
+    function update_treatment_details() {
+        $is_updated = $this->treatment_model->update_opd_treatment_data($this->input->post());
+        if ($is_updated) {
+            echo json_encode(array('status' => true));
+        } else {
+            echo json_encode(array('status' => false));
         }
     }
 
