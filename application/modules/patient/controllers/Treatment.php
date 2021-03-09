@@ -74,7 +74,6 @@ class Treatment extends SHV_Controller {
     function save() {
         $treat_id = $this->input->post('treat_id');
         $is_admit = ($this->input->post('admit') == 'on') ? 'Admit' : 'FollowUp';
-
 //        $diagnosis = return_delimeted_string($this->input->post('diagnosis'));
 //        $complaints = return_delimeted_string($this->input->post('complaints'));
 //        $treatment = return_delimeted_string($this->input->post('treatment'));

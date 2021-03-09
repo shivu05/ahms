@@ -4,7 +4,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="fa fa-database"></i> Record analysis:</h3>
             </div>
-            <form action="<?php echo base_url('analyse-data'); ?>" method="POST">
+            <form action="<?php echo base_url('analyse-data'); ?>" method="POST" name="gen_form" id="gen_form">
                 <div class="box-body">
                     <div class="row">
                         <div class="col-md-12 text-success">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <input type="submit" class="btn btn-primary btn-sm pull-right" value="Generate">
+                    <input type="submit" class="btn btn-primary btn-sm pull-right disable" id="generate" value="Generate">
                 </div>
             </form>
         </div>
@@ -54,6 +54,11 @@
 <?php echo form_close(); ?>
 <script type="text/javascript">    // When the document is ready    
     $(document).ready(function () {
+        $('.disable').click(function () {
+            $(this).prop('disabled', true);
+            $('#gen_form').submit();
+        });
+
         $('#date').datepicker({
             format: "yyyy-mm-dd"
         });
