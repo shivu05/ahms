@@ -35,6 +35,8 @@ function generate_pdf($html, $page_orientation = 'L', $title = '', $filename = '
         'margin_top' => $mt
     );
     $mpdf = new \Mpdf\Mpdf($configs);
+    $mpdf->SetTitle('VHMS');
+    $mpdf->SetCreator('Ayush Softwares');
     $mpdf->SetDisplayMode('fullpage');
     $css = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
     if ($header_flag) {
@@ -43,6 +45,19 @@ function generate_pdf($html, $page_orientation = 'L', $title = '', $filename = '
     if ($footer_flag) {
         $mpdf->SetHTMLFooter($footer);
     }
+    $mpdf->use_kwt = true;
+    $mpdf->shrink_tables_to_fit = 1;
+    $mpdf->useSubstitutions = false;
+    $mpdf->simpleTables = true;
+    //$mpdf->SetWatermarkImage('./assets/your_logo.png');
+//    $mpdf->SetWatermarkImage(
+//            'http://www.yourdomain.com/images/logo.jpg',
+//            1,
+//            '',
+//            array(160, 10)
+//    );
+//    $mpdf->showWatermarkImage = true;
     $mpdf->WriteHTML($css . $html);
     $mpdf->Output($filename . '.pdf', $output);
+    exit;
 }

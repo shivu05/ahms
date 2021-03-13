@@ -21,15 +21,18 @@ class Treatment extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function get_patients_for_treatment() {
         $input_array = array();
+
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
         }
+        unset($input_array['exp_type']);
         $search_key = $this->input->post('search');
         $input_array['keyword'] = $search_key['value'];
         $input_array['start'] = $this->input->post('start');
@@ -855,6 +858,124 @@ class Treatment extends SHV_Controller {
         } else {
             echo json_encode(array('status' => false));
         }
+    }
+
+    function export() {
+        $type = base64_decode($this->input->post('exp_type'));
+        $post_values = $this->input->post();
+        unset($post_values['exp_type']);
+        if ($type == 'cs') {
+            try {
+                $this->print_opd_casesheets($post_values);
+            } catch (Exception $e) {
+                //echo 'Message: ' . $e->getMessage();
+                show_error($e->getMessage());
+            }
+        }
+    }
+
+    function print_opd_casesheets($post_values) {
+        ini_set("memory_limit", "-1");
+        $data = $this->treatment_model->get_patients($post_values, true);
+        $this->load->helper('mpdf');
+        if (!empty($data)) {
+            $main_content = '';
+            $n = count($data['data']);
+            $i = 0;
+            foreach ($data['data'] as $row) {
+                $i++;
+                $treat_data = $this->treatment_model->get_patient_treatment($row['OpdNo'], $row['ID']);
+                //pma($treat_data, 1);
+                $config = $this->db->get('config');
+                $config = $config->row_array();
+                $header = '<table width="100%" style="border:1px red solid"><tr>
+                    <td width="10%"><img src="' . base_url('assets/your_logo.png') . '" width="80" height="80" alt="logo"></td>
+                    <td width="90%"><h2 align="center">' . $config["college_name"] . '</h2></td>
+                  </tr></table>';
+                $pat_table = '';
+                $pat_table .= $header;
+                $pat_table .= '<table class="table"  width="100%"><tr><td align="center" width="100%" style="font-size:14pt">Out Patient Card</td></tr></table><br/>';
+                $pat_table .= "<table class='' width='100%' style='font-size:10pt'>";
+                $pat_table .= "<tr>";
+                $pat_table .= "<td  width='50%'><b>OPD NO:</b> " . $treat_data['OpdNo'] . "</td>";
+                $pat_table .= "<td width='50%'><b>DATE:</b> " . $treat_data['CameOn'] . "</td>";
+                $pat_table .= "</tr>";
+                $pat_table .= "<tr>";
+                $pat_table .= "<td width='50%'><b>Name:</b> " . $treat_data['FirstName'] . "</td>";
+                $pat_table .= "<td width='50%'><b>AGE:</b> " . $treat_data['Age'] . "</td>";
+                $pat_table .= "</tr>";
+                $pat_table .= "<tr>";
+                $pat_table .= "<td width='50%'><b>ADDRESS:</b>  " . $treat_data['address'] . $treat_data['city'] . "</td>";
+                $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
+                $pat_table .= "</tr>";
+                $pat_table .= "<tr>";
+                $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['attndedby'] . " </td>";
+                $pat_table .= "</tr>";
+                $pat_table .= "</table><hr/>";
+
+                $treat_table = "<table class='' width='100%' style='font-size:12pt'>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td width='50%'>Pradhana Vedana:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td width='50%'>Anubandhi Vedana:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td width='50%'>Poorva Vyadhi Vrittanta:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td width='50%'>Vaiyaktika Vrittanta:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>a) Appetite:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>b) Bowel:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>c) Micturation:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>d) Sleep:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>e) Diet: Veg/Mixed </td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>f) Habits:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>Menstrual History: </td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>Treatment History: </td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>General Examination: </td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>Pulse:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>BP:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>Resp Rate:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>Temp:</td>";
+                $treat_table .= "<td style='font-size:10pt' width='50%'>Weight:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>Systemic Examination:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>Investigations:</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "<tr>";
+                $treat_table .= "<td style='font-size:12pt' width='50%'>Diagnosis: " . $treat_data['diagnosis'] . "</td>";
+                $treat_table .= "</tr>";
+                $treat_table .= "</table><hr style='border-top: 2px dotted black'/>";
+                $html = $pat_table . $treat_table . '</div>';
+                $main_content .= $html;
+                if ($i < $n) {
+                    $main_content .= '<pagebreak>';
+                }
+            }//foreach
+            //echo $main_content;
+            generate_pdf($main_content, 'P', '', 'opd_case_sheets_' . time(), false, false, 'I');
+            exit;
+        }//if
     }
 
 }

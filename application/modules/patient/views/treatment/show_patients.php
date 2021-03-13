@@ -1,6 +1,10 @@
 <style type="text/css">
     .opd_no{
         cursor: pointer;
+        width:60px !important;
+    }
+    .type{
+        text-align: center;
     }
 </style>
 <div class="row">
@@ -8,11 +12,11 @@
         <div class="box box-primary">
             <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-pencil"></i> OPD Treatment</h3></div>
             <div class="box-body">
-                <form class="form-horizontal" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Opd/export_patients_list_pdf'); ?>">
+                <form class="form-horizontal" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/treatment/export'); ?>">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <label class="control-label sr-only">OPD</label>
-                            <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
+                            <input class="form-control" type="text" placeholder="OPD" name="OpdNo" id="OpdNo" autocomplete="off">
                         </div>
                         <div class="col-md-2">
                             <label class="control-label sr-only">Name</label>
@@ -22,6 +26,19 @@
                             <label class="control-label sr-only">Date</label>
                             <input class="form-control date_picker" type="text" placeholder="Enter date" name="date" id="date" autocomplete="off">
                         </div>
+                        <div class="form-group col-md-2 col-sm-12">
+                            <label class="control-label  sr-only">Department:</label>
+                            <select name="department" id="department" class="form-control select2" data-placeholder="Department">
+                                <option value=""></option>
+                                <?php
+                                if (!empty($dept_list)) {
+                                    foreach ($dept_list as $dept) {
+                                        echo "<option value='" . $dept['dept_unique_code'] . "'>" . $dept['department'] . "</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
                         <div class="col-md-2">
                             <div class="form-check" style="padding-top: 5% !important">
                                 <input class="form-check-input" type="checkbox" value="1" checked="checked" name="all_patients" id="all_patients">
@@ -30,26 +47,27 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-4 align-self-end">
-                            <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
-                            <div class="btn-group" role="group" id="export">
-                                <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                        <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
-                                    </ul>
+                        <div class="col-md-3 align-self-end">
+                            <div class="">
+                                <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                                <div class="btn-group" role="group" id="export">
+                                    <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a class="dropdown-item" href="#" id="export_cs">Case sheet</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-                <div id="patient_details">
-                    <p class="text-warning">Note: OPD number with green label indicated treatment is completed and OPD with red color indicated treatment is pending</p>
+                <hr>
+                <div id="patient_details" style="margin-top:1%">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div>
             </div>
@@ -116,7 +134,14 @@
         $('#patient_table tbody').on('click', 'tr', function () {
             alert()
         });
-        $('#search_form #export').on('click', '#export_to_pdf', function () {
+        $('#search_form #export').on('click', '#export_cs', function (e) {
+            e.preventDefault();
+            $('<input>').attr({
+                type: 'hidden',
+                id: 'exp_type',
+                name: 'exp_type',
+                value: btoa('cs')
+            }).appendTo('#search_form');
             $('#search_form').submit();
         });
         var columns = [
@@ -149,16 +174,20 @@
                     return item.gender;
                 }
             },
-            {
-                title: "Address",
-                data: function (item) {
-                    return item.address;
-                }
-            },
+//            {
+//                title: "Address",
+//                data: function (item) {
+//                    return item.address;
+//                }
+//            },
             {
                 title: "City",
                 data: function (item) {
-                    return item.city;
+                    var patient_address = item.city;
+                    if (item.address) {
+                        patient_address = item.address + ', ' + item.city;
+                    }
+                    return patient_address;
                 }
             },
             {
@@ -187,11 +216,12 @@
             },
             {
                 title: "Type",
+                class: 'type',
                 data: function (item) {
                     if (item.PatType == 'Old Patient') {
-                        return 'OLD';
+                        return '<span style="color:orange">O</span>';
                     } else if (item.PatType == 'New Patient') {
-                        return 'New';
+                        return '<span style="color:green">N</span>';
                     } else {
                         return '';
                     }
@@ -200,7 +230,7 @@
             {
                 title: "Case sheet",
                 data: function (item) {
-                    return '<i class="fa fa-download hand_cursor download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
+                    return '<i class="fa fa-download hand_cursor text-primary download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
                 }
             },
             {

@@ -92,6 +92,9 @@ class treatment_model extends CI_Model {
                     case 'date':
                         $where_cond .= " AND t.CameOn='$val'";
                         break;
+                    case 'department':
+                        $where_cond .= " AND t.department='$val'";
+                        break;
                     case 'keyword':
                         $val = strtoupper(str_replace(' ', '_', $val));
                         $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%' OR t.OpdNo='$val' OR CONCAT(p.FirstName,' ',p.LastName) LIKE '%$val%') ";
