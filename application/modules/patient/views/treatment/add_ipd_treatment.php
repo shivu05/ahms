@@ -576,7 +576,7 @@ if (!empty($lab_categories)) {
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
-
+    var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
 
         $.each(procedure_div_ids, function (i) {
