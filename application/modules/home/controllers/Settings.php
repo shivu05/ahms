@@ -60,7 +60,7 @@ class Settings extends SHV_Controller {
     function reset_beds() {
         $dept_data = $this->db->get('deptper')->result_array();
         $this->db->query('DELETE FROM bed_details');
-		$this->db->query('ALTER TABLE bed_details AUTO_INCREMENT = 1');
+        $this->db->query('ALTER TABLE bed_details AUTO_INCREMENT = 1');
         $i = $k = 0;
         foreach ($dept_data as $row) {
             ++$k;
@@ -86,6 +86,24 @@ class Settings extends SHV_Controller {
                 }
             }
         }
+    }
+
+    function remove_data() {
+        $this->layout->render();
+    }
+
+    function delete_patients() {
+        $date = $this->input->post('cdate');
+        $is_deleted = false;
+        if (!empty($date)) {
+            $is_deleted = $this->settings_model->remove_patient_data_by_date($date);
+        }
+        if ($is_deleted) {
+            $this->session->set_flashdata('noty_msg', 'Deleted successfully');
+        } else {
+            $this->session->set_flashdata('noty_msg', 'Failed to delete, try again');
+        }
+        redirect('delete-data');
     }
 
 }

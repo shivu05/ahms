@@ -125,6 +125,9 @@ $route['add-opd-treatment/(:num)/(:num)'] = 'patient/treatment/add_treatment/$1/
 $route['add-purchase'] = 'pharmacy/purchase/add_purchase';
 $route['lab-list'] = 'master/laboratory';
 
+$route['delete-data'] = 'home/Settings/remove_data';
+$route['delete-patients'] = 'home/Settings/delete_patients';
+
 /* pdf links */
 $route['export-lab-report'] = 'reports/Test/export_lab_report';
 
