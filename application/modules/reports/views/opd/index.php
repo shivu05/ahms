@@ -45,13 +45,24 @@
                 </form>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
+                <hr/>
+                <div id="patient_statistics" class="col-md-12 col-lg-12 col-sm-12"></div>
             </div>
-            <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
 </div>
-</div>
+<style type="text/css">
+    .opd_no{
+        width: 40px !important;
+    }
+    .name{
+        width: 120px !important;
+    }
+    .diagnosis{
+        width: 150px !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
@@ -79,16 +90,38 @@
         });
         var columns = [
             {
-                title: "OPD",
+                title: "Y.No",
                 class: "opd_no",
                 data: function (item) {
                     return item.OpdNo;
                 }
             },
             {
-                title: "Name",
+                title: "M.No",
+                class: "opd_no",
                 data: function (item) {
-                    return item.FirstName + ' ' + item.LastName;
+                    return item.msd;
+                }
+            },
+            {
+                title: "C.OPD",
+                class: "opd_no",
+                data: function (item) {
+                    return item.OpdNo;
+                }
+            },
+            {
+                title: "D.OPD",
+                class: "opd_no",
+                data: function (item) {
+                    return item.deptOpdNo;
+                }
+            },
+            {
+                title: "Name",
+                class: 'name',
+                data: function (item) {
+                    return item.name;
                 }
             },
             {
@@ -110,6 +143,13 @@
                 }
             },
             {
+                title: "Diagnosis",
+                class: 'diagnosis',
+                data: function (item) {
+                    return item.diagnosis;
+                }
+            },
+            {
                 title: "Department",
                 data: function (item) {
                     return item.department;
@@ -122,10 +162,10 @@
                 }
             }
         ];
-
+        var patient_table;
         function show_patients() {
             var statistics = '';
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
@@ -143,6 +183,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
+                'ordering': false,
                 'ajax': {
                     'url': base_url + 'reports/Opd/get_patients_list',
                     'type': 'POST',
@@ -228,8 +269,8 @@
                     var male_total = 0;
                     var female_total = 0;
                     var table = "<h4>OPD STATISTICS:</h4><hr>";
-                    table += "<table width='50%' class='table table-bordered' style='margin-left: auto;margin-right: auto;'>";
-                    table += "<thead><tr><th width='30%'><center>Department</center></th><th><center>Old</center></th><th><center>New</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th>"
+                    table += "<table width='50%' class='table table-bordered dataTable' style='margin-left: auto;margin-right: auto;'>";
+                    table += "<thead><tr><th width='30%'>Department</th><th><center>Old</center></th><th><center>New</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th>"
                             + "<th>Netra-Roga Vibhaga</th><th>karna-Nasa-Mukha & Danta Vibhaga</th></tr></thead>";
                     table += "<tbody>";
                     $.each(stats, function (i) {

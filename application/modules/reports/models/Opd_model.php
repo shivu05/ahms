@@ -66,12 +66,14 @@ class Opd_model extends CI_Model {
 
     function get_opd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 'CASE WHEN t.PatType="Old Patient" THEN "OLD" WHEN t.PatType="New Patient" THEN "New" END as PatType', 
-            't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'Age', 'gender', 't.AddedBy',
-            'city', 'Trtment', 'diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department');
+        $columns = array('t.OpdNo', 'CASE WHEN t.PatType="Old Patient" THEN "OLD" WHEN t.PatType="New Patient" THEN "New" END as PatType'
+            , 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'Age', 'gender', 't.AddedBy', 'city', 'address',
+            't.Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.monthly_sid as msd', 't.ID',
+            't.department as ref_dept');
 
-        $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         //$where_cond = " WHERE 1=1 ";
+
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -101,7 +103,9 @@ class Opd_model extends CI_Model {
         }
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM treatmentdata t, (SELECT @a:= 0) AS a JOIN patientdata p $where_cond ORDER BY CameOn ASC";
+
+        $query = "SELECT @a:=@a+1 AS serial_number," . implode(',', $columns) . " FROM treatmentdata t, (SELECT @a:= 0) AS a JOIN patientdata p
+             $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 

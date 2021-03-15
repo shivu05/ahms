@@ -78,6 +78,17 @@ ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `anaesthetic`;
 ALTER TABLE `surgeryregistery` 
 ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `surgeryname`;
 
+ALTER TABLE `deptper` 
+ADD COLUMN `ref_room` INT NULL AFTER `bed_count`;
 
+UPDATE `deptper` SET `ref_room` = '1' WHERE (`ID` = '1');
+UPDATE `deptper` SET `ref_room` = '2' WHERE (`ID` = '5');
+UPDATE `deptper` SET `ref_room` = '3' WHERE (`ID` = '3');
+UPDATE `deptper` SET `ref_room` = '4' WHERE (`ID` = '8');
+UPDATE `deptper` SET `ref_room` = '5' WHERE (`ID` = '2');
+UPDATE `deptper` SET `ref_room` = '6' WHERE (`ID` = '4');
+UPDATE `deptper` SET `ref_room` = '8' WHERE (`ID` = '9');
+UPDATE `deptper` SET `ref_room` = '7' WHERE (`ID` = '10');
 
-
+ALTER TABLE `treatmentdata` 
+ADD COLUMN `sl_id` INT NULL AFTER `sub_department`;

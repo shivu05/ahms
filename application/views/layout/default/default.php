@@ -6,6 +6,7 @@
         <title><?= $this->layout->title ?> - AYUSH</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
         <?= $this->scripts_include->preJs() ?>
         <?= $this->scripts_include->includeCss() ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 require_once './vendor/autoload.php';
 
-function generate_pdf($html, $page_orientation = 'L', $title = '', $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
+function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
     $CI = & get_instance();
     $config = $CI->db->get('config');
     $config = $config->row_array();
@@ -24,7 +24,28 @@ function generate_pdf($html, $page_orientation = 'L', $title = '', $filename = '
     </tr>
 </table>';
 
-    $html = '<body>' . $html . '</body>';
+    $top_heading = "";
+    if (!empty($title)) {
+        $department = (isset($title['department'])) ? '<b>DEPARTMENT</b>:' . $title['department'] . '' : '';
+        $report_title = (isset($title['report_title'])) ? $title['report_title'] : '';
+        $from_date = (isset($title['start_date'])) ? '<b>FROM:</b>' . $title['start_date'] : '';
+        $to_date = (isset($title['end_date'])) ? '<b>TO: </b>' . $title['end_date'] : '';
+
+        $top_heading .= '<table width="100%" style="border: none;">';
+        $top_heading .= '<tr>';
+        $top_heading .= '<td width="33%">' . $department . '</td>
+            <td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td>
+                <td width="33%" style="text-align:center;">'
+                . $from_date .
+                '&nbsp;
+      ' . $to_date . '</td>';
+        $top_heading .= '</tr>';
+        $top_heading .= '</table><br/><br/>';
+        $top_heading .= @$title['extradata'];
+    }
+
+
+    $html = '<body>' . $top_heading . $html . '</body>';
     $mt = 2;
     if ($header_flag) {
         $mt = 38;
@@ -57,7 +78,14 @@ function generate_pdf($html, $page_orientation = 'L', $title = '', $filename = '
 //            array(160, 10)
 //    );
 //    $mpdf->showWatermarkImage = true;
-    $mpdf->WriteHTML($css . $html);
+    $mpdf->WriteHTML($css);
+    $chunks = explode("chunk", $html);
+    if (!empty($chunks)) {
+        foreach ($chunks as $key => $val) {
+            $mpdf->WriteHTML($val);
+        }
+    }
+    //$mpdf->WriteHTML($css . $html);
     $mpdf->Output($filename . '.pdf', $output);
     exit;
 }

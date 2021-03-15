@@ -21,7 +21,8 @@ class Opd extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD patients";
         $this->layout->navDescr = "Out Patient Department";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
@@ -29,6 +30,7 @@ class Opd extends SHV_Controller {
     }
 
     function get_patients_list() {
+        //$this->update_monthly_no();
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -54,7 +56,64 @@ class Opd extends SHV_Controller {
         echo json_encode(array('statistics' => $return));
     }
 
+    function update_monthly_no() {
+        $count = $this->db->query("select count(*) as count from treatmentdata where monthly_sid=0")->row_array();
+        if (!empty($count) && $count['count'] > 0) {
+            $this->db->trans_start();
+            $this->db->query('UPDATE treatmentdata SET monthly_sid = 0');
+            $months_query = "SELECT MONTH(CameOn) as month,max(monthly_sid) as max_val FROM treatmentdata t GROUP BY MONTH(CameOn)";
+            $present_months = $this->db->query($months_query)->result_array();
+
+            foreach ($present_months as $mon) {
+                $max_value_check = $this->db->query("SELECT max(monthly_sid) as max_val FROM treatmentdata t where MONTH(CameON)='" . $mon['month'] . "'")->row_array();
+                $prev_max_val = 0;
+                if ($mon['month'] > 1) {
+                    $prev_max_val = $max_value_check['max_val'];
+                }
+                $query = "UPDATE treatmentdata,(SELECT @a:= '" . ($prev_max_val) . "') AS a SET monthly_sid = @a:=@a+1 where MONTH(CameON)='" . $mon['month'] . "';";
+                //pma($query);
+                $this->db->query($query);
+            }
+            $this->db->trans_complete();
+        }
+    }
+
     function export_to_pdf() {
+        $this->load->helper('mpdf');
+        $this->layout->title = 'OPD Report';
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        ini_set("pcre.backtrack_limit", "5000000");
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->opd_model->get_opd_patients($input_array, true);
+        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        mysqli_next_result($this->db->conn_id); //imp
+
+        $data['opd_patients'] = $result['data'];
+        $data['department'] = $input_array['department'];
+        $data['opd_stats'] = $return;
+        $this->layout->data = $data;
+        $this->layout->headerFlag = false;
+        $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'OPD REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        //$content = $html . '<br/><br/>' . $stats_html;
+        //echo $html;exit;
+        generate_pdf($html, 'L', $title);
+        exit;
+        //pma($html, 1);
+    }
+
+    function export_to_tcpdf() {
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
