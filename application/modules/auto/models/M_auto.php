@@ -555,7 +555,9 @@ class M_auto extends CI_Model {
                 $this->akDoc = $this->get_day_doctor($this->input->post('cdate'), "AATYAYIKACHIKITSA");
             }
         }
-//        echo count($this->_treatment_data) . '<br/>';
+//        shuffle($this->_treatment_data['PRASOOTI_&_STRIROGA']);
+//        pma(($this->_treatment_data['PRASOOTI_&_STRIROGA'][0]));
+//        echo '<br/>';
 //        pma($this->_treatment_data, 1);
         $this->shuffle();
         //main logic starts
@@ -652,6 +654,15 @@ class M_auto extends CI_Model {
         return $index;
     }
 
+    private function _check_list_index($dept_arr, $index) {
+        if ((count($dept_arr) < $index ) || trim($dept_arr[$index]['diagnosis']) == "") {
+            $index = 0;
+            shuffle($dept_arr);
+            return $index;
+        }
+        return $index;
+    }
+
     function enter_prasooti_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'PRASOOTI_&_STRIROGA';
@@ -679,11 +690,9 @@ class M_auto extends CI_Model {
 
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                $this->_treatment_data[$dept_name];
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->tantraDoc;
                 $treatment_arr = array(
@@ -780,10 +789,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->bcDoc;
                 $treatment_arr = array(
@@ -879,10 +887,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->kayaDoc;
                 $treatment_arr = array(
@@ -968,10 +975,9 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     $sex = "Female";
                 }
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -1093,10 +1099,8 @@ class M_auto extends CI_Model {
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
 
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $docname = $this->shalyaDoc;
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $treatment_arr = array(
@@ -1199,10 +1203,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->swasthaDoc;
                 $treatment_arr = array(
@@ -1300,10 +1303,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->pkDoc;
                 $treatment_arr = array(
@@ -1403,10 +1405,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
-                if (count($this->_treatment_data[$dept_name]) < $this->_index) {
-                    $this->_index = 0;
-                    shuffle($this->_treatment_data[$dept_name]);
-                }
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+
                 $diagnosis = $this->_treatment_data[$dept_name][$this->_index]['diagnosis'];
                 $docname = $this->akDoc;
                 $treatment_arr = array(
