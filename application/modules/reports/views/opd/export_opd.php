@@ -47,7 +47,7 @@ $dept_room_array = array(
         } else {
             $i = 0;
             foreach ($opd_patients as $patients) {
-
+                $patType = patient_type($patients['PatType']);
                 $i++;
                 echo "<tr>";
                 echo "<td><center>" . $i . "</center></td>";
@@ -57,7 +57,7 @@ $dept_room_array = array(
                 if ($department != 1) {
                     echo "<td><center>" . $patients['deptOpdNo'] . "</center></td>";
                 }
-                echo "<td><center>" . patient_type($patients['PatType']) . "</center></td>";
+                echo "<td><center>" . $patType . "</center></td>";
                 echo "<td>" . $patients['name'] . "</td>";
                 echo "<td><center>" . $patients['Age'] . "</center></td>";
                 echo "<td>" . $patients['gender'] . "</td>";

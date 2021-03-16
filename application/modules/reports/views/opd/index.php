@@ -93,7 +93,7 @@
                 title: "Y.No",
                 class: "opd_no",
                 data: function (item) {
-                    return item.OpdNo;
+                    return item.ID;
                 }
             },
             {

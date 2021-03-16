@@ -66,7 +66,7 @@ class Opd_model extends CI_Model {
 
     function get_opd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 'CASE WHEN t.PatType="Old Patient" THEN "OLD" WHEN t.PatType="New Patient" THEN "New" END as PatType'
+        $columns = array('t.OpdNo', 't.PatType'
             , 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'Age', 'gender', 't.AddedBy', 'city', 'address',
             't.Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.monthly_sid as msd', 't.ID',
             't.department as ref_dept');

@@ -261,10 +261,10 @@ if (!function_exists('generate_table_pdf')) {
 if (!function_exists('patient_type')) {
 
     function patient_type($type = '') {
-        if ($type = 'New Patient') {
-            return 'New';
+        if (strtolower(trim($type)) == strtolower('New Patient')) {
+            return 'N';
         } else {
-            return 'Old';
+            return 'O';
         }
     }
 
