@@ -448,3 +448,11 @@ if (!function_exists('get_department_dropdown')) {
     }
 
 }
+
+if (!function_exists('prepare_dept_name')) {
+
+    function prepare_dept_name($dept = '') {
+        return ucfirst(strtolower(str_replace('_', ' ', $dept)));
+    }
+
+}

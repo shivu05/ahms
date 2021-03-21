@@ -14,8 +14,12 @@
 class Ipd_model extends CI_Model {
 
     function get_ipd_patients($conditions, $export_flag = FALSE) {
+        $query = "UPDATE inpatientdetails i, bed_details b SET i.WardNo=b.wardno WHERE i.BedNo = b.bedno";
+        $this->db->query($query);
+
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', 'department', 'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge',
+        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(department),"_"," ")) department',
+            'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge',
             'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
@@ -61,26 +65,30 @@ class Ipd_model extends CI_Model {
     function get_ipd_patients_count($conditions) {
 
         if ($conditions['department'] == 1) {
-            $query = "SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
+            $query = "SELECT (REPLACE(ucfirst(department),'_',' ')) department,Total,Male,Female FROM(
+                        SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
 			SUM(case when t.Gender='Female' then 1 else 0 end) Female 
 			FROM (`inpatientdetails` t) WHERE DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') >= '" . $conditions['start_date'] . "' 
 			AND DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') <= '" . $conditions['end_date'] . "' 
-			group by t.department";
+			group by t.department
+                        UNION ALL select dept_unique_code department,0 Total,0 Male,0 Female from deptper ) A group by department";
         } else {
             $query = "SELECT department,Total,Male,Female from( SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
 			SUM(case when t.Gender='Female' then 1 else 0 end) Female 
 			FROM (`inpatientdetails` t) WHERE DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') >= '" . $conditions['start_date'] . "' 
 			AND DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') <= '" . $conditions['end_date'] . "' AND t.department='" . $conditions['department'] . "'
 			group by t.department
-			UNION ALL select department,0 Total,0 Male,0 Female from deptper ) A group by department;";
+			UNION ALL select dept_unique_code department,0 Total,0 Male,0 Female from deptper ) A group by department";
         }
+
+        //echo $query;exit;
         return $this->db->query($query)->result_array();
     }
 
     function get_bed_occpd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', 'department', 'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge',
-            'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
+        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(department),"_"," ")) department', 'WardNo', 'BedNo', 'diagnosis',
+            'DoAdmission', 'DoDischarge', 'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
         //$where_cond = " WHERE 1 = 1 ";
         /* $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')

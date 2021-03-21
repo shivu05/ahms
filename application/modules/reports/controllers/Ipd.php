@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Ipd
  *
@@ -21,7 +15,8 @@ class Ipd extends SHV_Controller {
     }
 
     function index() {
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
@@ -52,6 +47,41 @@ class Ipd extends SHV_Controller {
     }
 
     function export_to_pdf() {
+        $this->load->helper('mpdf');
+        $this->layout->title = 'OPD Report';
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        ini_set("pcre.backtrack_limit", "5000000");
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->ipd_model->get_ipd_patients($input_array, true);
+        $data['ipd_count'] = $this->ipd_model->get_ipd_patients_count($input_array);
+
+
+        $data['ipd_patients'] = $result['data'];
+        $data['department'] = $input_array['department'];
+
+        $this->layout->data = $data;
+        $this->layout->headerFlag = false;
+        $html = $this->layout->render(array('view' => 'reports/ipd/export_ipd'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'IPD REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        //$content = $html . '<br/><br/>' . $stats_html;
+        //echo $html;exit;
+        generate_pdf($html, 'L', $title, 'vhms_ipd_report_' . $input_array['start_date'] . '.pdf', TRUE, TRUE, 'I');
+        exit;
+        //pma($html, 1);
+    }
+
+    function export_to_tcpdf() {
         $this->layout->title = 'IPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -101,134 +131,13 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function export_to_pdf_old() {
-        ini_set("memory_limit", "-1");
-        set_time_limit(0);
-        $data = array();
-        $input_array = array();
-        $head = array(
-            'serial_number' => array('name' => 'Sl. No', 'width' => 10, 'align' => 'C'),
-            'OpdNo' => array('name' => 'C.OPD', 'width' => 12),
-            'IpNo' => array('name' => 'C.IPD', 'width' => 12),
-            'deptOpdNo' => array('name' => 'Dept.OPD', 'width' => 15),
-            'FName' => array('name' => 'Name', 'width' => 46, 'align' => 'L', 'breakat' => 26),
-            'Age' => array('name' => 'Age', 'width' => 10),
-            'Gender' => array('name' => 'Sex', 'width' => 10),
-            'WardNo' => array('name' => 'W.No', 'width' => 10),
-            'BedNo' => array('name' => 'B.No', 'width' => 10),
-            'diagnosis' => array('name' => 'Diagnosis', 'width' => 40, 'align' => 'L', 'breakat' => 17),
-            'DoAdmission' => array('name' => 'DOA', 'width' => 20),
-            'DoDischarge' => array('name' => 'DOD', 'width' => 20),
-            'NofDays' => array('name' => 'Days', 'width' => 8),
-            'Doctor' => array('name' => 'Doctor', 'width' => 32, 'align' => 'L', 'breakat' => 16),
-            'department' => array('name' => 'Department', 'align' => 'L', 'width' => 32)
-        );
-
-        foreach ($this->input->post() as $search_data => $val) {
-            $input_array[$search_data] = $val;
-        }
-
-        $result = $this->ipd_model->get_ipd_patients($input_array, true);
-        $statistics = $this->ipd_model->get_ipd_patients_count($input_array);
-        //pma($statistics,1);
-        $patients = $result['data'];
-
-        $this->load->library('pdf');
-
-        $pdf = new Pdf('L', 'mm', 'A4', true, 'UTF-8', false);
-        $rep_meta_data = array(
-            'report_title' => 'IPD REPORT',
-        );
-        $pdf->setData($rep_meta_data);
-
-        // set document information
-        $pdf->setPrintHeader(TRUE);
-        // set header and footer fonts
-        $pdf->SetFont('helveticaB', '', 9);
-// ---------------------------------------------------------
-        // add a page
-        // set some text to print
-        // print a block of text using Write()
-        $pdf->SetFillColor(140, 142, 145);
-        $pdf->SetTextColor(255);
-        $pdf->SetDrawColor(140, 142, 145);
-        $pdf->SetLineWidth(0.3);
-        $pdf->SetFont('', 'B');
-        $pdf->SetMargins(5, 32, 10, true);
-        $pdf->AddPage('L');
-        foreach ($head as $h) {
-            $pdf->cell($h['width'], 6, $h['name'], 1, 0, 'C', 1);
-        }
-        $pdf->Ln();
-        $pdf->SetFillColor(224, 235, 255);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('helveticaB', '', 9);
-        // Data
-        $fill = 0;
-        foreach ($patients as $patient) {
-            foreach ($head as $h => $v) {
-                if ($pdf->gety() == 176) {
-                    $pdf->AddPage();
-                }
-                $c_width = 20; // cell width 
-                $c_height = 12; // cell height 
-                $x_axis = $pdf->getx(); // now get current pdf x axis value
-                $breakat = NULL;
-                if (isset($v['breakat'])) {
-                    $breakat = $v['breakat'];
-                }
-                $align = 'C';
-                if (isset($v['align'])) {
-                    $align = $v['align'];
-                }
-                $text = $patient[$h];
-                if ($h == 'Gender') {
-                    $text = get_short_gender($patient[$h]);
-                }
-                $pdf->vcell($v['width'], $c_height, $x_axis, $text, $breakat, $align);
-            }
-            $pdf->Ln();
-            $fill = !$fill;
-        }
-        $pdf->Ln();
-        $pdf->AddPage();
-        $pdf->SetX(80);
-        $pdf->Cell(110, 6, 'IPD Statistics', 1, 0, 'C', 1);
-        $pdf->Ln();
-        $pdf->SetX(80);
-        $pdf->cell(35, 6, 'Department', 1, 0, 'C', 1);
-        $pdf->cell(25, 6, 'Total', 1, 0, 'C', 1);
-        $pdf->cell(25, 6, 'Male', 1, 0, 'C', 1);
-        $pdf->cell(25, 6, 'Female', 1, 0, 'C', 1);
-        $pdf->Ln();
-        $total = $female = $male = 0;
-        foreach ($statistics as $stat) {
-            $pdf->SetX(80);
-            $pdf->cell(35, 6, $stat['department'], 1, 0, 'L', 0);
-            $pdf->cell(25, 6, $stat['Total'], 1, 0, 'C', 0);
-            $pdf->cell(25, 6, $stat['Male'], 1, 0, 'C', 0);
-            $pdf->cell(25, 6, $stat['Female'], 1, 0, 'C', 0);
-            $pdf->Ln();
-            $total = $total + $stat['Total'];
-            $female = $female + $stat['Female'];
-            $male = $male + $stat['Male'];
-        }
-        $pdf->SetX(80);
-        $pdf->cell(35, 6, 'Total', 1, 0, 'R', 1);
-        $pdf->cell(25, 6, $total, 1, 0, 'C', 1);
-        $pdf->cell(25, 6, $male, 1, 0, 'C', 1);
-        $pdf->cell(25, 6, $female, 1, 0, 'C', 1);
-        $pdf->Ln();
-        ob_end_clean();
-        return $pdf->Output('opd_report.pdf', 'I');
-    }
-
     public function bed_occupied_report() {
         $this->layout->navTitleFlag = false;
-        $this->layout->navTitle = "IPD";
+        $this->layout->navTitle = "IPD BED";
         $this->layout->navDescr = "";
         $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables', 'jq_validation', 'js'));
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
@@ -250,6 +159,42 @@ class Ipd extends SHV_Controller {
     }
 
     function export_bed_to_pdf() {
+        $this->load->helper('mpdf');
+        $this->layout->title = 'OPD Report';
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        ini_set("pcre.backtrack_limit", "5000000");
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->ipd_model->get_bed_occpd_patients($input_array, true);
+        $data['pat_count'] = $this->ipd_model->get_bed_occupied_statistics($input_array);
+
+
+        $data['patient'] = $result['data'];
+        $data['department'] = $input_array['department'];
+
+        $this->layout->data = $data;
+        $this->layout->headerFlag = false;
+        $html = $this->layout->render(array('view' => 'reports/ipd/export_bed_occ_report'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'IPD REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        //$content = $html . '<br/><br/>' . $stats_html;
+//        echo $html;
+//        exit;
+        generate_pdf($html, 'L', $title, 'vhms_ipd_bed_occ_report_' . $input_array['start_date'] . '_to_' . $input_array['end_date'] . '.pdf', TRUE, TRUE, 'I');
+        exit;
+        //pma($html, 1);
+    }
+
+    function export_bed_to_tcpdf() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();

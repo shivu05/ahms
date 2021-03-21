@@ -45,9 +45,10 @@
                 </form>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
+                <div id="patient_statistics" class="col-md-12"></div>
             </div>
-            <div id="patient_statistics" class="col-12"></div>
+
         </div>
     </div>
 </div>
@@ -95,21 +96,20 @@
                 }
             },
             {
-                title: "Department",
-                data: function (item) {
-                    return item.department;
-                }
-            },
-            {
-                title: "BedNo",
-                data: function (item) {
-                    return item.BedNo;
-                }
-            },
-            {
                 title: "Diagnosis",
                 data: function (item) {
                     return item.diagnosis;
+                }
+            },
+            {
+                title: "Ward",
+                data: function (item) {
+                    return item.WardNo;
+                }
+            }, {
+                title: "Bed",
+                data: function (item) {
+                    return item.BedNo;
                 }
             },
             {
@@ -135,12 +135,18 @@
                 data: function (item) {
                     return item.Doctor;
                 }
+            },
+            {
+                title: "Department",
+                data: function (item) {
+                    return item.department;
+                }
             }
         ];
-
+        var patient_table = '';
         function show_patients() {
             var statistics = '';
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
@@ -158,6 +164,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
+                'ordering': false,
                 'ajax': {
                     'url': base_url + 'reports/Ipd/get_patients_list',
                     'type': 'POST',
@@ -193,7 +200,7 @@
                     var male_total = 0;
                     var female_total = 0;
                     var table = "<hr/><h4>IPD STATISTICS:</h4><hr>";
-                    table += "<table width='50%' class='table table-bordered' style='margin-left: auto;margin-right: auto;'>";
+                    table += "<table width='50%' class='table table-bordered dataTable' style='margin-left: auto;margin-right: auto;'>";
                     table += "<thead><tr><th width='30%'><center>Department</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th>"
                             + "</tr></thead>";
                     table += "<tbody>";

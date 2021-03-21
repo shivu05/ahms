@@ -27,7 +27,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4 col-sm-12 align-self-end">
-                        <button class="btn btn-primary" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
+                        <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <div class="btn-group" role="group">
@@ -56,10 +56,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Patient information</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h5 class="modal-title" id="default_modal_label">IPD Patient information</h5>
             </div>
             <div class="modal-body" id="default_modal_body">
                 <form name="patient_form" id="patient_form" method="POST">
@@ -70,7 +70,7 @@
                     </div>
                     <div class="form-group">
                         <label for="last_name">Last name</label>
-                        <input class="form-control required" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
+                        <input class="form-control" id="last_name" name="last_name" type="text" aria-describedby="last_nameHelp" placeholder="Enter Last name">
                     </div>
                     <div class="form-group">
                         <label for="age">Age</label>
@@ -144,15 +144,20 @@
                 }
             },
             {
-                title: "BedNo",
-                data: function (item) {
-                    return item.BedNo;
-                }
-            },
-            {
                 title: "Diagnosis",
                 data: function (item) {
                     return item.diagnosis;
+                }
+            },
+            {
+                title: "Ward",
+                data: function (item) {
+                    return item.WardNo;
+                }
+            }, {
+                title: "Bed",
+                data: function (item) {
+                    return item.BedNo;
                 }
             },
             {
@@ -207,6 +212,7 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'reports/Ipd/get_bed_patients_list',
                 'type': 'POST',
