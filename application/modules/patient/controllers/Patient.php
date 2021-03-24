@@ -217,6 +217,7 @@ class Patient extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
+        $this->layout->title = "IPD";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
@@ -363,6 +364,87 @@ class Patient extends SHV_Controller {
         $data["patient_data"] = $this->patient_model->get_patient_info($opd);
         $this->layout->data = $data;
         $this->load->view('patient/patient/patient_view_ajax', $data);
+    }
+
+    function print_ipd_case_sheet($ipd = null) {
+        if ($ipd) {
+            $this->load->model('patient/treatment_model');
+            $data = array();
+            $data['ipd'] = $ipd;
+            $opd_data = $this->treatment_model->get_opd_by_ipd($ipd);
+            $opd = $opd_data['OpdNo'];
+            $patient_details = $this->treatment_model->get_ipd_patient_basic_details($opd, $ipd);
+            $data['treatment_details'] = $this->treatment_model->get_ipd_treatment_history($ipd);
+
+            $config = $this->db->get('config');
+            $config = $config->row_array();
+            $header = '<table width="100%" style="border:1px red solid"><tr>
+                    <td width="10%"><img src="' . base_url('assets/your_logo.png') . '" width="80" height="80" alt="logo"></td>
+                    <td width="90%"><h2 align="center">' . $config["college_name"] . '</h2></td>
+                  </tr></table>';
+            $pat_table = '';
+            $pat_table .= $header;
+            $pat_table .= '<table class="table"  width="100%"><tr><td align="center" width="100%" style="font-size:14pt">IN PATIENT CASE SHEET</td></tr></table><br/>';
+            $pat_table .= "<table class='' width='100%' style='font-size:10pt'>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td  width='50%'><b>OPD NO:</b> " . $opd . "</td>";
+            $pat_table .= "<td width='50%'><b>WARD NO:</b> " . $patient_details['WardNo'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>IPD NO:</b> " . $ipd . "</td>";
+            $pat_table .= "<td width='50%'><b>BED:</b> " . $patient_details['BedNo'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr><td width='100%' colspan=3></td></tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>NAME:</b>  " . $patient_details['FirstName'] . "</td>";
+            $pat_table .= "<td width='25%'><b>AGE:</b> " . $patient_details['Age'] . "</td>";
+            $pat_table .= "<td width='25%'><b>SEX:</b> " . $patient_details['gender'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>OCCUPATION:</b> " . $patient_details['occupation'] . "</td>";
+            $pat_table .= "<td width='50%'><b>ADDRESS:</b>  " . $patient_details['address'] . $patient_details['city'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr><td></td></tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>DOA:</b> " . $patient_details['DoAdmission'] . "</td>";
+            $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $patient_details['department']))) . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>DOD:</b> " . $patient_details['DoDischarge'] . "</td>";
+            $pat_table .= "<td width='50%'><b>REFERRED DR:</b> " . $patient_details['Doctor'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>DIAGNOSIS:</b> " . $patient_details['diagnosis'] . " </td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "</table><hr/>";
+            $pat_table .= "<h3 style='text-align:center'>CONSENT FORM</h3>";
+            $pat_table .= "<p style='text-align:justify;border:1px black solid;'>The under signed patient and/or responsible relatives here by consent/ or authorize to 
+                Bapuji Ayurvedic medicalcollege Hospital, physicians and medical persons to administer and perform medicaltreatment/ 
+                panchakarma procedures/ surgery/ Ksharasutra/ ksharakarma/ agnikarma/ raktamokshana/and if necessary anesthesia.The doctors explained me about the disease, 
+                condition of the disease,prognosis,line of treatment and procedures ofsurgery and panchakarma in regional language. 
+                The Physicians ,Hospital faculty and hospital are not responsible for any sort of complications.</p>";
+            $pat_table .= "<h6 style='text-align:right'>SIGNATURE</h6>";
+            $pat_table .= "<h3 style='text-align:center'>HISTORY</h3>";
+
+            $treat_table = "<table class='' width='100%' style='font-size:10pt'>";
+            $treat_table .= "<tr>";
+            $treat_table .= "<td width='50%' style='height: 100px; overflow:hidden;'><div>PRADHANA VEDANA:</div></td>";
+            $treat_table .= "</tr>";
+            $treat_table .= "<tr>";
+            $treat_table .= "<td width='50%'  style='height: 100px; overflow:hidden;'>ANUBANDHI VEDANA:</td>";
+            $treat_table .= "</tr>";
+            $treat_table .= "<tr>";
+            $treat_table .= "<td width='50%' style='height: 100px; overflow:hidden;'>VEDANA VRITTANTA:</td>";
+            $treat_table .= "</tr>";
+            $treat_table .= "<tr>";
+            $treat_table .= "<td width='50%' style='height: 100px; overflow:hidden;'>POORVA VYADHI VRITTANT:</td>";
+            $treat_table .= "</tr>";
+            $treat_table .= "</table>";
+            $html = $pat_table . $treat_table . '</div>';
+            //echo $html;
+            generate_pdf($html, 'P', '', 'ipd_case_sheets_' . $ipd . '_' . time(), false, false, 'I');
+            exit;
+        }
     }
 
 }

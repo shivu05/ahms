@@ -131,9 +131,7 @@
                 }
             });
         });
-        $('#patient_table tbody').on('click', 'tr', function () {
-            alert()
-        });
+        
         $('#search_form #export').on('click', '#export_cs', function (e) {
             e.preventDefault();
             $('<input>').attr({

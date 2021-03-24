@@ -105,6 +105,7 @@
 </div>
 
 <script type="text/javascript">
+
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
             patient_table.clear();
@@ -198,9 +199,40 @@
                 }
             },
             {
+                title: "DOD",
+                data: function (item) {
+                    return item.DoDischarge;
+                }
+            },
+            {
+                title: "Days",
+                data: function (item) {
+                    return item.NofDays;
+                }
+            },
+            {
                 title: "Discharge",
                 data: function (item) {
-                    return '<button class="btn btn-danger discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
+                    if (item.status == 'stillin') {
+                        return '<button class="btn btn-danger discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
+                    } else {
+                        return '<button class="btn btn-primary disabled" disabled="disabled" >Discharged</button>';
+                    }
+                }
+            },
+            {
+                title: "CS",
+                data: function (item) {
+                    /*if (item.status == 'stillin') {
+                     return "<i class='fa fa-download text-disabled' style='pointer-events: none;'></i>";
+                     } else {
+                     return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
+                     ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>';
+                     
+                     }*/
+                    return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
+                            ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>';
+
                 }
             }
         ];
@@ -235,9 +267,13 @@
             order: [[0, 'desc']],
             info: true,
             sScrollX: true,
-            "ordering": false
+            "ordering": false,
+
         });
 
+        patient_table.on('draw', function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         $('#patient_table tbody').on('click', '.ipd_no', function () {
             var ipd_id = $(this).find('span').data('ipd_no');
             window.location = base_url + 'patient/Treatment/add_ipd_treatment/' + ipd_id + '';
@@ -349,6 +385,12 @@
                     console.log(res);
                 }
             });
+        });
+
+        $('#patient_table tbody').on('click', '.download_case_sheet', function () {
+            var ipd = $(this).data('ipd');
+            window.open(base_url + 'patient/print_ipd_case_sheet/' + ipd, '_blank');
+            //window.location.href = base_url + 'patient/print_ipd_case_sheet/' + ipd;
         });
     });
 
