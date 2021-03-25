@@ -383,4 +383,8 @@ class treatment_model extends CI_Model {
         }
     }
 
+    public function insert_kriyakalpa($post_data) {
+        return $this->db->insert('kriyakalpa', $post_data);
+    }
+
 }

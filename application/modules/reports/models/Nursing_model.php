@@ -498,10 +498,11 @@ class Nursing_model extends CI_Model {
 
     function get_kriyakalp_data($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 'p.gender', 't.AddedBy',
-            'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'IpNo');
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 
+            'p.gender', 't.AddedBy','p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 
+            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo','k.id as kid');
 
-        $where_cond = " WHERE t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";
         $limit = '';
         if (!$export_flag) {
@@ -533,7 +534,8 @@ class Nursing_model extends CI_Model {
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " 
-            FROM treatmentdata t, (SELECT @a:= 0) AS a 
+            FROM kriyakalpa k
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a 
             JOIN patientdata p 
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
             $where_cond ORDER BY CameOn ASC";
@@ -541,7 +543,10 @@ class Nursing_model extends CI_Model {
         $return['data'] = $result->result_array();
 
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM kriyakalpa k 
+            JOIN treatmentdata t ON k.OpdNo=t.OpdNo AND k.treat_id=t.ID 
+            JOIN patientdata p ON t.OpdNo=p.OpdNo 
+            LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo')->num_rows();
         return $return;
     }
 

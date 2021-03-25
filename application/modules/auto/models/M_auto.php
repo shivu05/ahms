@@ -1023,6 +1023,14 @@ class M_auto extends CI_Model {
 
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
+
+
+                $insert_data = array(
+                    'OpdNo' => $last_id,
+                    'IpNo' => NULL,
+                    'treat_id' => $treatid
+                );
+                $this->db->insert('kriyakalpa', $insert_data);
             }
         } else {
             $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='SHALAKYA_TANTRA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
@@ -1051,6 +1059,13 @@ class M_auto extends CI_Model {
                 $last_id = $val->OpdNo;
                 $docname = $val->attndedby;
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SHALAKYA_TANTRA');
+
+                $insert_data = array(
+                    'OpdNo' => $last_id,
+                    'IpNo' => NULL,
+                    'treat_id' => $treatid
+                );
+                $this->db->insert('kriyakalpa', $insert_data);
             }//for
 
             $this->_index++;

@@ -18,7 +18,8 @@ class Test extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "X-Ray";
         $this->layout->navDescr = "";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_xray_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
@@ -685,6 +686,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count', true);
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }

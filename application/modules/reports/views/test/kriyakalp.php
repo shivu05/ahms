@@ -6,18 +6,23 @@
                 <?php echo $top_form; ?>
                 <div id="patient_details">
                     <form name="test_form" id="test_form" method="POST">
-                        <input type="hidden" name="tab" id="tab" value="<?= base64_encode('ecgregistery') ?>" />
+                        <input type="hidden" name="tab" id="tab" value="<?= base64_encode('kriyakalpa') ?>" />
                         <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                     </form>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
 </div>
-</div>
+<style type="text/css">
+    .sl_no{
+        width: 40px !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function () {
+        var is_admin = '<?= $is_admin ?>';
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
@@ -29,21 +34,21 @@
         var columns = [
             {
                 title: "Sl. No",
-                class: "ipd_no",
+                class: "sl_no",
                 data: function (item) {
                     return item.serial_number;
                 }
             },
             {
                 title: "OPD",
-                class: "opd_no",
+                class: "sl_no",
                 data: function (item) {
                     return item.OpdNo;
                 }
             },
             {
                 title: "IPD",
-                class: "ipd_no",
+                class: "sl_no",
                 data: function (item) {
                     return item.IpNo;
                 }
@@ -96,8 +101,16 @@
                     return item.attndedby;
                 }
             }
-
         ];
+        if (is_admin == '1') {
+            columns.push({
+                title: '<input type="checkbox" name="check_all" class="check_all" id="check_all" onclick="toggle(this)"/>',
+                data: function (item) {
+                    return "<center><input type='checkbox' name='check_del[]' class='check_box' id='checkbx" + item.kid + "' value='" + item.kid + "'/>"
+                            + "</center>";
+                }
+            });
+        }
         var patient_table;
         function show_patients() {
             patient_table = $('#patient_table').DataTable({
@@ -118,6 +131,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
+                'ordering': false,
                 'ajax': {
                     'url': base_url + 'reports/Test/get_kriyakalp_patients_list',
                     'type': 'POST',
@@ -136,30 +150,52 @@
         }
 
         $('#search_form').on('click', '#btn_delete', function () {
-
-            var $b = $('#test_form input[type=checkbox]');
-            num = $b.filter(':checked').length;
-            if (num == 0) {
-                alert('Please select atleast one records');
-            } else {
-                var form_data = $('#test_form').serializeArray();
-                $.ajax({
-                    url: base_url + 'reports/Test/delete_records',
-                    type: 'POST',
-                    data: form_data,
-                    dataType: 'json',
-                    success: function (res) {
-                        alert('Deleted successfully');
-                        $('#search_form search').trigger('click');
-                        patient_table.clear();
-                        patient_table.draw();
-                    },
-                    error: function (err) {
-                        console.log(err)
-                    }
-                })
-            }
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: 'Delete records',
+                message: 'Are you sure want to delete records?',
+                buttons: [{
+                        label: 'Yes',
+                        cssClass: 'btn-primary btn-sm',
+                        action: function (dialogItself) {
+                            var $b = $('#test_form input[type=checkbox]');
+                            num = $b.filter(':checked').length;
+                            if (num == 0) {
+                                alert('Please select atleast one records');
+                            } else {
+                                var form_data = $('#test_form').serializeArray();
+                                $.ajax({
+                                    url: base_url + 'reports/Test/delete_records',
+                                    type: 'POST',
+                                    data: form_data,
+                                    dataType: 'json',
+                                    success: function (res) {
+                                        alert('Deleted successfully');
+                                        $('#search_form search').trigger('click');
+                                        patient_table.clear();
+                                        patient_table.draw();
+                                    },
+                                    error: function (err) {
+                                        console.log(err)
+                                    }
+                                });
+                            }
+                            dialogItself.close();
+                        }
+                    }, {
+                        label: 'No',
+                        cssClass: 'btn-danger btn-sm',
+                        action: function (dialogItself) {
+                            dialogItself.close();
+                        }
+                    }]
+            });
         });
-
     });
+    var clicked = false;
+    function toggle(source) {
+        //console.log($(".skip_script:checked").length+'check');
+        $(".check_box").prop("checked", !clicked);
+        clicked = !clicked;
+    }
 </script>
