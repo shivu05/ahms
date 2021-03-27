@@ -92,3 +92,20 @@ UPDATE `deptper` SET `ref_room` = '7' WHERE (`ID` = '10');
 
 ALTER TABLE `treatmentdata` 
 ADD COLUMN `sl_id` INT NULL AFTER `sub_department`;
+
+CREATE TABLE `kriyakalpa` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `OpdNo` int(11) DEFAULT NULL,
+  `IpNo` int(11) DEFAULT NULL,
+  `treat_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1;
+
+
+INSERT INTO `kriyakalpa`
+(`OpdNo`,`IpNo`,`treat_id`)
+SELECT t.OpdNo,ip.IpNo,t.ID
+FROM treatmentdata t, (SELECT @a:= 0) AS a 
+JOIN patientdata p 
+LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo WHERE t.OpdNo=p.OpdNo 
+AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA');

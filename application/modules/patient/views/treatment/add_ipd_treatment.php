@@ -420,7 +420,7 @@ if (!empty($lab_categories)) {
                                                 <div class="control-group col-md-6">											
                                                     <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
                                                     <div class="controls">
-                                                        <select class="form-control birth_input" name="anesthesia_type" id="anesthesia_type">
+                                                        <select class="form-control surgery_inputs" name="anesthesia_type" id="anesthesia_type">
                                                             <option value="">Choose one</option>
                                                             <option value="LOCAL">LOCAL</option>
                                                             <option value="SPINAL">SPINAL</option>
