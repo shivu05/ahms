@@ -1,6 +1,6 @@
 <IfModule mod_headers.c>
 Header add Cache-Control:"no-store,no-cache, must-revalidate"
-Header set x-frame-options DENY
+Header always append X-Frame-Options SAMEORIGIN
 </IfModule>
 <IfModule mod_rewrite.c>
 RewriteEngine On

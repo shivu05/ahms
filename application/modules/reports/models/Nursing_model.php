@@ -66,7 +66,7 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
             'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
-            '(REPLACE(ucfirst(t.department),"_"," ")) as department','t.diagnosis');
+            '(REPLACE(ucfirst(t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -386,17 +386,9 @@ class Nursing_model extends CI_Model {
         /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
           AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
           //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) "; */
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  
-            AND (l.date >='" . $conditions['start_date'] . "' 
-            AND l.proc_end_date <='" . $conditions['end_date'] . "') ";
-
-        $limit = '';
-        if (!$export_flag) {
-            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
-            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
-            $limit = ' LIMIT ' . $start . ',' . ($length);
-            unset($conditions['start'], $conditions['length'], $conditions['order']);
-        }
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''  
+            AND l.date ='" . $conditions['start_date'] . "' 
+            AND l.proc_end_date >='" . $conditions['end_date'] . "'";
 
         unset($conditions['start_date'], $conditions['end_date']);
         foreach ($conditions as $col => $val) {
@@ -419,8 +411,8 @@ class Nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
-        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond group by l.treatid ORDER BY date ASC";
-        $result = $this->db->query($query . ' ' . $limit);
+        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond group by l.treatid ORDER BY serial_number ASC";
+        $result = $this->db->query($query);
         //echo $this->db->last_query();exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -498,9 +490,9 @@ class Nursing_model extends CI_Model {
 
     function get_kriyakalp_data($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age', 
-            'p.gender', 't.AddedBy','p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby', 
-            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo','k.id as kid');
+        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
+            'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
+            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid');
 
         $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";

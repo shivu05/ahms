@@ -30,7 +30,7 @@ class Opd extends SHV_Controller {
     }
 
     function get_patients_list() {
-        //$this->update_monthly_no();
+        $this->update_monthly_no();
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -57,7 +57,7 @@ class Opd extends SHV_Controller {
     }
 
     function update_monthly_no() {
-        $count = $this->db->query("select count(*) as count from treatmentdata where monthly_sid=0")->row_array();
+        $count = $this->db->query("select count(*) as count from treatmentdata where monthly_sid=0 OR monthly_sid is NULL")->row_array();
         if (!empty($count) && $count['count'] > 0) {
             $this->db->trans_start();
             $this->db->query('UPDATE treatmentdata SET monthly_sid = 0');

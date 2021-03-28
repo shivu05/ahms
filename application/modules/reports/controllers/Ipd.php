@@ -422,6 +422,7 @@ class Ipd extends SHV_Controller {
         $data['departments'] = $this->get_department_list('array');
 
         $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
+        //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
         $months_arr = array(
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
         );

@@ -153,6 +153,11 @@ class Ipd_model extends CI_Model {
         }
     }
 
+    function get_bed_count_by_dept() {
+        $query = "select bed_count,dept_unique_code department from deptper";
+        return $this->db->query($query)->result_array();
+    }
+
     function get_monthwise_bed_occupancy($month, $dept) {
         $query = $this->db->query("SELECT coalesce(sum(nofDays),0) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
         return $query->result();

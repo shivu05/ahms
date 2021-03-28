@@ -422,26 +422,42 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma_report');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma_report', false, false);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function get_panchakarma_report() {
-        $input_array = array();
-        foreach ($this->input->post('search_form') as $search_data) {
-            $input_array[$search_data['name']] = $search_data['value'];
-        }
-        $input_array['start'] = $this->input->post('start');
-        $input_array['length'] = $this->input->post('length');
-        $input_array['order'] = $this->input->post('order');
+        $input_array = $this->input->post();
+
         $data = $this->nursing_model->get_panchakarma_data($input_array);
-        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
-        echo json_encode($response);
+        $this->layout->data = $data;
+        echo $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);
     }
 
     function export_panchakarma_report() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = $this->input->post();
+
+        $data = $this->nursing_model->get_panchakarma_data($input_array);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'PANCHAKARMA REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        exit;
+    }
+
+    function export_panchakarma_report_tcf() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();

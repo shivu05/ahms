@@ -37,6 +37,8 @@
                 </ul>
             </div>
         </div>
-        <button class="btn btn-danger btn-sm" type="button" id="btn_delete"><i class="fa fa-fw fa-lg fa-trash"></i>Delete</button>
+        <?php if ($delete_btn_active == true) { ?>
+            <button class="btn btn-danger btn-sm" type="button" id="btn_delete"><i class="fa fa-fw fa-lg fa-trash"></i>Delete</button>
+        <?php } ?>
     </div>
 </form>

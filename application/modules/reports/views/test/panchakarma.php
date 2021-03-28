@@ -7,8 +7,8 @@
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div>
+                <div id="patient_statistics" class="col-md-12"></div>
             </div>
-            <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
 </div>
@@ -18,7 +18,7 @@
     }
 
     .sl_no{
-        width: 40px !important;
+        width: 80px !important;
         text-align: center;
     }
     .opd{
@@ -34,13 +34,57 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#search_form').validate();
         $('#search_form').on('click', '#search', function () {
-            show_patients();
+            $('#patient_statistics').html('');
+            var form_data = $('#search_form').serializeArray();
+            if ($('#search_form').valid()) {
+                $.ajax({
+                    url: base_url + 'reports/test/get_panchakarma_report',
+                    type: 'POST',
+                    data: form_data,
+                    success: function (response) {
+                        $('#patient_statistics').html(response);
+                        $('#panchakarma_table').dataTable();
+                    },
+                    error: function (error) {}
+                });
+            }
         });
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
         });
+
+        var detailRows = [];
+        $('#patient_table tbody').on('click', 'tr td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = patient_table.row(tr);
+            var idx = $.inArray(tr.attr('id'), detailRows);
+
+            if (row.child.isShown()) {
+                tr.removeClass('details');
+                row.child.hide();
+
+                // Remove from the 'open' array
+                detailRows.splice(idx, 1);
+            } else {
+                tr.addClass('details');
+                row.child(add_child(row.data())).show();
+
+                // Add to the 'open' array
+                if (idx === -1) {
+                    detailRows.push(tr.attr('id'));
+                }
+            }
+        });
+
         var columns = [
+            {
+                "class": "details-control",
+                "orderable": false,
+                "data": null,
+                "defaultContent": ""
+            },
             {
                 title: "Sl. No",
                 class: "sl_no",
@@ -116,8 +160,19 @@
         }
         function show_patients() {
             patient_table = $('#patient_table').DataTable({
-                "rowCallback": function (row, data) {
+                "rowCallback": function (row, data, index) {
                     // row.add(add_child(data)).show();
+                    console.log($(this));
+                    var table = '<table><tr><th>Procs</th></tr><tr><td>' + data.procedure + '</td></tr></table>'
+                    $(this).append('<tr>' + table + '</tr>');
+                    console.log(index);
+                },
+                "createdRow": function (row, data, index) {
+                    $('tr', row).append('<tr><table><tr><th>Procs</th></tr><tr><td>' + data.procedure + '</td></tr></table></tr>');
+                    console.log('createdRow');
+                    console.log(row);
+                    console.log(data);
+                    console.log(index);
                 },
                 'columns': columns,
                 'columnDefs': [
@@ -151,25 +206,13 @@
                 info: true,
                 sScrollX: "100%",
                 sScrollXInner: "150%",
-                bScrollCollapse: true,
-                responsive: {
-                    details: {
-                        renderer: function (api, rowIdx, columns) {
-                            var data = $.map(columns, function (col, i) {
-                                return col.hidden ?
-                                        '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                                        '<td>' + col.procedure + ':' + '</td> ' +
-                                        '<td>' + col.date + '</td>' +
-                                        '</tr>' :
-                                        '';
-                            }).join('');
-
-                            return data ?
-                                    $('<table/>').append(data) :
-                                    false;
-                        }
-                    }
-                }
+                bScrollCollapse: true
+            });
+            // On each draw, loop over the `detailRows` array and show any child rows
+            patient_table.on('draw', function () {
+                $.each(detailRows, function (i, id) {
+                    $('#' + id + ' td.details-control').trigger('click');
+                });
             });
         }
     }

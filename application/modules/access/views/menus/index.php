@@ -22,7 +22,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-bars" aria-hidden="true"></i> <?= $this->lang->line('MENU_MANAGEMENT_HEAD') ?></h3>
+                <h3 class="box-title"><i class="fa fa-bars" aria-hidden="true"></i> Menu Management</h3>
                 <button class="btn btn-primary btn-sm pull-right" id="add_new_menu">Add menu</button>
             </div>
             <div class="box-body">

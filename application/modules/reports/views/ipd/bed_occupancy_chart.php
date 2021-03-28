@@ -37,17 +37,19 @@
                                 echo "<tr>";
                                 $sm = 0;
                                 foreach ($deptbed as $d) {
+                                    $dept_wise_per = 0;
                                     foreach ($d as $m => $mon) {
                                         $days = cal_days_in_month(CAL_GREGORIAN, date("m", strtotime($m . "-$cur_year")), $cur_year);
                                         echo "<tr><td>" . $m . "</td><td align='center'>" . $days . "</td>";
+
                                         foreach ($mon as $dd) {
                                             foreach ($dd as $d => $ar) {
                                                 if ($d == $dept->department) {
                                                     $sm = $sm + $ar[0]->sum;
+                                                    $bed_per = round(((($ar[0]->sum) * (100))) / ($dept->sum * $days), 2);
                                                     echo "<td align='center'>" . $ar[0]->sum . "</td>";
-                                                    echo "<td align='center'>";
-                                                    echo round(((($ar[0]->sum) * (100))) / ($dept->sum * $days), 2) . ' %';
-                                                    echo "</td>";
+                                                    echo "<td align='center'>" . $bed_per . ' %' . "</td>";
+                                                    $dept_wise_per = $dept_wise_per + $bed_per;
                                                 }
                                             }
                                         }

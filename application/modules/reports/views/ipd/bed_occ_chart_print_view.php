@@ -6,8 +6,8 @@ if (empty($dept_bed_count)) {
     foreach ($dept_bed_count as $dept) {
         ?>
         <div class="alert alert-info">
-            <div class="pull-left"><b><?php echo $dept->department . " :"; ?>
-                    <?php echo "ALLOTED BED:" . $dept->sum; ?></b>
+            <div class="pull-left"><b><?php echo $dept['department'] . " :"; ?>
+                    <?php echo "ALLOTED BED:" . $dept['sum']; ?></b>
             </div>
         </div>
         <table class="table" width="70%" style="margin:auto;">
