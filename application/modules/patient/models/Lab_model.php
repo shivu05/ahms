@@ -25,7 +25,7 @@ class Lab_model extends CI_Model {
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
-            't.department', 't.diagnosis'
+            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.diagnosis'
         );
 
         $cur_date = date('Y-m-d');
@@ -56,7 +56,7 @@ class Lab_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l JOIN patientdata p ON p.OpdNo=l.OpdNo 
-           JOIN treatmentdata t ON l.treatID=t.ID ,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID order by l.ID DESC ";
+           JOIN treatmentdata t ON l.treatID=t.ID ,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID order by l.ID ASC ";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -78,7 +78,7 @@ class Lab_model extends CI_Model {
     }
 
     function get_lab_data($where) {
-        return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name,lab_test_reference')
+        return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name,lab_test_reference,testDate')
                         ->from('labregistery lb')
                         ->join('lab_investigations li', 'lb.testName = li.lab_inv_id')
                         ->join('lab_tests lt', 'lb.lab_test_type=lt.lab_test_id')

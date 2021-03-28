@@ -27,6 +27,10 @@ class Lab extends SHV_Controller {
 
     function get_pending_lab_list() {
         $input_array = array();
+
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
         $data = $this->lab_model->get_pending_labs($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
@@ -36,13 +40,15 @@ class Lab extends SHV_Controller {
         $testvalue = $this->input->post('test_value');
         $testrange = $this->input->post('test_range');
         $test_date = $this->input->post('test_date');
+        $test_refdate = $this->input->post('test_refdate');
         $lab_id = $this->input->post('lab_id');
         $i = 0;
         foreach ($lab_id as $id) {
             $form_data = array(
                 'testvalue' => $testvalue[$i],
                 'testrange' => $testrange[$i],
-                'tested_date' => $test_date
+                'tested_date' => $test_date,
+                'testDate' => $test_refdate
             );
             $this->lab_model->update($form_data, $id);
             $i++;

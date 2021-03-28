@@ -131,7 +131,7 @@
                 'dataType': 'json',
                 'data': function (d) {
                     return $.extend({}, d, {
-                        //"search_form": $('#search_form').serializeArray()
+                        //      "search_form": $('#test_form').serializeArray()
                     });
                 },
                 drawCallback: function (response) {}
@@ -170,7 +170,7 @@
                         daysOfWeekHighlighted: "0"
                     });
                     $('.date_picker').attr('autocomplete', 'off');
-                    $('.date_picker').datepicker('setDate', today);
+                    $('#test_date').datepicker('setDate', today);
                 },
                 error: function (err) {
                     console.log(err);
@@ -181,36 +181,39 @@
             $('#test_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
 
         });
+        $('#test_form').validate();
         $('#test_modal_box .modal-footer').on('click', '#btn-ok', function () {
-            var form_data = $('#test_form').serializeArray();
-            $.ajax({
-                url: base_url + 'patient/lab/save_lab_data',
-                type: 'POST',
-                dataType: 'json',
-                data: form_data,
-                success: function (res) {
-                    $('#test_modal_box').modal('hide');
-                    if (res) {
-                        $.notify({
-                            title: "Lab:",
-                            message: "Details added successfully",
-                            icon: 'fa fa-check'
-                        }, {
-                            type: "success"
-                        });
-                    } else {
-                        $.notify({
-                            title: "Lab:",
-                            message: "Failed to update data. Try again",
-                            icon: 'fa fa-check'
-                        }, {
-                            type: "danger"
-                        });
+            if ($('#test_form').valid()) {
+                var form_data = $('#test_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'patient/lab/save_lab_data',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        $('#test_modal_box').modal('hide');
+                        if (res) {
+                            $.notify({
+                                title: "Lab:",
+                                message: "Details added successfully",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                        } else {
+                            $.notify({
+                                title: "Lab:",
+                                message: "Failed to update data. Try again",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                        patient_table.clear();
+                        patient_table.draw();
                     }
-                    patient_table.clear();
-                    patient_table.draw();
-                }
-            });
+                });
+            }
         });
     });
 </script>

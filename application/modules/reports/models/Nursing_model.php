@@ -412,7 +412,7 @@ class Nursing_model extends CI_Model {
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
         JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond 
-            group by l.treatid ORDER BY l.date,serial_number ASC";
+            group by l.treatid ORDER BY serial_number ASC";
         $result = $this->db->query($query);
         //echo $this->db->last_query();exit;
         $return['data'] = $result->result_array();
