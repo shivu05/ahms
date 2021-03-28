@@ -430,7 +430,7 @@ class Test extends SHV_Controller {
 
     function get_panchakarma_report() {
         $input_array = $this->input->post();
-
+        $data = array();
         $data = $this->nursing_model->get_panchakarma_data($input_array);
         $this->layout->data = $data;
         echo $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);

@@ -387,8 +387,8 @@ class Nursing_model extends CI_Model {
           AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
           //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) "; */
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''  
-            AND ((l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['start_date'] . "' )
-            OR l.proc_end_date <='" . $conditions['end_date'] . "' ) ";
+            AND ((l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "' )
+            AND (l.proc_end_date >='" . $conditions['end_date'] . "')) ";
 
         unset($conditions['start_date'], $conditions['end_date']);
         foreach ($conditions as $col => $val) {
@@ -411,7 +411,8 @@ class Nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
-        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond group by l.treatid ORDER BY serial_number ASC";
+        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond 
+            group by l.treatid ORDER BY l.date,serial_number ASC";
         $result = $this->db->query($query);
         //echo $this->db->last_query();exit;
         $return['data'] = $result->result_array();
