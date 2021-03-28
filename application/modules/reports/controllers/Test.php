@@ -700,7 +700,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery_count', true);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_kriyalapa', true);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -718,6 +718,23 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_kriyakalp_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function export_kriyalapa() {
+        $input_array = $this->input->post();
+        $data = $this->nursing_model->get_kriyakalp_data($input_array, true);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/kriyakalpa/export_kriyakalpa'), true);
+        //$print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'KRIYAKALPA REGISTER',
+            'department' => strtoupper('Shalakya tantra'),
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        exit;
     }
 
 }

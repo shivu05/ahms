@@ -1,5 +1,5 @@
 <div class="table-wrap">
-    <table class="dataTable table table-bordered" id="panchakarma_table" width='100%' style="">
+    <table class="dataTable table table-bordered" id="panchakarma_table" width='100%'>
         <thead>
             <tr>
                 <th class="sl_no" style="width: 60px;text-align: left;">Sl.No</th>
@@ -29,7 +29,7 @@
                     $tr .= '<td>' . $row['dept'] . '</td>';
                     $tr .= '<td>' . $row['docname'] . '</td>';
                     $tr .= '</tr>';
-                    $tr .= '<tr><td colspan="9" style="text-align:center; padding: 10px;">';
+                    $tr .= '<tr><td colspan="9" style="page-break-inside:avoid;text-align:center; padding: 10px;">';
                     $treatment = explode(',', $row['treatment']);
                     $procedures = explode(',', $row['procedure']);
                     $start_date = explode(',', $row['date']);

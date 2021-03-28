@@ -530,7 +530,7 @@ class Nursing_model extends CI_Model {
             JOIN treatmentdata t, (SELECT @a:= 0) AS a 
             JOIN patientdata p 
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
-            $where_cond ORDER BY CameOn ASC";
+            $where_cond ORDER BY serial_number,CameOn ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 

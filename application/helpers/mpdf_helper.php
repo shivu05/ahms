@@ -71,9 +71,10 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->useSubstitutions = false;
     $mpdf->simpleTables = true;
     //$mpdf->SetWatermarkImage('./assets/your_logo.png');
+    //$mpdf->SetWatermarkImage($src, $alpha, $size, $pos)
 //    $mpdf->SetWatermarkImage(
-//            'http://www.yourdomain.com/images/logo.jpg',
-//            1,
+//            './assets/your_logo.png',
+//            -1,
 //            '',
 //            array(160, 10)
 //    );
