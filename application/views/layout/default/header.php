@@ -1,9 +1,18 @@
 <script type="text/javascript">
     var base_url = '<?= base_url() ?>';
     /*jQuery.ui.autocomplete.prototype._resizeMenu = function () {
-        var ul = this.menu.element;
-        ul.outerWidth(this.element.outerWidth());
-    }*/
+     var ul = this.menu.element;
+     ul.outerWidth(this.element.outerWidth());
+     }*/
+</script>
+<style id="antiClickjack">body{display:none !important;}</style>
+<script type="text/javascript">
+    if (self === top) {
+        var antiClickjack = document.getElementById("antiClickjack");
+        antiClickjack.parentNode.removeChild(antiClickjack);
+    } else {
+        top.location = self.location;
+    }
 </script>
 <header class="main-header">
     <!-- Header Navbar: style can be found in header.less -->

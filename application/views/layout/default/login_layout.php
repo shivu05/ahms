@@ -9,6 +9,15 @@
         echo $this->scripts_include->includeCss();
         echo $this->scripts_include->preJs();
         ?>
+        <style id="antiClickjack">body{display:none !important;}</style>
+        <script type="text/javascript">
+            if (self === top) {
+                var antiClickjack = document.getElementById("antiClickjack");
+                antiClickjack.parentNode.removeChild(antiClickjack);
+            } else {
+                top.location = self.location;
+            }
+        </script>
     </head>
     <body class="hold-transition login-page" style="background-image: url('<?php echo base_url('/assets/ayush_bg.png') ?>'); background-repeat: no-repeat, repeat;">
         <div class="login-box">
