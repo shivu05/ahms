@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-medkit"></i> Pharmacy OPD report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-medkit"></i> Pharmacy IPD report:</h3></div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
@@ -22,7 +22,7 @@
             $('#loader_div').show();
             $.ajax({
                 type: "POST",
-                url: base_url + 'reports/sales/get_pharmacy_report',
+                url: base_url + 'reports/sales/get_pharmacy_ipd_report',
                 data: form_data,
                 dataType: 'html',
                 success: function (response) {

@@ -25,7 +25,7 @@ if (empty($patient)) {
             foreach ($patient as $row) {
                 $count++;
                 ?> 
-                <tr style="background-color: lightgray">
+                <tr class="warning">
                     <td style="text-align: center;"><?php echo $count; ?></td>
                     <td style="text-align: center;"><?php echo $row->OpdNo; ?></td>
                     <td style="text-align: center;"><?php echo $row->deptOpdNo; ?></td>
@@ -46,7 +46,7 @@ if (empty($patient)) {
                 <tr>
                     <td colspan='10' cellspacing="0" style="boder:none;border-collapse:collapse;">
                         <table class="table table-bordered" cellspacing="0" width="70%" style="margin:auto;">
-                            <tr>
+                            <tr class="info" style="color:black">
                                 <th style="width: 60%" width="60%">Product</th>
                                 <th width="20%">QTY</th>
                                 <?php if (!$is_print): ?>

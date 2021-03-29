@@ -6,6 +6,7 @@ require_once './vendor/autoload.php';
 
 function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
     $CI = & get_instance();
+    ini_set("pcre.backtrack_limit", "5000000");
     $config = $CI->db->get('config');
     $config = $config->row_array();
     $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
