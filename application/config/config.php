@@ -1,7 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', TRUE);
 /*
   |--------------------------------------------------------------------------
   | Base Site URL

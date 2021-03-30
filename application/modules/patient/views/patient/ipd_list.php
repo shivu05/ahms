@@ -104,6 +104,54 @@
     </div>
 </div>
 
+<div class="modal fade" id="patient_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="default_modal_label">IPD Patient information</h5>
+            </div>
+            <div class="modal-body" id="default_modal_body">
+                <form name="patient_form" id="patient_form" method="POST">
+                    <div class="form-group">
+                        <label for="DoAdmission">Date of Admission:</label>
+                        <input class="form-control required date_picker" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                    </div>
+                    <!--<div class="form-group">
+                        <label for="DoDischarge">Date of Discharge</label>
+                        <input class="form-control required date_picker" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
+                    </div>
+                    <div class="form-group">
+                        <label for="NofDays">Days</label>
+                        <input class="form-control required numbers-only" id="NofDays" name="NofDays" type="text">
+                    </div>-->
+                    <div class="form-group">
+                        <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
+                            <input type="hidden" id="ipd" name="ipd" />
+                            <input type="hidden" id="opd" name="opd" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="pat_treatment">Treatment:</label>
+                        <span class="error">Note: Please separate each medicine with <b>,</b>(comma) </span>
+                        <div class="controls">
+                            <textarea name="pat_treatment" class="form-control" id="pat_treatment" rows="3" style="width: 100%" placeholder="Teatment should be seperated by comma"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-ok">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -214,14 +262,14 @@
                 title: "Discharge",
                 data: function (item) {
                     if (item.status == 'stillin') {
-                        return '<button class="btn btn-danger discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
+                        return '<button class="btn btn-danger btn-sm discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
                     } else {
-                        return '<button class="btn btn-primary disabled" disabled="disabled" >Discharged</button>';
+                        return '<button class="btn btn-primary btn-sm disabled" disabled="disabled" >Discharged</button>';
                     }
                 }
             },
             {
-                title: "CS",
+                title: "Action",
                 data: function (item) {
                     /*if (item.status == 'stillin') {
                      return "<i class='fa fa-download text-disabled' style='pointer-events: none;'></i>";
@@ -231,7 +279,8 @@
                      
                      }*/
                     return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
-                            ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>';
+                            ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>'
+                            + ' | <i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i>';
 
                 }
             }
@@ -266,8 +315,8 @@
             },
             order: [[0, 'desc']],
             info: true,
-            sScrollX: true,
-            "ordering": false,
+            scrollX: true,
+            ordering: false,
 
         });
 
@@ -391,6 +440,75 @@
             var ipd = $(this).data('ipd');
             window.open(base_url + 'patient/print_ipd_case_sheet/' + ipd, '_blank');
             //window.location.href = base_url + 'patient/print_ipd_case_sheet/' + ipd;
+        });
+
+        $('#patient_table tbody').on('click', '.edit_patient', function () {
+            var opd_id = $(this).data('opd');
+            var ipd_id = $(this).data('ipd');
+            $.ajax({
+                url: base_url + "common_methods/get_ipd_patient_details",
+                type: 'POST',
+                data: {opd: opd_id, ipd: ipd_id},
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.status) {
+                        $('#patient_form #opd').val(response.data.OpdNo);
+                        $('#patient_form #ipd').val(response.data.IpNo);
+                        $('#patient_form #DoAdmission').val(response.data.DoAdmission);
+                        $('#patient_form #pat_diagnosis').val(response.data.diagnosis);
+                        $('#patient_form #pat_treatment').val(response.data.Trtment);
+                    }
+                }
+            });
+            $('#patient_modal_box').modal('show');
+        });
+
+        $('#patient_form').validate();
+        $('#patient_modal_box').on('click', '#btn-ok', function () {
+
+            if ($('#patient_form').valid()) {
+                var form_data = $('#patient_form').serializeArray();
+
+                $.ajax({
+                    url: base_url + "common_methods/update_ipd_details",
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status) {
+                            $('#patient_modal_box').modal('hide');
+                            $.notify({
+                                title: "Patient information:",
+                                message: "Successfully updated patient info",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                        } else {
+                            $.notify({
+                                title: "Patient information:",
+                                message: "Failed to update data please try again",
+                                icon: 'fa fa-cross'
+                            }, {
+                                z_index: 2000,
+                                type: "danger"
+                            });
+                        }
+                        patient_table.clear();
+                        patient_table.draw();
+                    }
+                });
+            } else {
+                $.notify({
+                    title: "Patient information:",
+                    message: "Failed to update data please try again",
+                    icon: 'fa fa-cross'
+                }, {
+                    z_index: 2000,
+                    type: "danger"
+                });
+            }
         });
     });
 

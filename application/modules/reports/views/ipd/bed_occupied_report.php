@@ -45,12 +45,11 @@
                 </form>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-md-12"></div>
         </div>
     </div>
-</div>
 </div>
 <div class="modal fade" id="patient_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

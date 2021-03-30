@@ -24,10 +24,36 @@ class Common_methods extends SHV_Controller {
         }
     }
 
+    function get_ipd_patient_details() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $opd = $this->input->post('opd');
+            $ipd = $this->input->post('ipd');
+            $post_values = array(
+                'OpdNo' => $opd,
+                'IpNo' => $ipd
+            );
+            echo json_encode(array('data' => $this->common_model->get_patient_info_by_ipd($post_values), 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
     function update_patient_info() {
         $this->load->model('common_methods/common_model');
         $post_values = $this->input->post();
         $is_updated = $this->common_model->update_patient_data($post_values);
+        if ($is_updated) {
+            echo json_encode(array('status' => 'true'));
+        } else {
+            echo json_encode(array('status' => 'false'));
+        }
+    }
+
+    function update_ipd_details() {
+        $this->load->model('common_methods/common_model');
+        $post_values = $this->input->post();
+        $is_updated = $this->common_model->update_ipd_data($post_values);
         if ($is_updated) {
             echo json_encode(array('status' => 'true'));
         } else {

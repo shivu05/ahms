@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?= $this->layout->title ?> - AYUSH</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
         <?= $this->scripts_include->preJs() ?>
         <?= $this->scripts_include->includeCss() ?>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -15,7 +15,7 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <?php /* echo CI_VERSION; */ ?>
+        <?PHP header('X-Frame-Options: DENY'); ?>
         <style type="text/css">
             .pointer{
                 cursor: pointer;

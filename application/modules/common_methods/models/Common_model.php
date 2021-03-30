@@ -17,6 +17,11 @@ class Common_model extends CI_Model {
         return $this->db->get_where('patientdata', array('OpdNo' => $opd))->row_array();
     }
 
+    function get_patient_info_by_ipd($where) {
+        $this->db->join('ipdtreatment t', 't.ipdno=i.IpNo');
+        return $this->db->get_where('inpatientdetails i', $where)->row_array();
+    }
+
     function update_patient_data($form_data) {
         $update_data = array(
             'FirstName' => $form_data['first_name'],
@@ -53,6 +58,29 @@ class Common_model extends CI_Model {
             return $this->db->query($query)->result_array();
         } else {
             return NULL;
+        }
+    }
+
+    function update_ipd_data($update) {
+        $ipd_info = array(
+            'DoAdmission' => $update['DoAdmission'],
+            'diagnosis' => $update['pat_diagnosis']
+        );
+        $this->db->where('IpNo', $update['ipd']);
+        $this->db->where('OpdNo', $update['opd']);
+
+        $is_updated = $this->db->update('inpatientdetails', $ipd_info);
+
+        $it_info = array(
+            'Trtment' => $update['pat_treatment'],
+            'diagnosis' => $update['pat_diagnosis']
+        );
+
+        $is_itupdated = $this->db->update('ipdtreatment', $it_info, array('ipdno' => $update['ipd']));
+        if ($is_updated || $is_itupdated) {
+            return true;
+        } else {
+            return false;
         }
     }
 
