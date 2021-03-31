@@ -44,7 +44,7 @@ class Ipd_model extends CI_Model {
                         $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
                         break;
                     case 'department':
-                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        $where_cond .= ($val != 1) ? " AND department = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
