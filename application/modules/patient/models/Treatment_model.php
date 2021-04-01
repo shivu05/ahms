@@ -212,13 +212,13 @@ class treatment_model extends CI_Model {
     public function admit_patient($inpatientdata) {
         if (!empty($inpatientdata)) {
             $query = "INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId) 
-                SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',LastName) as name,Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.attndedby,'" . $inpatientdata['treatId'] . "' 
+                SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',LastName) as name,Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.AddedBy,'" . $inpatientdata['treatId'] . "' 
                     FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
             $this->db->query($query);
             $insert_id = $this->db->insert_id();
             if ($insert_id) {
                 $tquery = "INSERT INTO ipdtreatment (ipdno, AddedBy, Trtment, diagnosis, complaints, department, procedures, notes, attndedon, status) 
-                    SELECT $insert_id,T.attndedby,T.Trtment,T.diagnosis,T.complaints,T.department,T.procedures,T.notes,'" . $inpatientdata['DoAdmission'] . "','nottreated' 
+                    SELECT $insert_id,T.AddedBy,T.Trtment,T.diagnosis,T.complaints,T.department,T.procedures,T.notes,'" . $inpatientdata['DoAdmission'] . "','nottreated' 
                         FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
                 return $this->db->query($tquery);
             }
