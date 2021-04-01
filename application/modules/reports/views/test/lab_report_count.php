@@ -20,8 +20,10 @@ if (empty($patient)) {
         <tbody>	
             <?php
             if (!empty($result)) {
+                $lab_cat = 0;
                 foreach ($result as $key => $row) {
-                    $tr = '<tr style="background-color:#c9c8c5;color:#0000FF;"><td colspan="3">' . $key . '</td></tr>';
+                    $lab_cat = $lab_cat + array_sum(array_column($result[$key], 'ccount'));
+                    $tr = '<tr style="background-color:#c9c8c5;color:#0000FF;"><td colspan="2">' . $key . '</td><td>' . array_sum(array_column($result[$key], 'ccount')) . '</td></tr>';
                     if (!empty($row)) {
                         $i = 1;
                         foreach ($row as $r) {
@@ -35,6 +37,7 @@ if (empty($patient)) {
                     }
                     echo $tr;
                 }
+                echo '<tr style="background-color:#c9c8c5;color:#0000FF;"><td colspan="2">Grand Total: </td><td>' . $lab_cat . '</td></tr>';
             }
             ?>
         </tbody>

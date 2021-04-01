@@ -77,7 +77,7 @@ class Sales extends SHV_Controller {
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
-            'report_title' => 'IPD PHARMACY REGISTER',
+            'report_title' => 'IPD MEDICINE DISPENCE REGISTER',
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
@@ -97,7 +97,7 @@ class Sales extends SHV_Controller {
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
-            'report_title' => 'OPD PHARMACY REGISTER',
+            'report_title' => 'OPD MEDICINE DISPENCE REGISTER',
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])

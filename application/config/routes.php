@@ -130,5 +130,6 @@ $route['delete-patients'] = 'home/Settings/delete_patients';
 
 /* pdf links */
 $route['export-lab-report'] = 'reports/Test/export_lab_report';
+$route['nursing-report'] = 'reports/nursing';
 
 

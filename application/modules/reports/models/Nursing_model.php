@@ -7,6 +7,30 @@
  */
 class Nursing_model extends CI_Model {
 
+    function get_nursing_indent($start_date, $end_date, $department) {
+        $this->db->query("set session group_concat_max_len = 5000");
+        if ($department == "1") {
+            $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
+                p.Age,p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
+                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE(ucfirst(p.department),'_',' ')) department
+                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
+                    AND i.indentdate <='" . $end_date . "' group by i.treatid order by i.indentdate asc";
+        } else {
+            $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,p.Age,
+                p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
+                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE(ucfirst(p.department),'_',' ')) department
+                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
+                    AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid 
+                        order by i.indentdate asc";
+        }
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
     function get_xray_data($conditions, $export_flag = false) {
 
         $return = array();

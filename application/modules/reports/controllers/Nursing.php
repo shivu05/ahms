@@ -15,7 +15,7 @@ class Nursing extends SHV_Controller {
         $this->layout->title = "Nursing indent report";
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', '');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/nursing/get_nursing_report_print', false,false);
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -35,23 +35,21 @@ class Nursing extends SHV_Controller {
         $end_date = $this->input->post('end_date');
         $dept = $this->input->post('department');
         $data["patient"] = $this->nursing_model->get_nursing_indent($start_date, $end_date, $dept);
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', '-1'); //300 seconds = 5 minutes
         $print_dept = ($dept == 1) ? "CENTRAL" : $dept;
-        $table = '<table width="100%">';
-        $table .= '<tr>';
-        $table .= '<td width="33%"><b>DEPARTMENT</b>:' . strtoupper($print_dept) . '</td><td width="33%" text-align:"center"; align="center"><h2>NURSING IPD REGISTER</h2></td><td width="33%" style="text-align:center;"><b>FROM:</b>' . format_date($start_date) . '&nbsp; <b>TO: </b>' . format_date($end_date) . '</td>';
-        $table .= '</tr>';
-        $table .= '</table>';
-        $this->load->helper('pdf');
         $content = $this->load->view('reports/nursing/nursing_report_ajax', $data, true);
-        pdf_create($table, $content, 'ahms_nurisng_ipd_report', 'L');
-        return;
+        $title = array(
+            'report_title' => 'NURSING IPD REGISTER',
+            'department' => strtoupper($print_dept),
+            'start_date' => format_date($start_date),
+            'end_date' => format_date($end_date)
+        );
+        generate_pdf($content, 'L', $title, 'ipd_nursing_report.pdf', true, true, 'I');
+        exit;
     }
 
     function nursing_indent_report() {
         $data["title"] = "Nursing Indent Report";
-        $data['dept_list'] = $this->department_model->get_department_list();
+        $data['dept_list'] = $this->get_department_list('array');
         $this->load->view('reports/nursing/nursing_indent_report', $data);
     }
 
