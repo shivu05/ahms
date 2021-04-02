@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Diet register:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list-ul"></i> Diet register:</h3></div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <hr/>
@@ -18,8 +18,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
@@ -119,6 +119,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
+                'ordering':false,
                 'ajax': {
                     'url': base_url + 'reports/Test/get_diet_register_data',
                     'type': 'POST',

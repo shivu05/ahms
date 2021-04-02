@@ -115,3 +115,10 @@ INSERT INTO `months_list`
 VALUES
 ('January',1),('February',2),('March',3),('April',4),('May',5),('June',6),('July',7),('August',8),('September',9),
 ('October',10),('November',11),('December',12);
+-- Nursing indent report
+INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) 
+VALUES
+(48, 'NURSING_INDENT_REPORT', 'Nursing indent report', 16, 0, '14', '', 'reports/nursing', 'Active', '', '', 1, '2021-04-02 19:39:41');
+
+INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES
+(75, 1, 48, 'Active', 0, '2021-04-02 19:39:49', 2);

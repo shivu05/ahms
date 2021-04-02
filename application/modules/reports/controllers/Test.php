@@ -303,7 +303,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf',false,false);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -320,6 +320,23 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_diet_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function export_diet_to_pdf() {
+        $input_array = $this->input->post();
+        $return = $this->nursing_model->get_diet_data($input_array, true);
+        $data['patient'] = $return['data'];
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/ipd/diet_report_ajax'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+        $title = array(
+            'report_title' => 'DIET REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        generate_pdf($content, 'L', $title, 'diet_report.pdf', true, true, 'I');
+        exit;
     }
 
     function ksharasutra() {

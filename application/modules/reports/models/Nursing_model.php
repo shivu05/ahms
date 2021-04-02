@@ -270,7 +270,7 @@ class Nursing_model extends CI_Model {
     function get_diet_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', 'department');
+        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE(ucfirst(department),"_"," ")) department');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 

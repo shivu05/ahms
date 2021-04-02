@@ -6,7 +6,7 @@ require_once './vendor/autoload.php';
 
 function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
     $CI = & get_instance();
-    ini_set("pcre.backtrack_limit", "5000000");
+    ini_set("pcre.backtrack_limit", "10000000");
     $config = $CI->db->get('config');
     $config = $config->row_array();
     $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
@@ -60,7 +60,8 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->SetTitle('VHMS');
     $mpdf->SetCreator('Ayush Softwares');
     $mpdf->SetDisplayMode('fullpage');
-    $css = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
+    //$css = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
+    $css = file_get_contents(FCPATH . '/assets/css/print_table.css');
     if ($header_flag) {
         $mpdf->SetHTMLHeader($header);
     }
@@ -80,7 +81,7 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
 //            array(160, 10)
 //    );
 //    $mpdf->showWatermarkImage = true;
-    $mpdf->WriteHTML($css);
+    $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
     $chunks = explode("chunk", $html);
     if (!empty($chunks)) {
         foreach ($chunks as $key => $val) {
