@@ -3,7 +3,7 @@ if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
-    <table class="table table-bordered" width="50%" style="margin:auto;">
+    <table class="table table-bordered" width="80%" style="margin:auto;">
         <thead>
             <tr>
                 <th width="10%">Sl no.</th>

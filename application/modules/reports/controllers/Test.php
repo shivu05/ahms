@@ -414,6 +414,27 @@ class Test extends SHV_Controller {
         echo json_encode($response);
     }
 
+    function export_surgery() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = $this->input->post();
+
+        $data = $this->nursing_model->get_surgery_data($input_array, true);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/surgery/surgery_report_ajax'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'SURGERY REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        exit;
+    }
+
     function panchakarma() {
         $this->layout->title = "Panchakarma";
         $this->layout->navTitleFlag = false;
@@ -566,6 +587,23 @@ class Test extends SHV_Controller {
         $this->load->view('reports/test/surgery_count_ajax', $data);
     }
 
+    function export_surgery_count() {
+        $input_array = $this->input->post();
+        $data["patient"] = $this->nursing_model->get_surgery_count($input_array);
+        $content = $this->load->view('reports/test/surgery_count_ajax', $data, true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'SURGERY COUNT REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'surgery_count_report.pdf', true, true, 'I');
+        exit;
+    }
+
     function lab() {
         $this->layout->title = "Lab";
         $this->layout->navTitleFlag = false;
@@ -602,34 +640,8 @@ class Test extends SHV_Controller {
             $input_array[$search_data] = $val;
         }
 
-        $result = $this->nursing_model->get_lab_report($input_array, true);
-        //pma($result,1);
-        /* 'l.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.deptOpdNo', 't.diagnosis as labdisease',
-          ' GROUP_CONCAT(testrange) testrange','GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
-          'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName'
-         * 
-         */
-        $headers = array(
-            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '7'),
-            'name' => array('name' => 'Patient name', 'width' => '18'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Sex', 'width' => '5'),
-            'department' => array('name' => 'Department', 'width' => '15'),
-            'refDocName' => array('name' => 'Ref. doctor', 'width' => '19'),
-            'testDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '10'),
-            'tested_date' => array('name' => 'Lab date', 'align' => 'C', 'width' => '10'),
-            'extra_row' => array(
-                'lab_test_cat' => array('name' => 'Category', 'align' => 'C', 'width' => '15', 'colspan' => 2),
-                'lab_test_type' => array('name' => 'Type', 'align' => 'C', 'width' => '15', 'colspan' => 2),
-                'testName' => array('name' => 'Test', 'align' => 'C', 'width' => '15', 'colspan' => 2),
-                'testvalue' => array('name' => 'Value', 'align' => 'C', 'width' => '15', 'colspan' => 2),
-                'testrange' => array('name' => 'Range', 'align' => 'C', 'width' => '15', 'colspan' => 2),
-            )
-        );
-        $array = json_decode(json_encode($result), true);
-        $html = generate_table_pdf($headers, $array, true);
+        $data["patient"] = $this->nursing_model->get_lab_report($input_array, true);
+        $content = $this->load->view('reports/test/lab_report', $data, true);
 
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
@@ -640,7 +652,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        generate_pdf($content, 'L', $title, 'lab_report.pdf', true, true, 'I');
         exit;
     }
 
