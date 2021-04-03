@@ -67,6 +67,8 @@ class Sales extends SHV_Controller {
     }
 
     function export_sales() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
         $input_array = $this->input->post();
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
@@ -87,6 +89,8 @@ class Sales extends SHV_Controller {
     }
 
     function export_opd_sales() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
         $input_array = $this->input->post();
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
