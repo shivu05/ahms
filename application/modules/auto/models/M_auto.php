@@ -1011,7 +1011,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "sub_department" => $this->_treatment_data[$dept_name][$this->_index]['sub_dept']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
 

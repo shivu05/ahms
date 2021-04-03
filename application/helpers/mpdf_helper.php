@@ -56,6 +56,7 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
         'orientation' => $page_orientation,
         'margin_top' => $mt
     );
+    ob_clean();
     $mpdf = new \Mpdf\Mpdf($configs);
     $mpdf->SetTitle('VHMS');
     $mpdf->SetCreator('Ayush Softwares');
