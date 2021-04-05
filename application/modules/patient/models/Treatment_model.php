@@ -369,6 +369,11 @@ class treatment_model extends CI_Model {
         return $this->db->get()->row_array();
     }
 
+    private function _delete_pharmcay_data($treat_id) {
+        $this->db->where('treat_id', $treat_id);
+        return $this->db->delete('sales_entry');
+    }
+
     public function update_opd_treatment_data($post_values) {
         if ($post_values['treat_id']) {
             $update_array = array(
@@ -377,7 +382,12 @@ class treatment_model extends CI_Model {
             );
             $this->db->where('OpdNo', $post_values['opd']);
             $this->db->where('ID', $post_values['treat_id']);
-            return $this->db->update('treatmentdata', $update_array);
+            $is_updated = $this->db->update('treatmentdata', $update_array);
+            if ($is_updated) {
+                $this->_delete_pharmcay_data($post_values['treat_id']);
+                $this->add_to_pharmacy($post_values['treat_id'], 'opd');
+            }
+            return $is_updated;
         } else {
             return false;
         }

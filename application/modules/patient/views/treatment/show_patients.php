@@ -366,7 +366,7 @@
                             message: "Updated successfully",
                             icon: 'fa fa-check',
                         }, {
-                            type: "success",
+                            type: "success"
                         });
                     } else {
                         $.notify({
@@ -374,7 +374,7 @@
                             message: "Failed to update",
                             icon: 'fa fa-check',
                         }, {
-                            type: "danger",
+                            type: "danger"
                         });
                     }
                     $('#search_form #search').trigger('click');

@@ -20,7 +20,7 @@ class Dashboard_model extends CI_Model {
         }
         $query = "SELECT COALESCE(SUM(case when p.gender='Male' then 1 else 0 end),0) males,
             COALESCE(SUM(case when p.gender='Female' then 1 else 0 end),0) females,
-            count(*) total FROM patientdata p,treatmentdata t WHERE t.OpdNo = p.OpdNo $where;";
+            count(*) total FROM patientdata p,treatmentdata t WHERE t.OpdNo = p.OpdNo and p.gender is not null $where;";
         return $this->db->query($query)->result_array();
     }
 

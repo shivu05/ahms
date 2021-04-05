@@ -141,7 +141,7 @@ class Treatment extends SHV_Controller {
             );
 
             $this->treatment_model->store_treatment($treatpatientdata, $treat_id);
-            $this->add_pharmcy($treat_id);
+            $this->add_pharmcy($treat_id, 'ipd');
         }
 
         //if ($status) {
