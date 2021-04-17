@@ -455,8 +455,8 @@ class Treatment extends SHV_Controller {
                         $labdata[] = array(
                             'OpdNo' => $this->input->post('opd_no'),
                             'refDocName' => $ref_doc,
-                            'lab_test_cat' => $lab_cats[$i],
-                            'lab_test_type' => $lab_test[$i],
+                            //'lab_test_cat' => $lab_cats[$i],
+                            //'lab_test_type' => $lab_test[$i],
                             'testName' => $cat,
                             'testDate' => $this->input->post('testdate'),
                             'treatID' => $treat_id

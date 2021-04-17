@@ -459,14 +459,21 @@ if (!empty($lab_categories)) {
                                     <div class="tab-pane fade" id="lab">
                                         <div id="Lab" style="margin-top: 2%;">
                                             <h4><input type="checkbox" name="lab_check" id="lab_check" /> Laboratory Register</h4>
-                                            <div class="control-group col-6">
-                                                <label class="control-label" for="labdocname">Referred Doctor Name:</label>
-                                                <div class="controls">
-                                                    <input id="labdocname" value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
-                                                    <input type="hidden" name="tab_lab_row_count" id="tab_lab_row_count" value="1" />
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
+                                            <div class="row">
+                                                <div class="control-group col-md-6">
+                                                    <label class="control-label" for="labdocname">Referred Doctor Name:</label>
+                                                    <div class="controls">
+                                                        <input id="labdocname" required value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                                        <input type="hidden" name="tab_lab_row_count" id="tab_lab_row_count" value="1" />
+                                                    </div> <!-- /controls -->				
+                                                </div> <!-- /control-group -->
+                                                <div class="control-group col-md-6">											
+                                                    <label class="control-label" for="testname">Referred Date:</label>
+                                                    <div class="controls">
+                                                        <input id="labdate" type="text" required name="testdate" class="form-control date_picker lab_inputs required" placeholder="Enter Date" autocomplete="off">
+                                                    </div> <!-- /controls -->				
+                                                </div> <!-- /control-group -->
+                                            </div>
                                             <div class="col-12" id="lab_cats">
                                                 <table class="table table-borderless" id="lab_cat_table">
                                                     <thead>
@@ -488,7 +495,7 @@ if (!empty($lab_categories)) {
                                                                 <select name="lab_test[]" id="lab_test" class="form-control lab_test chosen-select" data-placeholder="Choose test"></select>
                                                             </td>
                                                             <td>
-                                                                <select name="lab_investigations[]" id="lab_investigations" class="lab_investigations form-control chosen-select" data-placeholder="Choose investigation"></select>
+                                                                <select name="lab_investigations[]" id="lab_investigations" multiple="multiple" class="lab_investigations form-control chosen-select" data-placeholder="Choose investigation"></select>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -503,13 +510,6 @@ if (!empty($lab_categories)) {
                                                     </tfoot>
                                                 </table>
                                             </div>
-                                            <div class="control-group col-6">											
-                                                <label class="control-label" for="testname">Referred Date:</label>
-                                                <div class="controls">
-                                                    <input id="labdate" type="text" name="testdate" class="form-control date_picker lab_inputs required" placeholder="Enter Date" autocomplete="off">
-                                                    <p class="help-block"></p>
-                                                </div> <!-- /controls -->				
-                                            </div> <!-- /control-group -->
                                         </div>
                                     </div>
                                     <div  class="tab-pane fade" id="panchakarma_treatment">
@@ -784,7 +784,7 @@ if (!empty($lab_categories)) {
                     '</select>' +
                     '</td>' +
                     '<td>' +
-                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" id="lab_investigations_' + (n + 1) + '">' +
+                    '<select class="form-control lab_investigations chosen-select" multiple name="lab_investigations[]" id="lab_investigations_' + (n + 1) + '">' +
                     '<option value="">Choose Investigations</option>' +
                     '</select>'
                     + '</td>' +
