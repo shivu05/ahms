@@ -31,7 +31,7 @@ class Lab_model extends CI_Model {
         $cur_date = date('Y-m-d');
         $search_data = $this->input->post('search');
         $search = (isset($search_data)) ? 'AND l.OpdNo like "%' . $search_data['value'] . '%"' : '';
-        $where_cond = " WHERE (tested_date is NULL) OR ( testrange is NULL AND testvalue IS NULL) OR (testDate='$cur_date') $search"; //xrayDate is NULL AND filmSize is NULL
+        $where_cond = " WHERE ((tested_date is NULL) OR ( testrange is NULL AND testvalue IS NULL) OR (testDate='$cur_date')) $search"; //xrayDate is NULL AND filmSize is NULL
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
@@ -56,7 +56,7 @@ class Lab_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l JOIN patientdata p ON p.OpdNo=l.OpdNo 
-           JOIN treatmentdata t ON l.treatID=t.ID ,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID order by l.ID ASC ";
+           JOIN treatmentdata t ON l.treatID=t.ID ,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -81,8 +81,8 @@ class Lab_model extends CI_Model {
         return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name,lab_test_reference,testDate')
                         ->from('labregistery lb')
                         ->join('lab_investigations li', 'lb.testName = li.lab_inv_id')
-                        ->join('lab_tests lt', 'lb.lab_test_type=lt.lab_test_id')
-                        ->join('lab_categories lc', 'lb.lab_test_cat=lc.lab_cat_id')
+                        ->join('lab_tests lt', 'li.lab_test_id=lt.lab_test_id')
+                        ->join('lab_categories lc', 'lt.lab_cat_id=lc.lab_cat_id')
                         ->where($where)
                         ->get()
                         ->result_array();

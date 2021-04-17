@@ -112,6 +112,9 @@ class M_auto extends CI_Model {
     private $_entered_records_arr;
     private $_total_records_to_be_entered;
     private $_treatment_data;
+    private $_department_data = array();
+    private $_index = 0;
+    private $_pancha_count = 5;
 
     function __construct() {
         parent::__construct();
@@ -349,8 +352,6 @@ class M_auto extends CI_Model {
           } */
     }
 
-    private $_department_data = array();
-
     function calculate_new_old_patient_count() {
         $type_arr = array('new', 'old');
         foreach ($this->_entered_records_arr as $dept => $vals) {
@@ -378,9 +379,6 @@ class M_auto extends CI_Model {
             shuffle($this->_department_data);
         }
     }
-
-    private $_index = 0;
-    private $_pancha_count = 5;
 
     function insertextradata($diff, $cdate, $target, $newpatient, $pancha_count) {
 
@@ -663,6 +661,50 @@ class M_auto extends CI_Model {
         return $index;
     }
 
+    private function add_old_patient_data($dept = NULL, $date = NULL) {
+        $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='$dept' AND NOT (CameOn = '" . $date . "') ORDER BY RAND() LIMIT 1 ";
+        $result = $this->db->query($query)->row_array();
+        if (!empty($result)) {
+            $insert_data = array(
+                "deptOpdNo" => $result['deptOpdNo'],
+                "Trtment" => $result['Trtment'],
+                "OpdNo" => $result['OpdNo'],
+                "diagnosis" => $result['diagnosis'],
+                "complaints" => $result['complaints'],
+                "department" => $dept,
+                "procedures" => $result['procedures'],
+                "InOrOutPat" => $result['InOrOutPat'],
+                "attndedby" => $result['attndedby'],
+                "CameOn" => $date,
+                "attndedon" => $date,
+                "AddedBy" => $result['AddedBy'],
+                "patType" => "Old Patient"
+            );
+            $this->db->insert('treatmentdata', $insert_data);
+            $treatid = $this->db->insert_id();
+
+            $this->add_to_pharmacy($treatid);
+
+            $last_id = $result['OpdNo'];
+            $labdisease = $result['diagnosis'];
+            $docname = $result['AddedBy'];
+            //insert_lexu
+            $this->insert_lexu($last_id, $treatid, $date, $labdisease, $docname, $dept);
+            if ($dept == 'SHALAKYA_TANTRA') {
+                $shalakya_insert_data = array(
+                    'OpdNo' => $result['OpdNo'],
+                    'IpNo' => NULL,
+                    'treat_id' => $treatid
+                );
+                $this->add_to_kriyaklpa($shalakya_insert_data);
+            }
+        }
+    }
+
+    function add_to_kriyaklpa($insert_data) {
+        return $this->db->insert('kriyakalpa', $insert_data);
+    }
+
     function enter_prasooti_patient_details($arr, $cdate) {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'PRASOOTI_&_STRIROGA';
@@ -722,35 +764,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='PRASOOTI_&_STRIROGA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => $dept_name,
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->AddedBy,
-                    "patType" => "Old Patient"
-                );
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $last_id = $val->OpdNo;
-                $labdisease = $val->diagnosis;
-                $docname = $val->AddedBy;
-                //insert_lexu
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
-            }
+            $this->add_old_patient_data('PRASOOTI_&_STRIROGA', $cdate);
             $this->_index++;
         }
     }
@@ -816,35 +830,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='BALAROGA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => $dept_name,
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->AddedBy,
-                    "patType" => "Old Patient"
-                );
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->AddedBy;
-
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
-            }
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }
@@ -898,7 +884,7 @@ class M_auto extends CI_Model {
                     "OpdNo" => $last_id,
                     "diagnosis" => $diagnosis,
                     "complaints" => $this->_treatment_data[$dept_name][$this->_index]['complaints'],
-                    "department" => 'KAYACHIKITSA',
+                    "department" => $dept_name,
                     "procedures" => $this->_treatment_data[$dept_name][$this->_index]['procedure'],
                     "InOrOutPat" => "FollowUp",
                     "attndedby" => $docname,
@@ -917,38 +903,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='KAYACHIKITSA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-
-            foreach ($query->result() as $val) {
-
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => 'KAYACHIKITSA',
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->attndedby,
-                    "patType" => "Old Patient"
-                );
-
-                $this->db->insert('treatmentdata', $treatment_arr2);
-
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->attndedby;
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'KAYACHIKITSA');
-            }
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }
@@ -1034,41 +989,7 @@ class M_auto extends CI_Model {
                 $this->db->insert('kriyakalpa', $insert_data);
             }
         } else {
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='SHALAKYA_TANTRA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => 'SHALAKYA_TANTRA',
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->attndedby,
-                    "patType" => "Old Patient");
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->attndedby;
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, 'SHALAKYA_TANTRA');
-
-                $insert_data = array(
-                    'OpdNo' => $last_id,
-                    'IpNo' => NULL,
-                    'treat_id' => $treatid
-                );
-                $this->db->insert('kriyakalpa', $insert_data);
-            }//for
-
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }
@@ -1147,37 +1068,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='SHALYA_TANTRA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => $dept_name,
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->attndedby,
-                    "patType" => "Old Patient"
-                );
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->attndedby;
-
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
-            }
-
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }
@@ -1248,35 +1139,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='SWASTHAVRITTA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => $dept_name,
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->attndedby,
-                    "patType" => "Old Patient"
-                );
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->attndedby;
-
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
-            }
-
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }
@@ -1351,35 +1214,7 @@ class M_auto extends CI_Model {
                 $this->_index++;
             }
         } else {
-            $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='PANCHAKARMA' AND NOT (CameOn = '" . $cdate . "') ORDER BY RAND() LIMIT 1 ";
-            $query = $this->db->query($query);
-            foreach ($query->result() as $val) {
-                $treatment_arr2 = array(
-                    "deptOpdNo" => $val->deptOpdNo,
-                    "Trtment" => $val->Trtment,
-                    "OpdNo" => $val->OpdNo,
-                    "diagnosis" => $val->diagnosis,
-                    "complaints" => $val->complaints,
-                    "department" => $dept_name,
-                    "procedures" => $val->procedures,
-                    "InOrOutPat" => $val->InOrOutPat,
-                    "attndedby" => $val->attndedby,
-                    "CameOn" => $cdate,
-                    "attndedon" => $cdate,
-                    "AddedBy" => $val->attndedby,
-                    "patType" => "Old Patient"
-                );
-                $this->db->insert('treatmentdata', $treatment_arr2);
-                $treatid = $this->db->insert_id();
-
-                $this->add_to_pharmacy($treatid);
-
-                $labdisease = $val->diagnosis;
-                $last_id = $val->OpdNo;
-                $docname = $val->attndedby;
-                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
-            }
-
+            $this->add_old_patient_data($dept_name, $cdate);
             $this->_index++;
         }
     }

@@ -14,14 +14,14 @@ $dept_room_array = array(
     <thead>
         <tr>
             <th width="3%">Sl No.</th>
-            <th width="3%">Month No.</th>
-            <th width="3%">Year No.</th>
-            <th width="6%">Central OPD</th>
+            <th width="5%">Yr.No.</th>
+            <th width="5%">M.No.</th>
+            <th width="6%">C.OPD</th>
             <?php if ($department != 1) { ?>
-                <th width="6%">Dept. OPD</th>
+                <th width="6%">D.OPD</th>
             <?php } ?>	
-            <th width="5%">Type</th>
-            <th width="20%">Name of patient</th>
+            <th width="3%">Type</th>
+            <th width="20%">Name</th>
             <th width="3%">Age</th>
             <th width="5%">Gender</th>
             <th width="10%">Place</th>

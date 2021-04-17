@@ -214,7 +214,6 @@ class Treatment extends SHV_Controller {
             $lab_test = $this->input->post('lab_test');
             $lab_investigation = $this->input->post('lab_investigations');
             $labdata = array();
-
             if (sizeof($lab_investigation) > 0) {
                 $i = 0;
                 foreach ($lab_investigation as $cat) {
@@ -222,8 +221,8 @@ class Treatment extends SHV_Controller {
                         $labdata[] = array(
                             'OpdNo' => $this->input->post('opd_no'),
                             'refDocName' => $this->input->post('labdocname'),
-                            'lab_test_cat' => $lab_cats[$i],
-                            'lab_test_type' => $lab_test[$i],
+                           // 'lab_test_cat' => $lab_cats[$i],
+                            //'lab_test_type' => $lab_test[$i],
                             'testName' => $cat,
                             'testDate' => $this->input->post('testdate'),
                             'treatID' => $treat_id

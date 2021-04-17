@@ -633,7 +633,7 @@ if (!empty($lab_categories)) {
                                                                         <select name="lab_test[]" id="lab_test" class="form-control lab_test chosen-select" data-placeholder="Choose test"></select>
                                                                     </td>
                                                                     <td>
-                                                                        <select name="lab_investigations[]" id="lab_investigations" class="lab_investigations form-control chosen-select" data-placeholder="Choose investigation"></select>
+                                                                        <select name="lab_investigations[]" id="lab_investigations" class="lab_investigations form-control chosen-select multiple" multiple data-placeholder="Choose investigation"></select>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -981,7 +981,7 @@ if (!empty($lab_categories)) {
                     '</select>' +
                     '</td>' +
                     '<td>' +
-                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" id="lab_investigations_' + (n + 1) + '">' +
+                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" multiple id="lab_investigations_' + (n + 1) + '">' +
                     '<option value="">Choose Investigations</option>' +
                     '</select>'
                     + '</td>' +

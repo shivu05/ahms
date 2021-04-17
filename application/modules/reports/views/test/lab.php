@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Laboratory report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-columns"></i> Laboratory report:</h3></div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">

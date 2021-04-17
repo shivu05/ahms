@@ -3,18 +3,18 @@ if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
-    <table class="table table-bordered table-condensed" width="100%">
+    <table class="table table-bordered table-condensed dataTable" width="100%">
         <thead>
             <tr>
                 <th width="5%">Sl no.</th>
-                <th width="6%">Central OPD.</th>
-                <th width="6%">Dept. OPD.</th>
-                <th width="20%">Patient Name</th>
+                <th width="5%">C.OPD.</th>
+                <th width="5%">D.OPD</th>
+                <th width="15%">Name</th>
                 <th width="5%">Age</th>
-                <th width="8%">Gender</th>
+                <th width="5%">Gender</th>
                 <th width="10%">Doctor</th>
                 <th width="15%">Disease</th>
-                <th width="8%">Test Date</th>
+                <th width="8%">Date</th>
             </tr>
         </thead>
         <tbody>
@@ -22,16 +22,16 @@ if (empty($patient)) {
             $count = 0;
             foreach ($patient as $row) {
                 $count++;
-                echo "<tr>";
+                echo "<tr class='warning'>";
                 echo "<td style='text-align:center;'>" . $count . "</td>";
                 echo "<td style='text-align:center;'>" . $row->OpdNo . "</td>";
                 echo "<td style='text-align:center;'>" . $row->deptOpdNo . "</td>";
                 echo "<td>" . $row->name  . "</td>";
-                echo "<td style='text-align:center;'>" . $row->Age . "</td>";
-                echo "<td style='text-align:center;'>" . $row->gender . "</td>";
+                echo "<td style='text-align:left;'>" . $row->Age . "</td>";
+                echo "<td style='text-align:left;'>" . $row->gender . "</td>";
                 echo "<td>" . $row->refDocName . "</td>";
                 echo "<td>" . $row->labdisease . "</td>";
-                echo "<td style='text-align:center;'>" . $row->testDate . "</td>";
+                echo "<td style='text-align:left;'>" . $row->testDate . "</td>";
                 $testname = array_from_delimeted_string($row->testName, ",", true);
                 $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", true);
                 $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", true);
@@ -46,7 +46,7 @@ if (empty($patient)) {
                             <tr>
                                 <td colspan='6' align='left'><b>Test Details:</b></caption></td>
                             </tr>
-                            <tr>
+                            <tr class="info" style="color:black">
                                 <th>Category</th>
                                 <th>Type</th>
                                 <th>Name</th>

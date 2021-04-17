@@ -106,11 +106,10 @@ class Opd extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        //$content = $html . '<br/><br/>' . $stats_html;
-        //echo $html;exit;
-        generate_pdf($html, 'L', $title);
+
+        $current_date = date('d_m_Y');
+        generate_pdf($html, 'L', $title, 'OPD_REPORT_' . $current_date, true, true, 'I');
         exit;
-        //pma($html, 1);
     }
 
     function export_to_tcpdf() {

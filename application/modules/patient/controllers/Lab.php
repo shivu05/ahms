@@ -17,7 +17,8 @@ class Lab extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Laboratory";
         $this->layout->navDescr = "";
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'export-lab-report');
         $data['dept_list'] = $this->get_department_list('array');
@@ -27,10 +28,11 @@ class Lab extends SHV_Controller {
 
     function get_pending_lab_list() {
         $input_array = array();
-
+        
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
+        
         $data = $this->lab_model->get_pending_labs($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);

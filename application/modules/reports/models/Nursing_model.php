@@ -407,12 +407,8 @@ class Nursing_model extends CI_Model {
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date');
 
-        /* $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID  AND ((l.proc_end_date >='" . $conditions['start_date'] . "' 
-          AND l.proc_end_date <='" . $conditions['end_date'] . "')) ";
-          //OR (l.proc_end_date <='" . $conditions['end_date'] . "')) "; */
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''  
-            AND ((l.date >='" . $conditions['start_date'] . "' AND l.date <='" . $conditions['end_date'] . "' )) ";
-        //AND (l.proc_end_date >='" . $conditions['end_date'] . "'))
+            AND (l.date ='" . $conditions['start_date'] . "' AND l.proc_end_date >='" . $conditions['end_date'] . "' ) ";
 
         unset($conditions['start_date'], $conditions['end_date']);
         foreach ($conditions as $col => $val) {
@@ -434,8 +430,8 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l
-        JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond 
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l 
+            JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID ,(SELECT @a:= 0) AS a $where_cond 
             group by l.treatid ORDER BY serial_number ASC";
         $result = $this->db->query($query);
         //echo $this->db->last_query();exit;
@@ -470,7 +466,7 @@ class Nursing_model extends CI_Model {
 
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
-        $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 'p.deptOpdNo',
+        $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
             't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
             ' GROUP_CONCAT(testrange) testrange', 'GROUP_CONCAT(testvalue) testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
@@ -482,7 +478,7 @@ class Nursing_model extends CI_Model {
                 JOIN lab_tests lt
                 JOIN lab_categories lc
                 WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName 
-                AND l.lab_test_type=lt.lab_test_id AND l.lab_test_cat = lc.lab_cat_id
+                AND li.lab_test_id=lt.lab_test_id AND lt.lab_cat_id = lc.lab_cat_id
                 AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' group by l.treatID order by l.tested_date asc";
         $result = $this->db->query($query);
         //echo $this->db->last_query();exit;

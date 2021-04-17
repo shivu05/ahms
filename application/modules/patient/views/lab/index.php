@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Patient's Lab list:</h3>
+                <h3 class="box-title"><i class="fa fa-users"></i> Patient's Lab list:</h3>
             </div>
             <div class="box-body">
                 <?php //echo $top_form; ?>
@@ -125,13 +125,14 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'patient/lab/get_pending_lab_list',
                 'type': 'POST',
                 'dataType': 'json',
                 'data': function (d) {
                     return $.extend({}, d, {
-                        //      "search_form": $('#test_form').serializeArray()
+                        "search_form": $('#test_form').serializeArray()
                     });
                 },
                 drawCallback: function (response) {}
