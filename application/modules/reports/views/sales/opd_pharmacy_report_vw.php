@@ -3,7 +3,7 @@ if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
-<table class="table table-bordered" id="opd_pharma_table" cellspacing="0"  width="100%">
+    <table class="table table-bordered" id="opd_pharma_table" cellspacing="0"  width="100%">
         <thead>
             <tr class="bg-aqua">
                 <th width="5%">Sl no.</th>
@@ -58,14 +58,15 @@ if (empty($patient)) {
                                 if (trim($product[$i]) != '') {
                                     ?>
                                     <tr>
-                                        <td width="80%"><?php echo $product[$i]; ?></td>
+                                        <td width="80%"><?php echo remove_chars_from_product($product[$i]); ?></td>
                                         <td width="10%" style="text-align: center;"><?php echo $qty[$i]; ?></td>
                                         <?php if (!$is_print): ?>
                                             <td width="10%"><i class="fa fa-edit product_edit" style="color:green;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i> 
                                                 | <i class="fa fa-trash text-error product_delete" style="color:red;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i></td>
                                             <?php endif; ?>
                                     </tr>
-                                <?php }
+                                <?php
+                                }
                             }
                             ?>
                         </table>

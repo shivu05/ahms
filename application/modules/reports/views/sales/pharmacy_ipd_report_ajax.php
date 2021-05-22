@@ -52,7 +52,7 @@ if (empty($patient)) {
                             <th width="80%">Product</th><!--<th width="20%">Batch No</th>--><th width="20%">QTY</th></tr>
                             <?php for ($i = 0; $i < sizeof($product); $i++) { ?>
                                 <tr>
-                                    <td width="80%"><?php echo $product[$i]; ?></td>
+                                    <td width="80%"><?php echo remove_chars_from_product($product[$i]); ?></td>
                                     <!--<td><?php echo $batch[$i]; ?></td>-->
                                     <td><?php echo $qty[$i]; ?></td>
                                 </tr>

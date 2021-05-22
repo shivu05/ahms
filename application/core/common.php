@@ -456,3 +456,14 @@ if (!function_exists('prepare_dept_name')) {
     }
 
 }
+
+if (!function_exists('remove_chars_from_product')) {
+
+    function remove_chars_from_product($str = '') {
+        $patterns = array(
+            '/\s*BD/', '/\s*TID/', '/\s*BID/', '/\s*QD/','/\s*TSP/','/[\d$]/'
+        );
+        return preg_replace($patterns, "", $str);
+    }
+
+}
