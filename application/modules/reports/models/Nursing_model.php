@@ -7,7 +7,7 @@
  */
 class Nursing_model extends CI_Model {
 
-    function get_nursing_indent($start_date, $end_date, $department) {
+    function get_nursing_ipd_indent($start_date, $end_date, $department) {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
@@ -22,6 +22,27 @@ class Nursing_model extends CI_Model {
                 from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
                     AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid 
                         order by i.indentdate asc";
+        }
+        $query = $this->db->query($query);
+        if ($query->num_rows() > 0) {
+            return $query->result(); //if data is true
+        } else {
+            return false; //if data is wrong
+        }
+    }
+
+    function get_nursing_indent($start_date, $end_date, $department) {
+        $this->db->query("set session group_concat_max_len = 5000");
+        if ($department == "1") {
+            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE(ucfirst(p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
+                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
+                WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'  
+                    group by i.treatid order by i.id";
+        } else {
+            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE(ucfirst(p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
+                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
+                WHERE i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "' 
+                    AND i.ipdno = p.IpNo AND p.department LIKE '%" . $department . "%' group by i.treatid order by i.id,i.indentdate asc ";
         }
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
@@ -402,7 +423,7 @@ class Nursing_model extends CI_Model {
 
     function get_panchakarma_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+        $columns = array('l.id', 'l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
             't.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date');

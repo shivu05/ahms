@@ -1,11 +1,11 @@
 <div class="row">
     <div class="box box-primary">
-        <div class="box-header with-border">
-            <i class="fa fa-list"></i>
-            <h3 class="box-title">Nursing IPD Register: </h3>
+        <div class="box-header with-border"><i class="fa fa-list"></i><h3 class="box-title">Nursing Indent Report: </h3>
         </div>
+        <!-- /widget-header -->
         <div class="box-body">
             <?php echo $top_form; ?>
+            <hr/>
             <div id="nursing_data"></div>
         </div>
     </div>
@@ -18,7 +18,7 @@
             $('#loader_div').show();
             $.ajax({
                 type: "POST",
-                url: base_url + 'reports/nursing/get_nursing_report',
+                url: base_url + 'reports/nursing/get_nursing_indent_report',
                 data: form_data,
                 dataType: 'html',
                 success: function (response) {

@@ -460,7 +460,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma_report', false, false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_panchakarma_report', false, true);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -468,7 +468,6 @@ class Test extends SHV_Controller {
 
     function get_panchakarma_report() {
         $input_array = $this->input->post();
-        $data = array();
         $data = $this->nursing_model->get_panchakarma_data($input_array);
         $this->layout->data = $data;
         echo $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);

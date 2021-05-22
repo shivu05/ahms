@@ -2,15 +2,18 @@
     <table class="dataTable table table-bordered" id="panchakarma_table" width='100%'>
         <thead>
             <tr>
-                <th class="sl_no" style="width: 60px;text-align: left;">Sl.No</th>
-                <th class="sl_no" style="width: 60px;text-align: left;">C.OPD</th>
-                <th class="sl_no" style="width: 60px;text-align: left;">D.OPD</th>
-                <th style="width: 120px;text-align: left;">Name</th>
-                <th style="width: 40px;text-align: left;">Age</th>
-                <th style="width: 80px;text-align: left;">Gender</th>
-                <th style="width: 200px;text-align: left;">Disease</th>
-                <th style="width: 160px;text-align: left;">Department</th>
-                <th style="width: 150px;text-align: left;">Ref. doctor</th>
+                <th class="sl_no" style="width: 40px !important;text-align: left;">Sl.No</th>
+                <th class="sl_no" style="width: 40px !important;text-align: left;">C.OPD</th>
+                <th class="sl_no" style="width: 40px !important;text-align: left;">D.OPD</th>
+                <th style="width: 120px !important;text-align: left;">Name</th>
+                <th style="width: 40px !important;text-align: left;">Age</th>
+                <th style="width: 80px !important;text-align: left;">Gender</th>
+                <th style="width: 180px !important;text-align: left;">Disease</th>
+                <th style="width: 160px !important;text-align: left;">Department</th>
+                <th style="width: 150px !important;text-align: left;">Ref. doctor</th>
+                <th style="width: 30px !important;text-align: center;">
+                    <input type="checkbox" name="check_all" class="check_all" id="check_all" onclick="toggle(this)"/>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -28,8 +31,9 @@
                     $tr .= '<td>' . $row['disease'] . '</td>';
                     $tr .= '<td>' . $row['dept'] . '</td>';
                     $tr .= '<td>' . $row['docname'] . '</td>';
+                    $tr .= '<td style="text-align:center;"><input type="checkbox" name="check_del[]" class="check_xray" id="checkbx' . $row['id'] . '" value="' . $row['id'] . '"/></td>';
                     $tr .= '</tr>';
-                    $tr .= '<tr><td colspan="9" style="page-break-inside:avoid;text-align:center; padding: 10px;">';
+                    $tr .= '<tr><td colspan="10" style="page-break-inside:avoid;text-align:center; padding: 10px;">';
                     $treatment = explode(',', $row['treatment']);
                     $procedures = explode(',', $row['procedure']);
                     $start_date = explode(',', $row['date']);

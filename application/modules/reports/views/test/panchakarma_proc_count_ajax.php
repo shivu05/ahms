@@ -8,7 +8,7 @@ if (empty($patient)) {
         $result[$element['treatment']][] = $element;
     }
     ?>
-    <table class="table table-bordered" width="100%" style="margin:auto;">
+    <table class="table table-bordered" width="100%" cellpadding="0">
         <thead>
             <tr style="background: lightgray;font-weight: bold;">
                 <th width='50'>Sl no.</th>
@@ -19,7 +19,7 @@ if (empty($patient)) {
         <tbody>
             <?php
             if (!empty($result)) {
-
+                $total = 0;
                 foreach ($result as $key => $row) {
                     $tr = '<tr style="background-color:#c9c8c5;color:#0000FF;"><td colspan="3">' . $key . '</td></tr>';
                     $i = 1;
@@ -30,9 +30,11 @@ if (empty($patient)) {
                         $tr .= '<td align="center">' . $r['procedure_count'] . '</td>';
                         $tr .= "</tr>";
                         $i++;
+                        $total += $r['procedure_count'];
                     }
                     echo $tr;
                 }
+                echo '<tr style="background-color:#c9c8c5;color:#0000FF;"><td colspan="2">Total:</td><td align="center">' . $total . '</td></tr>';
             }
             ?>
         </tbody>
