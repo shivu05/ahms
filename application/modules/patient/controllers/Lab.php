@@ -27,12 +27,14 @@ class Lab extends SHV_Controller {
     }
 
     function get_pending_lab_list() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
         $input_array = array();
-        
+
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
-        
+
         $data = $this->lab_model->get_pending_labs($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
