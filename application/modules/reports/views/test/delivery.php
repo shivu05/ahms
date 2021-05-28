@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">Birth report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Delivery report:</h3></div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <hr/>
@@ -12,6 +12,14 @@
         </div>
     </div>
 </div>
+<style type="text/css">
+    .num{
+        width: 40px !important;
+    }
+    .name{
+        width: 80px !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
@@ -25,27 +33,28 @@
         var columns = [
             {
                 title: "Sl. No",
-                class: "ipd_no",
+                class: "num",
                 data: function (item) {
                     return item.serial_number;
                 }
             },
             {
                 title: "OPD",
-                class: "opd_no",
+                class: "num",
                 data: function (item) {
                     return item.OpdNo;
                 }
             },
             {
                 title: "IPD",
-                class: "opd_no",
+                class: "num",
                 data: function (item) {
                     return item.IpNo;
                 }
             },
             {
                 title: "Name",
+                class: "name",
                 data: function (item) {
                     return item.FName;
                 }
@@ -69,15 +78,9 @@
                 }
             },
             {
-                title: "Birth date",
+                title: "Delivery date",
                 data: function (item) {
                     return item.babyBirthDate;
-                }
-            },
-            {
-                title: "Birth time",
-                data: function (item) {
-                    return item.birthtime;
                 }
             },
             {
@@ -87,27 +90,43 @@
                 }
             },
             {
+                title: "Baby Gender",
+                data: function (item) {
+                    return item.babygender;
+                }
+            },
+            {
                 title: "Delivery type",
                 data: function (item) {
                     return item.deliverytype;
                 }
             },
             {
+                title: "DOA",
+                data: function (item) {
+                    return item.DoAdmission;
+                }
+            },
+            {
                 title: "Doctor",
+                class: "name",
                 data: function (item) {
                     return item.treatby;
                 }
             }
 
         ];
-
+        var patient_table;
         function show_patients() {
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
                 ],
-                "bDestroy": true,
+                "drawCallback": function (settings) {
+
+                },
+                "destroy": true,
                 language: {
                     sZeroRecords: "<div class='no_records'>No patients found</div>",
                     sEmptyTable: "<div class='no_records'>No patients found</div>",
@@ -129,12 +148,11 @@
                         return $.extend({}, d, {
                             "search_form": $('#search_form').serializeArray()
                         });
-                    },
-                    drawCallback: function (response) {}
+                    }
                 },
                 order: [[0, 'desc']],
                 info: true,
-                sScrollX: true
+                scrollX: true
             });
         }
     });

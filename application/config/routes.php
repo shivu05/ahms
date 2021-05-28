@@ -88,6 +88,7 @@ $route['users-list'] = "master/users";
 $route['add-user'] = "master/users/add";
 $route['birth'] = "reports/Test/birth";
 $route['kriyakalp'] = "reports/Test/kriyakalp";
+$route['delivery'] = "reports/Test/delivery";
 
 $route['search-data'] = "auto/index";
 $route['analyse-data'] = "auto/move";

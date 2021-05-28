@@ -264,24 +264,9 @@ class Test extends SHV_Controller {
             $input_array[$search_data] = $val;
         }
 
-        $result = $this->nursing_model->get_birth_data($input_array, true);
-
-        $headers = array(
-            'serial_number' => array('name' => 'Sl. No', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
-            'IpNo' => array('name' => 'C.IPD', 'align' => 'C', 'width' => '7'),
-            'FName' => array('name' => 'Patient name', 'width' => '15'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'diagnosis' => array('name' => 'Diagnosis', 'width' => '15'),
-            'deliveryDetail' => array('name' => 'Delivery details', 'width' => '12'),
-            'babyBirthDate' => array('name' => 'Birth date', 'width' => '5'),
-            'birthtime' => array('name' => 'Birth time', 'width' => '5'),
-            'babyWeight' => array('name' => 'Weight', 'width' => '5'),
-            'deliverytype' => array('name' => 'Del. type', 'align' => 'C', 'width' => '6'),
-            'treatby' => array('name' => 'Doctor', 'align' => 'C', 'width' => '10'),
-        );
-        $html = generate_table_pdf($headers, $result['data']);
-
+        $data['patient'] = $this->nursing_model->get_birth_data($input_array, true);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/birth/birth_grid'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -291,7 +276,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        generate_pdf($content, 'L', $title, 'birth_report.pdf', true, true, 'I');
         exit;
     }
 
@@ -303,7 +288,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf',false,false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf', false, false);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -761,7 +746,47 @@ class Test extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'kriyalapa_report.pdf', true, true, 'I');
+        exit;
+    }
+
+    function delivery() {
+        $this->layout->title = "Delivery";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Delivery";
+        $this->layout->navDescr = "Delivery";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery',false,false);
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function export_delivery() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $data['patient'] = $this->nursing_model->get_birth_data($input_array, true);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/birth/delivery_grid'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'DELIVERY REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'birth_report.pdf', true, true, 'I');
         exit;
     }
 
