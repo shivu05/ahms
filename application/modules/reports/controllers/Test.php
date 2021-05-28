@@ -454,6 +454,7 @@ class Test extends SHV_Controller {
     function get_panchakarma_report() {
         $input_array = $this->input->post();
         $data = $this->nursing_model->get_panchakarma_data($input_array);
+        $data['is_print'] = false;
         $this->layout->data = $data;
         echo $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);
     }
@@ -464,6 +465,7 @@ class Test extends SHV_Controller {
         $input_array = $this->input->post();
 
         $data = $this->nursing_model->get_panchakarma_data($input_array);
+        $data['is_print'] = true;
         $this->layout->data = $data;
         $content = $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);

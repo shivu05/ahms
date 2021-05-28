@@ -73,6 +73,7 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->shrink_tables_to_fit = 1;
     $mpdf->useSubstitutions = false;
     $mpdf->simpleTables = true;
+    $mpdf->packTableData = true;
     //$mpdf->SetWatermarkImage('./assets/your_logo.png');
     //$mpdf->SetWatermarkImage($src, $alpha, $size, $pos)
 //    $mpdf->SetWatermarkImage(
