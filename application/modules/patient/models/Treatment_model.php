@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of treatment_model
  *
@@ -106,7 +100,7 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";        
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

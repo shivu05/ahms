@@ -15,6 +15,8 @@ class Treatment extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
     }
 
     function show_patients() {
@@ -221,7 +223,7 @@ class Treatment extends SHV_Controller {
                         $labdata[] = array(
                             'OpdNo' => $this->input->post('opd_no'),
                             'refDocName' => $this->input->post('labdocname'),
-                           // 'lab_test_cat' => $lab_cats[$i],
+                            // 'lab_test_cat' => $lab_cats[$i],
                             //'lab_test_type' => $lab_test[$i],
                             'testName' => $cat,
                             'testDate' => $this->input->post('testdate'),
