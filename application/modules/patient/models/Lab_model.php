@@ -32,8 +32,7 @@ class Lab_model extends CI_Model {
         $search_data = $this->input->post('search');
         $search_value = trim($search_data['value']);
         $search = (isset($search_data) && $search_value != '') ? 'AND (l.OpdNo like "%' . $search_value . '%" 
-            OR (REPLACE(ucfirst(t.department),"_"," ")) like "%' . $search_value . '%" 
-                OR t.diagnosis like "%' . $search_value . '%" OR FirstName like "%' . $search_value . '%") ' : '';
+            OR (REPLACE(ucfirst(t.department),"_"," ")) like "%' . $search_value . '%" ) ' : '';
         $where_cond = " WHERE ((tested_date is NULL) OR ( testrange is NULL AND testvalue IS NULL) OR (testDate='$cur_date')) $search"; //xrayDate is NULL AND filmSize is NULL
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
