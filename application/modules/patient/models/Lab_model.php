@@ -65,7 +65,9 @@ class Lab_model extends CI_Model {
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->count_all('labregistery');
+        $return['total_rows'] = $this->db->query('SELECT l.treatID FROM labregistery l 
+           JOIN treatmentdata t ON l.treatID=t.ID 
+           JOIN patientdata p ON p.OpdNo=t.OpdNo')->num_rows();
         return $return;
     }
 
