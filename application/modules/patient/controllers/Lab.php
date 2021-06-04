@@ -28,6 +28,7 @@ class Lab extends SHV_Controller {
 
     function get_pending_lab_list() {
         ini_set("memory_limit", "-1");
+        ini_set('max_execution_time', 0); // 0 = Unlimited
         set_time_limit(0);
         $input_array = array();
 

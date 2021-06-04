@@ -9,7 +9,7 @@ if (!empty($records)) {
         $table .= "<td>" . $row['lab_test_name'] . "</td>";
         $table .= "<td>" . $row['lab_inv_name'] . "</td>";
         //$table .= "<td>" . $row['diagnosis'] . "</td>";
-        $table .= '<td><input type="hidden" name="lab_id[]" id="lab_id" value="' . $row['lab_id'] . '"/><input class="form-control required" id="test_value" name="test_value[]" type="text" aria-describedby="test_dateHelp" placeholder="Enter Test value"></td>';
+        $table .= '<td><input type="hidden" name="lab_id[]" id="lab_id" value="' . $row['lab_id'] . '"/><input value="' . $row['testvalue'] . '" class="form-control required" id="test_value" name="test_value[]" type="text"  placeholder="Enter Test value"></td>';
         $table .= '<td><input class="form-control" value="' . $row['lab_test_reference'] . '" id="test_range" name="test_range[]" type="text" aria-describedby="test_dateHelp" placeholder="Enter Test range"></td>';
         $table .= "</tr>";
     }

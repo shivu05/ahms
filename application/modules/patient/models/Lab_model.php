@@ -22,6 +22,8 @@ class Lab_model extends CI_Model {
     }
 
     function get_pending_labs($conditions, $export_flag = FALSE) {
+        ini_set('max_execution_time', 0); // 0 = Unlimited
+        $this->db->query("DELETE FROM labregistery where testName=''");
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
@@ -33,7 +35,7 @@ class Lab_model extends CI_Model {
         $search_value = trim($search_data['value']);
         $search = (isset($search_data) && $search_value != '') ? 'AND (l.OpdNo like "%' . $search_value . '%" 
             OR (REPLACE(ucfirst(t.department),"_"," ")) like "%' . $search_value . '%" ) ' : '';
-        $where_cond = " WHERE ((tested_date is NULL) OR ( testrange is NULL AND testvalue IS NULL) OR (testDate='$cur_date')) $search"; //xrayDate is NULL AND filmSize is NULL
+        $where_cond = " WHERE (tested_date is NULL AND testvalue IS NULL) $search ";
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
@@ -80,7 +82,7 @@ class Lab_model extends CI_Model {
     }
 
     function get_lab_data($where) {
-        return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name,lab_test_reference,testDate')
+        return $this->db->select('ID as lab_id,OpdNo,refDocName,treatId,lab_cat_name,lab_inv_name,lab_test_name,lab_test_reference,testDate,testvalue')
                         ->from('labregistery lb')
                         ->join('lab_investigations li', 'lb.testName = li.lab_inv_id')
                         ->join('lab_tests lt', 'li.lab_test_id=lt.lab_test_id')
