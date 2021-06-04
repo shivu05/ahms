@@ -23,7 +23,7 @@ class Lab_model extends CI_Model {
 
     function get_pending_labs($conditions, $export_flag = FALSE) {
         ini_set('max_execution_time', 0); // 0 = Unlimited
-        $this->db->query("DELETE FROM labregistery where testName=''");
+//        $this->db->query("DELETE FROM labregistery where testName=''");
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
@@ -34,7 +34,7 @@ class Lab_model extends CI_Model {
         $search_data = $this->input->post('search');
         $search_value = trim($search_data['value']);
         $search = (isset($search_data) && $search_value != '') ? 'AND (l.OpdNo like "%' . $search_value . '%" 
-            OR (REPLACE(ucfirst(t.department),"_"," ")) like "%' . $search_value . '%" ) ' : '';
+            OR lower(t.department) like "%' . strtolower($search_value) . '%" ) ' : '';
         $where_cond = " WHERE (tested_date is NULL AND testvalue IS NULL) $search ";
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
