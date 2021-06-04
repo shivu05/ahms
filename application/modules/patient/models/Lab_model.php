@@ -59,8 +59,9 @@ class Lab_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l JOIN patientdata p ON p.OpdNo=l.OpdNo 
-           JOIN treatmentdata t ON l.treatID=t.ID ,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l 
+           JOIN treatmentdata t ON l.treatID=t.ID 
+           JOIN patientdata p ON p.OpdNo=t.OpdNo,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
