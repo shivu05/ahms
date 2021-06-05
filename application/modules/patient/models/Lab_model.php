@@ -23,7 +23,7 @@ class Lab_model extends CI_Model {
 
     function get_pending_labs($conditions, $export_flag = FALSE) {
         ini_set('max_execution_time', 0); // 0 = Unlimited
-//        $this->db->query("DELETE FROM labregistery where testName=''");
+        $this->db->query("DELETE FROM labregistery where testName=''");
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
