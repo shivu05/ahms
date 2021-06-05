@@ -246,8 +246,8 @@ class Nursing_model extends CI_Model {
     function get_birth_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype', 
-            'i.IpNo', 'i.deptOpdNo','i.FName', 'i.Age', 'i.diagnosis','babygender','babyWeight','fatherName','DoAdmission');
+        $columns = array('b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype',
+            'i.IpNo', 'i.deptOpdNo', 'i.FName', 'i.Age', 'i.diagnosis', 'babygender', 'babyWeight', 'fatherName', 'DoAdmission');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 
@@ -423,13 +423,13 @@ class Nursing_model extends CI_Model {
 
     function get_panchakarma_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('l.id', 'l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+        $columns = array('l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
             't.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
-            'GROUP_CONCAT(proc_end_date) as proc_end_date','i.IpNo' ,'"'.$conditions['end_date'].'" as selected_date');
+            'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
 
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''  
-            AND (l.proc_end_date >= '" . $conditions['end_date'] . "' AND l.proc_end_date <='" . $conditions['end_date'] . "' ) ";
+            AND (l.date <= '" . $conditions['start_date'] . "' AND l.proc_end_date >= '" . $conditions['end_date'] . "')  ";
 
         unset($conditions['start_date'], $conditions['end_date']);
         foreach ($conditions as $col => $val) {
@@ -451,12 +451,15 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM panchaprocedure l 
-            JOIN patientdata p ON l.opdno = p.OpdNo JOIN treatmentdata t ON l.treatid = t.ID 
-            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno,(SELECT @a:= 0) AS a $where_cond 
-            group by l.treatid ORDER BY serial_number ASC";
-        $result = $this->db->query($query);
-//        /echo $this->db->last_query();exit;
+        $query = "SELECT " . join(',', $columns) . " FROM panchaprocedure l 
+            JOIN treatmentdata t ON l.treatid = t.ID 
+            JOIN patientdata p ON t.OpdNo = p.OpdNo 
+            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno $where_cond 
+            group by l.treatid ORDER BY l.date ASC";
+        $main_query = "SELECT @a:=@a+1 serial_number,B.* FROM ( $query ) B,(SELECT @a:= 0) AS a order by serial_number ";
+        $result = $this->db->query($main_query);
+//        echo $this->db->last_query();
+//        exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();

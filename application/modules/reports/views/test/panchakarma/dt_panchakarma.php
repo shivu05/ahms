@@ -24,7 +24,7 @@
             <?php
             if (!empty($data)) {
                 $tr = '';
-                $n=10;
+                $n = 10;
                 foreach ($data as $row) {
                     $tr .= '<tr class="warning">';
                     $tr .= '<td>' . $row['serial_number'] . '</td>';
@@ -42,7 +42,7 @@
                         $tr .= '<td style="text-align:center;"><input type="checkbox" name="check_del[]" class="check_xray" id="checkbx' . $row['id'] . '" value="' . $row['id'] . '"/></td>';
                     endif;
                     $tr .= '</tr>';
-                    $tr .= '<tr><td colspan="'.$n.'" style="page-break-inside:avoid;text-align:center; padding: 10px;">';
+                    $tr .= '<tr><td colspan="' . $n . '" style="page-break-inside:avoid;text-align:center; padding: 10px;">';
                     $treatment = explode(',', $row['treatment']);
                     $procedures = explode(',', $row['procedure']);
                     $start_date = explode(',', $row['date']);
@@ -50,15 +50,16 @@
                     if (!empty($procedures)) {
                         $i = 0;
                         $tr .= '<table class="table table-bordered" width="75%" style="text-align:left; ">';
-                        $tr .= '<thead><tr class="info" style="color:black"><th>Treatment</th><th>procedure</th><!--<th>Start date</th>--><th>Date</th></tr></thead>';
+                        $tr .= '<thead><tr class="info" style="color:black"><th>Treatment</th>
+                            <th>procedure</th><th>Procedure date</th><th>Start date</th><th>End date</th></tr></thead>';
                         $tr .= '<tbody>';
                         foreach ($procedures as $r) {
                             $tr .= '<tr>';
                             $tr .= '<td>' . $treatment[$i] . '</td>';
                             $tr .= '<td>' . $r . '</td>';
-                            //$tr .= '<td>' . $start_date[$i] . '</td>';
-                            //$tr .= '<td>' . $end_date[$i] . '</td>';
                             $tr .= '<td>' . $row['selected_date'] . '</td>';
+                            $tr .= '<td>' . $start_date[$i] . '</td>';
+                            $tr .= '<td>' . $end_date[$i] . '</td>';
                             $tr .= '</tr>';
                             $i++;
                         }
