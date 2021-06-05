@@ -213,3 +213,17 @@ INSERT INTO `lab_investigations` (`lab_inv_id`, `lab_inv_name`, `lab_test_id`) V
 ALTER TABLE `labregistery` ADD `lab_test_cat` VARCHAR(250) NULL AFTER `refDocName`, ADD `lab_test_type` VARCHAR(250) NULL AFTER `lab_test_cat`;
 ALTER TABLE `lab_investigations` ADD COLUMN `lab_test_reference` TINYTEXT AFTER `lab_test_id`;
 -- --------------------------------------------------------
+
+ALTER TABLE labregistery MODIFY lab_test_cat INTEGER DEFAULT NULL;
+ALTER TABLE labregistery MODIFY lab_test_type INTEGER DEFAULT NULL;
+ALTER TABLE labregistery MODIFY testName INTEGER DEFAULT NULL;
+ALTER TABLE `labregistery` 
+CHANGE COLUMN `refDocName` `refDocName` VARCHAR(100) NULL DEFAULT NULL ,
+CHANGE COLUMN `testDate` `testDate` VARCHAR(10) NULL DEFAULT NULL ;
+
+ALTER TABLE `labregistery` 
+DROP INDEX `labregistery_index` ,
+ADD INDEX `labregistery_index` (`OpdNo` ASC, `treatID` ASC, `lab_test_cat` ASC, `lab_test_type` ASC, `testName` ASC) ;
+
+ALTER TABLE `labregistery` 
+ADD INDEX `labregistery_index` (`OpdNo` ASC, `treatID` ASC, `lab_test_cat` ASC, `lab_test_type` ASC, `testName` ASC) ;
