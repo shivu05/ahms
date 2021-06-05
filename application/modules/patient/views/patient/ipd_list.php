@@ -117,16 +117,16 @@
                 <form name="patient_form" id="patient_form" method="POST">
                     <div class="form-group">
                         <label for="DoAdmission">Date of Admission:</label>
-                        <input class="form-control required date_picker" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                        <input class="form-control required date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
                     </div>
-                    <!--<div class="form-group">
+                    <div class="form-group">
                         <label for="DoDischarge">Date of Discharge</label>
-                        <input class="form-control required date_picker" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
+                        <input class="form-control required date_picker ipd_dates" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
                     </div>
                     <div class="form-group">
                         <label for="NofDays">Days</label>
                         <input class="form-control required numbers-only" id="NofDays" name="NofDays" type="text">
-                    </div>-->
+                    </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
                         <div class="controls">
@@ -388,6 +388,24 @@
             });
         });
 
+        $('#patient_form').on('change', '.ipd_dates', function () {
+            var doa = $('#DoAdmission').val();
+            var dod = $('#DoDischarge').val();
+            if (doa && dod) {
+                $.ajax({
+                    url: base_url + 'patient/patient/date_difference/',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {doa: doa, dod: dod},
+                    success: function (res) {
+                        if (!isNaN(res)) {
+                            $('#NofDays').val(res);
+                        }
+                    }
+                });
+            }
+        });
+
         $('#default_modal_box').on('change', '#department', function () {
             var dept_id = $('#department').val();
             $.ajax({
@@ -451,11 +469,12 @@
                 data: {opd: opd_id, ipd: ipd_id},
                 dataType: 'json',
                 success: function (response) {
-                    console.log(response);
                     if (response.status) {
                         $('#patient_form #opd').val(response.data.OpdNo);
                         $('#patient_form #ipd').val(response.data.IpNo);
                         $('#patient_form #DoAdmission').val(response.data.DoAdmission);
+                        $('#patient_form #DoDischarge').val(response.data.DoDischarge);
+                        $('#patient_form #NofDays').val(response.data.NofDays);
                         $('#patient_form #pat_diagnosis').val(response.data.diagnosis);
                         $('#patient_form #pat_treatment').val(response.data.Trtment);
                     }

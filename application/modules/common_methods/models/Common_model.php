@@ -64,6 +64,8 @@ class Common_model extends CI_Model {
     function update_ipd_data($update) {
         $ipd_info = array(
             'DoAdmission' => $update['DoAdmission'],
+            'DoDischarge' => $update['DoDischarge'],
+            'NofDays' => $update['NofDays'],
             'diagnosis' => $update['pat_diagnosis']
         );
         $this->db->where('IpNo', $update['ipd']);
