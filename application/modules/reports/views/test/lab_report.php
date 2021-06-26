@@ -35,8 +35,8 @@ if (empty($patient)) {
                 $testname = array_from_delimeted_string($row->testName, ",", true);
                 $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", true);
                 $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", true);
-                $testrange = array_from_delimeted_string($row->testrange, ",", true);
-                $testvalue = array_from_delimeted_string($row->testvalue, ",", true);
+                $testrange = array_from_delimeted_string($row->testrange, ";", true);
+                $testvalue = array_from_delimeted_string($row->testvalue, ";", true);
                 echo "</tr>";
                 ?>
                 <tr>

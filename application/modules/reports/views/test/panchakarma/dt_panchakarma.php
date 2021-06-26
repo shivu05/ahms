@@ -51,15 +51,15 @@
                         $i = 0;
                         $tr .= '<table class="table table-bordered" width="75%" style="text-align:left; ">';
                         $tr .= '<thead><tr class="info" style="color:black"><th>Treatment</th>
-                            <th>procedure</th><th>Procedure date</th><th>Start date</th><th>End date</th></tr></thead>';
+                            <th>procedure</th><th>Procedure date</th><!--<th>Start date</th><th>End date</th>--></tr></thead>';
                         $tr .= '<tbody>';
                         foreach ($procedures as $r) {
                             $tr .= '<tr>';
                             $tr .= '<td>' . $treatment[$i] . '</td>';
                             $tr .= '<td>' . $r . '</td>';
                             $tr .= '<td>' . $row['selected_date'] . '</td>';
-                            $tr .= '<td>' . $start_date[$i] . '</td>';
-                            $tr .= '<td>' . $end_date[$i] . '</td>';
+                            //$tr .= '<td>' . $start_date[$i] . '</td>';
+                            //$tr .= '<td>' . $end_date[$i] . '</td>';
                             $tr .= '</tr>';
                             $i++;
                         }
