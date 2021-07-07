@@ -122,3 +122,16 @@ VALUES
 
 INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES
 (75, 1, 48, 'Active', 0, '2021-04-02 19:39:49', 2);
+
+
+CREATE TABLE `month_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+
+INSERT INTO `month_list`
+(`name`)
+VALUES
+('January'),('February'),('March'),('April'),('May'),('June'),('July'),('August'),('September'),('October'),('November'),('December');

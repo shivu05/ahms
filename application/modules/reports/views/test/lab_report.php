@@ -2,7 +2,7 @@
 if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
-    ?>
+?>
     <table class="table table-bordered table-condensed dataTable" width="100%">
         <thead>
             <tr>
@@ -32,13 +32,18 @@ if (empty($patient)) {
                 echo "<td>" . $row->refDocName . "</td>";
                 echo "<td>" . $row->labdisease . "</td>";
                 echo "<td style='text-align:left;'>" . $row->testDate . "</td>";
-                $testname = array_from_delimeted_string($row->testName, ",", true);
-                $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", true);
-                $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", true);
-                $testrange = array_from_delimeted_string($row->testrange, ";", true);
-                $testvalue = array_from_delimeted_string($row->testvalue, ";", true);
+                // $testname = array_from_delimeted_string($row->testName, ",", false);
+                // $lab_test_type = array_from_delimeted_string($row->lab_test_type, ",", false);
+                // $lab_cat_name = array_from_delimeted_string($row->lab_test_cat, ",", false);
+                // $testrange = array_from_delimeted_string($row->testrange, ";", false);
+                // $testvalue = array_from_delimeted_string($row->testvalue, ";", false);
+                $testname = explode(",", $row->testName);
+                $lab_test_type = explode(",", $row->lab_test_type);
+                $lab_cat_name = explode(",", $row->lab_test_cat);
+                $testrange = explode("|", $row->testrange);
+                $testvalue = explode(";", $row->testvalue);
                 echo "</tr>";
-                ?>
+            ?>
                 <tr>
                     <td></td>
                     <td colspan='7'>
@@ -53,20 +58,33 @@ if (empty($patient)) {
                                 <th>Value</th>
                                 <th>Range</th>
                             </tr>
-                            <tr> 
+                            <?php
+                            $i = 0;
+                            foreach ($testvalue as $val) {
+                                $tr = '<tr>';
+                                $tr .= '<td>' . $lab_cat_name[$i] . '</td>';
+                                $tr .= '<td>' . $lab_test_type[$i] . '</td>';
+                                $tr .= '<td>' . $testname[$i] . '</td>';
+                                $tr .= '<td>' . $val . '</td>';
+                                $tr .= '<td>' . $testrange[$i] . '</td>';
+                                $i++;
+                                echo $tr;
+                            }
+                            ?>
+                            <!-- <tr>
                                 <td><?= $lab_cat_name ?></td>
                                 <td><?= $lab_test_type ?></td>
                                 <td><?= $testname ?></td>
                                 <td><?= $testvalue ?></td>
                                 <td><?= $testrange ?></td>
-                            </tr>
-                        </table> 
-                    </td> 
+                            </tr> -->
+                        </table>
+                    </td>
                 </tr>
-                <?php
+            <?php
             }
             ?>
         </tbody>
-    </table>	
-    <?php
+    </table>
+<?php
 }
