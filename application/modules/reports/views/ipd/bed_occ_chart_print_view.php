@@ -1,49 +1,56 @@
 <?php
-$months_arr = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-if (empty($dept_bed_count)) {
-    echo "<h4>No bed data found</h4>";
-} else {
-    foreach ($dept_bed_count as $dept) {
-        ?>
-        <div class="alert alert-info">
-            <div class="pull-left"><b><?php echo $dept['department'] . " :"; ?>
-                    <?php echo "ALLOTED BED:" . $dept['sum']; ?></b>
-            </div>
-        </div>
-        <table class="table" width="70%" style="margin:auto;">
-            <thead>
-                <tr>
-                    <th>Month</th>
-                    <th>No Of Days</th>
-                    <th>Bed OCC Days</th>
-                    <th>% of bed occupancy</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                echo "<tr>";
-                foreach ($deptbed as $d) {
-                    foreach ($d as $m => $mon) {
-                        $days = cal_days_in_month(CAL_GREGORIAN, date("m", strtotime($m . "-2018")), 2018);
-                        echo "<tr><td>" . $m . "</td><td>" . $days . "</td>";
-                        foreach ($mon as $dd) {
-                            foreach ($dd as $d => $ar) {
-                                if ($d == $dept->department) {
-                                    echo "<td>" . $ar[0]->sum . "</td>";
-                                    echo "<td>";
-                                    echo round(((($ar[0]->sum) * (100))) / ($dept->sum * $days), 2);
-                                    echo "</td>";
-                                }
+$ts = 0;
+foreach ($dept_bed_count as $dept) {
+    $cur_year = date('Y');
+?>
+    <table class="table table-bordered table-hover" width='100%'>
+        <thead>
+            <tr class="bg-aqua-gradient" style="font-weight: bold;">
+                <th colspan="2"><?php echo 'Department: ' . str_replace("_", " ", ucfirst(strtolower($dept->department))) . ""; ?></th>
+                <th>&nbsp;</th>
+                <th><?php echo "Alloted beds : " . $dept->sum; ?></th>
+            </tr>
+            <tr align='center' style="background-color: lightgrey">
+                <th>Month</th>
+                <th>Days</th>
+                <th>Occupied Days</th>
+                <th> Percentage (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            echo "<tr>";
+            $sm = 0;
+            $dept_wise_per = 0;
+            foreach ($deptbed as $d) {
+                
+                $bed_avg = 0;
+                foreach ($d as $m => $mon) {
+                    $days = cal_days_in_month(CAL_GREGORIAN, date("m", strtotime($m . "-$cur_year")), $cur_year);
+                    echo "<tr><td>" . $m . "</td><td align='center'>" . $days . "</td>";
+
+                    foreach ($mon as $dd) {
+                        foreach ($dd as $d => $ar) {
+                            if ($d == $dept->department) {
+                                $sm = $sm + $ar[0]->sum;
+                                $bed_per = round(((($ar[0]->sum) * (100))) / ($dept->sum * $days), 2);
+                                echo "<td align='center'>" . $ar[0]->sum . "</td>";
+                                echo "<td align='center'>" . $bed_per . ' %' . "</td>";
+                                $dept_wise_per = $dept_wise_per + $bed_per;
                             }
                         }
                     }
-                    echo "</tr>";
                 }
-                ?>
-            </tbody>
-        </table>
-        <br />
-        <?php
-    }//end of foreach
-}
+                echo "</tr>";
+            }
+            $ts = $ts + $sm;
+            echo "<tr style='background-color: lightgrey'><td></td>
+            <td><b>Total: </b></td><td align='center'>" . $sm . "</td><td></td></tr>";
+            ?>
+        </tbody>
+    </table>
+    <br/>
+<?php
+} //end of foreach
 ?>
+<h4 class="pull-right">GRAND TOTAL (Bed occupied days): <?= $ts ?></h4>
