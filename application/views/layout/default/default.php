@@ -18,7 +18,6 @@
         <![endif]-->
     <?PHP
     header('X-Frame-Options: DENY');
-    header("Content-Security-Policy: default-src 'self'");
     ?>
     <style type="text/css">
         .pointer {
