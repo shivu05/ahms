@@ -4,6 +4,7 @@
     Header always append X-Frame-Options DENY
     Header set X-Content-Type-Options nosniff
     Header set Referrer-Policy "same-origin"
+    Header add Content-Security-Policy "default-src 'self';"
 </IfModule>
 <IfModule mod_rewrite.c>
 RewriteEngine On
