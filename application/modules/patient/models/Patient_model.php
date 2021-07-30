@@ -6,20 +6,28 @@
  * and open the template in the editor.
  */
 
-class Patient_model extends CI_Model {
+class Patient_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function save_patient($post_values, $id = null) {
+    public function save_patient($post_values, $id = null)
+    {
         if ($id) {
+            $ipd_data = array(
+                'FName' => $post_values['FirstName']
+            );
+            $this->db->update('inpatientdetails', $ipd_data, array('OpdNo' => $id));
             return $this->db->update('patientdata', $post_values, array('OpdNo' => $id));
         }
         return false;
     }
 
-    function get_patient_info($opd = NULL, $ipd = NULL) {
+    function get_patient_info($opd = NULL, $ipd = NULL)
+    {
         $query = "SELECT OpdNo, CONCAT(FirstName,' ',LastName) as name, Age, gender, city, dept, DATE_FORMAT((entrydate), '%d-%m-%Y' ) as entrydate FROM patientdata WHERE OpdNo = '" . $opd . "';";
         $result["opd_data"] = $this->db->query($query)->result_array();
         $query_ipd = "SELECT IpNo,OpdNo,WardNo, BedNo, diagnosis, DATE_FORMAT((DoAdmission), '%d-%m-%Y' ) as DoAdmission, DATE_FORMAT((DoDischarge), '%d-%m-%Y' ) as DoDischarge, DischargeNotes, NofDays, Doctor FROM 
@@ -27,5 +35,4 @@ class Patient_model extends CI_Model {
         $result['ipd_data'] = $this->db->query($query_ipd)->result_array();
         return $result;
     }
-
 }
