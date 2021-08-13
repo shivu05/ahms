@@ -3,6 +3,20 @@ if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
+    <div width="100%">
+        <table width="30%" class="table table-bordered pull-right" style="margin-left: 70% !important">
+            <tr>
+                <th>Morning</th>
+                <th>After noon</th>
+                <th>Night</th>
+            </tr>
+            <tr>
+                <td>Bread / Biscuit / Tea</td>
+                <td>Chapati rice</td>
+                <td>Chapati rice</td>
+            </tr>
+        </table>
+    </div>
     <table class="table table-bordered table-condensed" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -14,9 +28,9 @@ if (empty($patient)) {
                 <th width="25%">Diagnosis</th>
                 <th width="10%">DOA</th>
                 <th width="10%">DOD</th>
-                <th>Morning<br>Bread/Bis/Tea</th>
-                <th>Afternoon<br>Chapathi Rice</th>
-                <th>Night<br>Chapathi Rice</th>
+                <th>Morning</th>
+                <th>Afternoon</th>
+                <th>Night</th>
             </tr>
         </thead>
         <tbody>

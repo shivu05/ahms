@@ -51,8 +51,8 @@ $dept_room_array = array(
                 $i++;
                 echo "<tr>";
                 echo "<td><center>" . $i . "</center></td>";
-                echo "<td><center>" . $patients['msd'] . "</center></td>";
                 echo "<td><center>" . $patients['ID'] . "</center></td>";
+                echo "<td><center>" . $patients['msd'] . "</center></td>";
                 echo "<td><center>" . $patients['OpdNo'] . "</center></td>";
                 if ($department != 1) {
                     echo "<td><center>" . $patients['deptOpdNo'] . "</center></td>";
