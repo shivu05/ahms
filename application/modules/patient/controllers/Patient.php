@@ -180,6 +180,7 @@ class Patient extends SHV_Controller {
             'deptOpdNo' => $dept_opd,
             'PatType' => $pat_type,
             'department' => $this->input->post('department'),
+            'sub_department' => $this->input->post('sub_branch'),
             'AddedBy' => $this->input->post('doctor_name'),
             'CameOn' => $this->input->post('date'),
         );
