@@ -332,7 +332,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra', true, false);
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
@@ -354,38 +354,20 @@ class Test extends SHV_Controller {
     function export_ksharasutra() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
-        $input_array = array();
-        foreach ($this->input->post() as $search_data => $val) {
-            $input_array[$search_data] = $val;
-        }
-
-        $result = $this->nursing_model->get_ksharasutra_data($input_array, true);
-
-        $headers = array(
-            'serial_number' => array('name' => '#', 'width' => '5', 'align' => 'C'),
-            'OpdNo' => array('name' => 'C.OPD', 'width' => '6', 'align' => 'C'),
-            'name' => array('name' => 'Patient', 'width' => '13'),
-            'diagnosis' => array('name' => 'Diagnosis', 'width' => '10'),
-            'ksharaname' => array('name' => 'Name of Ksharasutra', 'width' => '12'),
-            'ksharsType' => array('name' => 'Type of Ksharasutra', 'width' => '10'),
-            'surgeon' => array('name' => 'Surgeon', 'width' => '12'),
-            'asssurgeon' => array('name' => 'Asst.Surgeon', 'width' => '12'),
-            'anaesthetic' => array('name' => 'Anesthetist', 'width' => '12'),
-            'ksharsDate' => array('name' => 'Date', 'width' => '10')
-        );
-
-
-        $html = generate_table_pdf($headers, $result['data']);
+        $input_array = $this->input->post();
+        $data = $this->nursing_model->get_ksharasutra_data($input_array, true);
+        $data['patient'] = $data['data'];
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/ksharasutra/kshara_report_ajax'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
-            'report_title' => 'KSHARASUTRA REPORT',
-            'department' => $print_dept,
+            'report_title' => 'KSHARASUTRA REGISTER',
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        generate_pdf($content, 'L', $title, 'ksharasutra_report' . date('dd_mm_Y') . '.pdf', true, true, 'I');
         exit;
     }
 
@@ -760,7 +742,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery',false,false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery', false, false);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;

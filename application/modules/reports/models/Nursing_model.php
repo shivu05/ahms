@@ -335,8 +335,9 @@ class Nursing_model extends CI_Model {
     function get_ksharasutra_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('k.OpdNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon', 'k.anaesthetic',
-            'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 't.diagnosis', 't.notes');
+        $columns = array('k.OpdNo', 'ip.IpNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
+            'k.anaesthetic', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo',
+            'p.dept', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
 
@@ -368,12 +369,17 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k,
-        (SELECT @a:= 0) AS a  JOIN patientdata p JOIN treatmentdata t $where_cond ORDER BY k.ksharsDate ASC";
+        /* $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k,
+          (SELECT @a:= 0) AS a  JOIN patientdata p JOIN treatmentdata t LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo $where_cond ORDER BY k.ksharsDate ASC";
+         */
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k 
+                  JOIN treatmentdata t ON k.treatId=t.ID 
+                  JOIN patientdata p  ON t.OpdNo = p.OpdNo 
+                  LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo, (SELECT @a:= 0) AS a $where_cond ORDER BY k.ksharsDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM ksharsutraregistery k JOIN treatmentdata t WHERE k.OpdNo=t.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT k.OpdNo FROM ksharsutraregistery k JOIN treatmentdata t WHERE k.treatId=t.ID ')->num_rows();
         return $return;
     }
 
