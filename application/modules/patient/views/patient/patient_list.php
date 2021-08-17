@@ -316,6 +316,7 @@
             });
         });
         $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
+			$("#default_modal_box .modal-footer #btn-ok").attr("disabled", true);
             if ($('#send_patient_for_followup').valid()) {
                 var form_data = $('#send_patient_for_followup').serializeArray();
                 $.ajax({
@@ -332,6 +333,7 @@
                         }, {
                             type: "success",
                         });
+						$("#default_modal_box .modal-footer #btn-ok").attr("disabled", false);
                     }
                 });
             }
