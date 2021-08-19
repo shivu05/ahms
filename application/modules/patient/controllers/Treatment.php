@@ -323,6 +323,7 @@ class Treatment extends SHV_Controller {
     function ipd_save() {
         $treat_id = NULL;
         $is_panchakarma = 'N';
+        $ipdno = $this->input->post('ipd_no');
         if ($this->input->post('panchakarma_check') == 'on') {
             $is_panchakarma = 'Y';
             $post_values = $this->input->post();
@@ -456,9 +457,10 @@ class Treatment extends SHV_Controller {
                     if ($cat != ' ') {
                         $labdata[] = array(
                             'OpdNo' => $this->input->post('opd_no'),
+                            'ipdno' => $this->input->post('ipd_no'),
                             'refDocName' => $ref_doc,
-                            //'lab_test_cat' => $lab_cats[$i],
                             //'lab_test_type' => $lab_test[$i],
+                            //'lab_test_cat' => $lab_cats[$i],
                             'testName' => $cat,
                             'testDate' => $this->input->post('testdate'),
                             'treatID' => $treat_id

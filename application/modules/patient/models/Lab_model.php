@@ -27,7 +27,8 @@ class Lab_model extends CI_Model {
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
-            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.diagnosis'
+            'IF(l.ipdno is null ,(REPLACE(ucfirst(t.department),"_"," ")) ,(REPLACE(ucfirst(it.department),"_"," ")) ) department',
+            'IF(l.ipdno is null ,(REPLACE(ucfirst(t.diagnosis),"_"," ")) ,(REPLACE(ucfirst(it.diagnosis),"_"," ")) ) diagnosis',
         );
 
         $cur_date = date('Y-m-d');
@@ -61,7 +62,8 @@ class Lab_model extends CI_Model {
 
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l 
            JOIN treatmentdata t ON l.treatID=t.ID 
-           JOIN patientdata p ON p.OpdNo=t.OpdNo,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
+           LEFT JOIN ipdtreatment it on l.ipdno=it.ipdno
+           JOIN patientdata p ON p.OpdNo=l.OpdNo,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
