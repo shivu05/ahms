@@ -125,10 +125,7 @@
                 title: "Department",
                 class: "department",
                 data: function (item) {
-                    return item.user_department.toLowerCase().replace(/\b[a-z]/g, function (letter) {
-                        return letter.toUpperCase();
-                    });
-                    ;
+                    return item.user_department;
                 }
             },
             {

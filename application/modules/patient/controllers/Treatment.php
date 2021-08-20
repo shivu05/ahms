@@ -770,7 +770,7 @@ class Treatment extends SHV_Controller {
     function print_case_sheet($opd = null, $treat_id = null) {
         if ($opd) {
             $treat_data = $this->treatment_model->get_patient_treatment($opd, $treat_id);
-            //pma($treat_data, 1);
+//            /pma($treat_data, 1);
             $this->load->helper('mpdf');
             $config = $this->db->get('config');
             $config = $config->row_array();
@@ -795,7 +795,7 @@ class Treatment extends SHV_Controller {
             $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
-            $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['attndedby'] . " </td>";
+            $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['AddedBy'] . " </td>";
             $pat_table .= "</tr>";
             $pat_table .= "</table><hr/>";
 

@@ -27,8 +27,8 @@ class Lab_model extends CI_Model {
         $return = array();
         $columns = array(
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
-            'IF(l.ipdno is null ,(REPLACE(ucfirst(t.department),"_"," ")) ,(REPLACE(ucfirst(it.department),"_"," ")) ) department',
-            'IF(l.ipdno is null ,(REPLACE(ucfirst(t.diagnosis),"_"," ")) ,(REPLACE(ucfirst(it.diagnosis),"_"," ")) ) diagnosis',
+            'IF(l.ipdno is null ,(REPLACE((t.department),"_"," ")) ,(REPLACE((it.department),"_"," ")) ) department',
+            'IF(l.ipdno is null ,(REPLACE((t.diagnosis),"_"," ")) ,(REPLACE((it.diagnosis),"_"," ")) ) diagnosis',
         );
 
         $cur_date = date('Y-m-d');

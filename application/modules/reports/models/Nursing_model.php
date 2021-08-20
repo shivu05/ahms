@@ -12,13 +12,13 @@ class Nursing_model extends CI_Model {
         if ($department == "1") {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
                 p.Age,p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
-                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE(ucfirst(p.department),'_',' ')) department
+                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE((p.department),'_',' ')) department
                 from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
                     AND i.indentdate <='" . $end_date . "' group by i.treatid order by i.indentdate asc";
         } else {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,p.Age,
                 p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
-                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE(ucfirst(p.department),'_',' ')) department
+                GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE((p.department),'_',' ')) department
                 from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
                     AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid 
                         order by i.indentdate asc";
@@ -34,12 +34,12 @@ class Nursing_model extends CI_Model {
     function get_nursing_indent($start_date, $end_date, $department) {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
-            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE(ucfirst(p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
+            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
                 GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
                 WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'  
                     group by i.treatid order by i.id";
         } else {
-            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE(ucfirst(p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
+            $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
                 GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
                 WHERE i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "' 
                     AND i.ipdno = p.IpNo AND p.department LIKE '%" . $department . "%' group by i.treatid order by i.id,i.indentdate asc ";
@@ -56,8 +56,8 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) as department',
-            'display_date(x.refDate) as refDate', 'display_date(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize',
+            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE((t.department),"_"," ")) as department',
+            '(x.refDate) as refDate', '(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize',
             't.deptOpdNo', 't.diagnosis');
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
@@ -111,7 +111,7 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
             'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
-            '(REPLACE(ucfirst(t.department),"_"," ")) as department', 't.diagnosis');
+            '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -156,7 +156,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE(ucfirst(t.department),"_"," ")) as department', 't.diagnosis');
+            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
@@ -291,7 +291,7 @@ class Nursing_model extends CI_Model {
     function get_diet_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE(ucfirst(department),"_"," ")) department');
+        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE((department),"_"," ")) department');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 
@@ -430,7 +430,7 @@ class Nursing_model extends CI_Model {
     function get_panchakarma_data($conditions, $export_flag = false) {
         $return = array();
         $columns = array('l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
-            't.deptOpdNo', '(REPLACE(ucfirst(t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
+            't.deptOpdNo', '(REPLACE((t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
 
@@ -544,7 +544,7 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
             'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
-            '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid');
+            '(REPLACE((t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid');
 
         $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";
