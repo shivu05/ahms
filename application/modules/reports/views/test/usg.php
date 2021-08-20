@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box">
-            <div class="box-header with-border"><h3 class="box-title">USG report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-heartbeat"></i> USG report:</h3></div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
@@ -9,12 +9,11 @@
                         <input type="hidden" name="tab" id="tab" value="<?= base64_encode('usgregistery') ?>" />
                         <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                     </form>
-                </div
+                </div>
             </div>
             <div id="patient_statistics" class="col-12"></div>
         </div>
     </div>
-</div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

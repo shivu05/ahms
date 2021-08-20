@@ -56,7 +56,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', '(REPLACE((t.department),"_"," ")) as department',
+            'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo', '(REPLACE((t.department),"_"," ")) as department',
             '(x.refDate) as refDate', '(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize',
             't.deptOpdNo', 't.diagnosis');
 
@@ -110,7 +110,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
+            'p.gender', 'CONCAT(p.address," ",p.city) address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
             '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
@@ -156,7 +156,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'p.address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
+            'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
@@ -336,7 +336,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('k.OpdNo', 'ip.IpNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
-            'k.anaesthetic', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo',
+            'k.anaesthetic', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo',
             'p.dept', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
@@ -386,7 +386,8 @@ class Nursing_model extends CI_Model {
     function get_surgery_data($conditions, $export_flag = false) {
         $return = array();
         $columns = array('s.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
-            's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'p.address', 'p.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
+            's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
+            'p.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo AND surgDate >='" . $conditions['start_date'] . "' AND surgDate <='" . $conditions['end_date'] . "'";
 
