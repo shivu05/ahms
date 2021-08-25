@@ -923,7 +923,7 @@ class Treatment extends SHV_Controller {
                 $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
                 $pat_table .= "</tr>";
                 $pat_table .= "<tr>";
-                $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['attndedby'] . " </td>";
+                $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['AddedBy'] . " </td>";
                 $pat_table .= "</tr>";
                 $pat_table .= "</table><hr/>";
 
