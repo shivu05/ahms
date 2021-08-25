@@ -338,8 +338,9 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery', false, false);
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -355,6 +356,18 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_surgery_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    public function update_surgery() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $is_updated = $this->nursing_model->update_sugery_info($post_values, $post_values['ID']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        }
     }
 
     function export_surgery() {

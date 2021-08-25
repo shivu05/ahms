@@ -106,6 +106,13 @@ class Nursing_model extends CI_Model {
         return false;
     }
 
+    function update_sugery_info($post_valyes, $id) {
+        if ($id) {
+            return $this->db->update('surgeryregistery', $post_valyes, array('ID' => $id));
+        }
+        return false;
+    }
+
     function get_usg_data($conditions, $export_flag = false) {
 
         $return = array();
@@ -385,7 +392,7 @@ class Nursing_model extends CI_Model {
 
     function get_surgery_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('s.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
+        $columns = array('s.ID', 's.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
             's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
             'p.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
 
