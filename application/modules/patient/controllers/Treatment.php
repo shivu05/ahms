@@ -405,6 +405,7 @@ class Treatment extends SHV_Controller {
         if ($this->input->post('xray_check') == 'on') {
             $xraydata = array(
                 'OpdNo' => $this->input->post('opd_no'),
+                'ipdno' => $ipdno,
                 'refDocName' => $this->input->post('xraydocname'),
                 'partOfXray' => $this->input->post('partxray'),
                 'filmSize' => $this->input->post('filmsize'),
