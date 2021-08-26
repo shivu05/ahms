@@ -24,6 +24,12 @@
             <div class="modal-body" id="surgery_modal_body">
                 <form action="" name="surgery_form" id="surgery_form" method="POST">
                     <div class="form-group">
+                        <label for="surgName">Surgeon:</label>
+                        <input class="form-control required" id="surgName" name="surgName" type="text" 
+                               aria-describedby="surgNameHelp" placeholder="Enter Surgeon">
+                        <small class="form-text text-muted" id="surgNameHelp"></small>
+                    </div>
+                    <div class="form-group">
                         <label for="asssurgeon">Asst. Surgeon:</label>
                         <input class="form-control required" id="asssurgeon" name="asssurgeon" type="text" 
                                aria-describedby="asssurgeonHelp" placeholder="Enter Asst. Surgeon">
@@ -208,6 +214,7 @@
             $('#patient_table tbody').on('click', '.edit', function () {
                 var data = patient_table.row($(this).closest('tr')).data();
                 $('#surgery_modal_box #surgery_form #ID').val(data.ID);
+                $('#surgery_modal_box #surgery_form #surgName').val(data.surgName);
                 $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
                 $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);
                 $('#surgery_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
@@ -216,6 +223,7 @@
 
         $('#surgery_form').validate({
             messages: {
+                surgName: {required: 'Surgeon is empty'},
                 asssurgeon: {required: 'Asst. Surgeon is empty'},
                 anaesthetic: {required: 'Anesthetist is empty'}
             }

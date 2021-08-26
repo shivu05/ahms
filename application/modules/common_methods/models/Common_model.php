@@ -62,10 +62,14 @@ class Common_model extends CI_Model {
     }
 
     function update_ipd_data($update) {
+        $num_days = NULL;
+        if (isset($update['NofDays']) && $update['NofDays'] != 0 && trim($update['NofDays']) != '') {
+            $num_days = $update['NofDays'];
+        }
         $ipd_info = array(
             'DoAdmission' => $update['DoAdmission'],
             'DoDischarge' => $update['DoDischarge'],
-            'NofDays' => $update['NofDays'],
+            'NofDays' => $num_days,
             'diagnosis' => $update['pat_diagnosis']
         );
         $this->db->where('IpNo', $update['ipd']);

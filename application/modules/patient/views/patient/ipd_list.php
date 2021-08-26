@@ -125,7 +125,7 @@
                     </div>
                     <div class="form-group">
                         <label for="NofDays">Days</label>
-                        <input class="form-control required numbers-only" id="NofDays" name="NofDays" type="text">
+                        <input class="form-control" id="NofDays" name="NofDays" type="text">
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
