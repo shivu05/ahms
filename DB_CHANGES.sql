@@ -154,3 +154,32 @@ DELIMITER ;
 INSERT INTO perm_master (perm_id, perm_code, perm_desc, perm_order, perm_label, perm_parent, perm_class, perm_url, perm_status, perm_attr, perm_icon, last_updated_id, last_updated_date) VALUES 
 (NULL, 'BED_OCC_CHART', 'Bed occupancy chart', '4', '4', '8', '', 'reports/Ipd/bed_occupancy_chart', 'Active', '', 'fa fa-book', '1', CURRENT_TIMESTAMP);
 INSERT INTO role_perm (role_perm_id, role_id, perm_id, status, last_updated_id, last_updated_date, access_perm) VALUES (NULL, '1', '13', 'Active', '1', CURRENT_TIMESTAMP, '1');
+
+CREATE TABLE `months_list` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `full_name` VARCHAR(45) NULL,
+  `short_name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+INSERT INTO `months_list`(`full_name`,`short_name`) VALUES 
+('January','JAN'),
+('February','FEB'),
+('March','MAR'),
+('April','APR'),
+('May','MAY'),
+('June','JUN'),
+('July','JUL'),
+('August','AUG'),
+('September','SEP'),
+('October','OCT'),
+('November','NOV'),
+('December','DEC');
+
+CREATE TABLE `archived_data` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `db_name` VARCHAR(45) NULL,
+  `status` VARCHAR(45) NULL DEFAULT 'active',
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `archived_data` 
+ADD COLUMN `name` VARCHAR(45) NULL AFTER `status`;

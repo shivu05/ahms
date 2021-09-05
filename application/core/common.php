@@ -6,17 +6,18 @@
 
 if (!function_exists('restructure_string')) {
 
-    function restructure_string($string = '') {
+    function restructure_string($string = '')
+    {
         $string = preg_replace('/\s+/', '_', $string);
         $string = trim(strtolower($string));
         return $string;
     }
-
 }
 
 if (!function_exists('get_short_gender')) {
 
-    function get_short_gender($str = '') {
+    function get_short_gender($str = '')
+    {
         if (trim($str) == 'Female') {
             return 'F';
         } else if (trim($str) == 'Male') {
@@ -25,12 +26,12 @@ if (!function_exists('get_short_gender')) {
             $str;
         }
     }
-
 }
 
 if (!function_exists('split_string')) {
 
-    function split_string($longString = '', $maxLineLength = 18) {
+    function split_string($longString = '', $maxLineLength = 18)
+    {
         $arrayOutput = array();
 
         $arrayWords = explode(' ', $longString);
@@ -57,7 +58,6 @@ if (!function_exists('split_string')) {
         }
         return $arrayOutput;
     }
-
 }
 
 
@@ -69,7 +69,8 @@ if (!function_exists('pma')) {
      * @return	formated value
      * @desc format as per the call back function passed
      */
-    function pma($arr_val, $exit_flag = 0) {
+    function pma($arr_val, $exit_flag = 0)
+    {
         echo '<pre>';
         if (is_array($arr_val)) {
             print_r($arr_val);
@@ -83,7 +84,6 @@ if (!function_exists('pma')) {
             exit('Exited here..');
         }
     }
-
 }
 
 if (!function_exists('flattenArray')) {
@@ -101,7 +101,8 @@ if (!function_exists('flattenArray')) {
      * @TODO Need to make support recursive
      * @author ShivarajB <shivaraj2badiger@gmail.com>
      */
-    function flattenArray($array, $callback = null, $group_function = null, $check_blank = null) {
+    function flattenArray($array, $callback = null, $group_function = null, $check_blank = null)
+    {
         if (!is_array($array)) {
             return (array) $array;
         }
@@ -142,12 +143,12 @@ if (!function_exists('flattenArray')) {
         }
         return $arrayValues;
     }
-
 }
 
 if (!function_exists('in_array_r')) {
 
-    function in_array_r($needle, $haystack) {
+    function in_array_r($needle, $haystack)
+    {
         $found = false;
         foreach ($haystack as $item) {
             if ($item === $needle) {
@@ -162,12 +163,12 @@ if (!function_exists('in_array_r')) {
         }
         return $found;
     }
-
 }
 
 if (!function_exists('array_column')) {
 
-    function array_column(array $input, $columnKey, $indexKey = null) {
+    function array_column(array $input, $columnKey, $indexKey = null)
+    {
         $array = array();
         foreach ($input as $value) {
             if (!array_key_exists($columnKey, $value)) {
@@ -190,12 +191,12 @@ if (!function_exists('array_column')) {
         }
         return $array;
     }
-
 }
 
 if (!function_exists('generate_table_pdf')) {
 
-    function generate_table_pdf($headers, $data = null, $add_extra_row = false) {
+    function generate_table_pdf($headers, $data = null, $add_extra_row = false)
+    {
         $table = '';
         if ($headers) {
             $table .= '<table width="100%" class="table table-bordered">';
@@ -251,47 +252,47 @@ if (!function_exists('generate_table_pdf')) {
             }
             $table .= '</table>';
         }
-//        echo $table;
-//        exit;
+        //        echo $table;
+        //        exit;
         return $table;
     }
-
 }
 
 if (!function_exists('patient_type')) {
 
-    function patient_type($type = '') {
+    function patient_type($type = '')
+    {
         if (strtolower(trim($type)) == strtolower('New Patient')) {
             return 'N';
         } else {
             return 'O';
         }
     }
-
 }
 
 if (!function_exists('format_date')) {
 
-    function format_date($date = '') {
+    function format_date($date = '')
+    {
         if ($date && $date != '--') {
             return date("d-m-Y", strtotime($date));
         } else {
             return NULL;
         }
     }
-
 }
 if (!function_exists('display_department')) {
 
-    function display_department($dept) {
+    function display_department($dept)
+    {
         return ucfirst(str_replace('_', ' ', $dept));
     }
-
 }
 
 if (!function_exists('prepare_pancha_table')) {
 
-    function prepare_pancha_table($data = NULL) {
+    function prepare_pancha_table($data = NULL)
+    {
         if (!empty($data)) {
             $arr = explode(',', $data['sub_grp_name']);
             $daysarr = explode(',', $data['tdays']);
@@ -312,7 +313,6 @@ if (!function_exists('prepare_pancha_table')) {
             return '';
         }
     }
-
 }
 if (!function_exists('create_dropdown_options_v2')) {
 
@@ -346,7 +346,8 @@ if (!function_exists('create_dropdown_options_v2')) {
      * @desc : used to return only options part of dropdown
      * @author
      */
-    function create_dropdown_options_v2($data, $key_col, $val_col, $option_tag_flag = TRUE, $selected_val = '', $selected_by = 'v', $attributes = '', $title_flag = FALSE, $title_col = '', $sort_flag = FALSE, $sort_type = 'a') {
+    function create_dropdown_options_v2($data, $key_col, $val_col, $option_tag_flag = TRUE, $selected_val = '', $selected_by = 'v', $attributes = '', $title_flag = FALSE, $title_col = '', $sort_flag = FALSE, $sort_type = 'a')
+    {
         $opt = "";
 
         if ($option_tag_flag) {
@@ -365,7 +366,7 @@ if (!function_exists('create_dropdown_options_v2')) {
                     }
                 }
                 $ttle = '';
-                if (!in_array($val[$key_col], $unique)) {//ignore duplicates
+                if (!in_array($val[$key_col], $unique)) { //ignore duplicates
                     $sort_arr[$val[$key_col]] = $val[$val_col];
 
                     if ($title_flag) {
@@ -395,12 +396,12 @@ if (!function_exists('create_dropdown_options_v2')) {
         }
         return $opt;
     }
-
 }
 
 if (!function_exists('array_from_delimeted_string')) {
 
-    function array_from_delimeted_string($string, $delimeter = ",", $return_enclose = false) {
+    function array_from_delimeted_string($string, $delimeter = ",", $return_enclose = false)
+    {
         $return = array();
         $return['data'] = explode($delimeter, $string);
         $return['count'] = sizeof($return['data']);
@@ -410,12 +411,12 @@ if (!function_exists('array_from_delimeted_string')) {
             return $return;
         }
     }
-
 }
 
 if (!function_exists('return_enclosed_string')) {
 
-    function return_enclosed_string($data_arr, $enclose_start = "<p>", $enclose_end = "</p>") {
+    function return_enclosed_string($data_arr, $enclose_start = "<p>", $enclose_end = "</p>")
+    {
         if (!empty($data_arr)) {
             $data = "";
             foreach ($data_arr as $val) {
@@ -425,45 +426,44 @@ if (!function_exists('return_enclosed_string')) {
         }
         return '';
     }
-
 }
 
 if (!function_exists('return_delimeted_string')) {
 
-    function return_delimeted_string($array, $delimeter = ",") {
+    function return_delimeted_string($array, $delimeter = ",")
+    {
         if (!empty($array)) {
             return implode($delimeter, $array);
         } else {
             return "";
         }
     }
-
 }
 
 if (!function_exists('get_department_dropdown')) {
 
-    function get_department_dropdown() {
-        $ci = & get_instance();
-        $this->$ci->db->get('');
+    function get_department_dropdown()
+    {
+        $ci = &get_instance();
+        return $ci->db->get('deptper');
     }
-
 }
 
 if (!function_exists('prepare_dept_name')) {
 
-    function prepare_dept_name($dept = '') {
+    function prepare_dept_name($dept = '')
+    {
         return ucfirst(strtolower(str_replace('_', ' ', $dept)));
     }
-
 }
 
 if (!function_exists('remove_chars_from_product')) {
 
-    function remove_chars_from_product($str = '') {
+    function remove_chars_from_product($str = '')
+    {
         $patterns = array(
-            '/\s*BD/', '/\s*TID/', '/\s*BID/', '/\s*QD/','/\s*TSP/','/[\d$]/'
+            '/\s*BD/', '/\s*TID/', '/\s*BID/', '/\s*QD/', '/\s*TSP/', '/[\d$]/'
         );
         return preg_replace($patterns, "", $str);
     }
-
 }
