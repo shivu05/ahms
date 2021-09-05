@@ -323,6 +323,7 @@ class Treatment extends SHV_Controller {
     function ipd_save() {
         $treat_id = NULL;
         $is_panchakarma = 'N';
+        $ipdno = $this->input->post('ipd_no');
         if ($this->input->post('panchakarma_check') == 'on') {
             $is_panchakarma = 'Y';
             $post_values = $this->input->post();
@@ -404,6 +405,7 @@ class Treatment extends SHV_Controller {
         if ($this->input->post('xray_check') == 'on') {
             $xraydata = array(
                 'OpdNo' => $this->input->post('opd_no'),
+                'ipdno' => $ipdno,
                 'refDocName' => $this->input->post('xraydocname'),
                 'partOfXray' => $this->input->post('partxray'),
                 'filmSize' => $this->input->post('filmsize'),
@@ -456,9 +458,10 @@ class Treatment extends SHV_Controller {
                     if ($cat != ' ') {
                         $labdata[] = array(
                             'OpdNo' => $this->input->post('opd_no'),
+                            'ipdno' => $this->input->post('ipd_no'),
                             'refDocName' => $ref_doc,
-                            //'lab_test_cat' => $lab_cats[$i],
                             //'lab_test_type' => $lab_test[$i],
+                            //'lab_test_cat' => $lab_cats[$i],
                             'testName' => $cat,
                             'testDate' => $this->input->post('testdate'),
                             'treatID' => $treat_id
@@ -768,7 +771,7 @@ class Treatment extends SHV_Controller {
     function print_case_sheet($opd = null, $treat_id = null) {
         if ($opd) {
             $treat_data = $this->treatment_model->get_patient_treatment($opd, $treat_id);
-            //pma($treat_data, 1);
+//            /pma($treat_data, 1);
             $this->load->helper('mpdf');
             $config = $this->db->get('config');
             $config = $config->row_array();
@@ -793,7 +796,7 @@ class Treatment extends SHV_Controller {
             $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
-            $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['attndedby'] . " </td>";
+            $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['AddedBy'] . " </td>";
             $pat_table .= "</tr>";
             $pat_table .= "</table><hr/>";
 
@@ -921,7 +924,7 @@ class Treatment extends SHV_Controller {
                 $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
                 $pat_table .= "</tr>";
                 $pat_table .= "<tr>";
-                $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['attndedby'] . " </td>";
+                $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['AddedBy'] . " </td>";
                 $pat_table .= "</tr>";
                 $pat_table .= "</table><hr/>";
 

@@ -38,7 +38,7 @@ class Users_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile',
-            'u.user_type', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'u.user_date', 'u.user_modified', 'u.active', 'rm.role_name'
+            'u.user_type', '(REPLACE((u.user_department),"_"," ")) as user_department', 'u.user_date', 'u.user_modified', 'u.active', 'rm.role_name'
         );
 
         $where_cond = " WHERE u.ID != 1 ";

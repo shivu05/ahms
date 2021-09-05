@@ -18,7 +18,7 @@ class Ipd_model extends CI_Model {
         $this->db->query($query);
 
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(department),"_"," ")) department',
+        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department',
             'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge',
             'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
@@ -65,7 +65,7 @@ class Ipd_model extends CI_Model {
     function get_ipd_patients_count($conditions) {
 
         if ($conditions['department'] == 1) {
-            $query = "SELECT (REPLACE(ucfirst(department),'_',' ')) department,Total,Male,Female FROM(
+            $query = "SELECT (REPLACE((department),'_',' ')) department,Total,Male,Female FROM(
                         SELECT t.department,count(*) as Total,SUM(case when t.Gender='Male' then 1 else 0 end) Male,
 			SUM(case when t.Gender='Female' then 1 else 0 end) Female 
 			FROM (`inpatientdetails` t) WHERE DATE_FORMAT(t.DoAdmission,'%Y-%m-%d') >= '" . $conditions['start_date'] . "' 
@@ -87,7 +87,7 @@ class Ipd_model extends CI_Model {
 
     function get_bed_occpd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(department),"_"," ")) department', 'WardNo', 'BedNo', 'diagnosis',
+        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department', 'WardNo', 'BedNo', 'diagnosis',
             'DoAdmission', 'DoDischarge', 'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
         //$where_cond = " WHERE 1 = 1 ";

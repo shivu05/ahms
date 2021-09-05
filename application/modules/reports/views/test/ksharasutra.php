@@ -136,6 +136,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
+                'sorting': false,
                 'ajax': {
                     'url': base_url + 'reports/Test/get_ksharasutra_report',
                     'type': 'POST',
@@ -151,7 +152,7 @@
                 info: true,
                 sScrollX: "100%",
                 sScrollXInner: "150%",
-                "bScrollCollapse": true
+                bScrollCollapse: true
 
             });
         }

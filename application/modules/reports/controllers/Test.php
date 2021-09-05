@@ -63,34 +63,19 @@ class Test extends SHV_Controller {
         }
 
         $result = $this->nursing_model->get_xray_data($input_array, true);
-
-        $headers = array(
-            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '4'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '6'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '6'),
-            'name' => array('name' => 'Patient name', 'width' => '18'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '4'),
-            'gender' => array('name' => 'Sex', 'width' => '7'),
-            'address' => array('name' => 'Place', 'width' => '8'),
-            'department' => array('name' => 'Department', 'width' => '15'),
-            //'ID' => array('name' => 'X-Ray No', 'align' => 'C', 'width' => '8'),
-            'partOfXray' => array('name' => 'Part', 'width' => '15'),
-            'filmSize' => array('name' => 'F.size', 'width' => '7'),
-            ///'refDate' => array('name' => 'Ref.Date', 'align' => 'C', 'width' => '8'),
-            'xrayDate' => array('name' => 'Date', 'align' => 'C', 'width' => '10'),
-        );
-        $html = generate_table_pdf($headers, $result['data']);
-
+        $this->layout->data = $result;
+        $html = $this->layout->render(array('view' => 'reports/test/xray/xray_table_vw'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
-            'report_title' => 'X-Ray REGISTER',
+            'report_title' => 'X-RAY REGISTER',
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        $current_date = format_date($input_array['start_date']);
+        generate_pdf($html, 'L', $title, 'XRAY_REPORT_' . $current_date, true, true, 'I');
         exit;
     }
 
@@ -132,22 +117,8 @@ class Test extends SHV_Controller {
         }
 
         $result = $this->nursing_model->get_usg_data($input_array, true);
-
-        $headers = array(
-            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '6'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '6'),
-            'name' => array('name' => 'Patient name', 'width' => '18'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Sex', 'width' => '5'),
-            'address' => array('name' => 'Place', 'width' => '15'),
-            'department' => array('name' => 'Department', 'width' => '15'),
-            'refDocName' => array('name' => 'Ref. doctor', 'width' => '15'),
-            //'entrydate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '7'),
-            'usgDate' => array('name' => 'USG date', 'align' => 'C', 'width' => '10'),
-        );
-        $html = generate_table_pdf($headers, $result['data']);
-
+        $this->layout->data = $result;
+        $html = $this->layout->render(array('view' => 'reports/test/usg/usg_grid_vw'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -157,7 +128,8 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        $current_date = format_date($input_array['start_date']);
+        generate_pdf($html, 'L', $title, 'USG_REPORT_' . $current_date, true, true, 'I');
         exit;
     }
 
@@ -199,22 +171,8 @@ class Test extends SHV_Controller {
         }
 
         $result = $this->nursing_model->get_ecg_data($input_array, true);
-
-        $headers = array(
-            'serial_number' => array('name' => '#', 'align' => 'C', 'width' => '5'),
-            'OpdNo' => array('name' => 'C.OPD', 'align' => 'C', 'width' => '7'),
-            'deptOpdNo' => array('name' => 'D.OPD', 'align' => 'C', 'width' => '7'),
-            'name' => array('name' => 'Patient name', 'width' => '18'),
-            'Age' => array('name' => 'Age', 'align' => 'C', 'width' => '5'),
-            'gender' => array('name' => 'Sex', 'width' => '5'),
-            'address' => array('name' => 'Place', 'width' => '10'),
-            'department' => array('name' => 'Department', 'width' => '15'),
-            'refDocName' => array('name' => 'Ref. doctor', 'width' => '19'),
-            //'refDate' => array('name' => 'Ref. date', 'align' => 'C', 'width' => '6'),
-            'ecgDate' => array('name' => 'ECG date', 'align' => 'C', 'width' => '10'),
-        );
-        $html = generate_table_pdf($headers, $result['data']);
-
+        $this->layout->data = $result;
+        $html = $this->layout->render(array('view' => 'reports/test/ecg/ecg_grid_vw'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -224,7 +182,8 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        pdf_create($title, $html);
+        $current_date = format_date($input_array['start_date']);
+        generate_pdf($html, 'L', $title, 'ECG_REPORT_' . $current_date, true, true, 'I');
         exit;
     }
 
@@ -379,8 +338,9 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_surgery', false, false);
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -396,6 +356,18 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_surgery_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    public function update_surgery() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $is_updated = $this->nursing_model->update_sugery_info($post_values, $post_values['ID']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        }
     }
 
     function export_surgery() {
@@ -415,7 +387,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'surgery_report', true, true, 'I');
         exit;
     }
 

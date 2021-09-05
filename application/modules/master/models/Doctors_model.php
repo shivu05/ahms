@@ -25,7 +25,8 @@ class Doctors_model extends CI_Model {
         $return = array();
         $columns = array(
             'd.id', 'd.doc_id', 'week_id', 'week_day', 'u.ID as user_id', 'u.user_name',
-            'u.user_email', 'u.user_department as user_dept', '(REPLACE(ucfirst(u.user_department),"_"," ")) as user_department', 'added_date'
+            'u.user_email', 'u.user_department as user_dept', '(REPLACE(u.user_department,"_"," ")) as user_department',
+            'added_date'
         );
 
         $where_cond = " WHERE u.ID != 1 AND u.active=1";
@@ -103,7 +104,7 @@ class Doctors_model extends CI_Model {
         //$this->db->trans_start();
         $this->db->where('id', $post_values['edit_duty_id']);
         return $this->db->update('doctorsduty', array('day' => $post_values['week_day'], 'doc_id' => $post_values['doctor_name']));
-        
+
         //$this->db->trans_complete();
     }
 

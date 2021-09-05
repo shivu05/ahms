@@ -57,7 +57,7 @@ class Scripts_include {
             '/assets/bower_components/bootstrap/dist/css/bootstrap.min.css',
             '/assets/bower_components/bootstrap/dist/css/bootstrap-dialog.min.css',
             '/assets/bower_components/font-awesome/css/font-awesome.min.css',
-            '/assets/bower_components/Ionicons/css/ionicons.min.css',
+            //'/assets/bower_components/Ionicons/css/ionicons.min.css',
             '/assets/bower_components/select2/dist/css/select2.min.css',
             '/assets/plugins/themes/admin/dist/css/AdminLTE.min.css',
             '/assets/plugins/themes/admin/dist/css/skins/skin-red.min.css',

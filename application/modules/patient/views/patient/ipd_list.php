@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title">IPD patients:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-users"></i> IPD patients:</h3></div>
             <div class="box-body">
                 <?php
                 if (!empty($this->session->flashdata('noty_msg'))) {
@@ -125,7 +125,7 @@
                     </div>
                     <div class="form-group">
                         <label for="NofDays">Days</label>
-                        <input class="form-control required numbers-only" id="NofDays" name="NofDays" type="text">
+                        <input class="form-control" id="NofDays" name="NofDays" type="text">
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>

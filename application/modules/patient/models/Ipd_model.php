@@ -21,7 +21,7 @@ class Ipd_model extends CI_Model {
         $return = array();
         $columns = array(
             'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(ip.department),"_"," ")) department', 'WardNo', 'BedNo',
-            'DoAdmission','DoDischarge', 'Doctor', 't.diagnosis', 'ip.status','NofDays'
+            'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis', 'ip.status', 'NofDays'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
@@ -52,7 +52,8 @@ class Ipd_model extends CI_Model {
                         break;
                     case 'keyword':
                         $val = strtoupper(str_replace(' ', '_', $val));
-                        $where_cond .= " AND ( ip.department like '%$val%' OR t.diagnosis like '%$val%' OR FName LIKE '%$val%') ";
+                        $where_cond .= " AND ( ip.department like '%$val%' OR t.diagnosis like '%$val%' OR FName LIKE '%$val%' OR 
+                            OpdNo like '%$val%' OR IpNo like '%$val%') ";
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";

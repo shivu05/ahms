@@ -75,14 +75,16 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->simpleTables = true;
     $mpdf->packTableData = true;
     //$mpdf->SetWatermarkImage('./assets/your_logo.png');
-    //$mpdf->SetWatermarkImage($src, $alpha, $size, $pos)
-//    $mpdf->SetWatermarkImage(
-//            './assets/your_logo.png',
-//            -1,
-//            '',
-//            array(160, 10)
-//    );
-//    $mpdf->showWatermarkImage = true;
+    //$mpdf->SetWatermarkImage($src, $alpha, $size, $pos);
+    //$mpdf->SetWatermarkText('VHMS',-2);
+    //$mpdf->showWatermarkText = true;
+    /* $mpdf->SetWatermarkImage(
+      './assets/your_logo.png',
+      -10,
+      'F',
+      array(70, 50)
+      );
+      $mpdf->showWatermarkImage = true; */
     $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
     $chunks = explode("chunk", $html);
     if (!empty($chunks)) {

@@ -68,7 +68,7 @@ class Opd_model extends CI_Model {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType'
             , 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'Age', 'gender', 't.AddedBy', 'city', 'address',
-            't.Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE(ucfirst(t.department),"_"," ")) department', 't.monthly_sid as msd', 't.ID',
+            't.Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE((t.department),"_"," ")) department', 't.monthly_sid as msd', 't.ID',
             't.department as ref_dept');
 
         $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
