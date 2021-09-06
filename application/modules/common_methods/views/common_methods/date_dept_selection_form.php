@@ -12,7 +12,7 @@
             <label class="control-label  sr-only">Department:</label>
             <select name="department" id="department" class="form-control" required="required">
                 <option value="">Select Department</option>
-                <option value="1">Central OPD</option>
+                <option value="1">Central</option>
                 <?php
                 if (!empty($dept_list)) {
                     foreach ($dept_list as $dept) {

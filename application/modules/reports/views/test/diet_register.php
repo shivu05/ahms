@@ -7,16 +7,46 @@
                 <hr/>
                 <div id="patient_details">
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
-                </div
+                </div>
             </div>
-            
             <div id="patient_statistics" class="col-md-12"></div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="diet_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="xray_modal_label">Update Diet details</h5>
+            </div>
+            <div class="modal-body" id="xray_modal_body">
+                <form action="" name="xray_form" id="xray_form" method="POST">
+                    <div class="form-group">
+                        <label for="filmpartOfXray_size">Morning:</label>
+                        <input class="form-control required" id="partOfXray" name="partOfXray" type="text" aria-describedby="partOfXrayHelp" placeholder="Enter Part of X-Ray">
+                        <small class="form-text text-muted" id="partOfXrayHelp"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="filmSize">Film size:</label>
+                        <input type="hidden" name="ID" id="ID" />
+                        <input class="form-control required" id="filmSize" name="filmSize" type="text" aria-describedby="film_sizeHelp" placeholder="Enter film size">
+                        <small class="form-text text-muted" id="film_sizeHelp"></small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+                <button type="button" class="btn btn-primary" id="btn-update"><i class="fa fa-save"></i> Update</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        var is_admin = '<?= $is_admin ?>';
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
@@ -99,6 +129,15 @@
             }
 
         ];
+//        if (is_admin == '1') {
+//            columns.push({
+//                title: 'Action | <input type="checkbox" name="check_all" class="check_all" id="check_all" onclick="toggle(this)"/>',
+//                data: function (item) {
+//                    return "<center><input type='checkbox' name='check_del[]' class='check_xray' id='checkbx" + item.ID + "' value='" + item.ID + "'/>" +
+//                            "&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-edit hand_cursor edit_xray' data-id='" + item.ID + "'></i>" + "</center>";
+//                }
+//            });
+//        }
 
         function show_patients() {
             var patient_table = $('#patient_table').DataTable({
@@ -119,7 +158,7 @@
                 'aLengthMenu': [10, 25, 50, 100],
                 'processing': true,
                 'serverSide': true,
-                'ordering':false,
+                'ordering': false,
                 'ajax': {
                     'url': base_url + 'reports/Test/get_diet_register_data',
                     'type': 'POST',

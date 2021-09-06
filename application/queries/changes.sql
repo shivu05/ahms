@@ -135,3 +135,13 @@ INSERT INTO `month_list`
 (`name`)
 VALUES
 ('January'),('February'),('March'),('April'),('May'),('June'),('July'),('August'),('September'),('October'),('November'),('December');
+
+CREATE TABLE `diet_register` (
+  `id` INT NOT NULL,
+  `ipd_no` INT NULL,
+  `opd_no` INT NULL,
+  `treat_id` INT NULL,
+  `morning` VARCHAR(100) NULL,
+  `after_noon` VARCHAR(100) NULL,
+  `evening` VARCHAR(100) NULL,
+  PRIMARY KEY (`id`));

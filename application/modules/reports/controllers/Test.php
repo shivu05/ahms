@@ -249,6 +249,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_diet_to_pdf', false, false);
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }

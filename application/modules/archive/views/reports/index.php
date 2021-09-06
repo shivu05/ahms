@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?php echo base_url('/assets/plugins/jstree-3.3.12/dist/themes/default/style.min.css'); ?>" />
+<script src="<?php echo base_url('/assets/plugins/jstree-3.3.12/dist/jstree.min.js') ?>"></script>
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
@@ -6,7 +8,7 @@
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-8" id="archive_form_elements">
+                    <div class="col-md-7" id="archive_form_elements">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Archived Year:</label>
                             <select class="form-control select2" style="width:25%;" id="archived_year" name="archived_year">
@@ -40,6 +42,7 @@
                                             <option>Choose department</option>
                                             <?php
                                             if (!empty($dept_list)) {
+                                                echo '<option value="1">CENTRAL</option>';
                                                 foreach ($dept_list as $row) {
                                                     echo '<option value="' . $row['dept_unique_code'] . '">' . $row['department'] . '</option>';
                                                 }
@@ -101,15 +104,120 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="col-md-5">
+                        <div id="jstree_demo_div">
+                            <?php listFolderFiles('public'); ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        $(function () {
+            $('#jstree_demo_div').jstree({
+                "core": {
+                    "themes": {
+                        "url": true,
+                        "icons": true
+                    },
+                    "check_callback": function (operation, node, node_parent, node_position, more) {
+                        if (operation === 'delete_node') {
+                            if (confirm('sure') == true) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
+                },
+                "types": {
+
+                },
+                "plugins": [
+                    "contextmenu", "search", "state", "types", "wholerow", "html_data", "themes", "ui"
+                ],
+                contextmenu: {
+                    'select_node': true,
+                    'items': function (node) {
+                        var tmp = $.jstree.defaults.contextmenu.items();
+                        tmp.ccp = false;
+                        tmp.create = false;
+                        tmp.rename = false;
+                        tmp.remove = false;
+                        if (node.children.length == 0) {
+                            tmp.remove = {"label": "Delete", "action": function (data) {
+                                    $('#jstree_demo_div').jstree(true).delete_node(node);
+                                }};
+                            tmp.custom_action = {"label": "Download", "action": function (data) {
+                                    var inst = $.jstree.reference(data.reference), obj = inst.get_node(data.reference);
+                                    //console.log(data.reference[0]);
+                                    window.open(data.reference[0].href);
+                                }};
+                        } else {
+                            tmp.remove = false;
+                        }
+                        return tmp;
+                    }
+                }
+            }).bind("delete_node.jstree", function (e, data) {
+                //console.log(data.instance._model.data);
+                var path = '';
+                var ordered = Object.keys(data.instance._model.data).sort().reduce(
+                        (obj, key) => {
+                    obj[key] = data.instance._model.data[key];
+                    return obj;
+                }, {});
+                $.each(ordered, function (k, v) {
+                    if (k != '#') {
+                        path += '/' + v.text;
+                        console.log('key', v);
+                    }
+                });
+                console.log(path);
+                $.ajax({
+                    url: base_url + "archive/reports/tree_operations",
+                    type: 'POST',
+                    data: {
+                        'file_path': path
+                    },
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    }
+                });
+            });
+        });
+
+        $('#archive_form_elements #export').on('click', '.excel_export', function (e) {
+            e.preventDefault();
+            var arch_year = $('#archive_form_elements #archived_year').val();
+            if (arch_year === "") {
+                alert('Archvied year can not be empty');
+            } else {
+                $('.loading-box').css('display', 'block');
+                var form_data = $('#search_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'patient/patient/export_patients_list',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {search_form: form_data},
+                    success: function (data) {
+                        $('.loading-box').css('display', 'none');
+                        download(data.file, data.file_name, 'application/octet-stream');
+                    }
+                });
+            }
+        });
+
         //pdf click 
-        $('#archive_form_elements').on('click', '.pdf_export', function() {
+        $('#archive_form_elements').on('click', '.pdf_export', function () {
             var arch_year = $('#archive_form_elements #archived_year').val();
             if (arch_year === "") {
                 alert('Archvied year can not be empty');
@@ -126,35 +234,23 @@
                         'selected_dept': selected_dept,
                         'report_type': report_type
                     };
-
-                    var form = document.createElement("form");
-                    var ele_arch_year = document.createElement("input");
-                    var ele_selected_month = document.createElement("input");
-                    var ele_selected_dept = document.createElement("input");
-                    var ele_report_type = document.createElement("input");
-
-                    form.method = "POST";
-                    form.action = base_url + "archive/reports/export_to_pdf";
-
-                    ele_arch_year.value = arch_year;
-                    ele_arch_year.name = "arch_year";
-                    form.appendChild(ele_arch_year);
-
-                    ele_selected_month.value = selected_month;
-                    ele_selected_month.name = "selected_month";
-                    form.appendChild(ele_selected_month);
-
-                    ele_selected_dept.value = selected_dept;
-                    ele_selected_dept.name = "selected_dept";
-                    form.appendChild(ele_selected_dept);
-
-                    ele_report_type.value = report_type;
-                    ele_report_type.name = "report_type";
-                    form.appendChild(ele_report_type);
-
-                    document.body.appendChild(form);
-
-                    form.submit();
+                    $.ajax({
+                        type: 'post',
+                        url: base_url + "archive/reports/export_to_pdf",
+                        data: post_data,
+                        beforeSend: function (xhr) {
+                            $('#ajxloading').show();
+                        },
+                        success: function (res) {
+                            alert('File downloaded sucessfully');
+                            $('#ajxloading').hide();
+                            window.location.reload();
+                        },
+                        error: function () {
+                            $('#ajxloading').hide();
+                            //window.location.reload();
+                        }
+                    });
                 }
             }
         });

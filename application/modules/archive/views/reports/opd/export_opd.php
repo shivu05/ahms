@@ -59,7 +59,7 @@ $dept_room_array = array(
                 }
                 echo "<td><center>" . $patType . "</center></td>";
                 echo "<td>" . $patients['name'] . "</td>";
-                echo "<td><center>" . $patients['Age'] . "</center></td>";
+                echo "<td>" . $patients['Age'] . "</td>";
                 echo "<td>" . $patients['gender'] . "</td>";
                 echo "<td>" . $patients['address'] . " " . $patients['city'] . "</td>";
                 if ($department != 1) {

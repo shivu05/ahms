@@ -61,6 +61,9 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->SetTitle('VHMS');
     $mpdf->SetCreator('Ayush Softwares');
     $mpdf->SetDisplayMode('fullpage');
+
+    $mpdf->SetCompression(true);
+    $mpdf->table_error_report_param = true;
     //$css = '<style type="text/css">' . file_get_contents(FCPATH . '/assets/css/print_table.css') . '</style>';
     $css = file_get_contents(FCPATH . '/assets/css/print_table.css');
     if ($header_flag) {
@@ -73,7 +76,7 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $mpdf->shrink_tables_to_fit = 1;
     $mpdf->useSubstitutions = false;
     $mpdf->simpleTables = true;
-    $mpdf->packTableData = true;
+    $mpdf->packTableData = false;
     //$mpdf->SetWatermarkImage('./assets/your_logo.png');
     //$mpdf->SetWatermarkImage($src, $alpha, $size, $pos);
     //$mpdf->SetWatermarkText('VHMS',-2);
@@ -86,11 +89,14 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
       );
       $mpdf->showWatermarkImage = true; */
     $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
-    $chunks = explode("chunk", $html);
-    if (!empty($chunks)) {
-        foreach ($chunks as $key => $val) {
-            $mpdf->WriteHTML($val);
-        }
+//    $chunks = explode("chunk", $html);
+//    if (!empty($chunks)) {
+//        foreach ($chunks as $key => $val) {
+//            $mpdf->WriteHTML($val);
+//        }
+//    }
+    foreach (array_chunk(explode('chunk', $html), 1000) as $lines) {
+        $mpdf->WriteHTML(implode('chunk', $lines), \Mpdf\HTMLParserMode::HTML_BODY);
     }
     //$mpdf->WriteHTML($css . $html);
     $mpdf->Output($filename . '.pdf', $output);
