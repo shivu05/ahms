@@ -298,7 +298,7 @@ class Nursing_model extends CI_Model {
     function get_diet_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE((department),"_"," ")) department');
+        $columns = array('dt.ID', 'IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE((department),"_"," ")) department', 'dt.morning', 'dt.after_noon', 'dt.evening');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 
@@ -330,13 +330,18 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
-        (SELECT @a:= 0) AS a $where_cond ORDER BY DoAdmission ASC";
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails ipd LEFT JOIN diet_register dt ON ipd.IpNo=dt.ipd_no,
+        (SELECT @a:= 0) AS a $where_cond ORDER BY serial_number ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM inpatientdetails')->num_rows();
         return $return;
+    }
+
+    function update_diet_register($input_data, $where) {
+        $this->db->where($where);
+        return $this->db->update('diet_register', $input_data);
     }
 
     function get_ksharasutra_data($conditions, $export_flag = false) {

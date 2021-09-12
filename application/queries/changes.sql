@@ -137,11 +137,16 @@ VALUES
 ('January'),('February'),('March'),('April'),('May'),('June'),('July'),('August'),('September'),('October'),('November'),('December');
 
 CREATE TABLE `diet_register` (
-  `id` INT NOT NULL,
-  `ipd_no` INT NULL,
-  `opd_no` INT NULL,
-  `treat_id` INT NULL,
-  `morning` VARCHAR(100) NULL,
-  `after_noon` VARCHAR(100) NULL,
-  `evening` VARCHAR(100) NULL,
-  PRIMARY KEY (`id`));
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ipd_no` int(11) DEFAULT NULL,
+  `opd_no` int(11) DEFAULT NULL,
+  `treat_id` int(11) DEFAULT NULL,
+  `morning` varchar(100) DEFAULT NULL,
+  `after_noon` varchar(100) DEFAULT NULL,
+  `evening` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `diet_register` (`ipd_no`,`opd_no`,`treat_id`,`morning`,`after_noon`,`evening`)
+SELECT IpNo,OpdNo,treatId,'Bread/Biscuit/Tea','Chapati rice','Chapati rice' FROM inpatientdetails ;

@@ -100,7 +100,7 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";        
+                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -214,7 +214,11 @@ class treatment_model extends CI_Model {
                 $tquery = "INSERT INTO ipdtreatment (ipdno, AddedBy, Trtment, diagnosis, complaints, department, procedures, notes, attndedon, status) 
                     SELECT $insert_id,T.AddedBy,T.Trtment,T.diagnosis,T.complaints,T.department,T.procedures,T.notes,'" . $inpatientdata['DoAdmission'] . "','nottreated' 
                         FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
-                return $this->db->query($tquery);
+                $this->db->query($tquery);
+                
+                $diet_entry = "INSERT INTO `diet_register` (`ipd_no`,`opd_no`,`treat_id`,`morning`,`after_noon`,`evening`) 
+                    SELECT IpNo,OpdNo,treatId,'Bread/Biscuit/Tea','Chapati rice','Chapati rice' FROM inpatientdetails  WHERE IpNo='$insert_id'";
+                $this->db->query($diet_entry);
             }
             return $insert_id;
         }

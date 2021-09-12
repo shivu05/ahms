@@ -284,6 +284,23 @@ class Test extends SHV_Controller {
         exit;
     }
 
+    function update_diet() {
+        $update = array(
+            'morning' => $this->input->post('morning'),
+            'after_noon' => $this->input->post('after_noon'),
+            'evening' => $this->input->post('evening')
+        );
+        $where = array(
+            'id' => $this->input->post('id')
+        );
+        $is_updated = $this->nursing_model->update_diet_register($update, $where);
+        if ($is_updated) {
+            echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+        } else {
+            echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+        }
+    }
+
     function ksharasutra() {
         $this->layout->title = "Ksharasutra";
         $this->layout->navTitleFlag = false;
