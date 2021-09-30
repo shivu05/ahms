@@ -14,6 +14,7 @@ if (empty($patient)) {
                 <th width="7%">Gender</th>
                 <th width="13%">Place</th>
                 <th width="12%">Department</th>
+                <th width="12%">Diagnosis</th>
                 <th width="10%">Entry Date</th>
                 <th width="10%">ECG Date</th>
                 <th width="13%">Doctor</th>
@@ -32,6 +33,7 @@ if (empty($patient)) {
                 echo "<td style='text-align:center;'>" . $row['gender'] . "</td>";
                 echo "<td>" . trim($row['address']) . "</td>";
                 echo "<td>" . $row['department'] . "</td>";
+                echo "<td>" . $row['diagnosis'] . "</td>";
                 echo "<td style='text-align:center;'>" . $row['refDate'] . "</td>";
                 echo "<td style='text-align:center;'>" . format_date($row['ecgDate']) . "</td>";
                 echo "<td>" . $row['refDocName'] . "</td>";

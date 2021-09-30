@@ -84,7 +84,8 @@ class Sales extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf');
+        $reported_date = format_date($input_array['start_date']);
+        generate_pdf($content, 'L', $title, 'IPD_PHARMACY_REPORT' . $reported_date);
         exit;
     }
 
@@ -106,7 +107,8 @@ class Sales extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf');
+        $reported_date = format_date($input_array['start_date']);
+        generate_pdf($content, 'L', $title, 'OPD_PHARMACY_REPORT_' . $reported_date);
         exit;
     }
 

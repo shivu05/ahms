@@ -10,11 +10,12 @@ if (empty($patient)) {
                 <th>Sl no.</th>
                 <th>C.OPD</th>
                 <th>D.OPD</th>
-                <th>Name</th>
+                <th style="width:15% !important;">Name</th>
                 <th>Age</th>
                 <th>Gender</th>
                 <th>Place</th>
                 <th>Department</th>
+                <th>Diagnosis</th>
                 <th>Date</th>
                 <th>USG Date</th>
             </tr>
@@ -31,8 +32,9 @@ if (empty($patient)) {
                 echo "<td>" . $row['name'] . "</td>";
                 echo "<td style='text-align:center;'><cente>" . $row['Age'] . "</center></td>";
                 echo "<td>" . $row['gender'] . "</td>";
-                echo "<td>" . $row['address'] . "</td>";
+                echo "<td>" . trim($row['address']) . "</td>";
                 echo "<td>" . $row['department'] . "</td>";
+                echo "<td>" . $row['diagnosis'] . "</td>";
                 echo "<td style='text-align:center;'>" . format_date($row['entrydate']) . "</td>";
                 echo "<td style='text-align:center;'>" . format_date($row['usgDate']) . "</td>";
                 echo "</tr>";

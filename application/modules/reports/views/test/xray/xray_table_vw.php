@@ -15,6 +15,7 @@ if (empty($patient)) {
                 <th>Gender</th>
                 <th>Place</th>
                 <th>Department</th>
+                <th>Diagnosis</th>
                 <th>X-Ray No.</th>
                 <th>Part</th>
                 <th>Film Size</th>
@@ -36,6 +37,7 @@ if (empty($patient)) {
                 echo "<td>" . $row['gender'] . "</td>";
                 echo "<td>" . trim($row['address']) . "</td>";
                 echo "<td>" . $row['department'] . "</td>";
+                echo "<td>" . $row['diagnosis'] . "</td>";
                 echo "<td><center>" . $row['ID'] . "</center></td>";
                 echo "<td>" . $row['partOfXray'] . "</td>";
                 echo "<td>" . $row['filmSize'] . "</td>";

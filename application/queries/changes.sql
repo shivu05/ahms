@@ -124,14 +124,14 @@ INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_u
 (75, 1, 48, 'Active', 0, '2021-04-02 19:39:49', 2);
 
 
-CREATE TABLE `month_list` (
+CREATE TABLE `months_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 ;
 
 
-INSERT INTO `month_list`
+INSERT INTO `months_list`
 (`name`)
 VALUES
 ('January'),('February'),('March'),('April'),('May'),('June'),('July'),('August'),('September'),('October'),('November'),('December');
@@ -150,3 +150,13 @@ CREATE TABLE `diet_register` (
 
 INSERT INTO `diet_register` (`ipd_no`,`opd_no`,`treat_id`,`morning`,`after_noon`,`evening`)
 SELECT IpNo,OpdNo,treatId,'Bread/Biscuit/Tea','Chapati rice','Chapati rice' FROM inpatientdetails ;
+
+
+CREATE TABLE `archived_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `db_name` varchar(45) DEFAULT NULL,
+  `status` varchar(45) DEFAULT 'active',
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1;
+INSERT INTO archived_data (db_name,status,name) VALUES('ahms_kramch_2020','Active','2020');

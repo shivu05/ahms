@@ -150,9 +150,9 @@
                         tmp.rename = false;
                         tmp.remove = false;
                         if (node.children.length == 0) {
-                            tmp.remove = {"label": "Delete", "action": function (data) {
+                            /*tmp.remove = {"label": "Delete", "action": function (data) {
                                     $('#jstree_demo_div').jstree(true).delete_node(node);
-                                }};
+                                }};*/
                             tmp.custom_action = {"label": "Download", "action": function (data) {
                                     var inst = $.jstree.reference(data.reference), obj = inst.get_node(data.reference);
                                     //console.log(data.reference[0]);

@@ -29,7 +29,7 @@ if (empty($patient)) {
                     <td style="text-align: center;"><?php echo $count; ?></td>
                     <td style="text-align: center;"><?php echo $row->OpdNo; ?></td>
                     <td style="text-align: center;"><?php echo $row->deptOpdNo; ?></td>
-                    <td><?php echo $row->FirstName . ' ' . $row->LastName; ?></td>
+                    <td><?php echo $row->name; ?></td>
                     <td style="text-align: center;"><?php echo $row->Age; ?></td>
                     <td style="text-align: center;"><?php echo $row->gender; ?></td>
                     <td style="text-align: center;"><?php echo $row->PatType; ?></td>
