@@ -215,7 +215,7 @@ class treatment_model extends CI_Model {
                     SELECT $insert_id,T.AddedBy,T.Trtment,T.diagnosis,T.complaints,T.department,T.procedures,T.notes,'" . $inpatientdata['DoAdmission'] . "','nottreated' 
                         FROM patientdata P JOIN treatmentdata T ON P.OpdNo=T.OpdNo WHERE P.OpdNo='" . $inpatientdata['OpdNo'] . "' and T.ID='" . $inpatientdata['treatId'] . "'";
                 $this->db->query($tquery);
-                
+
                 $diet_entry = "INSERT INTO `diet_register` (`ipd_no`,`opd_no`,`treat_id`,`morning`,`after_noon`,`evening`) 
                     SELECT IpNo,OpdNo,treatId,'Bread/Biscuit/Tea','Chapati rice','Chapati rice' FROM inpatientdetails  WHERE IpNo='$insert_id'";
                 $this->db->query($diet_entry);
@@ -378,6 +378,14 @@ class treatment_model extends CI_Model {
                 'Trtment' => $post_values['pat_treatment'],
                 'diagnosis' => $post_values['pat_diagnosis'],
             );
+            $personal_details = array(
+                'FirstName' => $post_values['pat_name'],
+                'Age' => $post_values['pat_age'],
+                'gender' => $post_values['pat_gender'],
+            );
+            $this->db->where('OpdNo', $post_values['opd']);
+            $is_pupdated = $this->db->update('patientdata', $personal_details);
+
             $this->db->where('OpdNo', $post_values['opd']);
             $this->db->where('ID', $post_values['treat_id']);
             $is_updated = $this->db->update('treatmentdata', $update_array);

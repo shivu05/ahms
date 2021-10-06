@@ -82,15 +82,35 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="treatment_edit_modal_title">Edit treatment details: <span id="pat_opd" class="text-warning"></span> </h4>
+                <h4 class="modal-title" id="treatment_edit_modal_title">Update patient information: <span id="OPD_NUM" class="text-warning"></span> </h4>
             </div>
             <div class="modal-body" id="lab_modal_body">
-                <h5 class="text-primary" id="OPD_NUM"></h5>
+                <h5 class="text-primary" id=""></h5>
                 <form method="POST" name="treatment_edit_form" id="treatment_edit_form">
+                    <div class="control-group">
+                        <label class="control-label" for="pat_name">Name:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control required" id="pat_name" name="pat_name" placeholder="Name"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="pat_age">Age:</label>
+                        <div class="controls">
+                            <input type="number" class="form-control required" id="pat_age" name="pat_age" placeholder="Age"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Gender:</label>
+                        <div class="controls">
+                            <label class="radio-inline"><input class="form-check-input required" type="radio" name="pat_gender" id="pat_gender" value="Male">Male</label>
+                            <label class="radio-inline"><input class="form-check-input required" type="radio" name="pat_gender" id="pat_gender" value="Female">Female</label>
+                            <label class="radio-inline"><input class="form-check-input required" type="radio" name="pat_gender" id="pat_gender" value="others">Others</label>
+                        </div>
+                    </div>
                     <div class="control-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
                         <div class="controls">
-                            <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
+                            <input type="text" class="form-control required" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
                             <input type="hidden" id="treat_id" name="treat_id" />
                             <input type="hidden" id="opd" name="opd" />
                         </div>
@@ -99,7 +119,7 @@
                         <label class="control-label" for="pat_treatment">Treatment:</label>
                         <span class="error">Note: Please separate each medicine with <b>,</b>(comma) </span>
                         <div class="controls">
-                            <textarea name="pat_treatment" class="form-control" id="pat_treatment" rows="3" style="width: 100%" placeholder="Teatment should be seperated by comma"></textarea>
+                            <textarea name="pat_treatment" class="form-control required" id="pat_treatment" rows="3" style="width: 100%" placeholder="Teatment should be seperated by comma"></textarea>
                         </div>
                     </div>
                 </form>
@@ -131,7 +151,7 @@
                 }
             });
         });
-        
+
         $('#search_form #export').on('click', '#export_cs', function (e) {
             e.preventDefault();
             $('<input>').attr({
@@ -330,16 +350,21 @@
                 }
             });
         });
-
+        $('#treatment_edit_form').validate();
         $('#patient_table tbody').on('click', '.edit_treatment_data', function () {
+            $('#treatment_edit_form .control-group').removeClass('error');
             var opd = $(this).data('opd');
             var treat_id = $(this).data('treat_id');
+
             $.ajax({
                 url: base_url + 'patient/treatment/fetch_treatment_data',
                 type: 'POST',
                 data: {'opd': opd, 'treat_id': treat_id},
                 dataType: 'json',
                 success: function (response) {
+                    $('#treatment_edit_form #pat_name').val(response.data.FirstName);
+                    $('#treatment_edit_form #pat_age').val(response.data.Age);
+                    $("input[name=pat_gender][value='" + response.data.gender + "']").prop("checked", true);
                     $('#treatment_edit_form #pat_treatment').val(response.data.Trtment);
                     $('#treatment_edit_form #treat_id').val(response.data.ID);
                     $('#treatment_edit_form #opd').val(response.data.OpdNo);
@@ -348,38 +373,42 @@
             });
             $('#treatment_edit_modal #OPD_NUM').html("Center OPD: " + opd);
             $('#treatment_edit_modal').modal('show');
+
         });
 
         $('#treatment_edit_modal').on('click', '#btn-update', function () {
-
             var form_data = $('#treatment_edit_modal #treatment_edit_form').serializeArray();
-            $.ajax({
-                url: base_url + 'patient/treatment/update_treatment_details',
-                type: 'POST',
-                data: form_data,
-                dataType: 'json',
-                success: function (response) {
-                    $('#treatment_edit_modal').modal('hide');
-                    if (response.status == true) {
-                        $.notify({
-                            title: "Treatment:",
-                            message: "Updated successfully",
-                            icon: 'fa fa-check',
-                        }, {
-                            type: "success"
-                        });
-                    } else {
-                        $.notify({
-                            title: "Treatment:",
-                            message: "Failed to update",
-                            icon: 'fa fa-check',
-                        }, {
-                            type: "danger"
-                        });
+            if ($('#treatment_edit_form').valid()) {
+                $.ajax({
+                    url: base_url + 'patient/treatment/update_treatment_details',
+                    type: 'POST',
+                    data: form_data,
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#treatment_edit_modal').modal('hide');
+                        if (response.status == true) {
+                            $.notify({
+                                title: "Treatment:",
+                                message: "Updated successfully",
+                                icon: 'fa fa-check',
+                            }, {
+                                type: "success"
+                            });
+                        } else {
+                            $.notify({
+                                title: "Treatment:",
+                                message: "Failed to update",
+                                icon: 'fa fa-check',
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                        $('#search_form #search').trigger('click');
                     }
-                    $('#search_form #search').trigger('click');
-                }
-            });
+                });
+            } else {
+                alert('Patient data can not be empty');
+            }
         });
     });
     function get_patient_info_by_opd(data) {
