@@ -133,4 +133,6 @@ $route['delete-patients'] = 'home/Settings/delete_patients';
 $route['export-lab-report'] = 'reports/Test/export_lab_report';
 $route['nursing-report'] = 'reports/nursing';
 
-
+$route['physiotherapy'] = 'master/Physiotherapy';
+$route['add-physiotherapy'] = 'master/Physiotherapy/save';
+$route['delete-physiotherapy'] = 'master/Physiotherapy/delete';

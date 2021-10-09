@@ -49,6 +49,13 @@ if (!empty($lab_categories)) {
         $lab_categories_markup .= '<option value="' . $cat['lab_cat_id'] . '">' . $cat['lab_cat_name'] . '</option>';
     }
 }
+
+$physiotherapy_markup = "";
+if (!empty($physic_list)) {
+    foreach ($physic_list as $row) {
+        $physiotherapy_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+    }
+}
 ?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
@@ -279,6 +286,7 @@ if (!empty($lab_categories)) {
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physiotherapy">Physiotherapy</a></li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade" id="birth">
@@ -693,6 +701,36 @@ if (!empty($lab_categories)) {
                                                     </table>
                                                 </div>
                                             </div>
+                                            <div  class="tab-pane fade" id="physiotherapy">
+                                                <div id="physiotherapy_div" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="physiotherapy_check" id="physiotherapy_check" /> Refer for Physiotherapy</h4>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-4">											
+                                                            <label class="control-label" for="physic_name">Physiotherapy name:</label>
+                                                            <div class="controls">
+                                                                <select id="physic_name" value="" type="text" name="physic_name" class="chosen-select form-control physic_inputs">
+                                                                    <option value="">Choose</option>
+                                                                    <?= $physiotherapy_markup ?>
+                                                                </select>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-4">											
+                                                            <label class="control-label" for="physic_date">Referred date:</label>
+                                                            <div class="controls">
+                                                                <input id="physic_date" type="text" name="physic_date" class="form-control date_picker physic_inputs" placeholder="Enter referred date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-4">											
+                                                            <label class="control-label" for="physic_doc">Physician name:</label>
+                                                            <div class="controls">
+                                                                <input id="physic_doc" type="text" name="physic_doc" class="form-control physic_inputs" placeholder="Enter Doctor name" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -756,7 +794,7 @@ if (!empty($lab_categories)) {
         $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
@@ -831,6 +869,15 @@ if (!empty($lab_categories)) {
                 $('.lab_inputs').attr('disabled', 'disabled');
             }
         });
+
+        $('#physiotherapy_check').click(function () {
+            if ($(this).is(":checked")) {
+                $('.physic_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.physic_inputs').attr('disabled', 'disabled');
+            }
+        });
+
         $('#copy_diagnosis').click(function () {
             if ($(this).is(":checked")) {
                 if ($('#diagnosis').val().length <= 0) {

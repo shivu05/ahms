@@ -51,6 +51,7 @@ class Treatment extends SHV_Controller {
         $this->load->model('patient/lab_model');
         $this->load->model('diagnosis');
         $this->load->model('complaints');
+        $this->load->model('master/master_physiotheraphy');
         $this->load->model('purchase_variables');
         $data = array();
         $data['opd'] = $opd;
@@ -67,6 +68,7 @@ class Treatment extends SHV_Controller {
         $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
         $data['diagnosis'] = $this->diagnosis->all();
         $data['complaints'] = $this->complaints->all();
+        $data['physic_list'] = $this->master_physiotheraphy->all();
         $data['medicines'] = $this->purchase_variables->filter(array('name'), array('type' => 'product'));
         $this->layout->data = $data;
         $this->layout->render();
@@ -235,6 +237,19 @@ class Treatment extends SHV_Controller {
             }
             $this->treatment_model->add_lab_info($labdata);
         }
+
+        if ($this->input->post('physiotherapy_check') == 'on') {
+            $input_arr = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'treat_id' => $treat_id,
+                'therapy_name' => $this->input->post('physic_name'),
+                'physician' => $this->input->post('physic_doc'),
+                'referred_date' => $this->input->post('physic_date'),
+            );
+            $this->load->model('physiotherapy_treatments');
+            $this->physiotherapy_treatments->store($input_arr);
+        }
+
         $last_ipd = NULL;
         if ($this->input->post('admit') == 'on') {
             $beddata = array(

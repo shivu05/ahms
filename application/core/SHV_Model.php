@@ -28,6 +28,11 @@ class SHV_Model extends CI_Model {
         return $this->CI->db->insert($this->_table, $values);
     }
 
+    public function update($values, $where) {
+        $this->CI->db->where($where);
+        return $this->CI->db->update($this->_table, $values);
+    }
+
     public function delete($where) {
         $this->db->where($where);
         return $this->CI->db->delete($this->_table);
