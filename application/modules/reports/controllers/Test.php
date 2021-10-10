@@ -764,4 +764,49 @@ class Test extends SHV_Controller {
         exit;
     }
 
+    function physiotherapy() {
+        $this->layout->title = "Physiotherapy";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Physiotherapy";
+        $this->layout->navDescr = "Physiotherapy";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_physiotherapy', false, false);
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function fetch_physiotherapy_records() {
+        $this->load->model('physiotherapy_treatments');
+        $post_values = $this->input->post();
+        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($post_values);
+        $this->load->view('reports/test/physiotherapy/data_grid', $data);
+    }
+
+    function export_physiotherapy() {
+        $this->load->model('physiotherapy_treatments');
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+
+        $input_array = $this->input->post();
+
+        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($input_array, true);
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/physiotherapy/data_grid'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'PHYSIOTHERAPY REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'physiotherapy_report', true, true, 'I');
+        exit;
+    }
+
 }

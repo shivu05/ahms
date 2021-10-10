@@ -136,3 +136,5 @@ $route['nursing-report'] = 'reports/nursing';
 $route['physiotherapy'] = 'master/Physiotherapy';
 $route['add-physiotherapy'] = 'master/Physiotherapy/save';
 $route['delete-physiotherapy'] = 'master/Physiotherapy/delete';
+
+$route['physiotherapy-report'] = 'reports/Test/physiotherapy';
