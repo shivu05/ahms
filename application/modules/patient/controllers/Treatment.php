@@ -244,7 +244,8 @@ class Treatment extends SHV_Controller {
                 'treat_id' => $treat_id,
                 'therapy_name' => $this->input->post('physic_name'),
                 'physician' => $this->input->post('physic_doc'),
-                'referred_date' => $this->input->post('physic_date'),
+                'start_date' => $this->input->post('start_date'),
+                'end_date' => $this->input->post('end_date'),
             );
             $this->load->model('physiotherapy_treatments');
             $this->physiotherapy_treatments->store($input_arr);

@@ -17,3 +17,7 @@ CREATE TABLE `physiotherapy_treatments` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
+ALTER TABLE `physiotherapy_treatments` 
+ADD COLUMN `end_date` DATE NULL AFTER `start_date`,
+CHANGE COLUMN `treat_id` `treat_id` INT(11) NULL DEFAULT NULL AFTER `physician`,
+CHANGE COLUMN `referred_date` `start_date` DATE NULL DEFAULT NULL ;

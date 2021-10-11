@@ -675,18 +675,18 @@ if (!empty($physic_list)) {
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_1">
+                                                                    <select class="form-control chosen-select pancha_procedure pancha_input" name="pancha_procedure[]" id="pancha_procedure_1">
                                                                         <option value="">Choose procedure</option>
                                                                         <?= $panchakarma_markup ?>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
+                                                                    <select class="form-control pancha_sub_procedure chosen-select pancha_input" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
                                                                         <option value="">Choose sub procedure</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type="text" class="form-control date_picker" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
-                                                                <td><input type="text" class="form-control date_picker" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -705,7 +705,7 @@ if (!empty($physic_list)) {
                                                 <div id="physiotherapy_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="physiotherapy_check" id="physiotherapy_check" /> Refer for Physiotherapy</h4>
                                                     <div class="row">
-                                                        <div class="control-group col-md-4">											
+                                                        <div class="control-group col-md-3">											
                                                             <label class="control-label" for="physic_name">Physiotherapy name:</label>
                                                             <div class="controls">
                                                                 <select id="physic_name" value="" type="text" name="physic_name" class="chosen-select form-control physic_inputs">
@@ -714,14 +714,21 @@ if (!empty($physic_list)) {
                                                                 </select>
                                                             </div> <!-- /controls -->				
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-4">											
-                                                            <label class="control-label" for="physic_date">Referred date:</label>
+                                                        <div class="control-group col-md-3">											
+                                                            <label class="control-label" for="start_date">Start date:</label>
                                                             <div class="controls">
-                                                                <input id="physic_date" type="text" name="physic_date" class="form-control date_picker physic_inputs" placeholder="Enter referred date" autocomplete="off">
+                                                                <input id="physic_date" type="text" name="start_date" class="form-control date_picker physic_inputs" placeholder="Enter Start date" autocomplete="off">
                                                                 <p class="help-block"></p>
                                                             </div> <!-- /controls -->				
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-4">											
+                                                        <div class="control-group col-md-3">											
+                                                            <label class="control-label" for="end_date">End date:</label>
+                                                            <div class="controls">
+                                                                <input id="physic_date" type="text" name="end_date" class="form-control date_picker physic_inputs" placeholder="Enter End date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->				
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-3">											
                                                             <label class="control-label" for="physic_doc">Physician name:</label>
                                                             <div class="controls">
                                                                 <input id="physic_doc" type="text" name="physic_doc" class="form-control physic_inputs" placeholder="Enter Doctor name" autocomplete="off">
@@ -794,11 +801,12 @@ if (!empty($physic_list)) {
         $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs','pancha_input'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
+            $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
         });
 
         $('#add_prescription').click(function () {
@@ -870,11 +878,23 @@ if (!empty($physic_list)) {
             }
         });
 
+        $('#panchakarma_check').click(function () {
+            if ($(this).is(":checked")) {
+                $('.pancha_input').prop('disabled', false).trigger("chosen:updated");
+                $('.pancha_input').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.pancha_input').attr('disabled', 'disabled');
+                $('.pancha_input').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+        
         $('#physiotherapy_check').click(function () {
             if ($(this).is(":checked")) {
+                $('.physic_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.physic_inputs').removeAttr('disabled');
             } else if ($(this).is(":not(:checked)")) {
                 $('.physic_inputs').attr('disabled', 'disabled');
+                $('.physic_inputs').prop('disabled', true).trigger("chosen:updated");
             }
         });
 
