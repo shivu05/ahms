@@ -21,3 +21,9 @@ ALTER TABLE `physiotherapy_treatments`
 ADD COLUMN `end_date` DATE NULL AFTER `start_date`,
 CHANGE COLUMN `treat_id` `treat_id` INT(11) NULL DEFAULT NULL AFTER `physician`,
 CHANGE COLUMN `referred_date` `start_date` DATE NULL DEFAULT NULL ;
+
+ALTER TABLE `inpatientdetails` 
+CHANGE COLUMN `Age` `Age` INT(4) NULL DEFAULT NULL ,
+CHANGE COLUMN `WardNo` `WardNo` INT(4) NULL DEFAULT NULL ,
+CHANGE COLUMN `BedNo` `BedNo` INT(4) NULL DEFAULT NULL ,
+CHANGE COLUMN `NofDays` `NofDays` INT NULL DEFAULT NULL ;

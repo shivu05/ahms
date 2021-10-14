@@ -62,7 +62,7 @@ class Ipd_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM inpatientdetails ip 
-            JOIN ipdtreatment t ON t.ipdno = ip.IpNo  $where_cond order by ip.IpNo desc";
+            JOIN ipdtreatment t ON t.ipdno = ip.IpNo  $where_cond group by ip.IpNo order by ip.IpNo desc";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
