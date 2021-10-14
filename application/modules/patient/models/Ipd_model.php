@@ -62,7 +62,7 @@ class Ipd_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM inpatientdetails ip 
-            JOIN ipdtreatment t ON t.ipdno = ip.IpNo  $where_cond group by ip.IpNo order by ip.IpNo desc";
+            JOIN ipdtreatment t ON t.ipdno = ip.IpNo  $where_cond order by ip.IpNo desc";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -106,7 +106,7 @@ class Ipd_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM inpatientdetails  ip 
-                JOIN ipdtreatment t JOIN patientdata p $where_cond order by IpNo desc";
+                JOIN ipdtreatment t JOIN patientdata p $where_cond group by IpNo order by IpNo desc";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

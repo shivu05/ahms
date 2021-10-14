@@ -52,6 +52,7 @@ class Treatment extends SHV_Controller {
         $this->load->model('diagnosis');
         $this->load->model('complaints');
         $this->load->model('master/master_physiotheraphy');
+        $this->load->model('master/master_other_procedures');
         $this->load->model('purchase_variables');
         $data = array();
         $data['opd'] = $opd;
@@ -69,6 +70,7 @@ class Treatment extends SHV_Controller {
         $data['diagnosis'] = $this->diagnosis->all();
         $data['complaints'] = $this->complaints->all();
         $data['physic_list'] = $this->master_physiotheraphy->all();
+        $data['other_proc_list'] = $this->master_other_procedures->all();
         $data['medicines'] = $this->purchase_variables->filter(array('name'), array('type' => 'product'));
         $this->layout->data = $data;
         $this->layout->render();
@@ -249,6 +251,19 @@ class Treatment extends SHV_Controller {
             );
             $this->load->model('physiotherapy_treatments');
             $this->physiotherapy_treatments->store($input_arr);
+        }
+
+        if ($this->input->post('other_proc_check') == 'on') {
+            $input_arr = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'treat_id' => $treat_id,
+                'therapy_name' => $this->input->post('other_proc_name'),
+                'physician' => $this->input->post('oth_proc_doc'),
+                'start_date' => $this->input->post('other_start_date'),
+                'end_date' => $this->input->post('other_end_date')
+            );
+            $this->load->model('other_procedures_treatments');
+            $this->other_procedures_treatments->store($input_arr);
         }
 
         $last_ipd = NULL;

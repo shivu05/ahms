@@ -138,3 +138,9 @@ $route['add-physiotherapy'] = 'master/Physiotherapy/save';
 $route['delete-physiotherapy'] = 'master/Physiotherapy/delete';
 
 $route['physiotherapy-report'] = 'reports/Test/physiotherapy';
+
+$route['other-procedures'] = 'master/Otherprocedures';
+$route['add-other-procedures'] = 'master/Otherprocedures/save';
+$route['delete-other-procedures'] = 'master/Otherprocedures/delete';
+
+$route['otherprocedures-report'] = 'reports/Test/otherprocedures';

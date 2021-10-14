@@ -56,6 +56,13 @@ if (!empty($physic_list)) {
         $physiotherapy_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
     }
 }
+
+$other_proc_markup = "";
+if (!empty($other_proc_list)) {
+    foreach ($other_proc_list as $row) {
+        $other_proc_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+    }
+}
 ?>
 <div class="row">
     <div class="col-md-3 col-sm-12">
@@ -86,7 +93,7 @@ if (!empty($physic_list)) {
                     <div class="box box-primary">
                         <div class="box-body">
                             <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $current_treatment['department']))); ?></span>
-                                <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span> 
+                                <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-info btn-sm" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
                                 </span>
@@ -98,7 +105,7 @@ if (!empty($physic_list)) {
                                     $i = 0;
                                     foreach ($treatment_details as $treatment) {
                                         $i++;
-                                        ?>        
+                                        ?>
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">
@@ -210,7 +217,7 @@ if (!empty($physic_list)) {
                                      <label>Medicine name: <span class="text-danger">*</span></label>
                                      <select name="medicine" id="medicine" class="form-control  required chosen-select">
                                          <option>Choose medicine</option>
- 
+
                             <?php
                             if (!empty($medicines)) {
                                 foreach ($medicines as $medicine) {
@@ -246,7 +253,7 @@ if (!empty($physic_list)) {
                             <?php
                             end($treatment_details);
                             $latest_data = key($treatment_details);
-                            ?> 
+                            ?>
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <label>Doctor: </label>
@@ -287,17 +294,18 @@ if (!empty($physic_list)) {
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physiotherapy">Physiotherapy</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#othertherapy">Other Procedures</a></li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade" id="birth">
                                                 <div id="Birth">
                                                     <h5 style="margin-top: 2%;"><input type="checkbox" name="birth_check" id="birth_check"/> Birth Register</h5>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">		
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="delivery">Details of delivery:</label>
                                                             <div class="controls">
                                                                 <textarea id="delivery" type="text" name="delivery" placeholder="Delivery details" class="form-control birth_input" ></textarea>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                         <div class="control-group col-md-6">
                                                             <label class="control-label" for="birthdate">Birth Date/Time Of Baby:</label>
@@ -306,17 +314,17 @@ if (!empty($physic_list)) {
                                                                 <br>
                                                                 <input id="birthtime" placeholder="Time __:__" type="text" name="birthtime" class="form-control birth_input" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">									
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="weight">Baby weight:</label>
                                                             <div class="controls">
                                                                 <input id="weight" type="text" name="weight" class="form-control birth_input" placeholder="Baby weight" >
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="weight">Baby Gender:</label>
                                                             <div class="controls">
                                                                 <select class="form-control birth_input" id="babygender" name="babygender">
@@ -325,52 +333,52 @@ if (!empty($physic_list)) {
                                                                     <option value="Female">Female</option>
                                                                     <option value="others">others</option>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                    </div> 
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="babyblood">Baby Blood Group:</label>
                                                             <div class="controls">
                                                                 <input id="babyblood" type="text" name="babyblood" class="form-control birth_input" placeholder="Baby blood group">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="motherblood">Mother Blood Group:</label>
                                                             <div class="controls">
                                                                 <input id="motherblood" type="text" name="motherblood" placeholder="Mother blood group" class="form-control birth_input">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                    </div> 
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="fathername">Father Name:</label>
                                                             <div class="controls">
                                                                 <input id="fathername" type="text" name="fathername" placeholder="Father name" class="form-control birth_input" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                    </div> 
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="surgeonname">Name Of Surgeon:</label>
                                                             <div class="controls">
                                                                 <input id="surgeonname" value="" type="text" name="surgeonname" placeholder="surgeon name" class="form-control birth_input" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                    </div> 
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="anaesthetic">Name Of Anesthetic:</label>
                                                             <div class="controls">
                                                                 <input id="anaesthetic" type="text" name="anaesthetic" placeholder="Anesthetic" class="form-control birth_input" />
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
                                                             <div class="controls">
                                                                 <select class="form-control birth_input" name="anesthesia_type" id="anesthesia_type">
@@ -379,11 +387,11 @@ if (!empty($physic_list)) {
                                                                     <option value="SPINAL">SPINAL</option>
                                                                     <option value="GENERAL">GENERAL</option>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                    </div> 
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="anaesthetic">Delivery Type:</label>
                                                             <div class="controls">
                                                                 <select class="form-control birth_input" name="deliverytype" id="deliverytype">
@@ -393,7 +401,7 @@ if (!empty($physic_list)) {
                                                                     <option value="Forceps">Forceps</option>
                                                                     <option value="Vacuum">Vacuum</option>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                 </div>
@@ -406,66 +414,66 @@ if (!empty($physic_list)) {
                                                         <div class="controls">
                                                             <input id="ecgdocname" value="" type="text" name="ecgdocname" class="form-control ecg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="ecgdate">Referred date:</label>
                                                         <div class="controls">
                                                             <input id="ecgdate" type="text" name="ecgdate" class="form-control date_picker ecg_inputs" placeholder="Enter ECG referred date" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="usg">
                                                 <div id="USG" style="display: block;margin-top: 2%;">
                                                     <h5><input type="checkbox" name="usg_check" id="usg_check" /> USG Register</h5>
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="usgdocname">Referred Doctor Name:</label>
                                                         <div class="controls">
                                                             <input id="usgdocname" value="" type="text" name="usgdocname" class="form-control usg_inputs" placeholder="Enter Doctor Name" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="usgdate">Referred date:</label>
                                                         <div class="controls">
                                                             <input id="usgdate" type="text" name="usgdate" class="form-control date_picker usg_inputs" placeholder="Enter USG referred date" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="xray">
                                                 <div id="Xray" style="margin-top: 2%">
                                                     <h5><input type="checkbox" name="xray_check" id="xray_check" /> X-ray Register</h5>
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="xraydocname">Referred Doctor Name:</label>
                                                         <div class="controls">
                                                             <input id="xraydocname" value="" type="text" name="xraydocname" class="form-control xray_inputs" placeholder="Enter Doctor Name" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="partxray">Part of X-Ray:</label>
                                                         <div class="controls">
                                                             <input id="partxray" type="text" name="partxray" class="form-control xray_inputs" placeholder="Enter X-Ray Part" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
-                                                    <!--<div class="control-group col-4">											
+                                                    <!--<div class="control-group col-4">
                                                         <label class="control-label" for="filmsize">Film Size:</label>
                                                         <div class="controls">
                                                             <input id="filmsize" type="text" name="filmsize" class="form-control xray_inputs" placeholder="Enter Film Size" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     <!--</div> <!-- /control-group -->
-                                                    <div class="control-group col-4">											
+                                                    <div class="control-group col-4">
                                                         <label class="control-label" for="xraydate">Referred date:</label>
                                                         <div class="controls">
                                                             <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
                                                             <p class="help-block"></p>
-                                                        </div> <!-- /controls -->				
+                                                        </div> <!-- /controls -->
                                                     </div> <!-- /control-group -->
                                                 </div>
                                             </div>
@@ -473,46 +481,46 @@ if (!empty($physic_list)) {
                                                 <div id="Kshara" style="margin-top: 2%">
                                                     <h4><input type="checkbox" name="kshara_check" id="kshara_check" /> Ksharasutra Register</h4>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharatype">Type of Ksharasutra:</label>
                                                             <div class="controls">
                                                                 <input id="ksharatype" type="text" name="ksharatype" class="form-control kshara_inputs" placeholder="Enter Type of ksharasutra" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharatype">Name of Ksharasutra:</label>
                                                             <div class="controls">
                                                                 <input id="ksharaname" type="text" name="ksharaname" class="form-control kshara_inputs" placeholder="Enter Name of ksharasutra" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharasurgeonname">Name Of Surgeon:</label>
                                                             <div class="controls">
                                                                 <input id="ksharasurgeonname" value="" type="text" name="ksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharasurgeonname">Name Of Asst. Surgeon:</label>
                                                             <div class="controls">
                                                                 <input id="assksharasurgeonname" type="text" name="assksharasurgeonname" class="form-control kshara_inputs" placeholder="Enter Surgeon" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharaanaesthetist">Name Of Anesthetist:</label>
                                                             <div class="controls">
                                                                 <input id="ksharaanaesthetist" type="text" name="ksharaanaesthetist" class="form-control kshara_inputs" placeholder="Enter Name " autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
                                                             <div class="controls">
                                                                 <select class="form-control kshara_inputs" name="anesthesia_type" id="anesthesia_type">
@@ -521,16 +529,16 @@ if (!empty($physic_list)) {
                                                                     <option value="SPINAL">SPINAL</option>
                                                                     <option value="GENERAL">GENERAL</option>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="ksharadate">Ksharasutra Date:</label>
                                                             <div class="controls">
                                                                 <input id="ksharadate" type="text" name="ksharadate" class="form-control date_picker kshara_inputs" placeholder="Enter Date" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                 </div>
@@ -539,30 +547,30 @@ if (!empty($physic_list)) {
                                                 <div id="Surgery" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="surgery_check" id="surgery_check" /> Surgery Register</h4>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="SurgeryDocname">Name of Surgeon:</label>
                                                             <div class="controls">
                                                                 <input id="SurgeryDocname" value="" type="text" name="SurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Surgeon Name" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="AssSurgeryDocname">Name of Assistant Surgeon:</label>
                                                             <div class="controls">
                                                                 <input id="AssSurgeryDocname" type="text" name="AssSurgeryDocname" class="form-control surgery_inputs" placeholder="Enter Assistant Surgeon Name" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="surganaesthetist">Name of Anesthetist:</label>
                                                             <div class="controls">
                                                                 <input id="surganaesthetist" type="text" name="surganaesthetist" class="form-control surgery_inputs" placeholder="Enter Anaesthetist" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="anesthesia_type">Type of Anesthesia:</label>
                                                             <div class="controls">
                                                                 <select class="form-control surgery_inputs" name="anesthesia_type" id="anesthesia_type">
@@ -571,32 +579,32 @@ if (!empty($physic_list)) {
                                                                     <option value="SPINAL">SPINAL</option>
                                                                     <option value="GENERAL">GENERAL</option>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="surgeryname">Name of surgery:</label>
                                                             <div class="controls">
                                                                 <input id="surgeryname" type="text" name="surgeryname" class="form-control surgery_inputs" placeholder="Enter Name" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="surgerytype">Type of surgery:</label>
                                                             <div class="controls">
                                                                 <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                     <div class="row">
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="surgerydate">Date of surgery:</label>
                                                             <div class="controls">
                                                                 <input id="surgerydate" type="text" name="surgerydate" class="form-control date_picker surgery_inputs" placeholder="Enter Date" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                 </div>
@@ -610,13 +618,13 @@ if (!empty($physic_list)) {
                                                             <div class="controls">
                                                                 <input id="labdocname" required value="" type="text" name="labdocname" class="form-control lab_inputs" placeholder="Enter Doctor Name" autocomplete="off">
                                                                 <input type="hidden" name="tab_lab_row_count" id="tab_lab_row_count" value="1" />
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-6">											
+                                                        <div class="control-group col-md-6">
                                                             <label class="control-label" for="testname">Referred Date:</label>
                                                             <div class="controls">
                                                                 <input id="labdate" type="text" required name="testdate" class="form-control date_picker lab_inputs required" placeholder="Enter Date" autocomplete="off">
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
 
@@ -705,35 +713,72 @@ if (!empty($physic_list)) {
                                                 <div id="physiotherapy_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="physiotherapy_check" id="physiotherapy_check" /> Refer for Physiotherapy</h4>
                                                     <div class="row">
-                                                        <div class="control-group col-md-3">											
+                                                        <div class="control-group col-md-3">
                                                             <label class="control-label" for="physic_name">Physiotherapy name:</label>
                                                             <div class="controls">
                                                                 <select id="physic_name" value="" type="text" name="physic_name" class="chosen-select form-control physic_inputs">
                                                                     <option value="">Choose</option>
                                                                     <?= $physiotherapy_markup ?>
                                                                 </select>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-3">											
+                                                        <div class="control-group col-md-3">
                                                             <label class="control-label" for="start_date">Start date:</label>
                                                             <div class="controls">
                                                                 <input id="physic_date" type="text" name="start_date" class="form-control date_picker physic_inputs" placeholder="Enter Start date" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-3">											
+                                                        <div class="control-group col-md-3">
                                                             <label class="control-label" for="end_date">End date:</label>
                                                             <div class="controls">
                                                                 <input id="physic_date" type="text" name="end_date" class="form-control date_picker physic_inputs" placeholder="Enter End date" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
-                                                        <div class="control-group col-md-3">											
+                                                        <div class="control-group col-md-3">
                                                             <label class="control-label" for="physic_doc">Physician name:</label>
                                                             <div class="controls">
                                                                 <input id="physic_doc" type="text" name="physic_doc" class="form-control physic_inputs" placeholder="Enter Doctor name" autocomplete="off">
                                                                 <p class="help-block"></p>
-                                                            </div> <!-- /controls -->				
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div  class="tab-pane fade" id="othertherapy">
+                                                <div id="physiotherapy_div" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="other_proc_check" id="other_proc_check" /> Refer for Other Procedures</h4>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="other_proc_name">Procedure name:</label>
+                                                            <div class="controls">
+                                                                <select id="other_proc_name" value="" type="text" name="other_proc_name" class="chosen-select form-control othr_proc_inputs">
+                                                                    <option value="">Choose</option>
+                                                                    <?= $other_proc_markup ?>
+                                                                </select>
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="other_start_date">Start date:</label>
+                                                            <div class="controls">
+                                                                <input id="other_start_date" type="text" name="other_start_date" class="form-control date_picker othr_proc_inputs" placeholder="Enter Start date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="other_end_date">End date:</label>
+                                                            <div class="controls">
+                                                                <input id="other_end_date" type="text" name="other_end_date" class="form-control date_picker othr_proc_inputs" placeholder="Enter End date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="oth_proc_doc">Physician name:</label>
+                                                            <div class="controls">
+                                                                <input id="oth_proc_doc" type="text" name="oth_proc_doc" class="form-control othr_proc_inputs" placeholder="Enter Doctor name" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
                                                 </div>
@@ -801,7 +846,7 @@ if (!empty($physic_list)) {
         $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs','pancha_input'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
@@ -887,7 +932,7 @@ if (!empty($physic_list)) {
                 $('.pancha_input').prop('disabled', true).trigger("chosen:updated");
             }
         });
-        
+
         $('#physiotherapy_check').click(function () {
             if ($(this).is(":checked")) {
                 $('.physic_inputs').prop('disabled', false).trigger("chosen:updated");
@@ -895,6 +940,16 @@ if (!empty($physic_list)) {
             } else if ($(this).is(":not(:checked)")) {
                 $('.physic_inputs').attr('disabled', 'disabled');
                 $('.physic_inputs').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+
+        $('#other_proc_check').click(function () {
+            if ($(this).is(":checked")) {
+                $('.othr_proc_inputs').prop('disabled', false).trigger("chosen:updated");
+                $('.othr_proc_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.othr_proc_inputs').attr('disabled', 'disabled');
+                $('.othr_proc_inputs').prop('disabled', true).trigger("chosen:updated");
             }
         });
 
