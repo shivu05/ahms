@@ -800,10 +800,16 @@ if (!empty($other_proc_list)) {
                                     foreach ($wards as $ward) {
                                         $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
                                         $beds = explode(',', $ward['beds']);
-                                        asort($beds);
-                                        if (!empty($beds)) {
-                                            foreach ($beds as $bed) {
-                                                $bed_select .= '<option value="' . $bed . '">' . $bed . '</option>';
+                                        $bedstatus = explode(',', $ward['bedstatus']);
+                                        //asort($beds);
+                                        if (!empty($bedstatus)) {
+                                            $i = 0;
+                                            //asort($beds);
+                                            foreach ($bedstatus as $bed) {
+                                                //$is_disabled = ()
+                                                $bed_stat = explode('#', $bed);
+                                                $is_disabled = ($bed_stat[1] == 'not available') ? 'disabled="disabled" style="color:red;"' : '';
+                                                $bed_select .= '<option value="' . $bed_stat[0] . '" ' . $is_disabled . '>' . $bed_stat[0] . '</option>';
                                             }
                                         }
                                     }

@@ -215,6 +215,7 @@ class Patient extends SHV_Controller {
     }
 
     function ipd_list() {
+        $this->load->model('patient/treatment_model');
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
@@ -222,6 +223,7 @@ class Patient extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
+        $data['wards'] = $this->treatment_model->getBedno(true);
         $this->layout->data = $data;
         $this->layout->render();
     }

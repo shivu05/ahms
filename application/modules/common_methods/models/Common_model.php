@@ -66,11 +66,30 @@ class Common_model extends CI_Model {
         if (isset($update['NofDays']) && $update['NofDays'] != 0 && trim($update['NofDays']) != '') {
             $num_days = $update['NofDays'];
         }
+        if (trim($update['cur_bed_no']) != trim($update['bed_no'])) {
+            $update_data = array(
+                'OpdNo' => NULL,
+                'bedstatus' => 'Available',
+                'treatId' => NULL
+            );
+            $this->db->where('bedno', $update['cur_bed_no']);
+            $this->db->update('bed_details', $update_data);
+
+            $update_data_new = array(
+                'OpdNo' => $update['opd'],
+                'bedstatus' => 'Not Available',
+                'IpNo' => $update['ipd']
+            );
+            $this->db->where('bedno', $update['bed_no']);
+            $this->db->update('bed_details', $update_data_new);
+        }
+
         $ipd_info = array(
             'DoAdmission' => $update['DoAdmission'],
             'DoDischarge' => $update['DoDischarge'],
             'NofDays' => $num_days,
-            'diagnosis' => $update['pat_diagnosis']
+            'diagnosis' => $update['pat_diagnosis'],
+            'BedNo' => $update['bed_no']
         );
         $this->db->where('IpNo', $update['ipd']);
         $this->db->where('OpdNo', $update['opd']);

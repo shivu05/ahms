@@ -155,9 +155,13 @@ class treatment_model extends CI_Model {
                         ->row_array();
     }
 
-    public function getBedno() {
-        $query = "SELECT id,department,wardno,group_concat(bedno) as beds 
-            FROM bed_details b where b.bedstatus='Available' 
+    public function getBedno($all_beds = false) {
+        $where = " and b.bedstatus='Available'";
+        if ($all_beds) {
+            $where = '';
+        }
+        $query = "SELECT id,department,wardno,group_concat(bedno) as beds,group_concat(lower(concat(bedno,'#',bedstatus)) order by bedno) bedstatus
+            FROM bed_details b where 1=1 $where
             group by department,wardno order by wardno";
         return $this->db->query($query)->result_array();
     }

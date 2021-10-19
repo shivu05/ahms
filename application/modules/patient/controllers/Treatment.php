@@ -59,7 +59,7 @@ class Treatment extends SHV_Controller {
         $data['treat_id'] = $treat_id;
         $data['patient_details'] = $this->treatment_model->get_patient_basic_details($opd);
         $data['treatment_details'] = $this->treatment_model->get_treatment_history($opd);
-        $data['wards'] = $this->treatment_model->getBedno();
+        $data['wards'] = $this->treatment_model->getBedno(true);
         $treatment_details = $this->treatment_model->get_current_treatment_info($opd, $treat_id);
         $data['med_freqs'] = $this->get_medicine_frequency();
         $data['medicines'] = $this->get_product_list();

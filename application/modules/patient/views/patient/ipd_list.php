@@ -103,7 +103,27 @@
         </div>
     </div>
 </div>
-
+<?php
+$bed_select = '';
+if (!empty($wards)) {
+    foreach ($wards as $ward) {
+        $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
+        $beds = explode(',', $ward['beds']);
+        $bedstatus = explode(',', $ward['bedstatus']);
+        //asort($beds);
+        if (!empty($bedstatus)) {
+            $i = 0;
+            //asort($beds);
+            foreach ($bedstatus as $bed) {
+                //$is_disabled = ()
+                $bed_stat = explode('#', $bed);
+                $is_disabled = ($bed_stat[1] == 'not available') ? 'disabled="disabled" style="color:red;"' : '';
+                $bed_select .= '<option value="' . $bed_stat[0] . '" ' . $is_disabled . '>' . $bed_stat[0] . '</option>';
+            }
+        }
+    }
+}
+?>
 <div class="modal fade" id="patient_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -126,6 +146,15 @@
                     <div class="form-group">
                         <label for="NofDays">Days</label>
                         <input class="form-control" id="NofDays" name="NofDays" type="text">
+                        <input class="form-control" id="cur_bed_no" name="cur_bed_no" type="hidden">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bed_no">Bed No</label>
+                        <select class="form-control" name="bed_no" id="bed_no">
+                            <option value="">Select bed</option>
+                            <?php echo $bed_select; ?>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
@@ -469,6 +498,7 @@
                 data: {opd: opd_id, ipd: ipd_id},
                 dataType: 'json',
                 success: function (response) {
+                    console.log(response);
                     if (response.status) {
                         $('#patient_form #opd').val(response.data.OpdNo);
                         $('#patient_form #ipd').val(response.data.IpNo);
@@ -477,10 +507,12 @@
                         $('#patient_form #NofDays').val(response.data.NofDays);
                         $('#patient_form #pat_diagnosis').val(response.data.diagnosis);
                         $('#patient_form #pat_treatment').val(response.data.Trtment);
+                        $('#patient_form #bed_no').val(response.data.BedNo);
+                        $('#patient_form #cur_bed_no').val(response.data.BedNo);
                     }
                 }
             });
-            $('#patient_modal_box').modal('show');
+            $('#patient_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
         });
 
         $('#patient_form').validate();
