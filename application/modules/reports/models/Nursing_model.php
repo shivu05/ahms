@@ -348,7 +348,7 @@ class Nursing_model extends CI_Model {
 
         $return = array();
         $columns = array('k.OpdNo', 'ip.IpNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
-            'k.anaesthetic', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo',
+            'k.anaesthetic', 'CONCAT(coalesce(p.FirstName,"")," ",coalesce(p.LastName,"")) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo',
             'p.dept', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
