@@ -12,6 +12,41 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="surgery_modal_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="surgery_modal_label"><i class="fa fa-pencil"></i> Update Ksharasutra details</h5>
+            </div>
+            <div class="modal-body" id="surgery_modal_body">
+                <form action="" name="surgery_form" id="surgery_form" method="POST">
+                    <div class="form-group">
+                        <label for="surgeon">Surgeon:</label>
+                        <input class="form-control required" id="surgeon" name="surgeon" type="text" aria-describedby="surgeonHelp" placeholder="Enter Surgeon"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="asssurgeon">Asst. Surgeon:</label>
+                        <input class="form-control required" id="asssurgeon" name="asssurgeon" type="text" 
+                               aria-describedby="asssurgeonHelp" placeholder="Enter Asst. Surgeon">
+                    </div>
+                    <div class="form-group">
+                        <label for="anaesthetic">Anesthetist:</label>
+                        <input type="hidden" name="ID" id="ID" />
+                        <input class="form-control required" id="anaesthetic" name="anaesthetic" type="text" 
+                               aria-describedby="anaestheticHelp" placeholder="Enter Anesthetist">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+                <button type="button" class="btn btn-primary" id="btn-update"><i class="fa fa-save"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 <style>
     .patient{
         width: 200px !important;
@@ -34,6 +69,7 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        var is_admin = '<?= $is_admin ?>';
         $('#search_form').on('click', '#search', function () {
             show_patients();
         });
@@ -117,8 +153,17 @@
                 }
             }
         ];
+        if (is_admin == '1') {
+            columns.push({
+                title: 'Action',
+                data: function (item) {
+                    return "<center><i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i>" + "</center>";
+                }
+            });
+        }
+        var patient_table = '';
         function show_patients() {
-            var patient_table = $('#patient_table').DataTable({
+            patient_table = $('#patient_table').DataTable({
                 'columns': columns,
                 'columnDefs': [
                     {className: "", "targets": [4]}
@@ -137,6 +182,7 @@
                 'processing': true,
                 'serverSide': true,
                 'sorting': false,
+                'ordering': false,
                 'ajax': {
                     'url': base_url + 'reports/Test/get_ksharasutra_report',
                     'type': 'POST',
@@ -155,6 +201,58 @@
                 bScrollCollapse: true
 
             });
+
+            $('#patient_table tbody').on('click', '.edit', function () {
+                var data = patient_table.row($(this).closest('tr')).data();
+                $('#surgery_modal_box #surgery_form #ID').val(data.ID);
+                $('#surgery_modal_box #surgery_form #surgeon').val(data.surgeon);
+                $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
+                $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);
+                $('#surgery_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+            });
+
         }
+
+
+        $('#surgery_form').validate({
+            messages: {
+                surgeon: {required: 'Surgeon is empty'},
+                asssurgeon: {required: 'Asst. Surgeon is empty'},
+                anaesthetic: {required: 'Anesthetist is empty'}
+            }
+        });
+
+        $('#surgery_modal_box').on('click', '#btn-update', function () {
+            if ($('#surgery_form').valid()) {
+                var form_data = $('#surgery_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'reports/Test/update_ksharasutra',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        $('#surgery_modal_box').modal('hide');
+                        if (res.status == 'ok') {
+                            $.notify({
+                                title: "Ksharasutra :",
+                                message: res.msg,
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                            $('#search_form #search').trigger('click');
+                        } else {
+                            $.notify({
+                                title: "Ksharasutra :",
+                                message: res.msg,
+                                icon: 'fa fa-remove'
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                    }
+                });
+            }
+        });
     });
 </script>

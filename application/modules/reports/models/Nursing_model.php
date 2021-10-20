@@ -113,6 +113,13 @@ class Nursing_model extends CI_Model {
         return false;
     }
 
+    function update_ksharasutra_info($post_valyes, $id) {
+        if ($id) {
+            return $this->db->update('ksharsutraregistery', $post_valyes, array('ID' => $id));
+        }
+        return false;
+    }
+
     function get_usg_data($conditions, $export_flag = false) {
 
         $return = array();
@@ -347,7 +354,7 @@ class Nursing_model extends CI_Model {
     function get_ksharasutra_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('k.OpdNo', 'ip.IpNo', 't.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
+        $columns = array('k.OpdNo', 'ip.IpNo', 'k.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
             'k.anaesthetic', 'CONCAT(coalesce(p.FirstName,"")," ",coalesce(p.LastName,"")) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo',
             'p.dept', 't.diagnosis', 't.notes');
 

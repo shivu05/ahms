@@ -311,6 +311,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_ksharasutra', true, false);
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -326,6 +327,18 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_ksharasutra_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    public function update_ksharasutra() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $is_updated = $this->nursing_model->update_ksharasutra_info($post_values, $post_values['ID']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        }
     }
 
     function export_ksharasutra() {
