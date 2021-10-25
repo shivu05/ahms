@@ -68,7 +68,7 @@
             'ordering': false
         });
         $('#add_new').on('click', function () {
-            $('#physio_add_modal_box #physio_add_modal_box_label').html('Add new Physiotherapy');
+            $('#physio_add_modal_box #physio_add_modal_box_label').html('Add new Other procedure');
             $('#test_form #physi_id').val('');
             $('#test_form #physi_name').val('');
             $('#physio_add_modal_box').modal({
