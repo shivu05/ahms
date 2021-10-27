@@ -480,11 +480,11 @@ class Nursing_model extends CI_Model {
         $query = "SELECT " . join(',', $columns) . " FROM panchaprocedure l 
             JOIN treatmentdata t ON l.treatid = t.ID 
             JOIN patientdata p ON t.OpdNo = p.OpdNo 
-            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno $where_cond 
+            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno and i.treatId=t.ID  $where_cond 
             group by l.treatid ORDER BY l.date ASC";
         $main_query = "SELECT @a:=@a+1 serial_number,B.* FROM ( $query ) B,(SELECT @a:= 0) AS a order by serial_number ";
         $result = $this->db->query($main_query);
-//        echo $this->db->last_query();
+//       echo $this->db->last_query();
 //        exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
