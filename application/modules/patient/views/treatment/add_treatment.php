@@ -85,17 +85,25 @@ if (!empty($other_proc_list)) {
     <div class="col-md-9 col-sm-12">
         <div class="">
             <div class="">
+                <?php
+                $curr_dept = (isset($current_treatment['department']) && $current_treatment['department'] != '') ? $current_treatment['department'] : '';
+                ?>
                 <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
                     <!--hiddden fields-->
                     <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
                     <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $opd; ?>"/>
-                    <input type="hidden" name="department" id="department" value="<?php echo $current_treatment['department']; ?>"/>
+                    <input type="hidden" name="department" id="department" value="<?php echo $curr_dept; ?>"/>
                     <div class="box box-primary">
                         <div class="box-body">
-                            <h6>Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $current_treatment['department']))); ?></span>
-                                <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span>
+                            <h6>
+                                <?php if ($curr_dept): ?>
+                                    Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $curr_dept))); ?></span>
+                                <?php endif; ?>
+                                <?php if (isset($current_treatment['CameOn']) && trim($current_treatment['CameOn']) != ''): ?>
+                                    <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span>
+                                    <?php endif; ?>   
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a class="btn btn-info btn-sm" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
+                                    <a class="btn btn-info btn-sm pull-right" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
                                 </span>
                             </h6>
                             <hr/>
