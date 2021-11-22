@@ -92,6 +92,8 @@ $route['delivery'] = "reports/Test/delivery";
 
 $route['search-data'] = "auto/index";
 $route['analyse-data'] = "auto/move";
+$route['show-ref'] = "auto/show_reference_data";
+$route['get_data'] = "auto/get_reference_data";
 
 // Purchase
 $route['show-purchase-type'] = "pharmacy/purchase/purchase_items";

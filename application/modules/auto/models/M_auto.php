@@ -1450,4 +1450,44 @@ class M_auto extends CI_Model {
         return $result['user_name'];
     }
 
+    function get_data($conditions, $export_flag = false) {
+        $return = array();
+        $columns = array('ID', 'FirstName', 'LastName', 'Age', 'gender', 'occupation', 'address',
+            'city', 'Mobileno', 'diagnosis', 'complaints', 'department', 'procedures', 'Trtment', 'notes', 'AddedBy',
+            'entrydate', 'medicines', 'sub_dept');
+
+        $where_cond = " WHERE 1=1";
+
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'keyword':
+                        $where_cond .= " AND (FirstName like '%$val%' OR gender like '%$val%' OR diagnosis like '%$val%'
+                            OR department like '%$val%' OR Trtment like '%$val%')";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM oldtable o,
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY o.ID ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM oldtable x')->num_rows();
+        return $return;
+    }
+
 }
