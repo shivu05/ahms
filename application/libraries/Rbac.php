@@ -59,7 +59,7 @@ class Rbac {
     public function is_sadmin() {
         if ($this->is_login()) {
             //if (in_array('ADMIN', $this->_session['user_data']['role_code'])) {
-            if ('SADMIN' == $this->_session['user_data']['role_code']) {
+            if ('SUP_ADMIN' == $this->_session['user_data']['role_code']) {
                 return 1;
             }
         }

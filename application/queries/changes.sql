@@ -160,3 +160,12 @@ CREATE TABLE `archived_data` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1;
 INSERT INTO archived_data (db_name,status,name) VALUES('ahms_kramch_2020','Active','2020');
+
+
+INSERT INTO `role_master` (`role_name`, `role_code`, `last_updated_by`) VALUES ('Super Admin', 'SUP_ADMIN', '1');
+INSERT INTO `users` (`user_name`, `user_email`, `user_mobile`, `user_type`, `active`) VALUES ('Abhilasha', 'abhis@vedicsofts.com', '9845098450', '7', '1');
+UPDATE `users` SET `user_password` = '$2a$08$SCRISSRvXN3.PQ4PL7nY5O1I6GcD2EfIAh8.Wwza7DDSKUa7LWtbG' WHERE (`ID` = '19');
+INSERT INTO `i_user_roles` (`user_id`, `role_id`) VALUES ('19', '7');
+
+
+
