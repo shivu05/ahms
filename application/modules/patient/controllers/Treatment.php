@@ -718,7 +718,7 @@ class Treatment extends SHV_Controller {
             }
         }
         $filename = 'pharmacy_bills_' . date('Y_m_d');
-        pdf_create('', $html, $filename, 'P', 'I', FALSE, TRUE);
+        generate_pdf($html, 'L', '', $filename, false, false, 'I');
         exit;
     }
 
