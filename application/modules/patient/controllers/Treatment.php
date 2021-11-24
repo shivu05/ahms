@@ -579,10 +579,10 @@ class Treatment extends SHV_Controller {
                 $html .= "</div><br/>";
             }//foreach
         }//if
-        $filename = 'opd_bills_' . 'shi';
+        $filename = 'opd_bills_' . date('Y_m_d');
         //echo $html;exit;
         //pdf_create(array(), $html, $filename, 'P', 'I', FALSE, TRUE, FALSE);
-        generate_pdf($html, 'P');
+        generate_pdf($html, 'L', '', $filename, false, false, 'I');
         exit;
     }
 
