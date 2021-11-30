@@ -169,3 +169,10 @@ INSERT INTO `i_user_roles` (`user_id`, `role_id`) VALUES ('19', '7');
 
 
 
+INSERT INTO `perm_master`(`perm_code`,`perm_desc`,`perm_order`,`perm_label`,`perm_parent`,`perm_class`,`perm_url`,`perm_status`,`perm_attr`,`perm_icon`,`last_updated_id`)
+VALUES('STOCK_LIST','Stock List',6,0,30,'','stock-view','Active','','',1);
+INSERT INTO `role_perm`(`role_id`,`perm_id`,`status`,`last_updated_id`,`access_perm`) VALUES(1,56,'Active',1,1);
+
+INSERT INTO `perm_master`(`perm_code`,`perm_desc`,`perm_order`,`perm_label`,`perm_parent`,`perm_class`,`perm_url`,`perm_status`,`perm_attr`,`perm_icon`,`last_updated_id`)
+VALUES('PURCHASE_ENTRY','Purchase entry',7,0,30,'','add-purchase','Active','','',1);
+INSERT INTO `role_perm`(`role_id`,`perm_id`,`status`,`last_updated_id`,`access_perm`) VALUES(1,57,'Active',1,1);

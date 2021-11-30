@@ -16,7 +16,7 @@ class Product_master extends SHV_Model {
 
     function __construct() {
         parent::__construct();
-        $this->_table = get_class($this);
+        $this->_table = strtolower(get_class($this));
     }
 
     function get_product_info($where, $columns = NULL, $limit = 1) {
@@ -38,8 +38,8 @@ class Product_master extends SHV_Model {
 
     function fetch_temp_purchase_data() {
         $columns = array(
-            't.id','p.supplier_id','billno','date','refno','price','opbal','batch','pty','fty','prate','p.mrp','p.discount','p.vat','btype','total',
-            'user_id','product_id','product_master_id','pv.name'
+            't.id', 'p.supplier_id', 'billno', 'date', 'refno', 'price', 'opbal', 'batch', 'pty', 'fty', 'prate', 'p.mrp', 'p.discount', 'p.vat', 'btype', 'total',
+            'user_id', 'product_id', 'product_master_id', 'pv.name'
         );
         $user_id = $this->rbac->get_uid();
         $this->db->select($columns);
