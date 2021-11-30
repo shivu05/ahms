@@ -61,7 +61,49 @@ class Stock_model extends CI_Model {
             'product_id' => $post_values['products'][$i],
         );
         $this->db->insert('stock', $stock_data);
-        redirect('stick-entry');
+        redirect('stock-entry');
+    }
+
+    function get_stock_list($conditions, $export_flag = false) {
+        $return = array();
+        $columns = array('p.id as stock_id', 'supplier_id', 'product', 'batchno', 'mhf', 'pack', 'cstock', 'expdate', 'price', 'amount', 'dmonths', 'billno', 'purchasetype', 'vat', 'refno',
+            'date', 'pgroup', 'category', 'product_id', 'status','pv1.name as product_name', 'pv2.name as supplier_name');
+        $where_cond = " WHERE 1=1 ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'type':
+                        $where_cond .= " AND LOWER(type)=LOWER('$val')";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND name LIKE '%$val%'";
+                /* default:
+                  $where_cond .= " AND $col = '$val'"; */
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM stock p
+            join purchase_variables pv1 on p.product=pv1.id
+            join purchase_variables pv2 on p.supplier_id=pv2.id
+            ,(SELECT @a:= 0) AS a $where_cond";
+
+
+        $result = $this->db->query($query . ' ' . $limit);
+
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query("SELECT * FROM stock")->num_rows();
+        return $return;
     }
 
 }

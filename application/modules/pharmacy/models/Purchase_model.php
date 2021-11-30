@@ -193,12 +193,12 @@ class Purchase_model extends CI_Model {
                 $check_stock_data = $this->db->query("select * from stock where supplier_id='" . $row['supplier_id'] . "' 
                     and product='" . $row['product'] . "' and batchno='" . $row['batch'] . "'")->row_array();
                 if (empty($check_stock_data)) {
-                    $this->db->query("INSERT INTO stock (supplier_id, product, batchno, cstock, price, amount, billno, status) 
-                        SELECT supplier_id, product, batch , pty, mrp, total, billno, '1' FROM temp_purchase_entry where id='" . $row['id'] . "'");
+                    $this->db->query("INSERT INTO stock (supplier_id, product, batchno, cstock, price, amount, billno, status,date) 
+                        SELECT supplier_id, product, batch , pty, mrp, total, billno, '1',date FROM temp_purchase_entry where id='" . $row['id'] . "'");
                 } else {
                     $this->db->query("update stock s 
                         JOIN temp_purchase_entry t ON t.supplier_id=s.supplier_id AND t.product = s.product AND t.batch =s.batchno 
-                        set s.cstock = (s.cstock+t.pty), status='1',s.amount=t.total,s.price=t.mrp where t.supplier_id='" . $row['supplier_id'] . "'
+                        set s.cstock = (s.cstock+t.pty), status='1',s.amount=t.total,s.price=t.mrp,s.date=t.date where t.supplier_id='" . $row['supplier_id'] . "'
                             AND t.product='" . $row['product'] . "' AND t.batch= '" . $row['batch'] . "'");
                 }
             }

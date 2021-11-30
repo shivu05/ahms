@@ -1,13 +1,14 @@
 <div class="row">
-    <div class="col-md-12">
-        <div class="tile">
-            <div class="tile-title">
-                <h5>Stock entry: <a class="pull-right btn btn-primary" href="<?php echo base_url('product-list'); ?>"><i class="fa fa-eye"></i> View stock</a></h5>
+    <div class="col-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Stock entry:</h3>
+                <a class="pull-right btn btn-primary btn-sm" href="<?php echo base_url('stock-view'); ?>"><i class="fa fa-eye"></i> View stock</a>
             </div>
-            <div class="row tile-body">
-                <form class="form-horizontal col-md-12" method="POST" name="add_stock" id="add_stock" action="<?php echo base_url('save-stock'); ?>">
+            <div class="box-body">
+                <form class="" method="POST" name="add_stock" id="add_stock" action="<?php echo base_url('save_stock'); ?>">
                     <div class="row">
-                        <div class="col-lg-2">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="Inputsupplier">Supplier:</label>
                                 <select class="form-control required chosen-select" name="supplier" id="supplier">
@@ -22,13 +23,13 @@
                                 </select> 
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="Inputsupplier">Bill No.:</label>
                                 <input type="text" name="bill_no" id="bill_no" class="form-control required" placeholder="Bill number"/>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="Inputsupplier">Date:</label>
                                 <input class="form-control required date_picker" type="text" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" />
@@ -55,8 +56,8 @@
                     </div>
                     <hr/>
                     <div class="clearfix"></div>
-                    <div class="col-lg-12">
-                        <div class="card mb-3 border-primary">
+                    <div class="col-12">
+                        <div class="card border-primary">
                             <div class="card-body" id="rows_block">
                                 <div id="add_0">
                                     <div class="row">
@@ -135,10 +136,10 @@
                             </div>
                         </div>
                     </div>
-                   <!-- <a id="add_row" class="btn btn-primary pull-left" style="color:#FFF">Add Row</a><a  style="color:#FFF" id='delete_row' class="pull-right btn btn-warning">Delete Row</a>-->
+                    <!-- <a id="add_row" class="btn btn-primary pull-left" style="color:#FFF">Add Row</a><a  style="color:#FFF" id='delete_row' class="pull-right btn btn-warning">Delete Row</a>-->
                 </form>
             </div>
-            <div class="tile-footer">
+            <div class="box-footer">
                 <button class="btn btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-save"></i> Add stock</button>
                 <button class="btn btn-danger" type="button"><i class="fa fa-refresh"></i> Reset</button>
             </div>
@@ -153,23 +154,24 @@
 
     $(document).ready(function () {
         var validator = $('#add_stock').validate();
-        $('.tile-footer').on('click','#submit', function () {
+        $('.tile-footer').on('click', '#submit', function () {
+            alert();
             if ($('#add_stock').valid()) {
                 $('#add_stock').submit();
             }
         });
         product_option = '';
         batch_option = '';
-        $('#submit').prop('disabled',true);
+        $('#submit').prop('disabled', true);
         $('#supplier').on('change', function () {
             $('#product').html('<option value="">Choose product</option>');
             product_option = '<option>Choose product</option>';
             batch_option = '<option>Choose Batch</option>';
             var supplier_id = $(this).val();
-            if(!supplier_id){
-                $('#submit').prop('disabled',true);
-            }else{
-                $('#submit').prop('disabled',false);
+            if (!supplier_id) {
+                $('#submit').prop('disabled', true);
+            } else {
+                $('#submit').prop('disabled', false);
             }
             $.ajax({
                 url: base_url + 'pharmacy/purchase/get_product_list_by_supplier',
@@ -202,40 +204,40 @@
                 }
             });
         });
-        $('.product').on('change',function(){
+        $('.product').on('change', function () {
             var product_id = $(this).val();
             var parent_div_id = $(this).parent().parent().parent().parent().attr('id');
             $.ajax({
-                url : base_url + 'pharmacy/Stock/get_batch',
-                type:'POST',
-                dataType:'json',
-                data:{product_id:product_id},
-                success:function(response){
-                    $('#'+parent_div_id+' .batch').val(response[0].product_batch);
-                    $('#'+parent_div_id+' .p_rate').val(response[0].purchase_rate);
-                    $('#'+parent_div_id+' .mrp').val(response[0].mrp);
-                    $('#'+parent_div_id+' .discount').val(response[0].discount);
-                    $('#'+parent_div_id+' .vat').val(response[0].vat);
+                url: base_url + 'pharmacy/Stock/get_batch',
+                type: 'POST',
+                dataType: 'json',
+                data: {product_id: product_id},
+                success: function (response) {
+                    $('#' + parent_div_id + ' .batch').val(response[0].product_batch);
+                    $('#' + parent_div_id + ' .p_rate').val(response[0].purchase_rate);
+                    $('#' + parent_div_id + ' .mrp').val(response[0].mrp);
+                    $('#' + parent_div_id + ' .discount').val(response[0].discount);
+                    $('#' + parent_div_id + ' .vat').val(response[0].vat);
                 }
             })
         });
-        
+
     });//document ready ends
-    
+
     function getVal(dom) {
-        var a = $('#'+dom+' .p_qty').val();
-        var b = $('#'+dom+' .mrp').val();
+        var a = $('#' + dom + ' .p_qty').val();
+        var b = $('#' + dom + ' .mrp').val();
         var c = a * b;
-        $('#'+dom+' .total_mrp').val(c);
-        var d = $('#'+dom+' .discount').val();
+        $('#' + dom + ' .total_mrp').val(c);
+        var d = $('#' + dom + ' .discount').val();
         var e = (c * d) / 100;
         var f = c - e;
-        $('#'+dom+' .total').val(f);
-        if ($('#'+dom+' .vat').val() !== "") {
-            var g = $('#'+dom+' .vat').val();
+        $('#' + dom + ' .total').val(f);
+        if ($('#' + dom + ' .vat').val() !== "") {
+            var g = $('#' + dom + ' .vat').val();
             var i = (c * g) / 100;
-            var h = Number($('#'+dom+' .total').val()) + Number(i);
-            $('#'+dom+' .total').val(h);
+            var h = Number($('#' + dom + ' .total').val()) + Number(i);
+            $('#' + dom + ' .total').val(h);
         }
     }
 </script>

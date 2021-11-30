@@ -1,7 +1,9 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Product list:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Stock list:</h3> 
+                <a class="pull-right btn btn-sm btn-primary" href="<?php echo base_url('stock_entry'); ?>"><i class="fa fa-plus"></i> Add stock</a>
+            </div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
                     <div class="form-group col-md-3">
@@ -39,45 +41,13 @@
                         <a class="btn btn-dark" href="<?php echo base_url('add-product') ?>" type="button" id="add_product" name="add_product" data-backdrop="static" data-keyboard="false"><i class="fa fa-fw fa-lg fa-plus-circle"></i>Add</a>
                     </div>
                 </form>
-                <div id="user_details">
-                    <table class="table table-bordered table-hover table-striped dataTable" id="pharmacy_table" width="100%"></table>
+                <div class="data_grid">
+                    <table class="table table-bordered table-hover table-striped dataTable" id="stock_table" width="100%"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<style type="text/css">
-    .sl_no{
-        max-width: 40px !important;
-        min-width: 40px !important;
-        text-align: center;
-    }
-    .dec_num{
-        max-width: 60px !important;
-        min-width: 60px !important;
-        text-align: center;
-    }
-    .date{
-        max-width: 100px !important;
-        min-width: 100px !important;
-    }
-    .product_name{
-        max-width: 200px !important;
-        min-width: 200px !important;
-    }
-    .supplier_name{
-        max-width: 300px !important;
-        min-width: 300px !important;
-    }
-    .mfr{
-        max-width: 150px !important;
-        min-width: 150px !important;
-    }
-    .category{
-        max-width: 80px !important;
-        min-width: 80px !important;
-    }
-</style>
 <script type="text/javascript">
     var columns = [
         {
@@ -88,147 +58,99 @@
             }
         },
         {
-            title: "Product name",
-            class: "product_name",
-            data: function (item) {
-                return item.product_name;
-            }
-        },
-        {
-            title: "Batch",
-            class: "email",
-            data: function (item) {
-                return item.product_batch;
-            }
-        },
-        {
             title: "Supplier",
-            class: "supplier_name",
+            class: "sl_no",
             data: function (item) {
                 return item.supplier_name;
             }
         },
         {
-            title: "Package",
-            class: "email",
+            title: "Product",
+            class: "sl_no",
             data: function (item) {
-                return item.packing_name;
+                return item.product_name;
             }
         },
         {
-            title: "MFR",
-            class: "mfr",
+            title: "Batch No",
+            class: "sl_no",
             data: function (item) {
-                return item.product_mfg;
+                return item.batchno;
             }
         },
         {
-            title: "Category",
-            class: "category",
+            title: "Stock",
+            class: "sl_no",
             data: function (item) {
-                return item.product_type;
+                return item.cstock;
             }
         },
         {
-            title: "Group",
-            class: "category",
+            title: "Price",
+            class: "sl_no",
             data: function (item) {
-                return item.product_group;
+                return item.price;
+            }
+        },
+        {
+            title: "Amount",
+            class: "sl_no",
+            data: function (item) {
+                return item.amount;
+            }
+        },
+        {
+            title: "Bill No",
+            class: "sl_no",
+            data: function (item) {
+                return item.billno;
+            }
+        },
+        {
+            title: "Purchase type",
+            class: "sl_no",
+            data: function (item) {
+                return item.purchasetype;
             }
         },
         {
             title: "VAT",
-            class: "dec_num",
+            class: "sl_no",
             data: function (item) {
                 return item.vat;
             }
         },
         {
-            title: "P. rate",
-            class: "dec_num",
+            title: "Ref.No",
+            class: "sl_no",
             data: function (item) {
-                return item.purchase_rate;
+                return item.refno;
             }
         },
         {
-            title: "MRP",
-            class: "dec_num",
+            title: "Date",
+            class: "sl_no",
             data: function (item) {
-                return item.mrp;
+                return item.date;
             }
         },
         {
-            title: "S. price",
-            class: "dec_num",
+            title: "Status",
+            class: "sl_no",
             data: function (item) {
-                return item.sale_rate;
+                if (item.status == '1')
+                    return '<span class="label bg-green"> In stock </span>';
+                else
+                    return 'Out of stock';
             }
         },
-        {
-            title: "Discount",
-            class: "email",
-            data: function (item) {
-                return item.discount;
-            }
-        },
-        {
-            title: "Reorder point",
-            class: "date",
-            data: function (item) {
-                return item.reorder_point;
-            }
-        },
-        {
-            title: "Weight",
-            class: "dec_num",
-            data: function (item) {
-                return item.weight;
-            }
-        },
-        {
-            title: "Mfg date",
-            class: "date",
-            data: function (item) {
-                return item.manifacture_date;
-            }
-        },
-        {
-            title: "Expiry date",
-            class: "date",
-            data: function (item) {
-                return item.exp_date;
-            }
-        }
     ];
     $(document).ready(function () {
         populate_table();
-        $('#search').on('click', function () {
-            user_table.draw();
-        });
-
-        $('#reset').on('click', function () {
-            user_table.draw();
-        });
-
-        $('#search_form #export').on('click', '#export_to_xls', function (e) {
-            e.preventDefault();
-            //$('#search_form').submit();
-            var form_data = $('#search_form').serializeArray();
-            $.ajax({
-                url: base_url + 'export-product-list',
-                type: 'POST',
-                dataType: 'json',
-                data: {search_form: form_data},
-                success: function (data) {
-                    download(data.file, data.file_name, 'application/octet-stream');
-                }
-            });
-        });
-
     });
     var user_table;
     function populate_table() {
-        user_table = $('#pharmacy_table').DataTable({
+        user_table = $('#stock_table').DataTable({
             'columns': columns,
             'columnDefs': [
                 {className: "", "targets": [2]}
@@ -245,8 +167,9 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
-                'url': base_url + 'pharmacy/purchase/get_product_list',
+                'url': base_url + 'pharmacy/Stock/get_stock_list',
                 'type': 'POST',
                 'dataType': 'json',
                 'data': function (d) {
@@ -260,4 +183,5 @@
             sScrollX: true
         });
     }
+
 </script>

@@ -105,6 +105,7 @@ $route['product-list'] = "pharmacy/purchase/product_list";
 $route['export-product-list'] = "pharmacy/purchase/export_product_list";
 
 $route['purchase-return'] = "pharmacy/purchase/purchase_return";
+$route['add-purchase'] = "pharmacy/purchase/add_purchase";
 
 $route['duty-doctors'] = "master/Doctors";
 
@@ -112,6 +113,7 @@ $route['opd-patients-list'] = "patient/Treatment/display_all_patients";
 
 $route['stock-entry'] = "pharmacy/Stock/stock_entry";
 $route['save-stock'] = "pharmacy/Stock/save_stock";
+$route['stock-view'] = "pharmacy/Stock/stock_list";
 
 //$route['print-opd-bill/(:num)/(:num)/(:any)'] = 'patient/Treatment/print_bill/$1/$2/$3';
 $route['print-opd-bill'] = 'patient/Treatment/print_bill';

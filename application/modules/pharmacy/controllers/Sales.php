@@ -9,7 +9,7 @@ class Sales extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->layout->title = "Pharmacy";
+        $this->layout->title = "Sales";
     }
 
     public function index() {
