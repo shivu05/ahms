@@ -18,6 +18,10 @@ class Common_model extends CI_Model {
     }
 
     function get_patient_info_by_ipd($where) {
+        $columns = array('p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'i.IpNo',
+            'i.DoAdmission', 'i.DoAdmission', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment');
+        $this->db->select($columns);
+        $this->db->join('patientdata p', 'p.OpdNo=i.OpdNo');
         $this->db->join('ipdtreatment t', 't.ipdno=i.IpNo');
         return $this->db->get_where('inpatientdetails i', $where)->row_array();
     }
@@ -66,7 +70,7 @@ class Common_model extends CI_Model {
         if (isset($update['NofDays']) && $update['NofDays'] != 0 && trim($update['NofDays']) != '') {
             $num_days = $update['NofDays'];
         }
-        if (trim($update['cur_bed_no']) != trim($update['bed_no'])) {
+        if (trim($update['cur_bed_no']) != trim($update['selected_bed_no'])) {
             $update_data = array(
                 'OpdNo' => NULL,
                 'bedstatus' => 'Available',
@@ -80,7 +84,7 @@ class Common_model extends CI_Model {
                 'bedstatus' => 'Not Available',
                 'IpNo' => $update['ipd']
             );
-            $this->db->where('bedno', $update['bed_no']);
+            $this->db->where('bedno', $update['selected_bed_no']);
             $this->db->update('bed_details', $update_data_new);
         }
 

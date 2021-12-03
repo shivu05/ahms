@@ -2,119 +2,32 @@
 
 class M_auto extends CI_Model {
 
-    private $addemailid;
-    private $countOld;
-    private $CountNew;
-    private $comparestr;
-    private $totalentry;
-    private $patPercent;
-    private $patTypeList;
-    public $firstname = array();
-    private $midname;
-    private $lastname;
-    private $age;
-    private $gender;
-    private $occupation;
-    private $address;
-    private $city;
-    private $department;
+    private $addemailid, $countOld, $CountNew, $comparestr, $totalentry, $patPercent, $patTypeList;
+    public $firstname = array(), $midname, $lastname, $age, $gender, $occupation, $address, $city, $department;
     /* Conditional check or constraints added */
-    private $femfirstname;
-    private $femLastName;
-    private $femoccp;
-    private $Prasootiage;
-    private $childage;
-    private $childoccup;
+    private $femfirstname, $femLastName, $femoccp, $Prasootiage, $childage, $childoccup;
     /*  Department Lists of KAYACHIKITSA********************************************************* */
-    private $kayadiagnosis;
-    private $kayacomplaints;
-    private $kayaprocedure;
-    private $kayaTreatment;
-    private $kayaDoc;
-    private $kayamed;
+    private $kayadiagnosis, $kayacomplaints, $kayaprocedure, $kayaTreatment, $kayaDoc, $kayamed;
     /* Department Lists of Shalakya */
-    private $shalkayadiagnosis;
-    private $shalkayacomplaints;
-    private $shalkayaprocedure;
-    private $shalkayaTreatment;
-    private $shalkayaDoc;
-    private $shalkayamed;
+    private $shalkayadiagnosis, $shalkayacomplaints, $shalkayaprocedure, $shalkayaTreatment, $shalkayaDoc, $shalkayamed;
     /* Department Lists of Shallya */
-    private $shalyadiagnosis;
-    private $shalyacomplaints;
-    private $shalyaprocedure;
-    private $shalyaTreatment;
-    private $shalyaDoc;
-    private $shalyamed;
+    private $shalyadiagnosis, $shalyacomplaints, $shalyaprocedure, $shalyaTreatment, $shalyaDoc, $shalyamed;
     /* Department Lists of tantra */
-    private $tantradiagnosis;
-    private $tantracomplaints;
-    private $tantraprocedure;
-    private $tantraTreatment;
-    private $tantraDoc;
-    private $tantramed;
+    private $tantradiagnosis, $tantracomplaints, $tantraprocedure, $tantraTreatment, $tantraDoc, $tantramed;
     /* Department Lists of StringUtility.dept_SwasthaStr */
-    private $swasthaDiagnosis;
-    private $swasthaComplaints;
-    private $swasthaProcedure;
-    private $swasthaTreatment;
-    private $swasthaDoc;
-    private $swasthamed;
+    private $swasthaDiagnosis, $swasthaComplaints, $swasthaProcedure, $swasthaTreatment, $swasthaDoc, $swasthamed;
     /* Department Lists of panchakarma */
-    private $pkdiagnosis;
-    private $pkcomplaints;
-    private $pkprocedure;
-    private $pkTreatment;
-    private $pkDoc;
-    private $pkmed;
+    private $pkdiagnosis, $pkcomplaints, $pkprocedure, $pkTreatment, $pkDoc, $pkmed;
     /* Department Lists of StringUtility.dept_BalaStr */
-    private $bcdiagnosis;
-    private $bccomplaints;
-    private $bcprocedure;
-    private $bcTreatment;
-    private $bcDoc;
-    private $bcmed;
+    private $bcdiagnosis, $bccomplaints, $bcprocedure, $bcTreatment, $bcDoc, $bcmed;
     /* Department Lists of Emergency */
-    private $akdiagnosis;
-    private $akcomplaints;
-    private $akprocedure;
-    private $akTreatment;
-    private $akDoc;
-    private $akmed;
+    private $akdiagnosis, $akcomplaints, $akprocedure, $akTreatment, $akDoc, $akmed;
     private $addedby;
-    private $countkayachik;
-    private $countshalakya;
-    private $countshallya;
-    private $counttantra;
-    private $countSwastha;
-    private $countpanchakar;
-    private $countbalachik;
-    private $countemergency;
-    private $tobeentkayachik;
-    private $tobeentshalakya;
-    private $tobeentshallya;
-    private $tobeenttantra;
-    private $toBeEntSwastha;
-    private $tobeentpanchakar;
-    private $tobeentbalachik;
-    private $tobeentemergency;
-    private $kayachikper;
-    private $shalakyaper;
-    private $shallyaper;
-    private $tantraper;
-    private $swasthaPer;
-    private $panchakarper;
-    private $balachikper;
-    private $emergencyper;
-    private $shalakyaSubBranch;
-    private $selected_date;
-    private $_dept_percentage_arr;
-    private $_entered_records_arr;
-    private $_total_records_to_be_entered;
-    private $_treatment_data;
-    private $_department_data = array();
-    private $_index = 0;
-    private $_pancha_count = 5;
+    private $countkayachik, $countshalakya, $countshallya, $counttantra, $countSwastha, $countpanchakar, $countbalachik, $countemergency;
+    private $tobeentkayachik, $tobeentshalakya, $tobeentshallya, $tobeenttantra, $toBeEntSwastha, $tobeentpanchakar, $tobeentbalachik, $tobeentemergency;
+    private $kayachikper, $shalakyaper, $shallyaper, $tantraper, $swasthaPer, $panchakarper, $balachikper, $emergencyper, $shalakyaSubBranch;
+    private $_dept_percentage_arr, $_entered_records_arr, $_total_records_to_be_entered, $_treatment_data;
+    private $_department_data = array(), $_index = 0, $_pancha_count = 5;
 
     function __construct() {
         parent::__construct();
@@ -173,7 +86,7 @@ class M_auto extends CI_Model {
     }
 
     function auto_master($target, $cdate, $newpatient, $pancha_count) {
-        $fnamess = shuffle($this->firstname);
+        shuffle($this->firstname);
 
         $query = "SELECT sum(dept_count) as dept_count,A.department,dept.percentage FROM ( 
                     SELECT count(*) as dept_count,department from treatmentdata WHERE 
@@ -807,7 +720,7 @@ class M_auto extends CI_Model {
                 $deptNum = $getDeptNum + 1;
                 $gender = $this->gender[$this->_index];
                 $sex = "Male";
-                if ($gender != "Female") {
+                if (!$this->_is_female_gender($gender)) {
                     $fname = $this->firstname[$this->_index];
                     $lname = $this->lastname[$this->_index];
                 } else {
@@ -950,7 +863,7 @@ class M_auto extends CI_Model {
 
                 $gender = $this->gender[$this->_index];
                 $sex = "Male";
-                if ($gender != "Female") {
+                if (!$this->_is_female_gender($gender)) {
                     $fname = $this->firstname[$this->_index];
                     $lname = $this->lastname[$this->_index];
                     $occ = $this->occupation[$this->_index];
@@ -1039,7 +952,7 @@ class M_auto extends CI_Model {
 
                 $gender = $this->gender[$this->_index];
                 $sex = "Male";
-                if ($gender != "Female") {
+                if (!$this->_is_female_gender($gender)) {
                     $fname = $this->firstname[$this->_index];
                     $lname = $this->lastname[$this->_index];
                     $occ = $this->occupation[$this->_index];
@@ -1117,7 +1030,7 @@ class M_auto extends CI_Model {
                 $deptNum = $getDeptNum + 1;
                 $gender = $this->gender[$this->_index];
                 $sex = "Male";
-                if ($gender != "Female") {
+                if (!$this->_is_female_gender($gender)) {
                     $fname = $this->firstname[$this->_index];
                     $lname = $this->lastname[$this->_index];
                     $occ = $this->occupation[$this->_index];
@@ -1264,7 +1177,7 @@ class M_auto extends CI_Model {
                 $deptNum = $getDeptNum + 1;
                 $gender = $this->gender[$this->_index];
                 $sex = 'Male';
-                if ($gender != "Female") {
+                if (!$this->_is_female_gender($gender)) {
                     $fname = $this->firstname[$this->_index];
                     $lname = $this->lastname[$this->_index];
                     $occ = $this->occupation[$this->_index];

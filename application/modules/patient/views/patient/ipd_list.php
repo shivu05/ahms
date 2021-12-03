@@ -131,30 +131,70 @@ if (!empty($wards)) {
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h5 class="modal-title" id="default_modal_label">IPD Patient information</h5>
+                <h5 class="modal-title" id="default_modal_label">IPD [<span id="ipd_no_span"></span>] Patient information</h5>
             </div>
             <div class="modal-body" id="default_modal_body">
                 <form name="patient_form" id="patient_form" method="POST">
-                    <div class="form-group">
-                        <label for="DoAdmission">Date of Admission:</label>
-                        <input class="form-control required date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                    <div claass="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="first_name">First Name:</label>
+                                <input class="form-control required" id="first_name" name="first_name" type="text" placeholder="First Name">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="last_name">Last Name:</label>
+                                <input class="form-control" id="last_name" name="last_name" type="text" placeholder="Last Name">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="DoDischarge">Date of Discharge</label>
-                        <input class="form-control required date_picker ipd_dates" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
+                    <div claass="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="age">Age:</label>
+                                <input class="form-control required" id="age" name="age" type="text" placeholder="Age">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="gender">Gender:</label>
+                                <input class="form-control required" id="gender" name="gender" type="text" placeholder="Gender">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="NofDays">Days</label>
-                        <input class="form-control" id="NofDays" name="NofDays" type="text">
-                        <input class="form-control" id="cur_bed_no" name="cur_bed_no" type="hidden">
+                    <div claass="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="DoAdmission">Date of Admission:</label>
+                                <input class="form-control required date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="DoDischarge">Date of Discharge</label>
+                                <input class="form-control date_picker ipd_dates" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="bed_no">Bed No</label>
-                        <select class="form-control" name="bed_no" id="bed_no">
-                            <option value="">Select bed</option>
-                            <?php echo $bed_select; ?>
-                        </select>
+                    <div claass="row">
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="NofDays">Days</label>
+                                <input class="form-control" id="NofDays" name="NofDays" type="text">
+                                <input class="form-control" id="cur_bed_no" name="cur_bed_no" type="hidden" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="bed_no">Bed No</label>
+                                <select class="form-control required" name="bed_no" id="bed_no">
+                                    <option value="">Select bed</option>
+                                    <?php echo $bed_select; ?>
+                                </select>
+                                <input class="form-control" id="selected_bed_no" name="selected_bed_no" type="hidden" />
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
@@ -492,6 +532,7 @@ if (!empty($wards)) {
         $('#patient_table tbody').on('click', '.edit_patient', function () {
             var opd_id = $(this).data('opd');
             var ipd_id = $(this).data('ipd');
+            $('#patient_modal_box #ipd_no_span').html(ipd_id).css('color', 'brown');
             $.ajax({
                 url: base_url + "common_methods/get_ipd_patient_details",
                 type: 'POST',
@@ -500,6 +541,10 @@ if (!empty($wards)) {
                 success: function (response) {
                     console.log(response);
                     if (response.status) {
+                        $('#patient_form #first_name').val(response.data.FirstName);
+                        $('#patient_form #last_name').val(response.data.LastName);
+                        $('#patient_form #age').val(response.data.Age);
+                        $('#patient_form #gender').val(response.data.gender);
                         $('#patient_form #opd').val(response.data.OpdNo);
                         $('#patient_form #ipd').val(response.data.IpNo);
                         $('#patient_form #DoAdmission').val(response.data.DoAdmission);
@@ -509,10 +554,15 @@ if (!empty($wards)) {
                         $('#patient_form #pat_treatment').val(response.data.Trtment);
                         $('#patient_form #bed_no').val(response.data.BedNo);
                         $('#patient_form #cur_bed_no').val(response.data.BedNo);
+                        $('#patient_form #selected_bed_no').val(response.data.BedNo);
                     }
                 }
             });
             $('#patient_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+        });
+
+        $('#patient_form #bed_no').on('change', function () {
+            $('#patient_form #selected_bed_no').val($('#patient_form #bed_no').val());
         });
 
         $('#patient_form').validate();

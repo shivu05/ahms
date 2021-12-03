@@ -30,8 +30,8 @@ class Common_methods extends SHV_Controller {
             $opd = $this->input->post('opd');
             $ipd = $this->input->post('ipd');
             $post_values = array(
-                'OpdNo' => $opd,
-                'IpNo' => $ipd
+                'p.OpdNo' => $opd,
+                'i.IpNo' => $ipd
             );
             echo json_encode(array('data' => $this->common_model->get_patient_info_by_ipd($post_values), 'status' => 'true'));
         } else {
@@ -54,6 +54,7 @@ class Common_methods extends SHV_Controller {
         $this->load->model('common_methods/common_model');
         $post_values = $this->input->post();
         $is_updated = $this->common_model->update_ipd_data($post_values);
+        $is_opd_updated = $this->common_model->update_patient_data($post_values);
         if ($is_updated) {
             echo json_encode(array('status' => 'true'));
         } else {
