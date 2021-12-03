@@ -188,7 +188,7 @@ if (!empty($wards)) {
                         <div class="col-md-6 col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label for="bed_no">Bed No</label>
-                                <select class="form-control required" name="bed_no" id="bed_no">
+                                <select class="form-control" name="bed_no" id="bed_no">
                                     <option value="">Select bed</option>
                                     <?php echo $bed_select; ?>
                                 </select>
@@ -562,7 +562,8 @@ if (!empty($wards)) {
         });
 
         $('#patient_form #bed_no').on('change', function () {
-            $('#patient_form #selected_bed_no').val($('#patient_form #bed_no').val());
+            var selected_bed = $(this).val();
+            $('#patient_form #selected_bed_no').val(selected_bed);
         });
 
         $('#patient_form').validate();
@@ -576,7 +577,11 @@ if (!empty($wards)) {
                     type: 'POST',
                     data: form_data,
                     dataType: 'json',
+                    beforeSend: function (xhr) {
+                        $('.loading-box').show();
+                    },
                     success: function (response) {
+                        $('.loading-box').hide();
                         if (response.status) {
                             $('#patient_modal_box').modal('hide');
                             $.notify({

@@ -93,7 +93,7 @@ class Common_model extends CI_Model {
             'DoDischarge' => $update['DoDischarge'],
             'NofDays' => $num_days,
             'diagnosis' => $update['pat_diagnosis'],
-            'BedNo' => $update['bed_no']
+            'BedNo' => $update['selected_bed_no']
         );
         $this->db->where('IpNo', $update['ipd']);
         $this->db->where('OpdNo', $update['opd']);
