@@ -56,6 +56,13 @@ class Rbac {
         return 0;
     }
 
+    public function get_user_role_name() {
+        if ($this->is_login()) {
+            return $this->_session['user_data']['role_code'];
+        }
+        return 0;
+    }
+
     public function is_sadmin() {
         if ($this->is_login()) {
             //if (in_array('ADMIN', $this->_session['user_data']['role_code'])) {

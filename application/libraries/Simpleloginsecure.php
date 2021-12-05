@@ -249,8 +249,7 @@ class Simpleloginsecure {
             $this->CI->session->set_userdata('user_data', $user_data);
 
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -297,12 +296,12 @@ class Simpleloginsecure {
     function edit_password($user_email = '', $old_pass = '', $new_pass = '') {
         $this->CI = & get_instance();
         // Check if the password is the same as the old one
-        $this->CI->db->select('user_pass');
+        $this->CI->db->select('user_password');
         $query = $this->CI->db->get_where($this->user_table, array('user_email' => $user_email));
         $user_data = $query->row_array();
 
         $hasher = new PasswordHash(PHPASS_HASH_STRENGTH, PHPASS_HASH_PORTABLE);
-        if (!$hasher->CheckPassword($old_pass, $user_data['user_pass'])) { //old_pass is the same
+        if (!$hasher->CheckPassword($old_pass, $user_data['user_password'])) { //old_pass is the same
             return FALSE;
         }
 
@@ -310,7 +309,7 @@ class Simpleloginsecure {
         $user_pass_hashed = $hasher->HashPassword($new_pass);
         // Insert new password into the database
         $data = array(
-            'user_pass' => $user_pass_hashed,
+            'user_password' => $user_pass_hashed,
             'user_modified' => date('c')
         );
 

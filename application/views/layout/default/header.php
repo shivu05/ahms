@@ -56,14 +56,14 @@
                                     <img src="<?php echo base_url('/assets/img/user_icon.png') ?>" class="img-circle" alt="User Image">
                                     <p>
                                         <?= $this->rbac->get_logged_in_user_name(); ?>
-                                        <small></small>
+                                        <small><b>Role:</b> <?= $this->rbac->get_user_role_name() ?></small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->                        
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="<?= base_url('login/passwordChange'); ?>" class="btn btn-default btn-flat">Change password</a>
+                                        <a href="<?= base_url('change-password'); ?>" class="btn btn-default btn-flat">Change password</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="<?= base_url('logout'); ?>" class="btn btn-default btn-flat">Sign out</a>

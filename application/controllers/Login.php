@@ -54,6 +54,38 @@ class Login extends SHV_Controller {
         redirect('Login', true);
     }
 
+    function change_password() {
+        if ($this->rbac->is_login()) {
+            $this->layout->title = 'Change password';
+            $this->layout->layout = 'default';
+            $this->layout->headerFlag = FALSE;
+            $this->layout->render();
+        } else {
+            redirect('logout');
+        }
+    }
+
+    function check_current_pasword() {
+        $user_name = $this->rbac->get_email();
+        $current_password = $this->input->post('current_password');
+        if ($this->simpleloginsecure->login($user_name, $current_password)) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(false);
+        }
+    }
+
+    function update_password() {
+        $user_name = $this->rbac->get_email();
+        $current_password = $this->input->post('current_password');
+        $new_password = $this->input->post('new_password');
+        if ($this->simpleloginsecure->edit_password($user_name, $current_password, $new_password)) {
+            echo json_encode(array('status' => true, 'msg' => 'Password updated successfully', 'label' => 'OK', 'class' => 'btn-primary'));
+        } else {
+            echo json_encode(array('status' => false, 'msg' => 'Failed to update password. Try again', 'label' => 'Cancel', 'class' => 'btn-danger'));
+        }
+    }
+
     function home() {
         if ($this->rbac->is_admin()) {
             redirect('admin-dashboard');
