@@ -523,11 +523,11 @@ class M_auto extends CI_Model {
 
     private function _get_diagnosis_by_gender($dg_arr = array(), $gender = '') {
         if ($this->_is_female_gender($gender)) {
-            $new_arr = array_filter($dg_arr, function($ar) {
+            $new_arr = array_filter($dg_arr, function ($ar) {
                 return ($ar['gender'] == 'Female');
             });
         } else {
-            $new_arr = array_filter($dg_arr, function($ar) {
+            $new_arr = array_filter($dg_arr, function ($ar) {
                 return ($ar['gender'] == 'Male');
             });
         }
@@ -895,7 +895,6 @@ class M_auto extends CI_Model {
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
 
-
                 $diagnosis = $treatment_details['diagnosis'];
                 $docname = $this->shalkayaDoc;
                 $treatment_arr = array(
@@ -924,7 +923,6 @@ class M_auto extends CI_Model {
 
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
-
 
                 $insert_data = array(
                     'OpdNo' => $last_id,
@@ -1366,7 +1364,7 @@ class M_auto extends CI_Model {
     function get_data($conditions, $export_flag = false) {
         $return = array();
         $columns = array('ID', 'FirstName', 'LastName', 'Age', 'gender', 'occupation', 'address',
-            'city', 'Mobileno', 'diagnosis', 'complaints', 'department', 'procedures', 'Trtment', 'notes', 'AddedBy',
+            'city', 'Mobileno', 'diagnosis', 'complaints', '(REPLACE((department),"_"," ")) department', 'procedures', 'Trtment', 'notes', 'AddedBy',
             'entrydate', 'medicines', 'sub_dept');
 
         $where_cond = " WHERE 1=1";
@@ -1401,6 +1399,11 @@ class M_auto extends CI_Model {
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM oldtable x')->num_rows();
         return $return;
+    }
+
+    function update_patient_data($post_values) {
+        $this->db->where('ID', $post_values['ID']);
+        return $this->db->update('oldtable', $post_values);
     }
 
 }

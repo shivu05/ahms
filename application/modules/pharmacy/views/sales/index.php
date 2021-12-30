@@ -12,85 +12,46 @@
             <div class="box-body">
                 <form role="form" name="sales_form" id="sales_form" method="POST"> 
                     <div class="row">
-                        <div class="col-md-2">
-                            <label class="radio-inline">
-                                <input type="radio" name="type" id="opd" value="opd"> OPD
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="type" id="ipd" value="ipd"> IPD
-                            </label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="kw" id="kw" placeholder="Search for OPD...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" name="search_opd" id="search_opd" type="button">Go!</button>
+                                </span>
+                            </div><!-- /input-group -->
                         </div>
-                        <div class="col-md-2">
-                            <div class="typeahead__container">
-                                <div class="typeahead__field input-group">
-                                    <div class="typeahead__query">
-                                        <input class="js-typeahead-opd form-control" placeholder="Enter OPD number" name="q" id="q" autocomplete="off">
-                                    </div>
-                                    <div class="typeahead__button">
-                                        <button type="button" class="btn" id="typeahead_reset" style="height: 34px !important;">
-                                            <span class="typeahead__search-icon" style="padding-top: 5px !important;"></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12" id="patient_div"></div>
                     </div>
                 </form>
             </div>
-            <div class="box-footer">
-
-            </div>
+            <div class="box-footer"></div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#typeahead_reset').on('click', function () {
-            $('#q').val('');
+        $('#patient_div').on('change', '#treatment_date', function () {
+            $('.hide_div').hide();
+            $('#' + $(this).val()).show();
         });
-        $.typeahead({
-            input: '.js-typeahead-opd',
-            minLength: 1,
-            order: "desc",
-            group: {
-                template: "{{group}} "
-            },
-            href: base_url + "pharmacy/sales/get_opd_details/ {{group | slugify}} / {{display | slugify}} / ",
-            source: {
-                "IPD": {
-                    ajax: {
-                        url: base_url + "pharmacy/sales/get_opd_details",
-                        path: "data",
-                        data: {
-                            type: 'ipd'
-                        }
-                    }
-                }
-            },
-            dropdownFilter: "OPD",
-            emptyTemplate: 'No result found',
-            callback: {
-                onInit: function (node) {
-                    console.log('Typeahead Initiated on ' + node.selector);
+        $('#sales_form').on('click', '#search_opd', function () {
+            var kw = $('#sales_form #kw').val();
+            $.ajax({
+                url: base_url + 'fetch_patient_data',
+                type: 'POST',
+                dataType: 'html',
+                data: {'opd': kw},
+                success: function (response) {
+                    $('#patient_div').html(response);
                 },
-                onClickAfter: function (node, a, item, event) {
-                    var type = $("input[name='type']:checked").val();
-                    event.preventDefault();
-                    //console.log(item.display);
-                    if (item.display) {
-                        $.ajax({
-                            url: base_url + "pharmacy/sales/fetch_patient_details",
-                            type: 'POST',
-                            data: {type: type, 'opd': item.display},
-                            dataType: 'json',
-                            success: function (response) {
-                                console.log(response);
-                            }
-                        });
-                    }
-                    $('#result-container').text('');
+                error: function (error) {
+                    console.log(error)
                 }
-            }
+
+            });
         });
     });
 </script>

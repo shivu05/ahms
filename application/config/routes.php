@@ -97,6 +97,7 @@ $route['search-data'] = "auto/index";
 $route['analyse-data'] = "auto/move";
 $route['show-ref'] = "auto/show_reference_data";
 $route['get_data'] = "auto/get_reference_data";
+$route['save-data'] = "auto/save_patient_details";
 
 // Purchase
 $route['show-purchase-type'] = "pharmacy/purchase/purchase_items";
@@ -106,6 +107,7 @@ $route['add-product'] = "pharmacy/purchase/add_product";
 $route['save-product'] = "pharmacy/purchase/save_product";
 $route['product-list'] = "pharmacy/purchase/product_list";
 $route['export-product-list'] = "pharmacy/purchase/export_product_list";
+$route['fetch_patient_data'] = "pharmacy/sales/fetch_patient_data";
 
 $route['purchase-return'] = "pharmacy/purchase/purchase_return";
 $route['add-purchase'] = "pharmacy/purchase/add_purchase";

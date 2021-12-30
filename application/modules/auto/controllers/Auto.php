@@ -44,9 +44,9 @@ class Auto extends SHV_Controller {
     }
 
     function show_reference_data() {
-        $this->layout->title = "X-Ray";
+        $this->layout->title = "Reference data";
         $this->layout->navTitleFlag = false;
-        $this->layout->navTitle = "X-Ray";
+        $this->layout->navTitle = "Reference data";
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
@@ -68,6 +68,16 @@ class Auto extends SHV_Controller {
         $data = $this->m_auto->get_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function save_patient_details() {
+        $post_values = $this->input->post();
+        $is_updated = $this->m_auto->update_patient_data($post_values);
+        if ($is_updated) {
+            echo json_encode(array('status' => true, 'msg' => 'Record updated successfully', 'type' => 'success'));
+        } else {
+            echo json_encode(array('status' => false, 'msg' => 'Failed to update try again', 'type' => 'danger'));
+        }
     }
 
 }

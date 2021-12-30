@@ -10,6 +10,7 @@ class Sales extends SHV_Controller {
     public function __construct() {
         parent::__construct();
         $this->layout->title = "Sales";
+        $this->load->model('pharmacy/sales_model');
     }
 
     public function index() {
@@ -19,14 +20,13 @@ class Sales extends SHV_Controller {
         $this->layout->render();
     }
 
-    public function get_opd_details() {
+    public function fetch_patient_data() {
         if ($this->input->is_ajax_request()) {
-            $type = $this->input->get('type');
-            if ($type == 'opd') {
-                echo json_encode(array('data' => array_column($this->db->select('OpdNo')->get('treatmentdata')->result_array(), 'OpdNo')));
-            } else {
-                echo json_encode(array('data' => array_column($this->db->select('ipdno')->get('ipdtreatment')->result_array(), 'ipdno')));
-            }
+            $opd = $this->input->post('opd');
+            $data = array();
+            $data['data'] = $this->sales_model->get_patient_data($opd);
+            $this->layout->data = $data;
+            echo $this->layout->render(array('view' => 'pharmacy/sales/fetch_patient_data'), true);
         }
     }
 
