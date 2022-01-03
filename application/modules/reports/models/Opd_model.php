@@ -66,14 +66,11 @@ class Opd_model extends CI_Model {
 
     function get_opd_patients($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType'
-            , 't.deptOpdNo', 'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name', 'Age', 'gender', 't.AddedBy', 'city', 'address',
-            't.Trtment', 't.diagnosis', 'CameOn', 'attndedby', '(REPLACE((t.department),"_"," ")) department', 't.monthly_sid as msd', 't.ID',
-            't.department as ref_dept');
+        $columns = array('t.ID', 't.monthly_sid as msd', 't.OpdNo', 't.deptOpdNo', 't.PatType',
+            'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name', 'Age', 'gender', 'address', 'city', 't.diagnosis', 't.Trtment', 't.AddedBy', '(REPLACE((t.department),"_"," ")) department',
+            'CameOn', 'd.ref_room ref_dept');
 
-        $where_cond = " WHERE t.OpdNo=p.OpdNo AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
-        //$where_cond = " WHERE 1=1 ";
-
+        $where_cond = " WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -104,8 +101,7 @@ class Opd_model extends CI_Model {
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
 
-        $query = "SELECT @a:=@a+1 AS serial_number," . implode(',', $columns) . " FROM treatmentdata t, (SELECT @a:= 0) AS a JOIN patientdata p
-             $where_cond ORDER BY t.ID ASC";
+        $query = "SELECT " . implode(',', $columns) . " FROM treatmentdata t JOIN patientdata p JOIN deptper d $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 

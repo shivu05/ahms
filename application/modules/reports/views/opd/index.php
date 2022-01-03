@@ -37,7 +37,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                    <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
+                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -70,14 +70,15 @@
         });
         $('#search_form #export').on('click', '#export_to_xls', function (e) {
             e.preventDefault();
-            //$('#search_form').submit();
+             $('.loading-box').css('display', 'block');
             var form_data = $('#search_form').serializeArray();
             $.ajax({
                 url: base_url + 'reports/Opd/export_patients_list',
                 type: 'POST',
                 dataType: 'json',
-                data: {search_form: form_data},
+                data: form_data,
                 success: function (data) {
+                    $('.loading-box').css('display', 'none');
                     download(data.file, data.file_name, 'application/octet-stream');
                 }
             });

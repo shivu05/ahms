@@ -201,4 +201,36 @@ class Opd extends SHV_Controller {
         exit;
     }
 
+    function export_patients_list() {
+        $this->load->helper('to_excel');
+
+        $headings = array(
+            'ID' => 'Yr.No.',
+            'msd' => 'M.No.',
+            'OpdNo' => 'C.OPD',
+            'deptOpdNo' => 'D.OPD',
+            'PatType' => 'Type',
+            'name' => 'Name',
+            'Age' => 'Age',
+            'gender' => 'Gender',
+            'address' => 'Address',
+            'city' => 'City',
+            'diagnosis' => 'Diagnosis',
+            'Trtment' => 'Treatment',
+            'AddedBy' => 'Doctor',
+            'department' => 'Department',
+            'CameOn' => 'Date',
+            'ref_dept' => 'Ref.Room No'
+        );
+
+        $input_array = array();
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+        $export_array = $this->opd_model->get_opd_patients($input_array, true);
+        $file_name = 'opd_patient_list.xlsx';
+        download_excel($export_array['data'], $file_name, $headings);
+        exit;
+    }
+
 }
