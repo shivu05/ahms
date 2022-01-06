@@ -176,3 +176,67 @@ INSERT INTO `role_perm`(`role_id`,`perm_id`,`status`,`last_updated_id`,`access_p
 INSERT INTO `perm_master`(`perm_code`,`perm_desc`,`perm_order`,`perm_label`,`perm_parent`,`perm_class`,`perm_url`,`perm_status`,`perm_attr`,`perm_icon`,`last_updated_id`)
 VALUES('PURCHASE_ENTRY','Purchase entry',7,0,30,'','add-purchase','Active','','',1);
 INSERT INTO `role_perm`(`role_id`,`perm_id`,`status`,`last_updated_id`,`access_perm`) VALUES(1,57,'Active',1,1);
+
+/* LAB REFERENCE */
+drop table lab_reference;
+create table lab_reference select * from labregistery;
+
+update lab_reference a,treatmentdata b set a.labdisease=b.diagnosis where a.treatID=b.ID;
+
+select * from lab_reference where trim(labdisease)='';
+delete from lab_reference where trim(labdisease)='';
+delete from lab_reference where testvalue is null;
+
+select *from lab_reference where lab_test_type is null;
+
+update lab_reference a,lab_investigations b 
+set a.lab_test_type=b.lab_test_id 
+where a.testName=b.lab_inv_id;
+
+select * from lab_reference; where lab_test_cat is null;
+
+update lab_reference a,lab_tests b 
+set a.lab_test_cat=b.lab_cat_id 
+where a.lab_test_type=b.lab_test_id;
+
+/* TESTING*/
+select lab_test_cat,lab_test_type,testName,treatID,testrange,testvalue,labdisease from lab_reference where upper(trim(labdisease))='ARSHA' group by treatID ORDER BY RAND() LIMIT 1;-- 23268
+select * from lab_reference where treatID=8840;
+
+select lab_test_cat,lab_test_type,testName,treatID,testrange,testvalue,labdisease from lab_reference;
+
+INSERT INTO labregistery
+(OpdNo,refDocName,lab_test_cat,lab_test_type,testName,testDate,treatID,testrange,testvalue,labdisease,tested_date)
+select * from lab_reference where treatID=8840;
+
+
+CREATE TABLE `reference_treatment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `diagnosis` VARCHAR(200) NULL,
+  `is_lab` VARCHAR(1) NULL DEFAULT 'N',
+  `is_usg` VARCHAR(1) NULL DEFAULT 'N',
+  `is_ecg` VARCHAR(1) NULL DEFAULT 'N',
+  `is_xray` VARCHAR(1) NULL DEFAULT 'N',
+  `is_pancha` VARCHAR(1) NULL DEFAULT 'N',
+  PRIMARY KEY (`id`));
+
+insert into reference_treatment (diagnosis) select distinct diagnosis from treatmentdata where diagnosis is not null and diagnosis <>'';
+
+SELECT * FROM reference_treatment;
+
+select * from reference_treatment a,
+lab_reference b where a.diagnosis=b.labdisease
+group by diagnosis;
+
+update reference_treatment a,lab_reference b
+set is_lab='Y'
+where a.diagnosis=b.labdisease;
+update  reference_treatment set  is_lab='N';
+
+select distinct diagnosis from usgregistery a,treatmentdata b where a.treatId=b.ID;
+
+update reference_treatment c,usgregistery a,treatmentdata b
+set is_usg='Y'
+where a.treatId=b.ID and b.diagnosis=c.diagnosis;
+
+select * from reference_treatment where is_usg='Y';

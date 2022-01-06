@@ -1273,24 +1273,11 @@ class M_auto extends CI_Model {
     }
 
     function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
-        return true;
-        $query = "SELECT * FROM ref_lab_reg_tab WHERE lab_disease='" . $labdisease . "' ORDER BY RAND() LIMIT 1";
-        $query = $this->db->query($query);
-        $is_inserted = false;
-        foreach ($query->result() as $val) {
-            $treatment_arr2 = array(
-                "OpdNo" => $opdno,
-                "refDocName" => $docname,
-                "testName" => $val->lab_test,
-                "testDate" => $camedate,
-                "treatID" => $treatid,
-                "testrange" => $val->lab_ref_range,
-                "labdisease" => $val->lab_disease,
-                "testvalue" => $val->lab_test_val,
-            );
-            $is_inserted = $this->db->insert('labregistery', $treatment_arr2);
-        }
-        return $is_inserted;
+        $check_data = "select treatID from lab_reference where upper(trim(labdisease))='" . strtoupper(trim($labdisease)) . "' ORDER BY RAND() LIMIT 1";
+        $trement_details = $this->db->query($check_data)->row_array();
+        $insert_query = "INSERT INTO labregistery (OpdNo,refDocName,lab_test_cat,lab_test_type,testName,testDate,treatID,testrange,testvalue,labdisease,tested_date) 
+            select '$opdno','$docname',lab_test_cat,lab_test_type,testName,'$camedate','$treatid',testrange,testvalue,'$labdisease','$camedate' from lab_reference where treatID='" . $trement_details['treatID'] . "'";
+        return $this->db->query($insert_query);
     }
 
     function InsertXrayRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
