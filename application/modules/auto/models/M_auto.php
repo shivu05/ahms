@@ -255,7 +255,9 @@ class M_auto extends CI_Model {
         } else if (strtolower(trim($labdisease)) == strtolower(trim("PAKSHAGHATA")) || strtolower(trim($labdisease)) == strtolower(trim("ARDITA")) || strtolower(trim($labdisease)) == strtolower(trim("V.RAKTACHAP")) || strtolower(trim($labdisease)) == strtolower(trim("HYPERTENSION")) || strtolower(trim($labdisease)) == strtolower(trim("AMLAPITTA"))) {
             $this->InsertECGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
         }
-
+        if (strtolower($dept) == strtolower('Panchakarma')) {
+            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname);
+        }
         /* if (strtolower($dept) == strtolower('Panchakarma')) {
           $j = $this->db->get('panchaprocedure')->num_rows();
           if ($j <= $this->_pancha_count) {
@@ -1273,11 +1275,19 @@ class M_auto extends CI_Model {
     }
 
     function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
-        $check_data = "select treatID from lab_reference where upper(trim(labdisease))='" . strtoupper(trim($labdisease)) . "' ORDER BY RAND() LIMIT 1";
-        $trement_details = $this->db->query($check_data)->row_array();
-        $insert_query = "INSERT INTO labregistery (OpdNo,refDocName,lab_test_cat,lab_test_type,testName,testDate,treatID,testrange,testvalue,labdisease,tested_date) 
+        if ($this->db->table_exists('lab_reference')) {
+            $check_data = "select treatID from lab_reference where upper(trim(labdisease))='" . strtoupper(trim($labdisease)) . "' ORDER BY RAND() LIMIT 1";
+            $trement_details = $this->db->query($check_data)->row_array();
+            if (!empty($trement_details)) {
+                $insert_query = "INSERT INTO labregistery (OpdNo,refDocName,lab_test_cat,lab_test_type,testName,testDate,treatID,testrange,testvalue,labdisease,tested_date) 
             select '$opdno','$docname',lab_test_cat,lab_test_type,testName,'$camedate','$treatid',testrange,testvalue,'$labdisease','$camedate' from lab_reference where treatID='" . $trement_details['treatID'] . "'";
-        return $this->db->query($insert_query);
+                return $this->db->query($insert_query);
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     function InsertXrayRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
@@ -1322,22 +1332,19 @@ class M_auto extends CI_Model {
     }
 
     function InsertPanchaProcedure($opdno, $treatid, $camedate, $labdisease, $docname) {
-        $query = "SELECT * FROM panchakarma_ref WHERE disease='" . $labdisease . "' ORDER BY RAND() LIMIT 1";
-        $query = $this->db->query($query);
-        $is_inserted = false;
-        foreach ($query->result() as $val) {
-            $treatment_arr2 = array(
-                "opdno" => $opdno,
-                "docname" => $docname,
-                "disease" => $val->disease,
-                "date" => $camedate,
-                "treatid" => $treatid,
-                "treatment" => $val->treatment,
-                "procedure" => $val->procedure
-            );
-            $is_inserted = $this->db->insert('panchaprocedure', $treatment_arr2);
+        if ($this->db->table_exists('reference_panchakarma')) {
+            $check_data = "select treatid,no_of_days from reference_panchakarma where upper(trim(disease))='UNMADA' ORDER BY RAND() LIMIT 1";
+            $trement_details = $this->db->query($check_data)->row_array();
+            if (!empty($trement_details)) {
+                $insert_query = "INSERT INTO panchaprocedure (opdno,disease,`treatment`,`procedure`,`date`,docname,treatid,proc_end_date)
+            select '$opdno','$labdisease',`treatment`,`procedure`,'$camedate','$docname','$treatid',DATE_ADD('$camedate', INTERVAL " . $trement_details['no_of_days'] . " DAY) from reference_panchakarma where treatid=" . $trement_details['treatid'] . "";
+                return $this->db->query($insert_query);
+            } else {
+                return false;
+            }
+        } else {
+            return true;
         }
-        return $is_inserted;
     }
 
     function get_day_doctor($date = "", $dept = "") {

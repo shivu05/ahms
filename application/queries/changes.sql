@@ -240,3 +240,21 @@ set is_usg='Y'
 where a.treatId=b.ID and b.diagnosis=c.diagnosis;
 
 select * from reference_treatment where is_usg='Y';
+
+
+/* Panchakarma procedures */
+select * from panchaprocedure;
+create table reference_panchakarma select * from panchaprocedure;
+
+select a.*,DATEDIFF(proc_end_date,date) from reference_panchakarma a; where proc_end_date ='';
+update reference_panchakarma a,treatmentdata b 
+set a.disease=b.diagnosis where a.treatid=b.ID;
+ALTER TABLE `reference_panchakarma` 
+ADD COLUMN `no_of_days` INT(3) NULL DEFAULT 0 AFTER `proc_end_date`;
+select * from reference_panchakarma a;
+delete from  reference_panchakarma where proc_end_date ='';
+update reference_panchakarma set no_of_days=DATEDIFF(proc_end_date,`date`) where  proc_end_date<>`date`;
+update reference_panchakarma set no_of_days=1 where  proc_end_date=`date`;
+ALTER TABLE reference_panchakarma 
+CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
+ADD PRIMARY KEY (`id`);
