@@ -14,6 +14,7 @@ class Auto extends SHV_Controller {
         }
         $this->load->model('auto/m_auto');
         $this->_is_admin = $this->rbac->is_admin();
+        $this->layout->title = "Record analysis";
     }
 
     function index() {
@@ -30,6 +31,7 @@ class Auto extends SHV_Controller {
 
     function move() {
         $data['title'] = "Analysis";
+        $this->layout->title = "Record analysis";
         $target = $this->input->post('target');
         $cdate = $this->input->post('cdate');
         $newpatient = $this->input->post('newpatient');

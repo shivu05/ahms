@@ -255,9 +255,9 @@ class M_auto extends CI_Model {
         } else if (strtolower(trim($labdisease)) == strtolower(trim("PAKSHAGHATA")) || strtolower(trim($labdisease)) == strtolower(trim("ARDITA")) || strtolower(trim($labdisease)) == strtolower(trim("V.RAKTACHAP")) || strtolower(trim($labdisease)) == strtolower(trim("HYPERTENSION")) || strtolower(trim($labdisease)) == strtolower(trim("AMLAPITTA"))) {
             $this->InsertECGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
         }
-        if (strtolower($dept) == strtolower('Panchakarma')) {
-            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname);
-        }
+//        if (strtolower($dept) == strtolower('Panchakarma')) {
+//            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname);
+//        }
         /* if (strtolower($dept) == strtolower('Panchakarma')) {
           $j = $this->db->get('panchaprocedure')->num_rows();
           if ($j <= $this->_pancha_count) {
