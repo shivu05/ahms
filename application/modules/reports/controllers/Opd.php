@@ -91,7 +91,7 @@ class Opd extends SHV_Controller {
         $result = $this->opd_model->get_opd_patients($input_array, true);
         $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
-
+        
         $data['opd_patients'] = $result['data'];
         $data['department'] = $input_array['department'];
         $data['opd_stats'] = $return;
@@ -99,7 +99,7 @@ class Opd extends SHV_Controller {
         $this->layout->headerFlag = false;
         $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-
+//pma($html,1);
         $title = array(
             'report_title' => 'OPD REGISTER',
             'department' => $print_dept,

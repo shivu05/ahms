@@ -1275,6 +1275,7 @@ class M_auto extends CI_Model {
     }
 
     function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+        return true;
         if ($this->db->table_exists('lab_reference')) {
             $check_data = "select treatID from lab_reference where upper(trim(labdisease))='" . strtoupper(trim($labdisease)) . "' ORDER BY RAND() LIMIT 1";
             $trement_details = $this->db->query($check_data)->row_array();

@@ -71,7 +71,7 @@ $dept_room_array = array(
                 }
                 echo "<td>" . $patients['department'] . "</td>";
                 if ($department == 1) {
-                    echo "<td style='text-align: right;'><center>" . $dept_room_array[$patients['ref_dept']] . "</center></td>";
+                    echo "<td style='text-align: right;'><center>" . $patients['ref_dept'] . "</center></td>";
                 }
                 echo "<td>" . format_date($patients['CameOn']) . "</td>";
                 echo "</tr>";
