@@ -439,11 +439,11 @@ class Nursing_model extends CI_Model {
         }
 
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM surgeryregistery s, 
-        (SELECT @a:= 0) AS a  JOIN patientdata p JOIN treatmentdata t JOIN inpatientdetails i  $where_cond ORDER BY surgDate ASC";
+        (SELECT @a:= 0) AS a  JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i  $where_cond ORDER BY surgDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN treatmentdata t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
         return $return;
     }
 
