@@ -92,7 +92,6 @@ class Treatment extends SHV_Controller {
 
         $dept = $this->input->post('department');
 
-
         if ($this->input->post('birth_check') == 'on') {
             $birth_data = array(
                 'OpdNo' => $this->input->post('opd_no'),
@@ -390,7 +389,7 @@ class Treatment extends SHV_Controller {
             );
             $last_ipd_id = $this->treatment_model->store_ipd_treatment($treatment_data);
             $treat_id = $last_ipd_id;
-            $this->add_pharmcy($treat_id);
+            $this->add_pharmcy($treat_id, 'ipd');
         } else {
             $treat_id = $this->input->post('treat_id');
         }

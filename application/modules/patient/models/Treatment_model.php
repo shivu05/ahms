@@ -296,7 +296,7 @@ class treatment_model extends CI_Model {
             }// end if
         } else if (strtolower($type) == 'ipd') {
             $treatment_data = $this->db->query("SELECT * FROM ipdtreatment i JOIN inpatientdetails ip On i.ipdno=ip.IpNo 
-                WHERE ip.department !='Swasthavritta' AND ID='" . $treat_id . "'")->result_array();
+                WHERE ip.department !='Swasthavritta' AND ID='" . $treat_id . "'")->row_array();
             $digits = 4;
             $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
             $products = explode(',', $treatment_data['Trtment']);
