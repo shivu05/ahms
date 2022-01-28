@@ -2,7 +2,7 @@
 if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
-?>
+    ?>
     <table class="table table-bordered table-condensed dataTable" width="100%">
         <thead>
             <tr>
@@ -26,7 +26,7 @@ if (empty($patient)) {
                 echo "<td style='text-align:center;'>" . $count . "</td>";
                 echo "<td style='text-align:center;'>" . $row->OpdNo . "</td>";
                 echo "<td style='text-align:center;'>" . $row->deptOpdNo . "</td>";
-                echo "<td>" . $row->name  . "</td>";
+                echo "<td>" . $row->name . "</td>";
                 echo "<td style='text-align:left;'>" . $row->Age . "</td>";
                 echo "<td style='text-align:left;'>" . $row->gender . "</td>";
                 echo "<td>" . $row->refDocName . "</td>";
@@ -40,10 +40,13 @@ if (empty($patient)) {
                 $testname = explode(",", $row->testName);
                 $lab_test_type = explode(",", $row->lab_test_type);
                 $lab_cat_name = explode(",", $row->lab_test_cat);
-                $testrange = explode("|", $row->testrange);
-                $testvalue = explode(";", $row->testvalue);
+                $testrange = explode("#", $row->testrange);
+                $testvalue = explode("#", $row->testvalue);
                 echo "</tr>";
-            ?>
+//                echo $row->OpdNo;
+//                pma($row->lab_test_cat);
+//                pma($row->testvalue);
+                ?>
                 <tr>
                     <td></td>
                     <td colspan='7'>
@@ -81,10 +84,10 @@ if (empty($patient)) {
                         </table>
                     </td>
                 </tr>
-            <?php
+                <?php
             }
             ?>
         </tbody>
     </table>
-<?php
+    <?php
 }
