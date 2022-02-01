@@ -21,7 +21,7 @@ class Ipd_model extends CI_Model {
         $return = array();
         $columns = array(
             'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(ip.department),"_"," ")) department', 'WardNo', 'BedNo',
-            'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis', 'ip.status', 'NofDays'
+            'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis','t.procedures', 'ip.status', 'NofDays'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {

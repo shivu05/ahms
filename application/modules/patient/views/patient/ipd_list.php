@@ -211,6 +211,12 @@ if (!empty($wards)) {
                             <textarea name="pat_treatment" class="form-control" id="pat_treatment" rows="3" style="width: 100%" placeholder="Teatment should be seperated by comma"></textarea>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" for="pat_procedure">Procedures:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure"/>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -555,6 +561,7 @@ if (!empty($wards)) {
                         $('#patient_form #bed_no').val(response.data.BedNo);
                         $('#patient_form #cur_bed_no').val(response.data.BedNo);
                         $('#patient_form #selected_bed_no').val(response.data.BedNo);
+                        $('#patient_form #pat_procedure').val(response.data.procedures);
                     }
                 }
             });
