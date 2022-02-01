@@ -381,11 +381,12 @@ class treatment_model extends CI_Model {
             $update_array = array(
                 'Trtment' => $post_values['pat_treatment'],
                 'diagnosis' => $post_values['pat_diagnosis'],
+                'procedures' => $post_values['pat_procedure']
             );
             $personal_details = array(
                 'FirstName' => $post_values['pat_name'],
                 'Age' => $post_values['pat_age'],
-                'gender' => $post_values['pat_gender'],
+                'gender' => $post_values['pat_gender']
             );
             $this->db->where('OpdNo', $post_values['opd']);
             $is_pupdated = $this->db->update('patientdata', $personal_details);

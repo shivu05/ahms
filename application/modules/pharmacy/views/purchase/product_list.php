@@ -245,6 +245,7 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'pharmacy/purchase/get_product_list',
                 'type': 'POST',

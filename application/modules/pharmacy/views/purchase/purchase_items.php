@@ -77,6 +77,10 @@
                                 <label for="add_name">Name:</label>
                                 <input class="form-control required" name="add_name" type="text" aria-describedby="add_name" placeholder="Enter name" id="add_name"/>
                             </div>
+                            <div class="form-group" id="mfg_code" style="display: none;">
+                                <label for="extrainfo">MFG Code:</label>
+                                <input class="form-control required" name="extrainfo" type="text" aria-describedby="extrainfo" placeholder="Enter details" id="extrainfo"/>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -111,6 +115,20 @@
             data: function (item) {
                 return item.name;
             }
+        },
+        {
+            title: "Code",
+            class: "email",
+            data: function (item) {
+                return item.extrainfo;
+            }
+        },
+        {
+            title: "Action",
+            class: "email",
+            data: function (item) {
+                return "<center><i class='fa fa-edit hand_cursor edit_xray' data-id='" + item.ID + "'></i>" + "</center>";
+            }
         }
     ];
     $(document).ready(function () {
@@ -136,6 +154,14 @@
                 add_name: {
                     required: 'Name is required'
                 }
+            }
+        });
+
+        $('#add_product_form').on('change', '#add_type', function () {
+            if ($('#add_product_form #add_type').val() == 'mfg') {
+                $('#add_product_form #mfg_code').show();
+            } else {
+                $('#add_product_form #mfg_code').hide();
             }
         });
         $('#add_btn').on('click', function () {
@@ -191,6 +217,7 @@
             'aLengthMenu': [10, 25, 50, 100],
             'processing': true,
             'serverSide': true,
+            'ordering': false,
             'ajax': {
                 'url': base_url + 'pharmacy/purchase/get_purchase_master_items_list',
                 'type': 'POST',

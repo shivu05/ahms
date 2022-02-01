@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-12">
-        <div class="box box-primary">
+        <div class="box box-primary" id="stock_div">
             <div class="box-header with-border">
                 <h3 class="box-title">Stock entry:</h3>
                 <a class="pull-right btn btn-primary btn-sm" href="<?php echo base_url('stock-view'); ?>"><i class="fa fa-eye"></i> View stock</a>
             </div>
             <div class="box-body">
-                <form class="" method="POST" name="add_stock" id="add_stock" action="<?php echo base_url('save_stock'); ?>">
+                <form class="" method="POST" name="add_stock" id="add_stock" action="<?php echo base_url('save-stock'); ?>">
                     <div class="row">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -153,11 +153,11 @@
     });
 
     $(document).ready(function () {
-        var validator = $('#add_stock').validate();
-        $('.tile-footer').on('click', '#submit', function () {
+        var validator = $('#stock_div #add_stock').validate();
+        $('#stock_div').on('click', '#submit', function () {
             alert();
-            if ($('#add_stock').valid()) {
-                $('#add_stock').submit();
+            if ($('#stock_div #add_stock').valid()) {
+                $('#stock_div #add_stock').submit();
             }
         });
         product_option = '';

@@ -101,8 +101,8 @@ class Doctors extends SHV_Controller {
         $title = array(
             'report_title' => 'DOCTORS DUTY CHART',
         );
-
-        pdf_create($title, $html);
+        $today = date('dmY');
+        generate_pdf($html, 'L', $title, 'doctors_duty_chart_' . $today . '', true, true, 'I');
         exit;
     }
 

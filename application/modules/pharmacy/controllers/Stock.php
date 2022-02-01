@@ -34,8 +34,8 @@ class Stock extends SHV_Controller {
 
     function save_stock() {
         $post_values = $this->input->post();
-        $this->stock_model->save_stock($post_values);
-        //pma($products);
+        //$this->stock_model->save_stock($post_values);
+        pma($post_values);
     }
 
     function get_batch() {
