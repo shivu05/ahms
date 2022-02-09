@@ -97,7 +97,7 @@ class Stock_model extends CI_Model {
             join purchase_variables pv2 on p.supplier_id=pv2.id
             ,(SELECT @a:= 0) AS a $where_cond";
 
-
+        
         $result = $this->db->query($query . ' ' . $limit);
 
         $return['data'] = $result->result_array();

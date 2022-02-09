@@ -16,6 +16,7 @@ class Sales extends SHV_Controller {
     public function index() {
         $this->scripts_include->includePlugins(array('typeahead'));
         $data = array();
+        $data['product_list'] = $this->sales_model->get_product_list();
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -23,8 +24,7 @@ class Sales extends SHV_Controller {
     public function fetch_patient_data() {
         if ($this->input->is_ajax_request()) {
             $opd = $this->input->post('opd');
-            $data = array();
-            $data['data'] = $this->sales_model->get_patient_data($opd);
+            $data = $this->sales_model->get_patient_data($opd);
             $this->layout->data = $data;
             echo $this->layout->render(array('view' => 'pharmacy/sales/fetch_patient_data'), true);
         }
