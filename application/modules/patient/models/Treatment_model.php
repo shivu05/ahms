@@ -381,7 +381,8 @@ class treatment_model extends CI_Model {
             $update_array = array(
                 'Trtment' => $post_values['pat_treatment'],
                 'diagnosis' => $post_values['pat_diagnosis'],
-                'procedures' => $post_values['pat_procedure']
+                'procedures' => $post_values['pat_procedure'],
+                'AddedBy' => $post_values['AddedBy'],
             );
             $personal_details = array(
                 'FirstName' => $post_values['pat_name'],

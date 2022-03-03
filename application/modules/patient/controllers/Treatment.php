@@ -893,7 +893,11 @@ class Treatment extends SHV_Controller {
         $opd = $this->input->post('opd');
         $treat_id = $this->input->post('treat_id');
         $data = $this->treatment_model->get_patient_treatment($opd, $treat_id);
-        echo json_encode(array('data' => $data, 'status' => true));
+        $doctors = $this->db->query("SELECT d.id,d.user_name 
+            FROM users d JOIN treatmentdata t ON t.department=d.user_department  
+            WHERE t.ID='$treat_id' 
+            GROUP BY d.id")->result_array();
+        echo json_encode(array('data' => $data, 'status' => true, 'doctors_list' => $doctors));
     }
 
     function update_treatment_details() {

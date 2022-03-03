@@ -6,6 +6,9 @@
     .type{
         text-align: center;
     }
+    .select2-container{
+        width: 100% !important;
+    }
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -126,6 +129,15 @@
                         <label class="control-label" for="pat_procedure">Procedures:</label>
                         <div class="controls">
                             <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="AddedBy">Doctor:</label>
+                        <div class="controls">
+                            <select class="form-control select2 required" id="AddedBy" name="AddedBy">
+                                <option value="">Choose doctor</option>
+                            </select>
+                            <!--<input type="text" class="form-control required" id="AddedBy" name="AddedBy" placeholder="Docotr"/>-->
                         </div>
                     </div>
                 </form>
@@ -376,6 +388,16 @@
                     $('#treatment_edit_form #opd').val(response.data.OpdNo);
                     $('#treatment_edit_form #pat_diagnosis').val(response.data.diagnosis);
                     $('#treatment_edit_form #pat_procedure').val(response.data.procedures);
+                    $('#treatment_edit_form #AddedBy').val(response.data.AddedBy);
+                    var option = '';
+                    $.each(response.doctors_list, function (i) {
+                        var is_selected = '';
+                        if (response.data.AddedBy == response.doctors_list[i].user_name) {
+                            is_selected = 'selected="selected"';
+                        }
+                        option += '<option ' + is_selected + ' value="' + response.doctors_list[i].user_name + '">' + response.doctors_list[i].user_name + '</option>';
+                    });
+                    $('#treatment_edit_form #AddedBy').html(option);
                 }
             });
             $('#treatment_edit_modal #OPD_NUM').html("Center OPD: " + opd);

@@ -55,7 +55,7 @@ if (!empty($product_list)) {
                                 <tfoot>
                                     <tr>
                                         <td colspan="4" style="text-align:right">Total:</td>
-                                        <td id="total_amt" class="bg-success" style="text-align:right;font-weight: bold;"></td>
+                                        <td id="total_amt" class="bg-success" style="text-align:right;font-weight: bold;">0</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -79,6 +79,7 @@ if (!empty($product_list)) {
             // append_data();
         });
         var rowval = 1;
+
         $('#medicine_form .add_sales').on('click', function () {
             var tr_products = '<tr>'
                     + '<td><select name="product_id[]" class="form-control select2 product_id" data-rownum="' + rowval + '" id="product_id_' + rowval + '" data-title="Choose product">' + '<option value="">Choose product</option>' + dropdown_products + '</select></td>'
@@ -100,11 +101,12 @@ if (!empty($product_list)) {
                     $(this).parent().next('td').find('.current_stock_info').html(available_stock);
                     $(this).parent().next('td').find('.stock').val(available_stock);
                     $(this).parent().next('td').next('td').next('td').find('.unit_price').val(unit_price);
-
+                    $('#qty_' + rn).attr('disabled', false);
+                    $('#qty_' + rn).trigger('change');
                 } else {
+                    $('#qty_' + rn).val('0').trigger('change')
                     $('#qty_' + rn).attr('disabled', 'disabled');
                 }
-                console.log(stock_status);
             });
 
             $('#medicine_form #table_sales .qty').on('change', function () {
@@ -112,18 +114,19 @@ if (!empty($product_list)) {
                 var current_stock = $(this).parent().prev('td').find('#stock_' + rownum).val();
                 var unit_price = $('#unit_price_' + rownum).val();
                 var required_qty = parseInt($(this).val());
-                console.log(current_stock, $(this).val());
                 if (required_qty > parseInt(current_stock)) {
                     alert('Out of stock. Quantity can not be greater than stock');
                     $(this).focus();
                 } else {
                     var sub_total = required_qty * parseInt(unit_price);
-                    $('#sub_total_' + rownum).val(sub_total);
-                    var total = 0;
-                    $(".sub_total").each(function () {
-                        total += parseInt($(this).val());
-                    });
-                    $('#table_sales tfoot td#total_amt').html(total);
+                    if (!Number.isNaN(sub_total)) {
+                        $('#sub_total_' + rownum).val(sub_total);
+                        var total = 0;
+                        $(".sub_total").each(function () {
+                            total += parseInt($(this).val());
+                        });
+                        $('#table_sales tfoot td#total_amt').html(total);
+                    }
                 }
             });
         });
@@ -147,6 +150,23 @@ if (!empty($product_list)) {
 
             });
         });
+
+        function PrintElem(elem) {
+            Popup(jQuery(elem).html());
+        }
+
+        function Popup(data) {
+            var mywindow = window.open('', 'my div', 'height=400,width=600');
+            mywindow.document.write('<html><head><title></title>');
+            mywindow.document.write('<link rel="stylesheet" href="http://www.test.com/style.css" type="text/css" />');
+            mywindow.document.write('<style type="text/css">.test { color:red; } </style></head><body>');
+            mywindow.document.write(data);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+        }
+
+
 
     });
 </script>
