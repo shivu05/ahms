@@ -91,7 +91,7 @@ class treatment_model extends CI_Model {
                         break;
                     case 'keyword':
                         $val = strtoupper(str_replace(' ', '_', $val));
-                        $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%' OR t.OpdNo='$val' OR CONCAT(p.FirstName,' ',p.LastName) LIKE '%$val%') ";
+                        $where_cond .= " AND ( t.department like '%$val%' OR t.diagnosis like '%$val%' OR t.OpdNo='$val' OR CONCAT(p.FirstName,' ',p.LastName) LIKE '%$val%' OR p.occupation LIKE '%$val%') ";
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
