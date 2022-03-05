@@ -543,11 +543,13 @@ class Nursing_model extends CI_Model {
     function get_lab_report_count($conditions, $export_flag = false) {
         //$query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
         $query = "SELECT lab_inv_name, lab_cat_name,count(lab_inv_name) as ccount 
-                  FROM labregistery l 
-                  JOIN lab_investigations li ON li.lab_inv_id=l.testName 
-                  JOIN lab_tests lt ON l.lab_test_type=lt.lab_test_id 
-                  JOIN lab_categories lc ON l.lab_test_cat = lc.lab_cat_id 
-                  GROUP BY lab_inv_name";
+            FROM labregistery l 
+            JOIN lab_investigations li ON li.lab_inv_id=l.testName 
+            JOIN lab_tests lt ON li.lab_test_id=lt.lab_test_id 
+            JOIN lab_categories lc ON lt.lab_cat_id = lc.lab_cat_id 
+            WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'
+            GROUP BY lab_inv_name 
+            ORDER BY lab_cat_name";
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
             return $query->result_array(); //if data is true
