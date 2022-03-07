@@ -461,12 +461,13 @@ class Treatment extends SHV_Controller {
         }
 
         if ($this->input->post('surgery_check') == 'on') {
+            $opd_treat_id = $this->db->query("select treatId from inpatientdetails where IpNo='$ipdno'")->row_array();
             $surgerydata = array(
                 'OpdNo' => $this->input->post('opd_no'),
                 'surgName' => $this->input->post('SurgeryDocname'),
                 'surgType' => $this->input->post('surgerytype'),
                 'surgDate' => $this->input->post('surgerydate'),
-                'treatId' => $treat_id,
+                'treatId' => $opd_treat_id['treatId'],
                 'anaesthetic' => $this->input->post('surganaesthetist'),
                 'asssurgeon' => $this->input->post('AssSurgeryDocname'),
                 'surgeryname' => $this->input->post('surgeryname'),

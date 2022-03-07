@@ -298,7 +298,7 @@ if (!empty($other_proc_list)) {
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#usg">USG</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#xray">X-Ray</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kshara">Ksharasutra</a></li>
-                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#surgery">Surgery</a></li>
+                                            <!--<li class="nav-item"><a class="nav-link disabled" data-toggle="tab" href="#surgery">Surgery</a></li>-->
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#lab">Laboratory</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physiotherapy">Physiotherapy</a></li>
