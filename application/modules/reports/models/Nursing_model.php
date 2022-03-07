@@ -406,9 +406,9 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('s.ID', 's.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
             's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
-            'p.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
+            't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis','t.notes');
 
-        $where_cond = " WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo AND surgDate >='" . $conditions['start_date'] . "' AND surgDate <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE surgDate >='" . $conditions['start_date'] . "' AND surgDate <='" . $conditions['end_date'] . "'";
 
         $limit = '';
         if (!$export_flag) {
@@ -438,9 +438,14 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM surgeryregistery s, 
-        (SELECT @a:= 0) AS a  JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i  $where_cond ORDER BY surgDate ASC";
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " 
+            FROM surgeryregistery s
+            JOIN inpatientdetails i ON i.OpdNo=s.OpdNo and i.treatId=s.treatId
+            JOIN treatmentdata t  ON i.treatId=t.ID
+            JOIN patientdata p ON  t.OpdNo=p.OpdNo, 
+            (SELECT @a:= 0) AS a  $where_cond ORDER BY surgDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
+       // echo $query;exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
