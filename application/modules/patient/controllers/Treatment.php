@@ -265,6 +265,17 @@ class Treatment extends SHV_Controller {
             $this->other_procedures_treatments->store($input_arr);
         }
 
+        if ($this->input->post('kriyakalpa_check') == 'on') {
+            $insert_data = array(
+                'OpdNo' => $this->input->post('opd_no'),
+                'IpNo' => NULL,
+                'treat_id' => $treat_id,
+                'kriya_procedures' => $this->input->post('kriya_procedures'),
+                'kriya_date' => $this->input->post('kriya_start_date')
+            );
+            $this->treatment_model->insert_kriyakalpa($insert_data);
+        }
+
         $last_ipd = NULL;
         if ($this->input->post('admit') == 'on') {
             $beddata = array(
@@ -305,14 +316,14 @@ class Treatment extends SHV_Controller {
 //
 //            $this->treatment_model->add_ipd_treatment_data($ipd_treatment);
         }
-        if ($dept == 'SHALAKYA_TANTRA') {
-            $insert_data = array(
-                'OpdNo' => $this->input->post('opd_no'),
-                'IpNo' => $last_ipd,
-                'treat_id' => $treat_id
-            );
-            $this->treatment_model->insert_kriyakalpa($insert_data);
-        }
+        /* if ($dept == 'SHALAKYA_TANTRA') {
+          $insert_data = array(
+          'OpdNo' => $this->input->post('opd_no'),
+          'IpNo' => $last_ipd,
+          'treat_id' => $treat_id
+          );
+          $this->treatment_model->insert_kriyakalpa($insert_data);
+          } */
         redirect('patient/treatment/show_patients', 'refresh');
     }
 

@@ -636,7 +636,9 @@ class M_auto extends CI_Model {
                 $shalakya_insert_data = array(
                     'OpdNo' => $result['OpdNo'],
                     'IpNo' => NULL,
-                    'treat_id' => $treatid
+                    'treat_id' => $treatid,
+                    'kriya_procedures' => $result['procedures'],
+                    'kriya_date' => $date
                 );
                 $this->add_to_kriyaklpa($shalakya_insert_data);
             }

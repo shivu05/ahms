@@ -588,7 +588,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        generate_pdf($content, 'L', $title, 'surgery_count_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'surgery_count_report', true, true, 'I');
         exit;
     }
 
@@ -733,7 +733,7 @@ class Test extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, 'kriyalapa_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'kriyalapa_report', true, true, 'I');
         exit;
     }
 
@@ -865,6 +865,20 @@ class Test extends SHV_Controller {
 
         generate_pdf($content, 'L', $title, 'other_procedure_report', true, true, 'I');
         exit;
+    }
+
+    function update_kriyakalpa() {
+        $post_values = $this->input->post();
+        if ($this->input->is_ajax_request()) {
+            $is_updated = $this->nursing_model->update_kriyakalpa_info($post_values, array('id' => $post_values['id']));
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        } else {
+            echo json_encode(array('msg' => 'Invalid request', 'status' => 'nok'));
+        }
     }
 
 }

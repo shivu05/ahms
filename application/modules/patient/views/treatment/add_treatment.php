@@ -303,6 +303,7 @@ if (!empty($other_proc_list)) {
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panchakarma_treatment">Panchakarma</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physiotherapy">Physiotherapy</a></li>
                                             <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#othertherapy">Other Procedures</a></li>
+                                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#kriyakalpa">Kriyakalpa</a></li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade" id="birth">
@@ -791,6 +792,27 @@ if (!empty($other_proc_list)) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div  class="tab-pane fade" id="kriyakalpa">
+                                                <div id="kriyakalpa_div" style="margin-top: 2%;">
+                                                    <h4><input type="checkbox" name="kriyakalpa_check" id="kriyakalpa_check" /> Refer for Kriyakalpa</h4>
+                                                    <div class="row">
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="kriya_procedures">Procedures:</label>
+                                                            <div class="controls">
+                                                                <input id="kriya_procedures" type="text" name="kriya_procedures" class="form-control kriya_inputs" placeholder="Enter Procedures"/>
+                                                                <p class="help-block">Enter comma separated data</p>
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                        <div class="control-group col-md-3">
+                                                            <label class="control-label" for="kriya_start_date">Date:</label>
+                                                            <div class="controls">
+                                                                <input id="kriya_start_date" type="text" name="kriya_start_date" class="form-control date_picker kriya_inputs" placeholder="Enter Date" autocomplete="off">
+                                                                <p class="help-block"></p>
+                                                            </div> <!-- /controls -->
+                                                        </div> <!-- /control-group -->
+                                                    </div>
+                                                </div>    
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -860,7 +882,7 @@ if (!empty($other_proc_list)) {
         $('.chosen-select').chosen({width: '100%'});
         $('.chosen-select-deselect').chosen({allow_single_deselect: true});
     });
-    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function () {
         $.each(procedure_div_ids, function (i) {
@@ -964,6 +986,16 @@ if (!empty($other_proc_list)) {
             } else if ($(this).is(":not(:checked)")) {
                 $('.othr_proc_inputs').attr('disabled', 'disabled');
                 $('.othr_proc_inputs').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+
+        $('#kriyakalpa_check').click(function () {
+            if ($(this).is(":checked")) {
+                $('.kriya_inputs').prop('disabled', false).trigger("chosen:updated");
+                $('.kriya_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.kriya_inputs').attr('disabled', 'disabled');
+                $('.kriya_inputs').prop('disabled', true).trigger("chosen:updated");
             }
         });
 

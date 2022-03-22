@@ -455,17 +455,12 @@ class Ipd extends SHV_Controller {
         }
         //pma($data_bed, 1);
         $data['deptbed'] = $data_bed;
-        $table = "<h3 align='center'>BED OCCUPANCY REGISTER</h3>";
         $this->load->helper('pdf');
         $content = $this->load->view('reports/ipd/bed_occ_chart_print_view', $data, true);
-        //echo $content;
-        //pdf_create($table, $content, 'ahms_bed_occupancy_count_report');
         $title = array(
             'report_title' => 'BED OCCUPANCY REGISTER'
         );
-        //$content = $html . '<br/><br/>' . $stats_html;
-        //echo $html;exit;
-        generate_pdf($content, 'L', $title, 'vhms_bed_occupancy_count_report' . '.pdf', TRUE, TRUE, 'I');
+        generate_pdf($content, 'L', $title, 'vhms_bed_occupancy_count_report', TRUE, TRUE, 'I');
         exit;
     }
 

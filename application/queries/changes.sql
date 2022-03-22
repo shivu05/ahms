@@ -258,3 +258,18 @@ update reference_panchakarma set no_of_days=1 where  proc_end_date=`date`;
 ALTER TABLE reference_panchakarma 
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
 ADD PRIMARY KEY (`id`);
+
+-- 21-03-2022
+ALTER TABLE `kriyakalpa` 
+ADD COLUMN `kriya_procedures` VARCHAR(250) NULL DEFAULT NULL AFTER `treat_id`,
+ADD COLUMN `kriya_start_date` VARCHAR(25) NULL DEFAULT NULL AFTER `kriya_procedures`;
+
+ALTER TABLE `kriyakalpa` 
+CHANGE COLUMN `kriya_start_date` `kriya_start_date` DATE NULL DEFAULT NULL ;
+ALTER TABLE `kriyakalpa` 
+CHANGE COLUMN `kriya_start_date` `kriya_date` DATE NULL DEFAULT NULL ;
+
+update kriyakalpa a, treatmentdata t 
+set a.kriya_date=t.CameOn,a.kriya_procedures=t.procedures
+where a.treat_id=t.id;
+

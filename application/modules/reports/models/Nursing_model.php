@@ -13,14 +13,14 @@ class Nursing_model extends CI_Model {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
                 p.Age,p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
                 GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE((p.department),'_',' ')) department
-                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
+                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "'
                     AND i.indentdate <='" . $end_date . "' group by i.treatid order by i.indentdate asc";
         } else {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,p.Age,
                 p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
                 GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,p.WardNo,(REPLACE((p.department),'_',' ')) department
-                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' 
-                    AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid 
+                from inpatientdetails p,indent i WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "'
+                    AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid
                         order by i.indentdate asc";
         }
         $query = $this->db->query($query);
@@ -35,13 +35,13 @@ class Nursing_model extends CI_Model {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
-                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
-                WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'  
+                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i
+                WHERE i.ipdno = p.IpNo AND i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'
                     group by i.treatid order by i.id";
         } else {
             $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
-                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i 
-                WHERE i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "' 
+                GROUP_CONCAT(i.morning) as morning,GROUP_CONCAT(i.afternoon) as afternoon,GROUP_CONCAT(i.night) as night,GROUP_CONCAT(i.totalqty) as totalqty from inpatientdetails p,indent i
+                WHERE i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'
                     AND i.ipdno = p.IpNo AND p.department LIKE '%" . $department . "%' group by i.treatid order by i.id,i.indentdate asc ";
         }
         $query = $this->db->query($query);
@@ -391,9 +391,9 @@ class Nursing_model extends CI_Model {
         /* $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k,
           (SELECT @a:= 0) AS a  JOIN patientdata p JOIN treatmentdata t LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo $where_cond ORDER BY k.ksharsDate ASC";
          */
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k 
-                  JOIN treatmentdata t ON k.treatId=t.ID 
-                  JOIN patientdata p  ON t.OpdNo = p.OpdNo 
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k
+                  JOIN treatmentdata t ON k.treatId=t.ID
+                  JOIN patientdata p  ON t.OpdNo = p.OpdNo
                   LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo, (SELECT @a:= 0) AS a $where_cond ORDER BY k.ksharsDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
@@ -406,7 +406,7 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('s.ID', 's.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
             's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
-            't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis','t.notes');
+            't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
 
         $where_cond = " WHERE surgDate >='" . $conditions['start_date'] . "' AND surgDate <='" . $conditions['end_date'] . "'";
 
@@ -438,14 +438,14 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " 
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . "
             FROM surgeryregistery s
             JOIN inpatientdetails i ON i.OpdNo=s.OpdNo and i.treatId=s.treatId
             JOIN treatmentdata t  ON i.treatId=t.ID
-            JOIN patientdata p ON  t.OpdNo=p.OpdNo, 
+            JOIN patientdata p ON  t.OpdNo=p.OpdNo,
             (SELECT @a:= 0) AS a  $where_cond ORDER BY surgDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
-       // echo $query;exit;
+        // echo $query;exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
@@ -459,7 +459,7 @@ class Nursing_model extends CI_Model {
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
 
-        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''  
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''
             AND (l.date <= '" . $conditions['start_date'] . "' AND l.proc_end_date >= '" . $conditions['end_date'] . "')  ";
 
         unset($conditions['start_date'], $conditions['end_date']);
@@ -482,10 +482,10 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        $query = "SELECT " . join(',', $columns) . " FROM panchaprocedure l 
-            JOIN treatmentdata t ON l.treatid = t.ID 
-            JOIN patientdata p ON t.OpdNo = p.OpdNo 
-            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno and i.treatId=t.ID  $where_cond 
+        $query = "SELECT " . join(',', $columns) . " FROM panchaprocedure l
+            JOIN treatmentdata t ON l.treatid = t.ID
+            JOIN patientdata p ON t.OpdNo = p.OpdNo
+            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno and i.treatId=t.ID  $where_cond
             group by l.treatid ORDER BY l.date ASC";
         $main_query = "SELECT @a:=@a+1 serial_number,B.* FROM ( $query ) B,(SELECT @a:= 0) AS a order by serial_number ";
         $result = $this->db->query($main_query);
@@ -498,7 +498,7 @@ class Nursing_model extends CI_Model {
     }
 
     function get_panchakarma_procedure_count($conditions, $export_flag = false) {
-        $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p 
+        $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p
              WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`";
         $query = $this->db->query($query);
         //echo $this->db->last_query();exit;
@@ -510,7 +510,7 @@ class Nursing_model extends CI_Model {
     }
 
     function get_surgery_count($conditions, $export_flag = false) {
-        $query = "SELECT surgeryname,count(surgeryname) as count,surgType from surgeryregistery WHERE surgDate >= '" . $conditions['start_date'] . "' 
+        $query = "SELECT surgeryname,count(surgeryname) as count,surgType from surgeryregistery WHERE surgDate >= '" . $conditions['start_date'] . "'
             AND surgDate <= '" . $conditions['end_date'] . "' AND surgeryname !='' group by surgeryname";
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
@@ -527,13 +527,13 @@ class Nursing_model extends CI_Model {
             ' GROUP_CONCAT(testrange SEPARATOR "#") testrange', 'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
-                FROM labregistery l,(SELECT @a:= 0) AS a 
-                JOIN patientdata p 
-                JOIN treatmentdata t   
-                JOIN lab_investigations li 
+                FROM labregistery l,(SELECT @a:= 0) AS a
+                JOIN patientdata p
+                JOIN treatmentdata t
+                JOIN lab_investigations li
                 JOIN lab_tests lt
                 JOIN lab_categories lc
-                WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName 
+                WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName
                 AND li.lab_test_id=lt.lab_test_id AND lt.lab_cat_id = lc.lab_cat_id
                 AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' group by l.treatID order by l.tested_date asc";
         $result = $this->db->query($query);
@@ -547,13 +547,13 @@ class Nursing_model extends CI_Model {
 
     function get_lab_report_count($conditions, $export_flag = false) {
         //$query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
-        $query = "SELECT lab_inv_name, lab_cat_name,count(lab_inv_name) as ccount 
-            FROM labregistery l 
-            JOIN lab_investigations li ON li.lab_inv_id=l.testName 
-            JOIN lab_tests lt ON li.lab_test_id=lt.lab_test_id 
-            JOIN lab_categories lc ON lt.lab_cat_id = lc.lab_cat_id 
+        $query = "SELECT lab_inv_name, lab_cat_name,count(lab_inv_name) as ccount
+            FROM labregistery l
+            JOIN lab_investigations li ON li.lab_inv_id=l.testName
+            JOIN lab_tests lt ON li.lab_test_id=lt.lab_test_id
+            JOIN lab_categories lc ON lt.lab_cat_id = lc.lab_cat_id
             WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'
-            GROUP BY lab_inv_name 
+            GROUP BY lab_inv_name
             ORDER BY lab_cat_name";
         $query = $this->db->query($query);
         if ($query->num_rows() > 0) {
@@ -571,9 +571,11 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
             'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
-            '(REPLACE((t.department),"_"," ")) department', 't.procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid');
+            '(REPLACE((t.department),"_"," ")) department', 'k.kriya_procedures procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid', 'kriya_date');
 
-        $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND kriya_date >='" . $conditions['start_date'] . "'
+                AND kriya_date <='" . $conditions['end_date'] . "'";
         //$where_cond = " WHERE 1=1 ";
         $limit = '';
         if (!$export_flag) {
@@ -604,21 +606,29 @@ class Nursing_model extends CI_Model {
         }
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " 
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
             FROM kriyakalpa k
-            JOIN treatmentdata t, (SELECT @a:= 0) AS a 
-            JOIN patientdata p 
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
             $where_cond ORDER BY serial_number,CameOn ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM kriyakalpa k 
-            JOIN treatmentdata t ON k.OpdNo=t.OpdNo AND k.treat_id=t.ID 
-            JOIN patientdata p ON t.OpdNo=p.OpdNo 
+        $return['total_rows'] = $this->db->query('SELECT * FROM kriyakalpa k
+            JOIN treatmentdata t ON k.OpdNo=t.OpdNo AND k.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo')->num_rows();
         return $return;
+    }
+
+    function update_kriyakalpa_info($post_values, $where) {
+        if ($post_values) {
+            $this->db->where($where);
+            return $this->db->update('kriyakalpa', $post_values);
+        }
+        return false;
     }
 
 }

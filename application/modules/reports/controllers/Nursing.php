@@ -43,7 +43,7 @@ class Nursing extends SHV_Controller {
             'start_date' => format_date($start_date),
             'end_date' => format_date($end_date)
         );
-        generate_pdf($content, 'L', $title, 'ipd_nursing_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'ipd_nursing_report', true, true, 'I');
         exit;
     }
 

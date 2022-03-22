@@ -2,7 +2,7 @@
 $ts = 0;
 foreach ($dept_bed_count as $dept) {
     $cur_year = date('Y');
-?>
+    ?>
     <table class="table table-bordered table-hover" width='100%'>
         <thead>
             <tr class="bg-aqua-gradient" style="font-weight: bold;">
@@ -23,7 +23,6 @@ foreach ($dept_bed_count as $dept) {
             $sm = 0;
             $dept_wise_per = 0;
             foreach ($deptbed as $d) {
-                
                 $bed_avg = 0;
                 foreach ($d as $m => $mon) {
                     $days = cal_days_in_month(CAL_GREGORIAN, date("m", strtotime($m . "-$cur_year")), $cur_year);
@@ -50,7 +49,7 @@ foreach ($dept_bed_count as $dept) {
         </tbody>
     </table>
     <br/>
-<?php
+    <?php
 } //end of foreach
 ?>
 <h4 class="pull-right">GRAND TOTAL (Bed occupied days): <?= $ts ?></h4>

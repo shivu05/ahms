@@ -16,6 +16,48 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="kriyakalpa_modal" tabindex="-1" role="dialog" aria-labelledby="kriyakalpa_modal_label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="kriyakalpa_modal_label">Edit information</h5>
+            </div>
+            <div class="modal-body" id="kriyakalpa_modal_body">
+                <?php
+                $attributes = array(
+                    'id' => 'kriya_edit_form',
+                    'name' => 'kriya_edit_form'
+                );
+                echo form_open('', $attributes);
+                ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Procedures:</label>
+                            <input type="text" name="kriya_procedures" id="kriya_procedures" class="form-control required"/>
+                            <input type="hidden" name="id" id="id" class="form-control required" value=""/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Date:</label>
+                            <input type="text" name="kriya_date" id="kriya_date" class="form-control date_picker required"/>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                echo form_close();
+                ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-remove"></i> Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-update"><i class="fa fa-save"></i> Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 <style type="text/css">
     .sl_no{
         width: 40px !important;
@@ -101,13 +143,20 @@
                 data: function (item) {
                     return item.attndedby;
                 }
+            },
+            {
+                title: "Date",
+                data: function (item) {
+                    return item.kriya_date;
+                }
             }
         ];
         if (is_admin == '1') {
             columns.push({
-                title: '<input type="checkbox" name="check_all" class="check_all" id="check_all" onclick="toggle(this)"/>',
+                title: 'Action',
                 data: function (item) {
-                    return "<center><input type='checkbox' name='check_del[]' class='check_box' id='checkbx" + item.kid + "' value='" + item.kid + "'/>"
+                    return "<center><i class='fa fa-edit edit_kriya' style='cursor:pointer;' title='Edit information'></i>&nbsp;&nbsp;&nbsp;&nbsp;" +
+                            "<input type='checkbox' name='check_del[]' class='check_box' id='checkbx" + item.kid + "' value='" + item.kid + "'/>"
                             + "</center>";
                 }
             });
@@ -148,7 +197,56 @@
                 info: true,
                 sScrollX: true
             });
+            $('#patient_table tbody').on('click', '.edit_kriya', function () {
+                var data = patient_table.row($(this).closest('tr')).data();
+                $('#kriyakalpa_modal #kriya_edit_form #id').val(data.kid);
+                $('#kriyakalpa_modal #kriya_edit_form #kriya_procedures').val(data.procedures);
+                $('#kriyakalpa_modal #kriya_edit_form #kriya_date').val(data.kriya_date);
+                $('#kriyakalpa_modal').modal({backdrop: 'static', keyboard: false}, 'show');
+            });
+
+            $('#kriya_edit_form').validate({
+                messages: {
+                    kriya_procedures: {required: 'Procedure is empty'},
+                    kriya_date: {required: 'Date is empty'}
+                }
+            });
         }
+
+        $('#kriyakalpa_modal').on('click', '#btn-update', function () {
+            if ($('#kriya_edit_form').valid()) {
+                var form_data = $('#kriya_edit_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'reports/Test/update_kriyakalpa',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        $('#kriyakalpa_modal').modal('hide');
+                        if (res.status == 'ok') {
+                            $.notify({
+                                title: "Kriyakalpa:",
+                                message: res.msg,
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                            $('#search_form #search').trigger('click');
+                        } else {
+                            $.notify({
+                                title: "Kriyakalpa:",
+                                message: res.msg,
+                                icon: 'fa fa-remove'
+                            }, {
+                                type: "danger"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
 
         $('#search_form').on('click', '#btn_delete', function () {
             BootstrapDialog.show({
