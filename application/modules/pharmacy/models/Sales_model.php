@@ -39,4 +39,38 @@ class Sales_model extends CI_Model {
             JOIN stock st on prod.product_id=st.product")->result_array();
     }
 
+    public function update_stock($post_values) {
+        if ($post_values) {
+            $sales_count = (int) $post_values['qty'];
+            $sub_toal = (int) $post_values['sub_total'];
+            $query = "UPDATE stock SET cstock= (cstock - $sales_count),amount = (amount - $sub_toal ) where product='" . $post_values['product_id'] . "'";
+            $is_inserted = $this->db->query($query);
+            //echo $this->db->last_query();exit;
+            if ($is_inserted) {
+                $product_query = "select product_id,product_master_id,pv.name product_name,product_batch
+                    from product_master p 
+                    join purchase_variables pv on p.product_master_id=pv.id 
+                    where product_id='" . $post_values['product_id'] . "'";
+                $row_data = $this->db->query($product_query)->row_array();
+                $insert_arr = array(
+                    'billno' => $post_values['billno'],
+                    'opdno' => $post_values['opd_no'],
+                    'treat_id' => $post_values['treat_id'],
+                    'product' => $row_data['product_name'],
+                    'batch' => $row_data['product_batch'],
+                    'qty' => $post_values['qty'],
+                    'date' => $post_values['date'],
+                    'price' => $post_values['unit_price']
+                );
+                $is_inserted_p = $this->db->insert('sales_entry', $insert_arr);
+                if ($is_inserted_p) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
 }

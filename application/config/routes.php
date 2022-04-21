@@ -70,9 +70,6 @@ $route['ecg-info'] = "patient/ecg";
 $route['usg-info'] = "patient/usg";
 $route['lab-info'] = "patient/lab";
 
-$route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
-
 $route['monthwise-ipd-report'] = "reports/Ipd/monthly_ipd_report";
 $route['monthwise-opd-ipd-report'] = "reports/Ipd/monthly_io_report";
 /* Test reports */
@@ -153,3 +150,10 @@ $route['add-other-procedures'] = 'master/Otherprocedures/save';
 $route['delete-other-procedures'] = 'master/Otherprocedures/delete';
 
 $route['otherprocedures-report'] = 'reports/Test/otherprocedures';
+
+//sales
+$route['update-sales'] = 'pharmacy/sales/update_stocks';
+$route['add-sales'] = 'pharmacy/sales';
+
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;

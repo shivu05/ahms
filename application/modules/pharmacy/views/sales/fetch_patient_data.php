@@ -40,7 +40,7 @@ if (!empty($data)) {
         if (!empty($dates)) {
             $i = 0;
             foreach ($dates as $row) {
-                $div .= '<div class="hide_div well col-md-4 pl-2"  id="' . $treat_ids[$i] . '" style="display:none;"><h4>Diagnosis: ' . $diagnosis[$i] . '</h4>';
+                $div .= '<div class="hide_div well col-md-12 pl-2"  id="' . $treat_ids[$i] . '" style="display:none;"><h4>Diagnosis: ' . $diagnosis[$i] . '</h4>';
                 $meds = explode(',', $treatment[$i]);
                 if (!empty($meds)) {
                     $div .= '<table class="table table-bordered" width="50">';

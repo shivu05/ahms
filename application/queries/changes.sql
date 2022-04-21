@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -57,28 +57,28 @@ CREATE TABLE  `master_panchakarma_sub_procedures` (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 update perm_master set perm_desc='Patient Master',perm_code='PATIENT_MASTER',perm_url='patient-list' where perm_id=5;
-ALTER TABLE `lab_investigations` 
+ALTER TABLE `lab_investigations`
 ADD COLUMN `lab_test_reference` VARCHAR(100) NULL AFTER `lab_test_id`;
-ALTER TABLE `labregistery` 
+ALTER TABLE `labregistery`
 CHANGE COLUMN `tested_date` `tested_date` DATE NULL DEFAULT NULL ;
 
-ALTER TABLE `lab_investigations` 
+ALTER TABLE `lab_investigations`
 CHANGE COLUMN `lab_test_reference` `lab_test_reference` VARCHAR(250) NULL DEFAULT NULL ;
 
-ALTER TABLE `xray_ref` 
+ALTER TABLE `xray_ref`
 CHANGE COLUMN `xraypart` `xraypart` VARCHAR(200) NULL DEFAULT NULL ,
 CHANGE COLUMN `filmsize` `filmsize` VARCHAR(200) NULL DEFAULT NULL ;
 
-ALTER TABLE `birthregistery` 
+ALTER TABLE `birthregistery`
 ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `birthtime`;
 
-ALTER TABLE `ksharsutraregistery` 
+ALTER TABLE `ksharsutraregistery`
 ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `anaesthetic`;
 
-ALTER TABLE `surgeryregistery` 
+ALTER TABLE `surgeryregistery`
 ADD COLUMN `anesthesia_type` VARCHAR(45) NULL DEFAULT NULL AFTER `surgeryname`;
 
-ALTER TABLE `deptper` 
+ALTER TABLE `deptper`
 ADD COLUMN `ref_room` INT NULL AFTER `bed_count`;
 
 UPDATE `deptper` SET `ref_room` = '1' WHERE (`ID` = '1');
@@ -90,7 +90,7 @@ UPDATE `deptper` SET `ref_room` = '6' WHERE (`ID` = '4');
 UPDATE `deptper` SET `ref_room` = '8' WHERE (`ID` = '9');
 UPDATE `deptper` SET `ref_room` = '7' WHERE (`ID` = '10');
 
-ALTER TABLE `treatmentdata` 
+ALTER TABLE `treatmentdata`
 ADD COLUMN `sl_id` INT NULL AFTER `sub_department`;
 
 CREATE TABLE `kriyakalpa` (
@@ -105,9 +105,9 @@ CREATE TABLE `kriyakalpa` (
 INSERT INTO `kriyakalpa`
 (`OpdNo`,`IpNo`,`treat_id`)
 SELECT t.OpdNo,ip.IpNo,t.ID
-FROM treatmentdata t, (SELECT @a:= 0) AS a 
-JOIN patientdata p 
-LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo WHERE t.OpdNo=p.OpdNo 
+FROM treatmentdata t, (SELECT @a:= 0) AS a
+JOIN patientdata p
+LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo WHERE t.OpdNo=p.OpdNo
 AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA');
 
 INSERT INTO `months_list`
@@ -116,7 +116,7 @@ VALUES
 ('January',1),('February',2),('March',3),('April',4),('May',5),('June',6),('July',7),('August',8),('September',9),
 ('October',10),('November',11),('December',12);
 -- Nursing indent report
-INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) 
+INSERT INTO `perm_master` (`perm_id`, `perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`)
 VALUES
 (48, 'NURSING_INDENT_REPORT', 'Nursing indent report', 16, 0, '14', '', 'reports/nursing', 'Active', '', '', 1, '2021-04-02 19:39:41');
 
@@ -189,14 +189,14 @@ delete from lab_reference where testvalue is null;
 
 select *from lab_reference where lab_test_type is null;
 
-update lab_reference a,lab_investigations b 
-set a.lab_test_type=b.lab_test_id 
+update lab_reference a,lab_investigations b
+set a.lab_test_type=b.lab_test_id
 where a.testName=b.lab_inv_id;
 
 select * from lab_reference; where lab_test_cat is null;
 
-update lab_reference a,lab_tests b 
-set a.lab_test_cat=b.lab_cat_id 
+update lab_reference a,lab_tests b
+set a.lab_test_cat=b.lab_cat_id
 where a.lab_test_type=b.lab_test_id;
 
 /* TESTING*/
@@ -247,29 +247,28 @@ select * from panchaprocedure;
 create table reference_panchakarma select * from panchaprocedure;
 
 select a.*,DATEDIFF(proc_end_date,date) from reference_panchakarma a; where proc_end_date ='';
-update reference_panchakarma a,treatmentdata b 
+update reference_panchakarma a,treatmentdata b
 set a.disease=b.diagnosis where a.treatid=b.ID;
-ALTER TABLE `reference_panchakarma` 
+ALTER TABLE `reference_panchakarma`
 ADD COLUMN `no_of_days` INT(3) NULL DEFAULT 0 AFTER `proc_end_date`;
 select * from reference_panchakarma a;
 delete from  reference_panchakarma where proc_end_date ='';
 update reference_panchakarma set no_of_days=DATEDIFF(proc_end_date,`date`) where  proc_end_date<>`date`;
 update reference_panchakarma set no_of_days=1 where  proc_end_date=`date`;
-ALTER TABLE reference_panchakarma 
+ALTER TABLE reference_panchakarma
 CHANGE COLUMN `id` `id` INT(11) NOT NULL AUTO_INCREMENT ,
 ADD PRIMARY KEY (`id`);
 
 -- 21-03-2022
-ALTER TABLE `kriyakalpa` 
+ALTER TABLE `kriyakalpa`
 ADD COLUMN `kriya_procedures` VARCHAR(250) NULL DEFAULT NULL AFTER `treat_id`,
 ADD COLUMN `kriya_start_date` VARCHAR(25) NULL DEFAULT NULL AFTER `kriya_procedures`;
 
-ALTER TABLE `kriyakalpa` 
+ALTER TABLE `kriyakalpa`
 CHANGE COLUMN `kriya_start_date` `kriya_start_date` DATE NULL DEFAULT NULL ;
-ALTER TABLE `kriyakalpa` 
+ALTER TABLE `kriyakalpa`
 CHANGE COLUMN `kriya_start_date` `kriya_date` DATE NULL DEFAULT NULL ;
 
-update kriyakalpa a, treatmentdata t 
+update kriyakalpa a, treatmentdata t
 set a.kriya_date=t.CameOn,a.kriya_procedures=t.procedures
 where a.treat_id=t.id;
-

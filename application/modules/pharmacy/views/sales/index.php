@@ -20,7 +20,7 @@ if (!empty($product_list)) {
             </div>
             <div class="box-body">
                 <div class="row">
-                    <form role="form" name="sales_form" id="sales_form" method="POST"> 
+                    <form role="form" name="sales_form" id="sales_form" method="POST">
                         <div class="col-md-4">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="kw" id="kw" placeholder="Search for OPD...">
@@ -30,6 +30,7 @@ if (!empty($product_list)) {
                             </div><!-- /input-group -->
                         </div>
                     </form>
+                    <?php //echo $this->uuid->v5('PHRM'); ?>
                 </div>
                 <br/>
                 <div class="row-fluid">
@@ -37,6 +38,8 @@ if (!empty($product_list)) {
                     <div class="col-md-6 bg-gray-light" id="priscription_div">
                         <form id="medicine_form" name="medicine_form" method="POST">
                             <input type="hidden" name="total_bill" id="total_bill" />
+                            <input type="hidden" name="opd_no" id="opd_no" />
+                            <input type="hidden" name="treat_id" id="treat_id" />
                             <button type="button" name="add_sales" id="add_sales" style="margin: 1%;" disabled="disabled" class="btn btn-primary btn-sm add_sales pull-right mt-1">Add sales</button>
                             <br/>
                             <table class="table table-dark dataTable" id="table_sales">
@@ -59,6 +62,9 @@ if (!empty($product_list)) {
                                     </tr>
                                 </tfoot>
                             </table>
+                            <div class="col-md-12" style="padding-bottom:2%">
+                                <button class="btn btn-primary btn-sm pull-right" id="add_bill">Add Bill</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -117,6 +123,7 @@ if (!empty($product_list)) {
                 if (required_qty > parseInt(current_stock)) {
                     alert('Out of stock. Quantity can not be greater than stock');
                     $(this).focus();
+                    return;
                 } else {
                     var sub_total = required_qty * parseInt(unit_price);
                     if (!Number.isNaN(sub_total)) {
@@ -131,6 +138,30 @@ if (!empty($product_list)) {
             });
         });
 
+        $('#medicine_form').on('click', '#add_bill', function (e) {
+            e.preventDefault();
+            var opd_no = $('#sales_form #kw').val();
+            var treat_id = $('#treatment_date').val();
+            var treat_date = $("#treatment_date option:selected").text();
+            var form_data = $('#medicine_form').serializeArray();
+            form_data.push({name: "opd_no", value: opd_no});
+            form_data.push({name: "treat_id", value: treat_id});
+            form_data.push({name: "treat_date", value: treat_date});
+            $.ajax({
+                url: base_url + 'update-sales',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.status === 'ok') {
+                        alert('Bill added successfully');
+                        window.location.reload();
+                    }
+                }
+            });
+
+        });
 
 
         $('#sales_form').on('click', '#search_opd', function () {
@@ -145,7 +176,7 @@ if (!empty($product_list)) {
                     $('.select2').select2();
                 },
                 error: function (error) {
-                    console.log(error)
+                    console.log(error);
                 }
 
             });
