@@ -1,15 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Common_model
  *
- * @author hp
+ * @author Shiv
  */
 class Common_model extends CI_Model {
 
@@ -19,7 +13,7 @@ class Common_model extends CI_Model {
 
     function get_patient_info_by_ipd($where) {
         $columns = array('p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'i.IpNo',
-            'i.DoAdmission', 'i.DoAdmission', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment','t.procedures');
+            'i.DoAdmission', 'i.DoAdmission', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment', 't.procedures');
         $this->db->select($columns);
         $this->db->join('patientdata p', 'p.OpdNo=i.OpdNo');
         $this->db->join('ipdtreatment t', 't.ipdno=i.IpNo');
@@ -112,6 +106,10 @@ class Common_model extends CI_Model {
         } else {
             return false;
         }
+    }
+
+    function get_archived_years() {
+        return $this->db->get('archived_data')->result_array();
     }
 
 }

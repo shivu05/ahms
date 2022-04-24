@@ -544,7 +544,7 @@ class M_auto extends CI_Model {
         if (!empty($treatment_data)) {
             $digits = 4;
             $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-            $products = explode(',', $treatment_data['Trtment']);
+            $products = explode(',', $treatment_data['medicines']);
             $n = count($products);
             for ($i = 0; $i < $n; $i++) {
                 if (strlen(trim($products[$i])) > 0) {
@@ -620,7 +620,8 @@ class M_auto extends CI_Model {
                 "CameOn" => $date,
                 "attndedon" => $date,
                 "AddedBy" => $result['AddedBy'],
-                "patType" => "Old Patient"
+                "patType" => "Old Patient",
+                "medicines" => $result['medicines']
             );
             $this->db->insert('treatmentdata', $insert_data);
             $treatid = $this->db->insert_id();
@@ -695,7 +696,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
@@ -767,7 +769,9 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient");
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
+                );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
                 $this->add_to_pharmacy($treatid);
@@ -838,7 +842,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
@@ -915,7 +920,8 @@ class M_auto extends CI_Model {
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
                     "patType" => "New Patient",
-                    "sub_department" => $treatment_details['sub_dept']
+                    "sub_department" => $treatment_details['sub_dept'],
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
 
@@ -1001,7 +1007,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
 
@@ -1076,7 +1083,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
@@ -1149,7 +1157,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
 
@@ -1224,7 +1233,8 @@ class M_auto extends CI_Model {
                     "CameOn" => $cdate,
                     "attndedon" => $cdate,
                     "AddedBy" => $docname,
-                    "patType" => "New Patient"
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();

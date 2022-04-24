@@ -1,4 +1,19 @@
 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo $submit_url; ?>">
+    <?php if ($is_arch_report) { ?>
+        <div class="form-group col-md-2 col-sm-12">
+            <label class="control-label  sr-only">Archived Year:</label>
+            <select name="arch_year" id="arch_year" class="form-control" required="required">
+                <option value="">Select Year</option>
+                <?php
+                if (!empty($arch_years)) {
+                    foreach ($arch_years as $row) {
+                        echo "<option value='" . base64_encode($row['db_name']) . "'>" . $row['name'] . "</option>";
+                    }
+                }
+                ?>
+            </select>
+        </div>
+    <?php } ?>
     <div class="form-group col-md-2 col-sm-12">
         <label class="control-label sr-only">From:</label>
         <input class="form-control date_picker" type="text" placeholder="From date" name="start_date" id="start_date" autocomplete="off" required="required">
@@ -8,7 +23,7 @@
         <input class="form-control date_picker" type="text" placeholder="To date" name="end_date" id="end_date" required="required" autocomplete="off">
     </div>
     <?php if (!$dept_hide) { ?>
-        <div class="form-group col-md-3 col-sm-12">
+        <div class="form-group col-md-2 col-sm-12">
             <label class="control-label  sr-only">Department:</label>
             <select name="department" id="department" class="form-control" required="required">
                 <option value="">Select Department</option>

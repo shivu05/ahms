@@ -272,3 +272,9 @@ CHANGE COLUMN `kriya_start_date` `kriya_date` DATE NULL DEFAULT NULL ;
 update kriyakalpa a, treatmentdata t
 set a.kriya_date=t.CameOn,a.kriya_procedures=t.procedures
 where a.treat_id=t.id;
+
+-- 21-04-2022
+ALTER TABLE `treatmentdata` 
+ADD COLUMN `medicines` VARCHAR(256) NULL DEFAULT NULL AFTER `sub_department`;
+
+UPDATE `perm_master` SET `perm_order` = '8', `perm_label` = '8', `perm_icon` = 'fa-archive' WHERE (`perm_id` = '59');

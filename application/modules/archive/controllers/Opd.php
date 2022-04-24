@@ -12,9 +12,9 @@ class Opd extends SHV_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('reports/opd_model');
+        $this->load->model('archive/opd_model');
         $this->layout->navIcon = 'fa fa-users';
-        $this->layout->title = "OPD";
+        $this->layout->title = "Archived OPD";
     }
 
     function index() {
@@ -24,13 +24,13 @@ class Opd extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['dept_list'] = $this->get_department_list('array');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Opd/export_to_pdf', false, false, true);
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function get_patients_list() {
-        $this->update_monthly_no();
+        //$this->update_monthly_no();
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -38,9 +38,14 @@ class Opd extends SHV_Controller {
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
-        $data = $this->opd_model->get_opd_patients($input_array);
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
-        mysqli_next_result($this->db->conn_id); //imp
+
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data = $this->opd_model->get_opd_patients($db, $input_array);
+        $return = null;
+        //$db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        // mysqli_next_result($db->conn_id); //imp
         //return $return;
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data'], 'statistics' => $return);
         echo json_encode($response);
@@ -48,11 +53,15 @@ class Opd extends SHV_Controller {
 
     function get_statistics() {
         $input_array = array();
+        $this->load->model('custom_db');
+        $db_name = base64_decode($this->input->post('arch_year'));
+        $db = $this->custom_db->getdatabase($db_name);
+
         $input_array['start_date'] = $this->input->post('start_date');
         $input_array['end_date'] = $this->input->post('end_date');
         $input_array['department'] = $this->input->post('department');
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
-        mysqli_next_result($this->db->conn_id); //imp
+        $return = $db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        mysqli_next_result($db->conn_id); //imp
         echo json_encode(array('statistics' => $return));
     }
 
@@ -88,18 +97,22 @@ class Opd extends SHV_Controller {
             $input_array[$search_data] = $val;
         }
 
-        $result = $this->opd_model->get_opd_patients($input_array, true);
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+
+        $result = $this->opd_model->get_opd_patients($db, $input_array, true);
+        $return = $db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
-        
+
         $data['opd_patients'] = $result['data'];
         $data['department'] = $input_array['department'];
         $data['opd_stats'] = $return;
         $this->layout->data = $data;
         $this->layout->headerFlag = false;
-        $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
+        $html = $this->layout->render(array('view' => 'archive/opd/export_opd'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-//pma($html,1);
+        //pma($html, 1);
         $title = array(
             'report_title' => 'OPD REGISTER',
             'department' => $print_dept,
