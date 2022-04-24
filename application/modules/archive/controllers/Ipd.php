@@ -66,7 +66,7 @@ class Ipd extends SHV_Controller {
         $db_name = base64_decode($input_array['arch_year']);
         $db = $this->custom_db->getdatabase($db_name);
 
-        $result = $this->ipd_model->get_ipd_patients($db,$input_array, true);
+        $result = $this->ipd_model->get_ipd_patients($db, $input_array, true);
         $data['ipd_count'] = $this->ipd_model->get_ipd_patients_count($db, $input_array);
 
         $data['ipd_patients'] = $result['data'];
@@ -145,7 +145,7 @@ class Ipd extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['dept_list'] = $this->get_department_list('array');
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Ipd/export_bed_to_pdf', false, false, true);
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -158,7 +158,10 @@ class Ipd extends SHV_Controller {
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
-        $data = $this->ipd_model->get_bed_occpd_patients($input_array);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data = $this->ipd_model->get_bed_occpd_patients($db, $input_array);
 
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
@@ -174,15 +177,18 @@ class Ipd extends SHV_Controller {
             $input_array[$search_data] = $val;
         }
 
-        $result = $this->ipd_model->get_bed_occpd_patients($input_array, true);
-        $data['pat_count'] = $this->ipd_model->get_bed_occupied_statistics($input_array);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $result = $this->ipd_model->get_bed_occpd_patients($db, $input_array, true);
+        $data['pat_count'] = $this->ipd_model->get_bed_occupied_statistics($db, $input_array);
 
         $data['patient'] = $result['data'];
         $data['department'] = $input_array['department'];
 
         $this->layout->data = $data;
         $this->layout->headerFlag = false;
-        $html = $this->layout->render(array('view' => 'reports/ipd/export_bed_occ_report'), true);
+        $html = $this->layout->render(array('view' => 'archive/ipd/export_bed_occ_report'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -191,12 +197,8 @@ class Ipd extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        //$content = $html . '<br/><br/>' . $stats_html;
-        //        echo $html;
-        //        exit;
         generate_pdf($html, 'L', $title, 'vhms_ipd_bed_occ_report_' . $input_array['start_date'] . '_to_' . $input_array['end_date'] . '.pdf', TRUE, TRUE, 'I');
         exit;
-        //pma($html, 1);
     }
 
     function export_bed_to_tcpdf() {

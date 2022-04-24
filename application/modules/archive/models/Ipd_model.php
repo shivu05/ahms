@@ -67,7 +67,7 @@ class Ipd_model extends CI_Model {
         return $return;
     }
 
-    function get_ipd_patients_count($db,$conditions) {
+    function get_ipd_patients_count($db, $conditions) {
 
         if ($conditions['department'] == 1) {
             $query = "SELECT (REPLACE((department),'_',' ')) department,Total,Male,Female FROM(
@@ -90,16 +90,23 @@ class Ipd_model extends CI_Model {
         return $db->query($query)->result_array();
     }
 
-    function get_bed_occpd_patients($conditions, $export_flag = FALSE) {
+    function get_bed_occpd_patients($db, $conditions, $export_flag = FALSE) {
         $return = array();
+        //pma($db->database, 1);
+        $this->load->dbutil();
+        if (empty($db->database)) {
+            $return['data'] = array();
+            $return['found_rows'] = 0;
+            $return['total_rows'] = 0;
+            return $return;
+        }
+        unset($conditions['arch_year']);
+
         $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department', 'WardNo', 'BedNo', 'diagnosis',
             'DoAdmission', 'DoDischarge', 'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
 
-        //$where_cond = " WHERE 1 = 1 ";
         $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
           OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) ";
-        /* $where_cond = " WHERE ((DoAdmission >= '" . $conditions['start_date'] . "' AND DoDischarge <= '" . $conditions['end_date'] . "') 
-          OR (DoAdmission >= '" . $conditions['start_date'] . "' AND status = 'stillin')) "; */
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -129,19 +136,18 @@ class Ipd_model extends CI_Model {
         }
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
- (SELECT @a:=0) AS a $where_cond ORDER BY DoAdmission ASC";
-        $result = $this->db->query($query . ' ' . $limit);
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails, (SELECT @a:=0) AS a $where_cond ORDER BY DoAdmission ASC";
+        $result = $db->query($query . ' ' . $limit);
         //echo $this->db->last_query();exit;
         $return['data'] = $result->result_array();
-        $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM inpatientdetails')->num_rows();
+        $return['found_rows'] = $db->query($query)->num_rows();
+        $return['total_rows'] = $db->query('SELECT * FROM inpatientdetails')->num_rows();
         return $return;
     }
 
-    function get_bed_occupied_statistics($where) {
-        $query = $this->db->query("CALL get_bed_occupancy('" . $where['department'] . "', '" . $where['start_date'] . "', '" . $where['end_date'] . "')");
-        mysqli_next_result($this->db->conn_id); //imp
+    function get_bed_occupied_statistics($db, $where) {
+        $query = $db->query("CALL get_bed_occupancy('" . $where['department'] . "', '" . $where['start_date'] . "', '" . $where['end_date'] . "')");
+        mysqli_next_result($db->conn_id); //imp
         if ($query->num_rows() > 0) {
             return $query->result_array(); //if data is true
         } else {
