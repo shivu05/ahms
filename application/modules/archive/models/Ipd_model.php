@@ -155,8 +155,8 @@ class Ipd_model extends CI_Model {
         }
     }
 
-    function get_departmentwise_bed_count() {
-        $query = $this->db->query("SELECT count(*) as sum,department from bed_details where department NOT IN ('Aatyayikachikitsa','Swasthavritta') group by department");
+    function get_departmentwise_bed_count($db) {
+        $query = $db->query("SELECT count(*) as sum,department from bed_details where department NOT IN ('Aatyayikachikitsa','Swasthavritta') group by department");
         if ($query->num_rows() > 0) {
             return $query->result(); //if data is true
         } else {
@@ -169,8 +169,8 @@ class Ipd_model extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
-    function get_monthwise_bed_occupancy($month, $dept) {
-        $query = $this->db->query("SELECT coalesce(sum(nofDays),0) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
+    function get_monthwise_bed_occupancy($db, $month, $dept) {
+        $query = $db->query("SELECT coalesce(sum(nofDays),0) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
         return $query->result();
     }
 

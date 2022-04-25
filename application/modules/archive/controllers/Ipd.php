@@ -418,16 +418,12 @@ class Ipd extends SHV_Controller {
     }
 
     function bed_occupancy_chart() {
-        $this->layout->navTitleFlag = false;
-        $this->layout->navTitle = "IPD";
-        $this->layout->navDescr = "";
-        $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables'), 'js');
-        $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['departments'] = $this->get_department_list('array');
-
-        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
+        $this->load->model('custom_db');
+        $db_name = base64_decode($this->input->post('arch_year'));
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count($db);
         //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
         $months_arr = array(
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
@@ -436,22 +432,32 @@ class Ipd extends SHV_Controller {
         foreach ($months_arr as $month) {
             $dept_counts = array();
             foreach ($data['departments'] as $dept) {
-                $result = $this->ipd_model->get_monthwise_bed_occupancy($month, $dept['dept_unique_code']);
+                $result = $this->ipd_model->get_monthwise_bed_occupancy($db, $month, $dept['dept_unique_code']);
                 array_push($dept_counts, array($dept['dept_unique_code'] => $result));
             }
             array_push($data_bed, array($month => $dept_counts));
         }
         //pma($data_bed, 1);
         $data['deptbed'] = $data_bed;
+        $this->load->view('archive/ipd/bed_occupancy_chart', $data);
+    }
+
+    function fetch_bed_occupancy_chart() {
+        $data = array();
+        $this->load->model('common_methods/common_model');
+        $data['arch_years'] = $this->common_model->get_archived_years();
         $this->layout->data = $data;
         $this->layout->render();
     }
 
-    function bed_occupancy_chart_pdf() {
+    function bed_occupancy_chart_pdf($arch_year = '') {
         $data = array();
+        $this->load->model('custom_db');
+        $db_name = base64_decode($arch_year);
+        $db = $this->custom_db->getdatabase($db_name);
         $data['departments'] = $this->get_department_list('array');
 
-        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
+        $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count($db);
         //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
         $months_arr = array(
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
@@ -460,7 +466,7 @@ class Ipd extends SHV_Controller {
         foreach ($months_arr as $month) {
             $dept_counts = array();
             foreach ($data['departments'] as $dept) {
-                $result = $this->ipd_model->get_monthwise_bed_occupancy($month, $dept['dept_unique_code']);
+                $result = $this->ipd_model->get_monthwise_bed_occupancy($db, $month, $dept['dept_unique_code']);
                 array_push($dept_counts, array($dept['dept_unique_code'] => $result));
             }
             array_push($data_bed, array($month => $dept_counts));
