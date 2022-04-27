@@ -498,12 +498,13 @@ class Ipd extends SHV_Controller {
         ini_set('max_execution_time', '-1'); //300 seconds = 5 minutes
         $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
         $data['show_date'] = 0;
-        $table = "<h3 align='center'>MONTHLY IPD PATIENT'S REGISTER</h3>";
-        $this->load->helper('mpdf');
-        $content = $this->load->view('reports/ipd/yearly_ipd_count_report_print', $data, true);
-        generate_pdf($content, 'L');
+        $this->load->helper('pdf');
+        $content = $this->load->view('reports/ipd/bed_occ_chart_print_view', $data, true);
+        $title = array(
+            'report_title' => 'MONTHLY IPD PATIENTS REGISTER'
+        );
+        generate_pdf($content, 'L', $title, 'MONTHWISE_IPD_REPORT', TRUE, TRUE, 'I');
         exit;
-        //pdf_create($table, $content, 'ahms_monthly_ipd_report', 'L');
     }
 
     function monthly_ipd_opd_report_pdf() {
