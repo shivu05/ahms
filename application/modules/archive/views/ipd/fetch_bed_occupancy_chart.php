@@ -26,7 +26,7 @@
                             <?php
                             if (!empty($arch_years)) {
                                 foreach ($arch_years as $row) {
-                                    echo "<option value='" . base64_encode($row['db_name']) . "'>" . $row['name'] . "</option>";
+                                    echo "<option value='" . urlencode($row['db_name']) . "'>" . $row['name'] . "</option>";
                                 }
                             }
                             ?>

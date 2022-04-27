@@ -421,7 +421,7 @@ class Ipd extends SHV_Controller {
         $data = array();
         $data['departments'] = $this->get_department_list('array');
         $this->load->model('custom_db');
-        $db_name = base64_decode($this->input->post('arch_year'));
+        $db_name = urldecode($this->input->post('arch_year'));
         $db = $this->custom_db->getdatabase($db_name);
         $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count($db);
         //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
@@ -453,7 +453,7 @@ class Ipd extends SHV_Controller {
     function bed_occupancy_chart_pdf($arch_year = '') {
         $data = array();
         $this->load->model('custom_db');
-        $db_name = base64_decode($arch_year);
+        $db_name = urldecode($arch_year);
         $db = $this->custom_db->getdatabase($db_name);
         $data['departments'] = $this->get_department_list('array');
 
