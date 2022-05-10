@@ -1,7 +1,10 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Archived IPD report:</h3></div>
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-archive" aria-hidden="true"></i> Archived IPD report:</h3>
+                <a href="<?= base_url('archive/patient/ipd_list'); ?>"><button class="btn btn-sm btn-primary pull-right"><i class="fa fa-download"></i> Case sheet</button></a>
+            </div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
