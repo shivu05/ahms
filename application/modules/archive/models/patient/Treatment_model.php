@@ -44,7 +44,7 @@ class treatment_model extends CI_Model {
         }
     }
 
-    function get_patients($conditions, $export_flag = FALSE) {
+    function get_patients($db,$conditions, $export_flag = FALSE) {
         $return = array();
         $display_all = FALSE;
         $columns = array(
@@ -101,10 +101,10 @@ class treatment_model extends CI_Model {
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
                 . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
-        $result = $this->db->query($query . ' ' . $limit);
+        $result = $db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
-        $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query("SELECT * FROM treatmentdata t "
+        $return['found_rows'] = $db->query($query)->num_rows();
+        $return['total_rows'] = $db->query("SELECT * FROM treatmentdata t "
                         . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department WHERE 1=1 $user_dept_cond")->num_rows();
         return $return;
     }
@@ -143,12 +143,12 @@ class treatment_model extends CI_Model {
         return $return;
     }
 
-    function get_patient_treatment($opd, $treat_id) {
+    function get_patient_treatment($db,$opd, $treat_id) {
         $where = array(
             'it.OpdNo' => $opd,
             'it.ID' => $treat_id
         );
-        return $this->db->from('patientdata p')
+        return $db->from('patientdata p')
                         ->join('treatmentdata it', 'p.OpdNo=it.OpdNo')
                         ->where($where)
                         ->get()

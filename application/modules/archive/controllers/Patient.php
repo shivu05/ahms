@@ -382,7 +382,7 @@ class Patient extends SHV_Controller {
 
     function print_ipd_case_sheet($ipd = null, $date = '') {
         if ($ipd && $date) {
-            $this->load->model('patient/treatment_model');
+            $this->load->model('archive/patient/treatment_model');
             $data = array();
             $data['ipd'] = $ipd;
             $this->load->model('custom_db');
