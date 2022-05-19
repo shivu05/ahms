@@ -18,3 +18,26 @@ FROM months_list
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `get_monthly_opd_ipd_dept_wise`(`deptname` VARCHAR(50))
+BEGIN
+
+SELECT SUM(id) id,month,SUM(NEW) NEW,SUM(OLD) OLD,SUM(total) total,SUM(Male) Male,SUM(Female) Female
+FROM (
+	SELECT 0 id,DATE_FORMAT(it.`cameOn`, '%M') as 'month',
+	SUM(case when it.PatType='New Patient' then 1 else 0 end) NEW,
+	SUM(case when it.PatType='Old Patient' then 1 else 0 end) OLD,
+	COUNT(i.OpdNo) as 'total',
+	SUM(case when i.gender='Male' then 1 else 0 end) Male,
+	SUM(case when i.gender='Female' then 1 else 0 end) Female
+	FROM patientdata i JOIN treatmentdata it ON i.OpdNo=it.OpdNo
+	WHERE i.dept=deptname
+	GROUP BY DATE_FORMAT(it.`cameOn`, '%Y%m')
+	UNION ALL 
+	SELECT id,name month,0 NEW,0 OLD, 0 total,0 Male, 0 Female
+	FROM months_list order by id
+) A GROUP BY month order by id asc;
+
+END$$
+DELIMITER ;

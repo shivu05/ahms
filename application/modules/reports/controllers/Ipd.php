@@ -510,10 +510,10 @@ class Ipd extends SHV_Controller {
     function monthly_ipd_opd_report_pdf() {
         $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
         $data['show_date'] = 0;
-        $table = "<h3 align='center'>MONTHLY OPD - IPD PATIENT'S REGISTER</h3>";
         $this->load->helper('pdf');
         $content = $this->load->view('reports/ipd/monthly_opd_ipd_count_print', $data, true);
-        pdf_create($table, $content, 'ahms_monthly_opd_ipd_report', 'L');
+        $title = array();
+        generate_pdf($content, 'L', $title, 'MONTHWISE_IPD_REPORT', TRUE, TRUE, 'I');
         exit;
     }
 

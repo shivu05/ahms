@@ -3,18 +3,17 @@ if (empty($result)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
-    <h3 align='center'>Month-wise IPD-OPD Report</h3>
     <table id="example" border='' class="table table-bordered" cellspacing="0"  width="100%">
         <thead>
             <tr>
-                <th width='1%'></th>
+                <th>Department</th>
                 <th>Month</th>
                 <th>NEW</th>
                 <th>OLD</th>
                 <th>TOTAL</th>
                 <th>No.Of IPD</th>
-                <th>Male's</th>
-                <th>Female's</th>
+                <th>Male</th>
+                <th>Female</th>
             </tr>
         </thead>
         <tbody>
@@ -22,14 +21,14 @@ if (empty($result)) {
             $table_body = '';
             $total_new = $total_old = $total_tot = $total_ipd = $total_male = $total_female = 0;
             foreach ($result['opd'] as $dept_data => $val_arr) {
-                $table_body .= "<tr><td colspan=8><b>" . $dept_data . "</b></td></tr>";
+                $table_body .= "<tr><td colspan=7><b>" . prepare_dept_name($dept_data) . "</b></td></tr>";
                 $total = $new = $old = $ipd = $male = $female = $count = 0;
                 foreach ($val_arr as $val) {
                     $ipd_count = 0;
                     if (!empty($result['ipd'][$dept_data][$count]['total'])) {
                         $ipd_count = $result['ipd'][$dept_data][$count]['total'];
                     }
-                    $table_body .= "<tr><td width='1%'></td><td>" . $val['month'] . "</td><td>" . $val['NEW'] . "</td><td>" . $val['OLD'] . "</td><td>" . $val['total'] . "</td><td>" . $ipd_count . "</td><td>" . $val['Male'] . "</td><td>" . $val['Female'] . "</td></tr>";
+                    $table_body .= "<tr><td></td><td>" . $val['month'] . "</td><td>" . $val['NEW'] . "</td><td>" . $val['OLD'] . "</td><td>" . $val['total'] . "</td><td>" . $ipd_count . "</td><td>" . $val['Male'] . "</td><td>" . $val['Female'] . "</td></tr>";
 
                     $total = $total + $val['total'];
                     $male = $male + $val['Male'];
@@ -46,10 +45,10 @@ if (empty($result)) {
                 $total_male = $total_male + $male;
                 $total_female = $total_female + $female;
 
-                $table_body .= "<tr><td></td><td></td><td align='right'><b>" . $new . "</b></td><td align='right'><b>" . $old . "</b></td><td align='right'><b>" . $total . "</b></td><td align='right'><b>" . $ipd . "</b></td><td align='right'><b>" . $male . "</b></td><td align='right'><b>" . $female . "</b></td></tr>";
+                $table_body .= "<tr><td>Total</td><td></td><td align='right'><b>" . $new . "</b></td><td align='right'><b>" . $old . "</b></td><td align='right'><b>" . $total . "</b></td><td align='right'><b>" . $ipd . "</b></td><td align='right'><b>" . $male . "</b></td><td align='right'><b>" . $female . "</b></td></tr>";
             }
             $table_body .= "<tr><td colspan=8></td></tr>";
-            $table_body .= "<tr><td></td><td><b>Total:</b></td><td align='right'>" . $total_new . "</td><td align='right'>" . $total_old . "</td><td align='right'>" . $total_tot . "</td><td align='right'>" . $total_ipd . "</td><td align='right'>" . $total_male . "</td><td align='right'>" . $total_female . "</td></tr>";
+            $table_body .= "<tr><td><b>Grand Total:</b></td><td></td><td align='right'>" . $total_new . "</td><td align='right'>" . $total_old . "</td><td align='right'>" . $total_tot . "</td><td align='right'>" . $total_ipd . "</td><td align='right'>" . $total_male . "</td><td align='right'>" . $total_female . "</td></tr>";
             echo $table_body;
             ?>
         </tbody>

@@ -478,59 +478,79 @@ class Ipd extends SHV_Controller {
         $title = array(
             'report_title' => 'BED OCCUPANCY REGISTER'
         );
-        generate_pdf($content, 'L', $title, 'vhms_bed_occupancy_count_report', TRUE, TRUE, 'I');
+        $report_year = substr(trim($arch_year), -4);
+        generate_pdf($content, 'L', $title, 'BED_OCCIPANCY_CHART_'.$report_year, TRUE, TRUE, 'I');
         exit;
     }
 
-    function monthly_io_report() {
-        $this->layout->title = "OPD-IPD";
-        $this->layout->navTitleFlag = false;
-        $this->layout->navTitle = "OPD-IPD Report";
-        $this->layout->navDescr = "Monthly OPD-IPD report";
-        $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables', 'js'));
+    function fetch_io_report_chart() {
         $data = array();
-        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
+        $this->load->model('common_methods/common_model');
+        $data['arch_years'] = $this->common_model->get_archived_years();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function monthly_io_report() {
+        $this->load->model('custom_db');
+        $db_name = urldecode($this->input->post('arch_year'));
+        $db = $this->custom_db->getdatabase($db_name);
+
+        $data = array();
+        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report($db);
         $data['dept_list'] = $this->get_department_list('array');
+        $this->load->view('archive/ipd/monthly_io_report', $data);
+    }
+
+    function fetch_ipd_report_chart() {
+        $data = array();
+        $this->load->model('common_methods/common_model');
+        $data['arch_years'] = $this->common_model->get_archived_years();
         $this->layout->data = $data;
         $this->layout->render();
     }
 
     function monthly_ipd_report() {
-        $this->layout->title = "IPD";
-        $this->layout->navTitleFlag = false;
-        $this->layout->navTitle = "IPD Report";
-        $this->layout->navDescr = "Monthly IPD report";
-        $this->layout->navIcon = 'fa fa-bed';
-        $this->scripts_include->includePlugins(array('datatables'), 'js');
-        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $this->load->model('custom_db');
+        $db_name = urldecode($this->input->post('arch_year'));
+        $db = $this->custom_db->getdatabase($db_name);
         $data = array();
-        $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
+        $data['result'] = $this->ipd_model->get_month_wise_ipd_report($db);
         $data['dept_list'] = $this->get_department_list('array');
-        $this->layout->data = $data;
-        $this->layout->render();
+        $this->load->view('archive/ipd/monthly_ipd_report', $data);
     }
 
-    function monthly_ipd_report_pdf() {
+    function monthly_ipd_report_pdf($year = '') {
+        $this->load->model('custom_db');
+        $db_name = urldecode($year);
+        $db = $this->custom_db->getdatabase($db_name);
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', '-1'); //300 seconds = 5 minutes
-        $data['result'] = $this->ipd_model->get_month_wise_ipd_report();
+        $data['result'] = $this->ipd_model->get_month_wise_ipd_report($db);
         $data['show_date'] = 0;
-        $table = "<h3 align='center'>MONTHLY IPD PATIENT'S REGISTER</h3>";
-        $this->load->helper('mpdf');
-        $content = $this->load->view('reports/ipd/yearly_ipd_count_report_print', $data, true);
-        generate_pdf($content, 'L');
+        $this->load->helper('pdf');
+        $content = $this->load->view('archive/ipd/monthly_ipd_report', $data, true);
+        $title = array(
+            'report_title' => 'MONTHLY IPD PATIENT/\'S REGISTER'
+        );
+        $report_year = substr(trim($year), -4);
+        generate_pdf($content, 'L', $title, 'MONTHLY_IPD_PATIENT_REGISTER_' . $report_year, TRUE, TRUE, 'I');
         exit;
-        //pdf_create($table, $content, 'ahms_monthly_ipd_report', 'L');
     }
 
-    function monthly_ipd_opd_report_pdf() {
-        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
+    function monthly_ipd_opd_report_pdf($year = '') {
+        $this->load->model('custom_db');
+        $db_name = urldecode($year);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report($db);
         $data['show_date'] = 0;
-        $table = "<h3 align='center'>MONTHLY OPD - IPD PATIENT'S REGISTER</h3>";
         $this->load->helper('pdf');
-        $content = $this->load->view('reports/ipd/monthly_opd_ipd_count_print', $data, true);
-        pdf_create($table, $content, 'ahms_monthly_opd_ipd_report', 'L');
+        $content = $this->load->view('archive/ipd/monthly_io_report', $data, true);
+        $title = array(
+            'report_title' => "MONTHLY OPD - IPD PATIENT'S REGISTER"
+        );
+        $report_year = substr(trim($year), -4);
+        generate_pdf($content, 'L', $title, 'MONTHLY_OPD_IPD_PATIENT_REGISTER_'.$report_year, TRUE, TRUE, 'I');
         exit;
     }
 

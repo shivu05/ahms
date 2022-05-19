@@ -6,6 +6,7 @@
             </div>
             <div class="box-body">
                 <?php
+                //pma($result,1);
                 if (empty($result)) {
                     echo "<h4 class='center red'>No Records found</h4>";
                 } else {
@@ -13,20 +14,20 @@
                     <table id="example" class="table table-bordered" cellspacing="0"  width="90%" nobr="true">
                         <thead>
                             <tr>
-                                <th></th>
+                                <th>Department</th>
                                 <th>Month</th>
                                 <th>NEW</th>
                                 <th>OLD</th>
                                 <th>TOTAL</th>
                                 <th>No.Of IPD</th>
-                                <th>Male's</th>
-                                <th>Female's</th>
+                                <th>Male</th>
+                                <th>Female</th>
                             </tr>
                         </thead>
                         <?php
                         $total_new = $total_old = $total_tot = $total_ipd = $total_male = $total_female = 0;
                         foreach ($result['opd'] as $dept_data => $val_arr) {
-                            echo "<tr><td colspan=9><b>" . $dept_data . "</b></td></tr>";
+                            echo "<tr><td colspan=8><b>" . prepare_dept_name($dept_data) . "</b></td></tr>";
                             $total = $new = $old = $ipd = $male = $female = $count = 0;
                             foreach ($val_arr as $val) {
                                 $ipd_count = 0;
@@ -51,7 +52,9 @@
                                 $old = $old + $val['OLD'];
                                 $ipd = $ipd + $ipd_count;
                                 $count++;
+                                echo $tr;
                             }
+
                             $total_new = $total_new + $new;
                             $total_old = $total_old + $old;
                             $total_tot = $total_tot + $total;
@@ -59,10 +62,10 @@
                             $total_male = $total_male + $male;
                             $total_female = $total_female + $female;
 
-                            echo "<tr nobr='true'><td></td><td></td><td><b>" . $new . "</b></td><td><b>" . $old . "</b></td><td><b>" . $total . "</b></td><td><b>" . $ipd . "</b></td><td><b>" . $male . "</b></td><td><b>" . $female . "</b></td></tr>";
+                            echo "<tr nobr='true'><td>Total:</td><td></td><td><b>" . $new . "</b></td><td><b>" . $old . "</b></td><td><b>" . $total . "</b></td><td><b>" . $ipd . "</b></td><td><b>" . $male . "</b></td><td><b>" . $female . "</b></td></tr>";
                         }
                         echo "<tr><td colspan=8></td></tr>";
-                        echo "<tr><td></td><td><b>Total:</b></td><td>" . $total_new . "</td><td>" . $total_old . "</td><td>" . $total_tot . "</td><td>" . $total_ipd . "</td><td>" . $total_male . "</td><td>" . $total_female . "</td></tr>";
+                        echo "<tr><td><b>Grand Total:</b></td><td></td><td>" . $total_new . "</td><td>" . $total_old . "</td><td>" . $total_tot . "</td><td>" . $total_ipd . "</td><td>" . $total_male . "</td><td>" . $total_female . "</td></tr>";
                         ?>
                         <tbody>
                         </tbody>
