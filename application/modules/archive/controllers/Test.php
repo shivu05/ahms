@@ -766,14 +766,14 @@ class Test extends SHV_Controller {
     }
 
     function kriyakalp() {
-        $this->layout->title = "Kriyakalpa";
+        $this->layout->title = "Archived Kriyakalpa";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Kriyakalpa";
         $this->layout->navDescr = "Kriyakalpa";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_kriyalapa', true);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Test/export_kriyalapa', true, false, true);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -788,14 +788,20 @@ class Test extends SHV_Controller {
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
-        $data = $this->nursing_model->get_kriyakalp_data($input_array);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data = $this->nursing_model->get_kriyakalp_data($db, $input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
     }
 
     function export_kriyalapa() {
         $input_array = $this->input->post();
-        $data = $this->nursing_model->get_kriyakalp_data($input_array, true);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data = $this->nursing_model->get_kriyakalp_data($db, $input_array, true);
         $this->layout->data = $data;
         $content = $this->layout->render(array('view' => 'reports/test/kriyakalpa/export_kriyakalpa'), true);
         //$print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
@@ -806,19 +812,20 @@ class Test extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, 'kriyalapa_report', true, true, 'I');
+        $date = format_date($input_array['start_date']);
+        generate_pdf($content, 'L', $title, 'kriyalapa_report_' . $date, true, true, 'I');
         exit;
     }
 
     function delivery() {
-        $this->layout->title = "Delivery";
+        $this->layout->title = "Archived Delivery";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Delivery";
         $this->layout->navDescr = "Delivery";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery', false, false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Test/export_delivery', false, false, true);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -833,10 +840,12 @@ class Test extends SHV_Controller {
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
-
-        $data['patient'] = $this->nursing_model->get_birth_data($input_array, true);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['patient'] = $this->nursing_model->get_birth_data($db, $input_array, true);
         $this->layout->data = $data;
-        $content = $this->layout->render(array('view' => 'reports/test/birth/delivery_grid'), true);
+        $content = $this->layout->render(array('view' => 'archive/test/birth/delivery_grid'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -845,8 +854,9 @@ class Test extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
+        $date = format_date($input_array['start_date']);
 
-        generate_pdf($content, 'L', $title, 'birth_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'delivery_report_' . $date, true, true, 'I');
         exit;
     }
 
@@ -858,7 +868,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_physiotherapy', false, false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Test/export_physiotherapy', false, false, true);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -866,22 +876,27 @@ class Test extends SHV_Controller {
     }
 
     function fetch_physiotherapy_records() {
-        $this->load->model('physiotherapy_treatments');
+        $this->load->model('archive/physiotherapy_treatments');
         $post_values = $this->input->post();
-        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($post_values);
-        $this->load->view('reports/test/physiotherapy/data_grid', $data);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($post_values['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($db, $post_values);
+        $this->load->view('archive/test/physiotherapy/data_grid', $data);
     }
 
     function export_physiotherapy() {
-        $this->load->model('physiotherapy_treatments');
+        $this->load->model('archive/physiotherapy_treatments');
         ini_set("memory_limit", "-1");
         set_time_limit(0);
 
         $input_array = $this->input->post();
-
-        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($input_array, true);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['physic_list'] = $this->physiotherapy_treatments->get_physiotherapy($db, $input_array, true);
         $this->layout->data = $data;
-        $content = $this->layout->render(array('view' => 'reports/test/physiotherapy/data_grid'), true);
+        $content = $this->layout->render(array('view' => 'archive/test/physiotherapy/data_grid'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
@@ -903,7 +918,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_otherprocedures', false, false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'archive/Test/export_otherprocedures', false, false, true);
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -911,22 +926,27 @@ class Test extends SHV_Controller {
     }
 
     function fetch_oherprocedures_records() {
-        $this->load->model('other_procedures_treatments');
+        $this->load->model('archive/other_procedures_treatments');
         $post_values = $this->input->post();
-        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($post_values);
-        $this->load->view('reports/test/otherprocedures/data_grid', $data);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($post_values['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($db, $post_values);
+        $this->load->view('archive/test/otherprocedures/data_grid', $data);
     }
 
     function export_otherprocedures() {
-        $this->load->model('other_procedures_treatments');
+        $this->load->model('archive/other_procedures_treatments');
         ini_set("memory_limit", "-1");
         set_time_limit(0);
 
         $input_array = $this->input->post();
-
-        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($input_array, true);
+        $this->load->model('custom_db');
+        $db_name = base64_decode($input_array['arch_year']);
+        $db = $this->custom_db->getdatabase($db_name);
+        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($db, $input_array, true);
         $this->layout->data = $data;
-        $content = $this->layout->render(array('view' => 'reports/test/otherprocedures/data_grid'), true);
+        $content = $this->layout->render(array('view' => 'archive/test/otherprocedures/data_grid'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(

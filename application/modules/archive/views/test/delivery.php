@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Delivery report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-archive"></i> Archived Delivery report:</h3>
+                <a class="btn btn-sm btn-success pull-right" href="<?php echo base_url('archive/TestReports') ?>"><i class="fa fa-backward"></i> Back to main</a>
+            </div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <hr/>
@@ -141,7 +143,7 @@
                 'serverSide': true,
                 'ordering': false,
                 'ajax': {
-                    'url': base_url + 'reports/Test/get_birth_register_data',
+                    'url': base_url + 'archive/Test/get_birth_register_data',
                     'type': 'POST',
                     'dataType': 'json',
                     'data': function (d) {

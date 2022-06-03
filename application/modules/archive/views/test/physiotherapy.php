@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-pulse"></i> Physiotherapy report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-archive"></i> Archived Physiotherapy report:</h3>
+                <a class="btn btn-sm btn-success pull-right" href="<?php echo base_url('archive/TestReports') ?>"><i class="fa fa-backward"></i> Back to main</a>
+            </div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
@@ -23,7 +25,7 @@
             var form_data = $('#search_form').serializeArray();
             if ($('#search_form').valid()) {
                 $.ajax({
-                    url: base_url + 'reports/test/fetch_physiotherapy_records',
+                    url: base_url + 'archive/test/fetch_physiotherapy_records',
                     type: 'POST',
                     data: form_data,
                     success: function (response) {

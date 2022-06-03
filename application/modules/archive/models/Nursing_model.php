@@ -7,8 +7,8 @@
  */
 class Nursing_model extends CI_Model {
 
-    function get_nursing_ipd_indent($start_date, $end_date, $department) {
-        $this->db->query("set session group_concat_max_len = 5000");
+    function get_nursing_ipd_indent($db, $start_date, $end_date, $department) {
+        $db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
                 p.Age,p.Gender,p.department,p.Doctor,GROUP_CONCAT(i.product) as product,
@@ -23,7 +23,7 @@ class Nursing_model extends CI_Model {
                     AND i.indentdate <= '" . $end_date . "'  AND p.department LIKE '%" . $department . "%' group by i.treatid
                         order by i.indentdate asc";
         }
-        $query = $this->db->query($query);
+        $query = $db->query($query);
         if ($query->num_rows() > 0) {
             return $query->result(); //if data is true
         } else {
@@ -31,7 +31,7 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_nursing_indent($start_date, $end_date, $department) {
+    function get_nursing_indent($db,$start_date, $end_date, $department) {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
@@ -44,7 +44,7 @@ class Nursing_model extends CI_Model {
                 WHERE i.indentdate >= '" . $start_date . "' AND i.indentdate <= '" . $end_date . "'
                     AND i.ipdno = p.IpNo AND p.department LIKE '%" . $department . "%' group by i.treatid order by i.id,i.indentdate asc ";
         }
-        $query = $this->db->query($query);
+        $query = $db->query($query);
         if ($query->num_rows() > 0) {
             return $query->result(); //if data is true
         } else {
@@ -565,7 +565,7 @@ class Nursing_model extends CI_Model {
         return $this->db->delete($table, $where);
     }
 
-    function get_kriyakalp_data($conditions, $export_flag = FALSE) {
+    function get_kriyakalp_data($db, $conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
             'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
@@ -583,7 +583,7 @@ class Nursing_model extends CI_Model {
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
 
-        unset($conditions['start_date'], $conditions['end_date']);
+        unset($conditions['start_date'], $conditions['end_date'], $conditions['arch_year']);
         foreach ($conditions as $col => $val) {
             $val = trim($val);
             if ($val !== '') {
@@ -603,18 +603,17 @@ class Nursing_model extends CI_Model {
             }
         }
 
-        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
             FROM kriyakalpa k
             JOIN treatmentdata t, (SELECT @a:= 0) AS a
             JOIN patientdata p
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
             $where_cond ORDER BY serial_number,CameOn ASC";
-        $result = $this->db->query($query . ' ' . $limit);
+        $result = $db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 
-        $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM kriyakalpa k
+        $return['found_rows'] = $db->query($query)->num_rows();
+        $return['total_rows'] = $db->query('SELECT * FROM kriyakalpa k
             JOIN treatmentdata t ON k.OpdNo=t.OpdNo AND k.treat_id=t.ID
             JOIN patientdata p ON t.OpdNo=p.OpdNo
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo')->num_rows();

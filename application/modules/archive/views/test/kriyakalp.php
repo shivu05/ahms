@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Kriyakalp report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-archive"></i> Archived Kriyakalp report:</h3>
+                <a class="btn btn-sm btn-success pull-right" href="<?php echo base_url('archive/TestReports') ?>"><i class="fa fa-backward"></i> Back to main</a>
+            </div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
@@ -151,16 +153,7 @@
                 }
             }
         ];
-        if (is_admin == '1') {
-            columns.push({
-                title: 'Action',
-                data: function (item) {
-                    return "<center><i class='fa fa-edit edit_kriya' style='cursor:pointer;' title='Edit information'></i>&nbsp;&nbsp;&nbsp;&nbsp;" +
-                            "<input type='checkbox' name='check_del[]' class='check_box' id='checkbx" + item.kid + "' value='" + item.kid + "'/>"
-                            + "</center>";
-                }
-            });
-        }
+
         var patient_table;
         function show_patients() {
             patient_table = $('#patient_table').DataTable({
@@ -183,7 +176,7 @@
                 'serverSide': true,
                 'ordering': false,
                 'ajax': {
-                    'url': base_url + 'reports/Test/get_kriyakalp_patients_list',
+                    'url': base_url + 'archive/Test/get_kriyakalp_patients_list',
                     'type': 'POST',
                     'dataType': 'json',
                     'data': function (d) {
@@ -197,104 +190,6 @@
                 info: true,
                 sScrollX: true
             });
-            $('#patient_table tbody').on('click', '.edit_kriya', function () {
-                var data = patient_table.row($(this).closest('tr')).data();
-                $('#kriyakalpa_modal #kriya_edit_form #id').val(data.kid);
-                $('#kriyakalpa_modal #kriya_edit_form #kriya_procedures').val(data.procedures);
-                $('#kriyakalpa_modal #kriya_edit_form #kriya_date').val(data.kriya_date);
-                $('#kriyakalpa_modal').modal({backdrop: 'static', keyboard: false}, 'show');
-            });
-
-            $('#kriya_edit_form').validate({
-                messages: {
-                    kriya_procedures: {required: 'Procedure is empty'},
-                    kriya_date: {required: 'Date is empty'}
-                }
-            });
         }
-
-        $('#kriyakalpa_modal').on('click', '#btn-update', function () {
-            if ($('#kriya_edit_form').valid()) {
-                var form_data = $('#kriya_edit_form').serializeArray();
-                $.ajax({
-                    url: base_url + 'reports/Test/update_kriyakalpa',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: form_data,
-                    success: function (res) {
-                        $('#kriyakalpa_modal').modal('hide');
-                        if (res.status == 'ok') {
-                            $.notify({
-                                title: "Kriyakalpa:",
-                                message: res.msg,
-                                icon: 'fa fa-check'
-                            }, {
-                                type: "success"
-                            });
-                            $('#search_form #search').trigger('click');
-                        } else {
-                            $.notify({
-                                title: "Kriyakalpa:",
-                                message: res.msg,
-                                icon: 'fa fa-remove'
-                            }, {
-                                type: "danger"
-                            });
-                        }
-                    }
-                });
-            }
-        });
-
-
-
-        $('#search_form').on('click', '#btn_delete', function () {
-            BootstrapDialog.show({
-                type: BootstrapDialog.TYPE_WARNING,
-                title: 'Delete records',
-                message: 'Are you sure want to delete records?',
-                buttons: [{
-                        label: 'Yes',
-                        cssClass: 'btn-primary btn-sm',
-                        action: function (dialogItself) {
-                            var $b = $('#test_form input[type=checkbox]');
-                            num = $b.filter(':checked').length;
-                            if (num == 0) {
-                                alert('Please select atleast one records');
-                            } else {
-                                var form_data = $('#test_form').serializeArray();
-                                $.ajax({
-                                    url: base_url + 'reports/Test/delete_records',
-                                    type: 'POST',
-                                    data: form_data,
-                                    dataType: 'json',
-                                    success: function (res) {
-                                        alert('Deleted successfully');
-                                        $('#search_form search').trigger('click');
-                                        patient_table.clear();
-                                        patient_table.draw();
-                                    },
-                                    error: function (err) {
-                                        console.log(err)
-                                    }
-                                });
-                            }
-                            dialogItself.close();
-                        }
-                    }, {
-                        label: 'No',
-                        cssClass: 'btn-danger btn-sm',
-                        action: function (dialogItself) {
-                            dialogItself.close();
-                        }
-                    }]
-            });
-        });
     });
-    var clicked = false;
-    function toggle(source) {
-        //console.log($(".skip_script:checked").length+'check');
-        $(".check_box").prop("checked", !clicked);
-        clicked = !clicked;
-    }
 </script>

@@ -20,8 +20,17 @@
                     <a href="<?php echo base_url('archive/test/lab_count'); ?>" class="btn btn-info">LAB count</a>
                     <a href="<?php echo base_url('archive/test/birth'); ?>" class="btn btn-success">Birth report</a>
                     <a href="<?php echo base_url('archive/test/diet_register'); ?>" class="btn btn-primary">Diet report</a>
-                    <a href="<?php echo base_url('archive/test/Kriyakalp'); ?>" class="btn btn-warning disabled">Kriyakalp</a>
-                    <a href="<?php echo base_url('archive/test/panchakarma'); ?>" class="btn btn-default disabled">Nursing IPD</a>
+                    <a href="<?php echo base_url('archive/test/Kriyakalp'); ?>" class="btn btn-warning">Kriyakalp</a>
+                    <a href="<?php echo base_url('archive/nursing'); ?>" class="btn btn-default">Nursing IPD</a>
+                </div>
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <a href="<?php echo base_url('archive/nursing/nursing_indent_report'); ?>" class="btn btn-primary">Nursing Indent Report</a>
+                    <a href="<?php echo base_url('archive/test/delivery'); ?>" class="btn btn-success">Delivery report</a>
+                    <a href="<?php echo base_url('archive/test/physiotherapy'); ?>" class="btn btn-default">Physiotherapy report</a>
+                    <a href="<?php echo base_url('archive/test/otherprocedures'); ?>" class="btn btn-danger"> Other Procedures report</a>
+                    <a href="<?php echo base_url('#'); ?>" class="btn btn-info disabled">-</a>
+                    <a href="<?php echo base_url('#'); ?>" class="btn btn-primary disabled">-</a>
+                    <a href="<?php echo base_url('#'); ?>" class="btn btn-warning disabled">-</a>
                 </div>
             </div>
         </div>
