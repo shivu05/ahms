@@ -48,7 +48,7 @@ class Sales_entry extends SHV_Model {
             $this->db->select("count(*) as records,s.id as product_id,s.treat_id,p.OpdNO,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.FName,p.Age,p.Gender,p.department,p.Doctor,s.ipdno,group_concat(s.product) as product,group_concat(s.batch) as batch,group_concat(s.qty) as qty,group_concat(s.id) as product_ids");
             $this->db->from("inpatientdetails p");
             $this->db->join("sales_entry s", "s.ipdno=p.IpNo");
-            $this->db->join("ipdtreatment t", "s.ipdno=t.ipdno");
+            $this->db->join("ipdtreatment t", "s.ipdno=t.ipdno and s.date=t.attndedon");
             $this->db->where("s.date >=", $from);
             $this->db->where("s.date <=", $to);
             $this->db->where('p.department !=', 'Swasthavritta');
