@@ -12,7 +12,7 @@ class ClientInfo extends CI_Model {
     }
 
     public function fetch_config_years($key) {
-        if (trim(strtolower($key)) != 'ahms') {
+        if (trim(strtolower(SHORT_NAME)) != 'ahms') {
             $this->db->where('client_short_name', $key);
         }
         return $this->db->get($this->_dbName . '.' . $this->_tableName)->result_array();
