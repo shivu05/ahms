@@ -5,7 +5,9 @@
      ul.outerWidth(this.element.outerWidth());
      }*/
 </script>
-<style id="antiClickjack">body{display:none !important;}</style>
+<style id="antiClickjack">body{
+    display:none !important;
+}</style>
 <script type="text/javascript">
     if (self === top) {
         var antiClickjack = document.getElementById("antiClickjack");
@@ -37,12 +39,16 @@
                         </div>
                     </form>
                 <?php } ?>
+
             </div>
             <!-- /.navbar-collapse -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <?php if ($this->rbac->is_login()): ?>
 
+                        <li class="dropdown tasks-menu">
+                            <a href="#" aria-expanded="false">Current Year: <?= substr(base64_decode($this->rbac->get_selected_year()), -4); ?></a>
+                        </li>
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu" style="cursor: pointer; width:auto;" data-toggle="tooltip" data-placement="left" title="">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

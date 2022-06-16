@@ -14,8 +14,15 @@ class Login extends SHV_Controller {
     }
 
     function index() {
+        $key = fetchProjectDir();
+        $this->load->model('ClientInfo');
+        $accessConfig = $this->ClientInfo->fetch_config_years($key);
+        if (empty($accessConfig)) {
+            echo 'no data';
+        }
         $data = array();
         $data['app_settings'] = $this->application_settings(array('college_name'));
+        $data['accessConfig'] = $accessConfig;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -24,22 +31,44 @@ class Login extends SHV_Controller {
         $data["title"] = "Login Page";
         $this->form_validation->set_rules('loginname', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
+        $this->form_validation->set_rules('selection_year', 'Year', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
             $data['app_settings'] = $this->application_settings(array('college_name'));
             $this->layout->data = $data;
             $this->layout->render(array('view' => 'login/index'));
         } else {
             //if ($this->simpleloginsecure->check_license() == 1) {
-            if ($this->simpleloginsecure->login($this->input->post('loginname'), $this->input->post('password'))) {
-                redirect('login/home');
-            } else {
-                $this->session->set_flashdata('noty_msg', 'Wrong username / password ');
-                redirect('login');
+
+            $year = $this->input->post('selection_year');
+            $db = base64_decode(trim($year));
+            $db_exists = $this->db->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'vhms_" . $db . "'")->row_array();
+            if (empty($db_exists) && !isset($db_exists['SCHEMA_NAME'])) {
+                show_error('Unathorised access! Please contact administrator <a href="' . base_url() . '" >Home</a>', 500);
+                exit;
             }
+            $this->session->set_userdata('randkey', $year);
+            $this->session->set_userdata('configs', $this->input->post());
+            //$this->load->database($config, TRUE);
+            //pma($this->session->userdata('randkey'), 1);
+            redirect('login/authenticate');
+            // $this->authenticate($this->input->post());
+
             /* } else {
               $data["invalid"] = "License Expired please contact admin";
               $this->load->view('login/login_vw', $data);
               } */
+        }
+    }
+
+    function authenticate() {
+        $postvalues = $this->session->userdata('configs');
+        $this->session->set_userdata('configs', NULL);
+        $dbname = $this->session->userdata('randkey');
+        if ($this->simpleloginsecure->login($postvalues['loginname'], $postvalues['password'], $dbname)) {
+            redirect('login/home');
+        } else {
+            $this->session->set_flashdata('noty_msg', 'Wrong username / password ');
+            redirect(base_url(), true);
         }
     }
 
@@ -51,7 +80,7 @@ class Login extends SHV_Controller {
         $this->session->unset_userdata('user');
         //$this->session->sess_destroy();
         $this->db->cache_delete_all();
-        redirect('Login', true);
+        redirect(base_url(), true);
     }
 
     function change_password() {

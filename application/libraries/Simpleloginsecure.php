@@ -53,8 +53,6 @@ class Simpleloginsecure {
     function create($user_email = '', $user_pass = '', $auto_login = true) {
         $this->CI = & get_instance();
 
-
-
         //Make sure account info was sent
         if ($user_email == '' OR $user_pass == '') {
             return false;
@@ -201,11 +199,11 @@ class Simpleloginsecure {
      * @param	string
      * @return	bool
      */
-    function login($user_email = '', $user_pass = '') {
+    function login($user_email = '', $user_pass = '', $dbname = '') {
         $this->CI = & get_instance();
         //$this->CI->db->reconnect();
 
-        if ($user_email == '' OR $user_pass == '')
+        if ($user_email == '' OR $user_pass == '' OR $dbname == '')
             return false;
 
 
@@ -246,6 +244,7 @@ class Simpleloginsecure {
             $user_data['id'] = $user_data['ID'];
             $user_data['role_code'] = $user_data['role_code'];
             $user_data['logged_in'] = true;
+            $user_data['randkey'] = $dbname;
             $this->CI->session->set_userdata('user_data', $user_data);
 
             return true;

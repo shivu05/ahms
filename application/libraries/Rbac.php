@@ -89,6 +89,13 @@ class Rbac {
         }
         return '';
     }
+    
+    public function get_selected_year() {
+        if (isset($this->_session['user_data']['randkey'])) {
+            return $this->_session['user_data']['randkey'];
+        }
+        return '';
+    }
 
     public function has_role($role_code) {
 

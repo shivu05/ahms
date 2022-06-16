@@ -505,3 +505,28 @@ if (!function_exists('listFolderFiles')) {
     }
 
 }
+
+if (!function_exists('fetchProjectDir')) {
+
+    function fetchProjectDir() {
+        $uri_segments = current_url();
+        $uri_segments = rtrim($uri_segments, '/');
+        $segments = explode('/', $uri_segments);
+        return end($segments);
+    }
+
+}
+
+
+if (!function_exists('getDBName')) {
+
+    function getDBName($string, $logic = 'en') {
+        $db = trim('vhms_' . $string);
+        if ($logic == 'en') {
+            return base64_encode($db);
+        } else {
+            return base64_decode($db);
+        }
+    }
+
+}

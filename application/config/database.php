@@ -73,13 +73,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 $active_group = 'default';
 $query_builder = TRUE;
+$db_name = DB_NAME;
+$CI = & get_instance();
+$CI->load->library('session');
+
+if ($CI->session->has_userdata('user_data')) {
+    $sess_arr = $CI->session->userdata('user_data');
+    if ($sess_arr['randkey'] != "") {
+        $db_name = base64_decode($sess_arr['randkey']);
+        $db_name = 'vhms_' . $db_name;
+    }
+}
 
 $db['default'] = array(
     'dsn' => '',
     'hostname' => 'localhost',
     'username' => DB_USER,
     'password' => DB_PASS,
-    'database' => DB_NAME,
+    'database' => $db_name,
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,

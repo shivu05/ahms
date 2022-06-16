@@ -9,7 +9,9 @@
         echo $this->scripts_include->includeCss();
         echo $this->scripts_include->preJs();
         ?>
-        <style id="antiClickjack">body{display:none !important;}</style>
+        <style id="antiClickjack">body{
+                display:none !important;
+            }</style>
         <script type="text/javascript">
             if (self === top) {
                 var antiClickjack = document.getElementById("antiClickjack");
@@ -32,20 +34,41 @@
                         if ($this->session->flashdata('noty_msg') != '') {
                             echo $this->session->flashdata('noty_msg');
                         }
+                        echo validation_errors();
+                        //pma($accessConfig);
                         ?></p>
                     <div class="form-group has-feedback">
-                        <input class="form-control" type="text" placeholder="Email" autofocus name="loginname" id="loginname" autocomplete="off">
+                        <input class="form-control" type="text" placeholder="Email" autofocus name="loginname" id="loginname" required="required" autocomplete="off">
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
-                        <input class="form-control" type="password" placeholder="Password" name="password" id="password">
+                        <input class="form-control" type="password" placeholder="Password" name="password" id="password" required="required">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <select name="selection_year" id="selection_year" class="form-control required" required="required">
+                            <option value="">Choose year</option>
+                            <?php
+                            if (!empty($accessConfig)) {
+                                foreach ($accessConfig as $row) {
+                                    $years = $row['client_data_access'];
+                                    $years = explode(',', $years);
+                                    if (!empty($years)) {
+                                        foreach ($years as $n) {
+                                            $value = base64_encode($row['client_short_name'] . "_" . $n);
+                                            echo '<option value="' . $value . '">' . $row['client_short_name'] . '-' . $n . '</option>';
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
                     <div class="row">
                         <div class="col-xs-8">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"> Remember Me
+                                    <input type="checkbox" class="disabled"> Remember Me
                                 </label>
                             </div>
                         </div>
