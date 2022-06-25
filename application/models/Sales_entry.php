@@ -31,18 +31,7 @@ class Sales_entry extends SHV_Model {
                 JOIN treatmentdata t ON s.treat_id=t.ID 
                 JOIN patientdata p ON t.OpdNo=p.OpdNo 
                 WHERE s.date >= '" . $from . "' AND s.date <= '" . $to . "' AND ipdno is null $dept_condition
-                group by s.treat_id";
-            /* if ($department == "1") {
-              $query = "SELECT count(*) as records,s.id as product_id,s.treat_id,p.OpdNo,p.deptOpdNo,p.FirstName,p.Age,p.gender,p.dept,t.PatType,p.LastName,t.AddedBy,t.CameOn, group_concat(s.product) as product,
-              group_concat(s.batch) as batch, group_concat(s.qty) as qty,group_concat(s.id) as product_ids
-              from patientdata p left join sales_entry s on s.opdno=p.OpdNo
-              left JOIN treatmentdata t ON s.treat_id=t.ID WHERE s.date >= '" . $from . "' AND s.date <= '" . $to . "' AND ipdno is null group by s.treat_id";
-              } else {
-              $query = "SELECT count(*) as records,s.id as product_id,s.treat_id,p.OpdNo,p.deptOpdNo,p.FirstName,p.Age,p.gender,p.dept,t.PatType,p.LastName,t.AddedBy,t.CameOn,group_concat(i.product) as product,
-              group_concat(i.batch) as batch, group_concat(i.qty) as qty,group_concat(s.id) as product_ids
-              from patientdata p,sales_entry i,treatmentdata t WHERE i.opdno = p.OpdNo
-              AND i.treat_id=t.ID AND i.date >=  '" . $from . "' AND i.date <= '" . $to . "' AND ipdno is null  group by i.treat_id";
-              } */
+                group by s.treat_id ";
             $query = $this->db->query($query);
         } else {
             $this->db->select("count(*) as records,s.id as product_id,s.treat_id,p.OpdNO,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.FName,p.Age,p.Gender,p.department,p.Doctor,s.ipdno,group_concat(s.product) as product,group_concat(s.batch) as batch,group_concat(s.qty) as qty,group_concat(s.id) as product_ids");

@@ -54,7 +54,7 @@ class Doctors_model extends CI_Model {
                         $where_cond .= " AND user_name LIKE '%$val%'";
                         break;
                     case 'department':
-                        $where_cond .= ($val != 1) ? " AND UPPER(replace(t.department,' ','_')) = '$val'" : '';
+                        $where_cond .= ($val != 1) ? " AND UPPER(replace(u.user_department,' ','_')) = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
@@ -66,7 +66,7 @@ class Doctors_model extends CI_Model {
             JOIN users u on d.doc_id=u.id 
             JOIN i_user_roles ur ON u.id=ur.user_id 
             JOIN week_days w ON w.week_id=d.day,
-        (SELECT @a:= 0) AS a  $where_cond ORDER BY serial_number,user_department,week_id";
+        (SELECT @a:= 0) AS a  $where_cond ORDER BY user_department,week_id";
         if ($export_flag) {
             
         }
@@ -106,6 +106,10 @@ class Doctors_model extends CI_Model {
         return $this->db->update('doctorsduty', array('day' => $post_values['week_day'], 'doc_id' => $post_values['doctor_name']));
 
         //$this->db->trans_complete();
+    }
+
+    function fetch_roles() {
+        return $this->db->where("role_code != 'ADMIN'")->get("role_master")->result_array();
     }
 
 }

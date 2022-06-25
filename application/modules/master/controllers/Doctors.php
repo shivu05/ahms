@@ -24,6 +24,7 @@ class Doctors extends SHV_Controller {
         $data = array();
         $data['department_list'] = $this->get_department_list('array');
         $data['week_days'] = $this->doctors_model->get_week_days();
+        $data['roles'] = $this->doctors_model->fetch_roles();
         $this->layout->data = $data;
         $this->layout->render();
     }

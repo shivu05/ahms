@@ -65,7 +65,7 @@ if (empty($patient)) {
                                                 | <i class="fa fa-trash text-error product_delete" style="color:red;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i></td>
                                             <?php endif; ?>
                                     </tr>
-                                <?php
+                                    <?php
                                 }
                             }
                             ?>

@@ -29,11 +29,24 @@
                     <div class="form-group col-md-2">
                         <label class="control-label sr-only">Role</label>
                         <select name="role" id="role" class="form-control">
-                            <option value="">Choose</option>
+                            <option value="">Choose role</option>
                             <?php
                             if (!empty($roles)) {
                                 foreach ($roles as $role) {
                                     echo '<option value="' . $role['role_id'] . '">' . $role['role_name'] . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label sr-only">Department</label>
+                        <select name="department" id="department" class="form-control">
+                            <option value="">Choose Department</option>
+                            <?php
+                            if (!empty($department_list)) {
+                                foreach ($department_list as $row) {
+                                    echo '<option value="' . $row['dept_unique_code'] . '">' . $row['dept_unique_code'] . '</option>';
                                 }
                             }
                             ?>
