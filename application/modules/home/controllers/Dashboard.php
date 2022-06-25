@@ -39,8 +39,10 @@ class Dashboard extends SHV_Controller {
         if ($this->rbac->is_admin()) {
             $this->scripts_include->includePlugins(array('chartjs'), 'js');
             $this->layout->navTitleFlag = true;
-            $this->layout->navTitle = "Dashboard";
+            $app_configs = $this->application_settings();
+            $this->layout->navTitle = '<span class="" style="width:100% !important;text-align:center;padding:5px;background-color:#00C0EF;color:white;font-size:18px; font-weight:bold;text-shadow: 2px 2px grey;">'.@$app_configs['college_name'].'</span>';
             $this->breadcrumbs->push('Dashboard', '#');
+            $this->layout->breadcrumbsFlag=false;
 
             $data = array();
             $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();
