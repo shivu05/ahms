@@ -54,8 +54,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Update user details:</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update user details:</h4>
             </div>
             <div class="modal-body">
                 <form method="POST" name="user_edit" id="user_edit">
@@ -64,6 +64,29 @@
                         <input type="text" class="form-control required" id="user_name" name="user_name" placeholder="Name">
                         <input type="hidden" class="form-control" id="id" name="id">
                     </div>
+                    <div class="form-group">
+                        <label for="email">Email: <span class="form_astrisk">*</span></label>
+                        <input class="form-control required" id="email" name="email" type="email" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="off">
+                        <small class="form-text text-muted" id="emailHelp">Email will be your username</small>
+                    </div> 
+                    <div class="form-group">
+                        <label for="user_name">Mobile:</label>
+                        <input type="text" class="form-control required" id="user_mobile" name="user_mobile" placeholder="Mobile">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_department">Department: <span class="form_astrisk">*</span></label>
+                        <select name="user_department" id="user_department" class="form-control">
+                            <option value="">Choose department</option>
+                            <?php
+                            if (!empty($department_list)) {
+                                foreach ($department_list as $dept) {
+                                    echo '<option value="' . $dept['dept_unique_code'] . '">' . $dept['department'] . '</option>';
+                                }
+                            }
+                            ?>    
+                        </select>
+                        <small class="form-text text-muted" id="deptHelp"></small>
+                    </div> 
                 </form>
             </div>
             <div class="modal-footer">
@@ -143,14 +166,47 @@
                 title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>';
+                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>';
                 }
             }
         ];
-        $('#user_edit').validate();
+        $('#user_edit').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true,
+                    remote: {
+                        url: base_url + 'master/users/check_for_duplicate_email_update',
+                        data: {
+                            email: function () {
+                                return $('#user_edit_modal_box #email').val();
+                            },
+                            id: function () {
+                                return $('#user_edit_modal_box #id').val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                email: {
+                    remote: 'Email already exists'
+                }
+            }
+        });
         $('#users_table').on('click', '.edit-user', function () {
-            $('#user_edit_modal_box #user_name').val($(this).data('name'));
-            $('#user_edit_modal_box #id').val($(this).data('id'));
+            var data = user_table.row($(this).closest('tr')).data();
+            console.log(data);
+            $('#user_edit_modal_box #user_name').val(data.user_name);
+            $('#user_edit_modal_box #id').val(data.ID);
+            $('#user_edit_modal_box #email').val(data.user_email);
+            $('#user_edit_modal_box #user_mobile').val(data.user_mobile);
+            $('#user_edit_modal_box #user_department').val(data.user_department);
+            if (data.user_type !== '4') {
+                $('#user_edit_modal_box #user_department').attr('disabled', 'disabled');
+            }else{
+                $('#user_edit_modal_box #user_department').removeAttr('disabled');
+            }
             $('#user_edit_modal_box').modal('show');
         });
         $('#user_edit_modal_box').on('click', '#update_btn', function () {

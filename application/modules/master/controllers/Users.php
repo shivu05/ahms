@@ -13,6 +13,7 @@ class Users extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $data = array();
         $data['roles'] = $this->users_model->get_roles();
+        $data['department_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -66,12 +67,29 @@ class Users extends SHV_Controller {
         }
     }
 
+    function check_for_duplicate_email_update() {
+        $email = $this->input->get('email');
+        $id = $this->input->get('id');
+        $count = $this->users_model->check_for_dup_email($email, $id);
+        if ($count > 0) {
+            echo 'false';
+        } else {
+            echo 'true';
+        }
+    }
+
     function update() {
         if ($this->input->is_ajax_request()) {
             $user_name = $this->input->post('user_name');
+            $user_mail = $this->input->post('email');
+            $user_mobile = $this->input->post('user_mobile');
+            $user_department = $this->input->post('user_department');
             $id = $this->input->post('id');
             $update = array(
-                'user_name' => $user_name
+                'user_name' => $user_name,
+                'user_email' => $user_mail,
+                'user_mobile' => $user_mobile,
+                'user_department' => $user_department
             );
             $where = array(
                 'ID' => $id

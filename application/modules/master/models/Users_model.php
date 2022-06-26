@@ -17,8 +17,11 @@ class Users_model extends CI_Model {
         return $this->db->get('role_master')->result_array();
     }
 
-    function check_for_dup_email($email) {
+    function check_for_dup_email($email, $id = '') {
         $this->db->where('user_email', $email);
+        if ($id) {
+            $this->db->where('ID != ' . $id . '');
+        }
         return $this->db->get('users')->num_rows();
     }
 
@@ -38,7 +41,7 @@ class Users_model extends CI_Model {
 
         $return = array();
         $columns = array('u.ID', 'u.user_name', 'u.user_email', 'u.user_country', 'u.user_state', 'u.user_mobile',
-            'u.user_type', '(REPLACE((u.user_department),"_"," ")) as user_department', 'u.user_date', 'u.user_modified', 'u.active', 'rm.role_name'
+            'u.user_type', '(REPLACE((u.user_department), "_", " ")) as user_department', 'u.user_date', 'u.user_modified', 'u.active', 'rm.role_name'
         );
 
         $where_cond = " WHERE u.ID != 1 ";
@@ -47,7 +50,7 @@ class Users_model extends CI_Model {
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
-            $limit = ' LIMIT ' . $start . ',' . ($length);
+            $limit = ' LIMIT ' . $start . ', ' . ($length);
             unset($conditions['start'], $conditions['length'], $conditions['order']);
         }
 
@@ -75,12 +78,12 @@ class Users_model extends CI_Model {
             }
         }
 
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
+        $query = "SELECT @a:=@a+1 serial_number, " . join(', ', $columns) . " FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id,
         (SELECT @a:= 0) AS a  $where_cond ORDER BY serial_number ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM users u JOIN i_user_roles ur ON u.ID=ur.user_id JOIN role_master rm ON rm.role_id=ur.role_id WHERE u.ID !=1')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM users u JOIN i_user_roles ur ON u.ID = ur.user_id JOIN role_master rm ON rm.role_id = ur.role_id WHERE u.ID != 1')->num_rows();
 
         return $return;
     }
