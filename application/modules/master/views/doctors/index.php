@@ -106,7 +106,7 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Duty day:</label>
-                        <select class="form-control required" name="week_day" id="week_day">
+                        <select class="form-control required select2" style="width:100%" name="week_day[]" id="week_day" multiple>
                             <option value="">Choose day</option>
                             <?php
                             if (!empty($week_days)) {
@@ -348,7 +348,6 @@
                 title: "Action",
                 class: "delete",
                 data: function (item) {
-                    console.log(item);
                     return '<i style="margin-right:15px !important;" data-week_id="' + item.week_id + '" data-dept="' + item.user_dept + '" data-name="' + item.user_name + '" data-doc_id="' + item.doc_id + '" class="fa fa-pencil text-primary edit_duty" data-id="' + item.id + '" aria-hidden="true"></i>' +
                             '<i class="fa fa-trash-o error delete_duty"  data-id="' + item.id + '" aria-hidden="true"></i>';
                 }

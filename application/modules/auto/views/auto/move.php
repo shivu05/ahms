@@ -3,7 +3,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="fa fa-database"></i> Record analysis:</h3>
-                 <a class="pull-right btn btn-primary btn-sm" href="<?php echo base_url('show-ref'); ?>"><i class="fa fa-eye"></i> View patient data</a>
+                <a class="pull-right btn btn-primary btn-sm" href="<?php echo base_url('show-ref'); ?>"><i class="fa fa-eye"></i> View patient data</a>
             </div>
             <form action="<?php echo base_url('analyse-data'); ?>" method="POST" name="gen_form" id="gen_form">
                 <div class="box-body">
@@ -12,6 +12,13 @@
                             <?php
                             if ($this->session->flashdata('noty_msg') != '') {
                                 echo $this->session->flashdata('noty_msg');
+                            }
+                            ?>
+                        </div>
+                        <div class="col-md-12 text-danger">
+                            <?php
+                            if ($doc_duty_count == 'N') {
+                                echo "<p>Please check the doctors duty chart. Its incomplete</p>";
                             }
                             ?>
                         </div>
@@ -46,7 +53,9 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <input type="submit" class="btn btn-primary btn-sm pull-right disable" id="generate" value="Generate">
+                    <?php if ($doc_duty_count != 'N') { ?>
+                        <input type="submit" class="btn btn-primary btn-sm pull-right disable" id="generate" value="Generate">
+                    <?php } ?>
                 </div>
             </form>
         </div>

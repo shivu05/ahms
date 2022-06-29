@@ -22,6 +22,9 @@ class Auto extends SHV_Controller {
         $this->layout->navTitle = "Patients";
         $this->layout->title = "Record analysis";
         if (md5($this->input->post('key_word')) == "9eb80e31381f8509f062dd01a8b2b758") {
+            $n = $this->check_doctors_duty_records();
+            $data['doc_duty_count'] = $n;
+            $this->layout->data = $data;
             $this->layout->render(array('view' => 'auto/auto/move'));
         } else {
             echo "No Results Found";
@@ -36,6 +39,8 @@ class Auto extends SHV_Controller {
         $cdate = $this->input->post('cdate');
         $newpatient = $this->input->post('newpatient');
         $pancha_count = $this->input->post('pancha_count');
+        $n = $this->check_doctors_duty_records();
+        $data['doc_duty_count'] = $n;
         $data['message'] = $this->m_auto->auto_master($target, $cdate, $newpatient, $pancha_count);
         $this->layout->data = $data;
         $this->layout->render();
@@ -59,9 +64,6 @@ class Auto extends SHV_Controller {
 
     function get_reference_data() {
         $input_array = array();
-//        foreach ($this->input->post('search_form') as $search_data) {
-//            $input_array[$search_data['name']] = $search_data['value'];
-//        }
         $search_key = $this->input->post('search');
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');

@@ -196,12 +196,11 @@
         });
         $('#users_table').on('click', '.edit-user', function () {
             var data = user_table.row($(this).closest('tr')).data();
-            console.log(data);
             $('#user_edit_modal_box #user_name').val(data.user_name);
             $('#user_edit_modal_box #id').val(data.ID);
             $('#user_edit_modal_box #email').val(data.user_email);
             $('#user_edit_modal_box #user_mobile').val(data.user_mobile);
-            $('#user_edit_modal_box #user_department').val(data.user_department);
+            $('#user_edit_modal_box #user_department').val(data.department);
             if (data.user_type !== '4') {
                 $('#user_edit_modal_box #user_department').attr('disabled', 'disabled');
             }else{

@@ -80,15 +80,17 @@ class Doctors_model extends CI_Model {
 
     function save_doctors_duty($post_values) {
         extract($post_values);
-        $where = array(
-            'doc_id' => $doctor_name,
-            'day' => $week_day
-        );
-        $result = $this->db->get_where('doctorsduty', $where);
-        if ($result->num_rows() == 0) {
-            return $this->db->insert('doctorsduty', $where);
-        } else {
-            return 'exists';
+        if (!empty($week_day)) {
+            foreach ($week_day as $day) {
+                $where = array(
+                    'doc_id' => $doctor_name,
+                    'day' => $day
+                );
+                $result = $this->db->get_where('doctorsduty', $where);
+                if ($result->num_rows() == 0) {
+                    $this->db->insert('doctorsduty', $where);
+                }
+            }
         }
     }
 
