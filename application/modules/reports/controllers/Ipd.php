@@ -181,12 +181,8 @@ class Ipd extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        //$content = $html . '<br/><br/>' . $stats_html;
-        //        echo $html;
-        //        exit;
-        generate_pdf($html, 'L', $title, 'vhms_ipd_bed_occ_report_' . $input_array['start_date'] . '_to_' . $input_array['end_date'] . '.pdf', TRUE, TRUE, 'I');
+        generate_pdf($html, 'L', $title, 'IPD_BED_OCCU_REPORT_' . $input_array['start_date'] . '', TRUE, TRUE, 'I');
         exit;
-        //pma($html, 1);
     }
 
     function export_bed_to_tcpdf() {

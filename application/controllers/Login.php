@@ -38,14 +38,16 @@ class Login extends SHV_Controller {
             $this->layout->render(array('view' => 'login/index'));
         } else {
             //if ($this->simpleloginsecure->check_license() == 1) {
-
             $year = $this->input->post('selection_year');
             $db = base64_decode(trim($year));
             $db_exists = $this->db->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'vhms_" . $db . "'")->row_array();
             if (empty($db_exists) && !isset($db_exists['SCHEMA_NAME'])) {
                 show_error('Unathorised access! Please contact administrator <a href="' . base_url() . '" >Home</a>', 500);
                 exit;
+            } else {
+                
             }
+
             $this->session->set_userdata('randkey', $year);
             $this->session->set_userdata('configs', $this->input->post());
             //$this->load->database($config, TRUE);

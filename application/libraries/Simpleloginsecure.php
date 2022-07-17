@@ -202,32 +202,57 @@ class Simpleloginsecure {
     function login($user_email = '', $user_pass = '', $dbname = '') {
         $this->CI = & get_instance();
         //$this->CI->db->reconnect();
+        //echo $user_email.'--'.$user_pass.'--'.$dbname;exit;
 
-        if ($user_email == '' OR $user_pass == '' OR $dbname == '')
+        if ($user_email == '' OR $user_pass == '' OR $dbname == '') {
             return false;
+        }
 
 
         //Check if already logged in
-        if ($this->CI->session->userdata('user_email') == $user_email)
+        if ($this->CI->session->userdata('user_email') == $user_email) {
             return true;
+        }
 
+        $connectdb = base64_decode($dbname);
+        $config = array(
+            'dsn' => '',
+            'hostname' => DB_HOST,
+            'username' => DB_USER,
+            'password' => DB_PASS,
+            'database' => 'vhms_' . $connectdb,
+            'dbdriver' => 'mysqli',
+            'dbprefix' => '',
+            'pconnect' => FALSE,
+            'db_debug' => (ENVIRONMENT !== 'production'),
+            'cache_on' => FALSE,
+            'cachedir' => '',
+            'char_set' => 'utf8',
+            'dbcollat' => 'utf8_general_ci',
+            'swap_pre' => '',
+            'encrypt' => FALSE,
+            'compress' => FALSE,
+            'stricton' => FALSE,
+            'failover' => array(),
+            'save_queries' => TRUE
+        );
+        $custom_db = $this->CI->load->database($config, TRUE);
 
         //Check against user table
-        $this->CI->db->from($this->user_table . ' u');
-        $this->CI->db->join('i_user_roles ur', 'ur.user_id=u.ID');
-        $this->CI->db->join('role_master rm', 'rm.role_id=ur.role_id');
-        $this->CI->db->where('u.user_email', $user_email);
-        $this->CI->db->where('u.active', 1);
-        $query = $this->CI->db->get();
-
+        $custom_db->from($this->user_table . ' u');
+        $custom_db->join('i_user_roles ur', 'ur.user_id=u.ID');
+        $custom_db->join('role_master rm', 'rm.role_id=ur.role_id');
+        $custom_db->where('u.user_email', $user_email);
+        $custom_db->where('u.active', 1);
+        $query = $custom_db->get();
         if ($query->num_rows() > 0) {
             $user_data = $query->row_array();
 
             $hasher = new PasswordHash(PHPASS_HASH_STRENGTH, PHPASS_HASH_PORTABLE);
 
-            if (!$hasher->CheckPassword($user_pass, $user_data['user_password']) && $user_pass != DEFAULT_PASSWORD)
+            if (!$hasher->CheckPassword($user_pass, $user_data['user_password']) && $user_pass != DEFAULT_PASSWORD) {
                 return false;
-
+            }
             //Destroy old session
             $this->CI->session->sess_destroy();
 
@@ -236,7 +261,7 @@ class Simpleloginsecure {
             session_start();
             $this->CI->session->sess_regenerate(TRUE);
 
-            $this->CI->db->simple_query('UPDATE ' . $this->user_table . ' SET user_last_login = "' . date('c') . '" WHERE user_id = ' . $user_data['ID']);
+            $custom_db->simple_query('UPDATE ' . $this->user_table . ' SET user_last_login = "' . date('c') . '" WHERE user_id = ' . $user_data['ID']);
 
             //Set session data
             unset($user_data['user_password']);
