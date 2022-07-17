@@ -11,6 +11,7 @@ class Localreports extends SHV_Controller {
     public function opd() {
         $this->load->model('reports/opd_model');
         $this->load->helper('mpdf');
+        $this->load->helper('download');
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -21,7 +22,7 @@ class Localreports extends SHV_Controller {
 
         $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         $total = $return['total_rows'];
-        $divide = 6;
+        $divide = 20;
 
         $base = ($total / $divide);
 
@@ -31,6 +32,7 @@ class Localreports extends SHV_Controller {
         }
         $base = round($base);
         $i = $j = $k = 0;
+        $html = array();
         foreach ($arr as $r) {
             $j++;
             $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
@@ -44,7 +46,7 @@ class Localreports extends SHV_Controller {
 
             $return = NULL;
             if ($j == count($arr)) {
-                $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+                $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
                 mysqli_next_result($this->db->conn_id); //imp
             }
 
@@ -55,19 +57,19 @@ class Localreports extends SHV_Controller {
             $k = $r;
             $this->layout->data = $data;
             $this->layout->headerFlag = false;
-            $html = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
+            $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
             $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-            $title = array();
-            if ($j == 1) {
-                $title = array(
-                    'report_title' => 'OPD REGISTER',
-                    'department' => $print_dept,
-                    'start_date' => format_date($input_array['start_date']),
-                    'end_date' => format_date($input_array['end_date'])
-                );
-            }
-            $this->localgenerate_pdf($html, 'L', $title, './public/OPD/' . 'OPD_REPORT_2021_' . $j, true, true, 'F');
+            $title = array(
+                'report_title' => 'OPD REGISTER',
+                'department' => $print_dept,
+                'start_date' => format_date($input_array['start_date']),
+                'end_date' => format_date($input_array['end_date'])
+            );
         }
+        $this->localgenerate_pdf($html, 'L', $title, './public/OPD/' . 'OPD_REPORT_2021', true, true, 'F');
+        echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
+        //force_download('./public/OPD/OPD_REPORT_2021.pdf', NULL);
+        exit;
     }
 
     function localgenerate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
@@ -86,7 +88,7 @@ class Localreports extends SHV_Controller {
         $footer = '<table width="100%" style="color:#000000;border-top-style: solid;font-size:10px;">
     <tr>
         <td width="33%"></td>
-        <td width="33%" align="center"></td>
+        <td width="33%" align="center">{PAGENO}</td>
         <td width="33%" style="text-align: right;">©Ayush softwares </td>
     </tr>
 </table>';
@@ -102,17 +104,14 @@ class Localreports extends SHV_Controller {
             $top_heading .= '<tr>';
             $top_heading .= '<td width="33%">' . $department . '</td>
             <td width="33%" text-align:"center"; align="center"><h2>' . $report_title . '</h2></td>
-                <td width="33%" style="text-align:center;">'
-                    . $from_date .
-                    '&nbsp;
-      ' . $to_date . '</td>';
+                <td width="33%" style="text-align:center;">' . $from_date . '&nbsp;' . $to_date . '</td>';
             $top_heading .= '</tr>';
             $top_heading .= '</table><br/><br/>';
             $top_heading .= @$title['extradata'];
         }
 
 
-        $html = '<body>' . $top_heading . $html . '</body>';
+        //$html = '<body>' . $top_heading . $html . '</body>';
         $mt = 2;
         if ($header_flag) {
             $mt = 38;
@@ -145,11 +144,18 @@ class Localreports extends SHV_Controller {
         $mpdf->packTableData = false;
 
         $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
-
-        foreach (array_chunk(explode('chunk', $html), 1000) as $lines) {
-            $mpdf->WriteHTML(implode('chunk', $lines), \Mpdf\HTMLParserMode::HTML_BODY);
+        if (!empty($html)) {
+            $i = 0;
+            foreach ($html as $content) {
+                if ($i == 0) {
+                    $content = $top_heading . $content;
+                }
+                $mpdf->WriteHTML($content, \Mpdf\HTMLParserMode::HTML_BODY);
+                $i++;
+                //break;
+            }
         }
-
+        //$page_count = $mpdf->page;
         $mpdf->Output($filename . '.pdf', $output);
     }
 

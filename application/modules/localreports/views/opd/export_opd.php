@@ -35,7 +35,7 @@ $dept_room_array = array(
             <?php } ?>
             <th width="13%">Department</th>
             <?php if ($department == 1) { ?>
-                <th width="3%">Ref.<br/>Room No.</th>
+                <th width="3%">Room No.</th>
             <?php } ?>
             <th width="7%">Date</th>
         </tr>   
@@ -50,7 +50,7 @@ $dept_room_array = array(
                 $patType = patient_type($patients['PatType']);
                 $i++;
                 echo "<tr>";
-                echo "<td><center>" . $i . "</center></td>";
+                echo "<td><center>" . $patients['ID'] . "</center></td>";
                 echo "<td><center>" . $patients['ID'] . "</center></td>";
                 echo "<td><center>" . $patients['msd'] . "</center></td>";
                 echo "<td><center>" . $patients['OpdNo'] . "</center></td>";
@@ -84,7 +84,7 @@ $dept_room_array = array(
 $table = '';
 if (!empty($opd_stats)) {
     $total = $male_total = $female_total = 0;
-    $table = "<br/><table width='80%' class='table' style='margin-top:2 !important;margin-left: auto;margin-right: auto;'>";
+    $table = "<br/><table width='90%' class='table' style='margin-top:2 !important;margin-left: auto;margin-right: auto;'>";
     $table .= "<thead><tr><th width='35%'><center>Department</center></th><th width='5%'><center>Old</center></th><th width='5%'><center>New</center></th>
         <th width='8%'><center>Total</center></th><th width='5%'><center>Male</center></th><th width='5%'><center>Female</center></th>"
             . "<th>Netra-Roga Vibhaga</th><th>karna-Nasa-Mukha & Danta Vibhaga</th></tr></thead>";
