@@ -8,69 +8,91 @@ class Localreports extends SHV_Controller {
         parent::__construct();
     }
 
-    public function opd() {
-        $this->load->model('reports/opd_model');
-        $this->load->helper('mpdf');
-        $this->load->helper('download');
-        $this->layout->title = 'OPD Report';
-        ini_set("memory_limit", "-1");
-        set_time_limit(0);
-        ini_set("pcre.backtrack_limit", "5000000");
-        $input_array['start_date'] = '2021-01-01';
-        $input_array['end_date'] = '2021-12-31';
-        $input_array['department'] = 1;
+    private function _fetch_year() {
+        $year = $this->rbac->get_selected_year();
+        return substr(base64_decode($year), -4);
+    }
 
-        $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
-        $total = $return['total_rows'];
-        $divide = 10;
-
-        $base = ($total / $divide);
-
-        $arr = array();
-        for ($i = 1; $i <= $divide; $i++) {
-            $arr[] = round($i * $base);
+    private function removefiles($path) {
+        if ($path != '') {
+            $files = glob($path); // get all file names
+            foreach ($files as $file) { // iterate files
+                if (is_file($file)) {
+                    unlink($file); // delete file
+                }
+            }
         }
-        $base = round($base);
-        $i = $j = $k = 0;
-        $html = array();
-        foreach ($arr as $r) {
-            $j++;
-            $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
+    }
+
+    public function opd() {
+        $year = $this->_fetch_year();
+        if (trim($year) != '') {
+            //$this->removefiles('./public/OPD/*');
+            $this->load->model('reports/opd_model');
+            $this->load->helper('mpdf');
+            $this->load->helper('download');
+            $this->layout->title = 'OPD Report';
+            ini_set("memory_limit", "-1");
+            set_time_limit(0);
+            ini_set("pcre.backtrack_limit", "5000000");
+            $input_array['start_date'] = $year . '-01-01';
+            $input_array['end_date'] = $year . '-12-31';
+            $input_array['department'] = 1;
+
+            $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+            $total = $return['total_rows'];
+            $divide = 10;
+
+            $base = ($total / $divide);
+
+            $arr = array();
+            for ($i = 1; $i <= $divide; $i++) {
+                $arr[] = round($i * $base);
+            }
+            $base = round($base);
+            $i = $j = $k = 0;
+            $html = array();
+            foreach ($arr as $r) {
+                $j++;
+                $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
                 (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept 
                 FROM treatmentdata t JOIN patientdata p JOIN deptper d 
                 WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code 
-                AND CameOn >="2021-01-01" AND CameOn <="2021-12-31" ORDER BY t.ID LIMIT ' . $i . ',' . $base . '';
+                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $i . ',' . $base . '';
 
-            $result['data'] = $this->db->query($query)->result_array();
-            $i = ($j * $base);
+                $result['data'] = $this->db->query($query)->result_array();
+                $i = ($j * $base);
 
-            $return = NULL;
-            if ($j == count($arr)) {
-                $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
-                mysqli_next_result($this->db->conn_id); //imp
+                $return = NULL;
+                if ($j == count($arr)) {
+                    $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+                    mysqli_next_result($this->db->conn_id); //imp
+                }
+
+                $data['opd_patients'] = $result['data'];
+                $data['department'] = $input_array['department'];
+                $data['opd_stats'] = $return;
+                $data['num'] = $k;
+                $k = $r;
+                $this->layout->data = $data;
+                $this->layout->headerFlag = false;
+                $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
+                $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+                $title = array(
+                    'report_title' => 'OPD REGISTER',
+                    'department' => $print_dept,
+                    'start_date' => format_date($input_array['start_date']),
+                    'end_date' => format_date($input_array['end_date'])
+                );
             }
-
-            $data['opd_patients'] = $result['data'];
-            $data['department'] = $input_array['department'];
-            $data['opd_stats'] = $return;
-            $data['num'] = $k;
-            $k = $r;
-            $this->layout->data = $data;
-            $this->layout->headerFlag = false;
-            $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
-            $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-            $title = array(
-                'report_title' => 'OPD REGISTER',
-                'department' => $print_dept,
-                'start_date' => format_date($input_array['start_date']),
-                'end_date' => format_date($input_array['end_date'])
-            );
+            $file_name = './public/OPD/' . SHORT_NAME . '_OPD_REPORT_' . $year;
+            $this->localgenerate_pdf($html, 'L', $title, $file_name, true, true, 'F');
+            echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
+            force_download($file_name . '.pdf', NULL);
+            exit;
+        } else {
+            echo '<p style="color:red;font-weight:bold;">Invalid request please contact admin</p>';
         }
-        $file_name = './public/OPD/' . SHORT_NAME . '_OPD_REPORT_2021';
-        $this->localgenerate_pdf($html, 'L', $title, $file_name, true, true, 'F');
-        echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
-        force_download($file_name . '.pdf', NULL);
-        exit;
     }
 
     function localgenerate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
@@ -153,7 +175,7 @@ class Localreports extends SHV_Controller {
                 }
                 $mpdf->WriteHTML($content, \Mpdf\HTMLParserMode::HTML_BODY);
                 $i++;
-                break;
+                // break;
             }
         }
         //$page_count = $mpdf->page;

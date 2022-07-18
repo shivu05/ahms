@@ -483,6 +483,7 @@ class Treatment extends SHV_Controller {
                 'asssurgeon' => $this->input->post('AssSurgeryDocname'),
                 'surgeryname' => $this->input->post('surgeryname'),
                 'anesthesia_type' => $this->input->post('anesthesia_type'),
+                'ipdno' => $ipdno
             );
             $this->treatment_model->add_surgery_info($surgerydata);
         }
