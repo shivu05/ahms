@@ -30,7 +30,7 @@ class Settings extends SHV_Controller {
         } else {
             $config = array();
         }
-        $img = "img";
+     
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload('college_logo')) {
             if ($this->input->post('logo_name') && empty($_FILES['college_logo']['name'])) {
@@ -51,7 +51,8 @@ class Settings extends SHV_Controller {
             'place' => $this->input->post('place'),
             'printing_style' => $this->input->post('printing_style'),
             'logo' => $this->input->post('logo'),
-            'admin_email' => $this->input->post('config_email')
+            'admin_email' => $this->input->post('config_email'),
+            'logo_img'=> file_get_contents($_FILES['college_logo']['tmp_name'])
         );
         $this->settings_model->save_settings($form_data);
         redirect('home/Settings', true);

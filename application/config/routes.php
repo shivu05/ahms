@@ -155,5 +155,7 @@ $route['otherprocedures-report'] = 'reports/Test/otherprocedures';
 $route['update-sales'] = 'pharmacy/sales/update_stocks';
 $route['add-sales'] = 'pharmacy/sales';
 
+$route['full-year-report'] = 'localreports/localreports/opd';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

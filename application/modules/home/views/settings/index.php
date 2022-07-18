@@ -62,6 +62,7 @@
                                     </div>
                                     <div class="col-md-4 mb-4">
                                         <img src="<?php echo base_url('assets/' . $settings['logo']); ?>" width="90px" height="90px"/>
+                                        <?php /*echo '<img src="data:image/png;base64,'.base64_encode($settings['logo_img']).'" width="90px" height="90px"/>'; */?>
                                     </div>
                                 </div>
                                 <div class="row mb-10">

@@ -22,7 +22,7 @@ class Localreports extends SHV_Controller {
 
         $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         $total = $return['total_rows'];
-        $divide = 20;
+        $divide = 10;
 
         $base = ($total / $divide);
 
@@ -66,9 +66,10 @@ class Localreports extends SHV_Controller {
                 'end_date' => format_date($input_array['end_date'])
             );
         }
-        $this->localgenerate_pdf($html, 'L', $title, './public/OPD/' . 'OPD_REPORT_2021', true, true, 'F');
+        $file_name = './public/OPD/' . SHORT_NAME . '_OPD_REPORT_2021';
+        $this->localgenerate_pdf($html, 'L', $title, $file_name, true, true, 'F');
         echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
-        //force_download('./public/OPD/OPD_REPORT_2021.pdf', NULL);
+        force_download($file_name . '.pdf', NULL);
         exit;
     }
 
@@ -80,7 +81,7 @@ class Localreports extends SHV_Controller {
         $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
         //Html page design
         $header = '<div class="row"><div class="col first">'
-                . '<img src="' . base_url('assets/your_logo.png') . '" width="80" height="80" alt="logo">
+                . '<img src="data:image/png;base64,' . base64_encode($config['logo_img']) . '" width="80px" height="80px"/>
                     </div>
                     <div class="col half">
                     <h2 align="center">' . $config["college_name"] . '</h2>
@@ -152,7 +153,7 @@ class Localreports extends SHV_Controller {
                 }
                 $mpdf->WriteHTML($content, \Mpdf\HTMLParserMode::HTML_BODY);
                 $i++;
-                //break;
+                break;
             }
         }
         //$page_count = $mpdf->page;

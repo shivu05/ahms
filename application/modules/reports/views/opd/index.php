@@ -37,10 +37,11 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
+                                    <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
                                 </ul>
                             </div>
                         </div>
+                        <a href="<?php echo base_url('full-year-report'); ?>" target="_blank"><button class="btn btn-primary btn-sm" type="button" id="full_report"><i class="fa fa-fw fa-lg fa-download"></i>Full OPD Report</button></a>
                     </div>
                 </form>
                 <div id="patient_details">
@@ -70,7 +71,7 @@
         });
         $('#search_form #export').on('click', '#export_to_xls', function (e) {
             e.preventDefault();
-             $('.loading-box').css('display', 'block');
+            $('.loading-box').css('display', 'block');
             var form_data = $('#search_form').serializeArray();
             $.ajax({
                 url: base_url + 'reports/Opd/export_patients_list',
