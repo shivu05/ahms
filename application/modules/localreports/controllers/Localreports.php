@@ -41,7 +41,7 @@ class Localreports extends SHV_Controller {
 
             $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
             $total = $return['total_rows'];
-            $divide = 10;
+            $divide = 4;
 
             $base = ($total / $divide);
 
