@@ -17,6 +17,27 @@ class Test extends SHV_Controller {
         parent::__construct();
     }
 
+    public function uuid_gen() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $this->load->library('uuid');
+//        echo $this->uuid->v3('AnSh');
+//        echo '<br/>';
+//        echo $this->uuid->v4();
+//        echo '<br/>';
+//        echo $this->uuid->v5('AnSh');
+        $this->db->query("ALTER TABLE patientdata CHANGE COLUMN `sid` `sid` VARCHAR(200) NULL DEFAULT NULL");
+        $result = $this->db->get('patientdata')->result_array();
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $uid = $this->uuid->v5('AnSh');
+                echo $uid . '-' . $row['OpdNo'] . '<br/>';
+                $this->db->query("UPDATE patientdata SET sid='" . $uid . "' WHERE OpdNo='" . $row['OpdNo'] . "'");
+                $uid = '';
+            }
+        }
+    }
+
     function print_pdf() {
         $this->load->helper('mpdf');
         $config = $this->db->get('config');

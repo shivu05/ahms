@@ -9,6 +9,7 @@ class treatment_model extends CI_Model {
 
     function add_patient_for_treatment($post_values) {
         $user_id = $this->rbac->get_uid();
+        $uid = $this->uuid->v5('AnSh');
         $this->db->trans_start();
         $form_data = array(
             'FirstName' => $post_values['first_name'],
@@ -20,7 +21,8 @@ class treatment_model extends CI_Model {
             'city' => $post_values['place'],
             'AddedBy' => $user_id,
             'entrydate' => $post_values['consultation_date'],
-            'mob' => $post_values['mobile']
+            'mob' => $post_values['mobile'],
+            'sid' => $uid
         );
         $this->db->insert('patientdata', $form_data);
         $last_id = $this->db->insert_id();

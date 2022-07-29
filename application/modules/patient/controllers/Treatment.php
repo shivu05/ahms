@@ -457,6 +457,7 @@ class Treatment extends SHV_Controller {
         }
 
         if ($this->input->post('kshara_check') == 'on') {
+            $opd_treat_id = $this->db->query("select treatId from inpatientdetails where IpNo='$ipdno'")->row_array();
             $ksharadata = array(
                 'OpdNo' => $this->input->post('opd_no'),
                 'ksharsType' => $this->input->post('ksharatype'),
@@ -466,7 +467,7 @@ class Treatment extends SHV_Controller {
                 'asssurgeon' => $this->input->post('assksharasurgeonname'),
                 'ksharsDate' => $this->input->post('ksharadate'),
                 'anesthesia_type' => $this->input->post('anesthesia_type'),
-                'treatId' => $treat_id
+                'treatId' => $opd_treat_id
             );
             $this->treatment_model->add_kshara_info($ksharadata);
         }

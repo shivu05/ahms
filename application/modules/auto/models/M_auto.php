@@ -660,6 +660,7 @@ class M_auto extends CI_Model {
 
             if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
                 $deptNum = $getDeptNum + 1;
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $this->femfirstname[$this->_index],
@@ -672,7 +673,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
 
                 $this->db->insert('patientdata', $data);
@@ -734,6 +736,7 @@ class M_auto extends CI_Model {
                     $lname = $this->femLastName[$this->_index];
                     $sex = "Female";
                 }
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -746,7 +749,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -806,7 +810,7 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     // $sex = "Female";
                 }
-
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -819,7 +823,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -885,7 +890,7 @@ class M_auto extends CI_Model {
 
                 $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
                 $treatment_details = $this->_get_diagnosis_by_gender($this->_treatment_data[$dept_name], $sex);
-
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -899,7 +904,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sub_dept" => $treatment_details['sub_dept']
+                    "sub_dept" => $treatment_details['sub_dept'],
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -970,7 +976,7 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     $sex = "Female";
                 }
-
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -983,7 +989,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
 
                 $this->db->insert('patientdata', $data);
@@ -1049,6 +1056,7 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     $sex = "Female";
                 }
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -1061,7 +1069,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => 'SWASTHAVRITTA'
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1121,7 +1130,7 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     //$sex = "Female";
                 }
-
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -1134,7 +1143,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1198,6 +1208,7 @@ class M_auto extends CI_Model {
                     $occ = $this->femoccp[$this->_index];
                     $sex = "Female";
                 }
+                $uid = $this->uuid->v5('AnSh');
                 $data = array(
                     "deptOpdNo" => $deptNum,
                     "FirstName" => $fname,
@@ -1210,7 +1221,8 @@ class M_auto extends CI_Model {
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
-                    "dept" => $dept_name
+                    "dept" => $dept_name,
+                    "sid" => $uid
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();

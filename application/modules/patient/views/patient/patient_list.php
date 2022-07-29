@@ -4,13 +4,17 @@
             <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Patient master:</h3></div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label class="control-label sr-only">OPD</label>
                         <input class="form-control" type="text" placeholder="Enter OPD number" name="OpdNo" id="OpdNo" autocomplete="off">
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label class="control-label sr-only">Name</label>
                         <input class="form-control" type="text" placeholder="Enter name" name="name" id="name">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="control-label sr-only">Unique ID</label>
+                        <input class="form-control" type="text" placeholder="Enter ID" name="sid" id="sid">
                     </div>
                     <div class="form-group col-md-4 align-self-end">
                         <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
@@ -120,6 +124,16 @@
         </div>
     </div>
 </div>
+<style type="text/css">
+    .unique_id{
+        min-width: 230px !important;
+        max-width: 230px !important;
+    }
+    .opd_no{
+        min-width: 80px !important;
+        max-width: 80px !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
@@ -148,8 +162,19 @@
 
         var columns = [
             {
+                title: "Unique ID",
+                class: "unique_id",
+                data: function (item) {
+                    var unique_id = item.sid;
+                    if (unique_id == 'null') {
+                        unique_id = '--';
+                    }
+                    return  '<small style="color:blue">' + unique_id + '</small>';
+                }
+            },
+            {
                 title: "C.OPD",
-                class: "opd_no text-center",
+                class: "opd_no",
                 data: function (item) {
                     return  item.OpdNo;
                 }
@@ -162,12 +187,14 @@
             },
             {
                 title: "Age",
+                class: "opd_no",
                 data: function (item) {
                     return item.Age;
                 }
             },
             {
                 title: "Gender",
+                class: "opd_no",
                 data: function (item) {
                     return item.gender;
                 }
@@ -227,7 +254,8 @@
             },
             order: [[0, 'desc']],
             info: true,
-            sScrollX: true
+            sScrollX: true,
+            ordering: false
         });
 
         $('#patient_table tbody').on('click', '.take_appointment', function () {
@@ -316,7 +344,7 @@
             });
         });
         $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
-			$("#default_modal_box .modal-footer #btn-ok").attr("disabled", true);
+            $("#default_modal_box .modal-footer #btn-ok").attr("disabled", true);
             if ($('#send_patient_for_followup').valid()) {
                 var form_data = $('#send_patient_for_followup').serializeArray();
                 $.ajax({
@@ -333,7 +361,7 @@
                         }, {
                             type: "success",
                         });
-						$("#default_modal_box .modal-footer #btn-ok").attr("disabled", false);
+                        $("#default_modal_box .modal-footer #btn-ok").attr("disabled", false);
                     }
                 });
             }

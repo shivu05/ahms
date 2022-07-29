@@ -14,7 +14,7 @@ class Opd_model extends CI_Model {
     public function get_patients($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array(
-            'OpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'city', 'occupation', 'address'
+            'OpdNo', 'FirstName', 'LastName', 'Age', 'gender', 'city', 'occupation', 'address', '(CASE WHEN sid IS NULL THEN "##" ELSE sid END) sid'
         );
         $where_cond = " WHERE 1=1 ";
         $limit = ' LIMIT 100';
@@ -34,6 +34,9 @@ class Opd_model extends CI_Model {
                         break;
                     case 'name':
                         $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'sid':
+                        $where_cond .= " AND sid LIKE '%$val%'";
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
