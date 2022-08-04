@@ -26,7 +26,7 @@ class Test extends SHV_Controller {
 //        echo $this->uuid->v4();
 //        echo '<br/>';
 //        echo $this->uuid->v5('AnSh');
-        $this->db->query("ALTER TABLE patientdata CHANGE COLUMN `sid` `sid` VARCHAR(200) NULL DEFAULT NULL");
+        //$this->db->query("ALTER TABLE patientdata CHANGE COLUMN `sid` `sid` VARCHAR(200) NULL DEFAULT NULL");
         $result = $this->db->get('patientdata')->result_array();
         if (!empty($result)) {
             foreach ($result as $row) {

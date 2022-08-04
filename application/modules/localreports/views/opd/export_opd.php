@@ -45,7 +45,7 @@ $dept_room_array = array(
         if (empty($opd_patients)) {
             echo "No data";
         } else {
-            $i = $num;
+            $i = 0;
             foreach ($opd_patients as $patients) {
                 $patType = patient_type($patients['PatType']);
                 $i++;

@@ -39,57 +39,87 @@ class Localreports extends SHV_Controller {
             $input_array['end_date'] = $year . '-12-31';
             $input_array['department'] = 1;
 
-            $return['total_rows'] = $this->db->query('SELECT * FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+            $return['total_rows'] = $this->db->query('SELECT ID FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
             $total = $return['total_rows'];
-            $divide = 4;
-
-            $base = ($total / $divide);
-
-            $arr = array();
-            for ($i = 1; $i <= $divide; $i++) {
-                $arr[] = round($i * $base);
-            }
-            $base = round($base);
-            $i = $j = $k = 0;
+            $j = $k = 0;
             $html = array();
-            foreach ($arr as $r) {
+            $step = 0;
+            while ($total > $step) {
                 $j++;
                 $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
                 (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept 
                 FROM treatmentdata t JOIN patientdata p JOIN deptper d 
                 WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code 
-                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $i . ',' . $base . '';
+                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $step . ',2000';
 
                 $result['data'] = $this->db->query($query)->result_array();
-                $i = ($j * $base);
-
+                $step = $step + 2000;
+                $data['opd_patients'] = $result['data'];
+                $data['department'] = $input_array['department'];
                 $return = NULL;
-                if ($j == count($arr)) {
+                if ($total < $step) {
                     $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
                     mysqli_next_result($this->db->conn_id); //imp
                 }
-
-                $data['opd_patients'] = $result['data'];
-                $data['department'] = $input_array['department'];
                 $data['opd_stats'] = $return;
-                $data['num'] = $k;
-                $k = $r;
                 $this->layout->data = $data;
                 $this->layout->headerFlag = false;
                 $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
-                $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
-                $title = array(
-                    'report_title' => 'OPD REGISTER',
-                    'department' => $print_dept,
-                    'start_date' => format_date($input_array['start_date']),
-                    'end_date' => format_date($input_array['end_date'])
-                );
             }
+
+            $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+            $title = array(
+                'report_title' => 'OPD REGISTER',
+                'department' => $print_dept,
+                'start_date' => format_date($input_array['start_date']),
+                'end_date' => format_date($input_array['end_date'])
+            );
+
             $file_name = './public/OPD/' . SHORT_NAME . '_OPD_REPORT_' . $year;
             $this->localgenerate_pdf($html, 'L', $title, $file_name, true, true, 'F');
             echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
             force_download($file_name . '.pdf', NULL);
             exit;
+            /*
+              foreach ($arr as $r) {
+              $j++;
+              $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
+              (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept
+              FROM treatmentdata t JOIN patientdata p JOIN deptper d
+              WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code
+              AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $i . ',' . $base . '';
+
+              $result['data'] = $this->db->query($query)->result_array();
+              $i = ($j * $base);
+
+              $return = NULL;
+              if ($j == count($arr)) {
+              $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+              mysqli_next_result($this->db->conn_id); //imp
+              }
+
+              $data['opd_patients'] = $result['data'];
+              $data['department'] = $input_array['department'];
+              $data['opd_stats'] = $return;
+              $data['num'] = $k;
+              $k = $r;
+              $this->layout->data = $data;
+              $this->layout->headerFlag = false;
+              $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
+              $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+              $title = array(
+              'report_title' => 'OPD REGISTER',
+              'department' => $print_dept,
+              'start_date' => format_date($input_array['start_date']),
+              'end_date' => format_date($input_array['end_date'])
+              );
+              }
+              $file_name = './public/OPD/' . SHORT_NAME . '_OPD_REPORT_' . $year;
+              $this->localgenerate_pdf($html, 'L', $title, $file_name, true, true, 'F');
+              echo '<p style="color:green;font-weight:bold;">Report exported successfully</p>';
+              force_download($file_name . '.pdf', NULL);
+              exit;
+             * */
         } else {
             echo '<p style="color:red;font-weight:bold;">Invalid request please contact admin</p>';
         }
@@ -183,6 +213,7 @@ class Localreports extends SHV_Controller {
     }
 
     function export_opd_sales() {
+        echo 'Export started<br/>';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $start_date = '2021-01-01';
@@ -190,49 +221,71 @@ class Localreports extends SHV_Controller {
         $data["is_print"] = true;
         $dept_condition = '';
 
-        $query = "select t.OpdNo,s.treat_id,group_concat(s.product) as product,group_concat(s.batch) as batch, group_concat(s.qty) as qty,
+        $query = "select @a:=@a+1 serial_number,t.OpdNo,s.treat_id,group_concat(s.product) as product,group_concat(s.batch) as batch, group_concat(s.qty) as qty,
                 group_concat(s.id) as product_ids,ucfirst(REPLACE((t.department),'_',' ')) dept,t.deptOpdNo,t.PatType,CONCAT(p.FirstName,' ',p.LastName) as name,
                 t.AddedBy,t.CameOn ,p.Age,p.gender
                 from sales_entry s 
                 JOIN treatmentdata t ON s.treat_id=t.ID 
-                JOIN patientdata p ON t.OpdNo=p.OpdNo 
+                JOIN patientdata p ON t.OpdNo=p.OpdNo, (SELECT @a:= 0) AS a
                 WHERE s.date >= '" . $start_date . "' AND s.date <= '" . $end_date . "' AND ipdno is null $dept_condition
                 group by s.treat_id ";
 
-        $result = $this->db->query($query);
+        //$result = $this->db->query($query);
 
-        $total = $result->num_rows();
-        $divide = 20;
-
-        $base = ($total / $divide);
-
-        $arr = array();
-        for ($i = 1; $i <= $divide; $i++) {
-            $arr[] = round($i * $base);
-        }
-        $base = round($base);
-
-        $i = $j = $k = 0;
-        foreach ($arr as $r) {
+        $total = 32296; //$result->num_rows();
+        $step = $j = 0;
+        $html = array();
+        while ($total > $step) {
             $j++;
-            $resultset = $this->db->query($query . ' ' . 'LIMIT ' . $i . ',' . $base . '');
+            $resultset = $this->db->query($query . ' ' . 'LIMIT ' . $step . ',2000');
+            $step = $step + 2000;
             $data["patient"] = $resultset->result();
-            $i = ($j * $base);
-            $data['num'] = $k;
-            $k = $r;
-            $html = $this->load->view('localreports/sales/opd_pharmacy_report_vw', $data, true);
-            $print_dept = "CENTRAL";
-            $title = array();
-            if ($j == 1) {
-                $title = array(
-                    'report_title' => 'OPD MEDICINE DISPENCE REGISTER',
-                    'department' => $print_dept,
-                    'start_date' => format_date($start_date),
-                    'end_date' => format_date($end_date)
-                );
-            }
-            $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'OPD_PHARMA_REPORT_2021_' . $j, true, true, 'F');
+            $html[] = $this->load->view('localreports/sales/opd_pharmacy_report_vw', $data, true);
         }
+        $print_dept = "CENTRAL";
+        $title = array(
+            'report_title' => 'OPD MEDICINE DISPENCE REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($start_date),
+            'end_date' => format_date($end_date)
+        );
+        //echo count($html);exit;
+        $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'OPD_PHARMA_REPORT_2021', true, true, 'F');
+        echo 'Task completed<br/>';
+        exit;
+//        echo '------------------------------------------------------------------';
+//        exit;
+//        $divide = 20;
+//
+//        $base = ($total / $divide);
+//
+//        $arr = array();
+//        for ($i = 1; $i <= $divide; $i++) {
+//            $arr[] = round($i * $base);
+//        }
+//        $base = round($base);
+//
+//        $i = $j = $k = 0;
+//        foreach ($arr as $r) {
+//            $j++;
+//            $resultset = $this->db->query($query . ' ' . 'LIMIT ' . $i . ',' . $base . '');
+//            $data["patient"] = $resultset->result();
+//            $i = ($j * $base);
+//            $data['num'] = $k;
+//            $k = $r;
+//            $html = $this->load->view('localreports/sales/opd_pharmacy_report_vw', $data, true);
+//            $print_dept = "CENTRAL";
+//            $title = array();
+//            if ($j == 1) {
+//                $title = array(
+//                    'report_title' => 'OPD MEDICINE DISPENCE REGISTER',
+//                    'department' => $print_dept,
+//                    'start_date' => format_date($start_date),
+//                    'end_date' => format_date($end_date)
+//                );
+//            }
+//            $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'OPD_PHARMA_REPORT_2021_' . $j, true, true, 'F');
+//        }
     }
 
 }

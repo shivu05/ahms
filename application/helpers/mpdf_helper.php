@@ -11,8 +11,9 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $config = $config->row_array();
     $orientation = (empty($pstyle)) ? $config["printing_style"] : $pstyle;
     //Html page design
+    //. '<img src="' . base_url('assets/your_logo.png') . '" width="80" height="80" alt="logo">
     $header = '<div class="row"><div class="col first">'
-            . '<img src="' . base_url('assets/your_logo.png') . '" width="80" height="80" alt="logo">
+            . '<img src="data:image/png;base64,' . base64_encode($config['logo_img']) . '" width="80px" height="80px"/>
                     </div>
                     <div class="col half">
                     <h2 align="center">' . $config["college_name"] . '</h2>

@@ -20,13 +20,13 @@ if (empty($patient)) {
         </thead>
         <tbody>
             <?php
-            $count = $num;
+            //$count = $num;
             $last_id = -1;
             foreach ($patient as $row) {
-                $count++;
+                //$count++;
                 ?> 
                 <tr class="warning">
-                    <td style="text-align: center;"><?php echo $count; ?></td>
+                    <td style="text-align: center;"><?php echo $row->serial_number; ?></td>
                     <td style="text-align: center;"><?php echo $row->OpdNo; ?></td>
                     <td style="text-align: center;"><?php echo $row->deptOpdNo; ?></td>
                     <td><?php echo $row->name; ?></td>

@@ -307,7 +307,9 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('dt.ID', 'IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE((department),"_"," ")) department', 'dt.morning', 'dt.after_noon', 'dt.evening');
 
-        $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
+        //$where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
+        $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
+          OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) ";
 
         $limit = '';
         if (!$export_flag) {
