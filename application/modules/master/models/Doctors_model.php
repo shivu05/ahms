@@ -114,4 +114,22 @@ class Doctors_model extends CI_Model {
         return $this->db->where("role_code != 'ADMIN'")->get("role_master")->result_array();
     }
 
+    function fetch_doctors_duty($conditions) {
+        $department_cond = ($conditions['department'] == 1) ? '' : ' AND d.dept_unique_code="' . $conditions['department'] . '"';
+        $query = "SELECT user_name,user_email,trim(dept_unique_code) user_department,day,week_day 
+            FROM doctorsduty dt 
+            JOIN users u ON dt.doc_id=u.id 
+            JOIN week_days w ON dt.day=w.week_id 
+            JOIN deptper d ON u.user_department=d.dept_unique_code
+            WHERE u.ID != 1 AND u.active=1 $department_cond
+            order by user_department,week_id asc";
+//       // echo $query;exit;
+//        $query = "SELECT d.id,
+//            user_name,user_department 
+//            FROM users u 
+//            JOIN doctorsduty d ON u.ID=d.doc_id 
+//            WHERE u.user_type=4 and user_department='BALAROGA'";
+        return $result = $this->db->query($query)->result_array();
+    }
+
 }

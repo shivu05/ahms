@@ -280,7 +280,7 @@ class Test extends SHV_Controller {
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
-        generate_pdf($content, 'L', $title, SHORT_NAME. '_DIET_REGISTER', true, true, 'I');
+        generate_pdf($content, 'L', $title, SHORT_NAME . '_DIET_REGISTER', true, true, 'I');
         exit;
     }
 
@@ -879,6 +879,45 @@ class Test extends SHV_Controller {
         } else {
             echo json_encode(array('msg' => 'Invalid request', 'status' => 'nok'));
         }
+    }
+
+    function doctors_duty() {
+        $this->layout->title = "Doctors duty";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Doctors duty chart";
+        $this->layout->navDescr = "Doctors duty char";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_doctorsduty', false, false);
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function fetch_doctorsduty() {
+        $post_values = $this->input->post();
+        $this->load->model('master/doctors_model');
+        $data['duty_list'] = $this->doctors_model->fetch_doctors_duty($post_values);
+        $this->load->view('reports/test/doctorsduty/data_grid', $data);
+    }
+
+    function export_doctorsduty() {
+        $post_values = $this->input->post();
+        $this->load->model('master/doctors_model');
+        $data['duty_list'] = $this->doctors_model->fetch_doctors_duty($post_values);
+        $content = $this->load->view('reports/test/doctorsduty/data_grid', $data, true);
+        $print_dept = ($post_values['department'] == 1) ? "CENTRAL" : strtoupper($post_values['department']);
+        $title = array(
+            'report_title' => 'DOCTORS DUTY REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($post_values['start_date']),
+            'end_date' => format_date($post_values['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, SHORT_NAME . '_DOCTORS_DUTY_REGISTER', true, true, 'D');
+        exit;
     }
 
 }
