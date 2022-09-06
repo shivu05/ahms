@@ -87,7 +87,7 @@ if ($CI->session->has_userdata('user_data')) {
 
 $db['default'] = array(
     'dsn' => '',
-    'hostname' => 'localhost',
+    'hostname' => DB_HOST,
     'username' => DB_USER,
     'password' => DB_PASS,
     'database' => $db_name,

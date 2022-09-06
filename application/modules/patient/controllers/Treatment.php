@@ -467,7 +467,7 @@ class Treatment extends SHV_Controller {
                 'asssurgeon' => $this->input->post('assksharasurgeonname'),
                 'ksharsDate' => $this->input->post('ksharadate'),
                 'anesthesia_type' => $this->input->post('anesthesia_type'),
-                'treatId' => $opd_treat_id
+                'treatId' => $opd_treat_id['treatId']
             );
             $this->treatment_model->add_kshara_info($ksharadata);
         }

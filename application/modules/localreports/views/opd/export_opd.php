@@ -50,8 +50,8 @@ $dept_room_array = array(
                 $patType = patient_type($patients['PatType']);
                 $i++;
                 echo "<tr>";
-                echo "<td><center>" . $patients['ID'] . "</center></td>";
-                echo "<td><center>" . $patients['ID'] . "</center></td>";
+                echo "<td><center>" . $patients['serial_number'] . "</center></td>";
+                echo "<td><center>" . $patients['serial_number'] . "</center></td>";
                 echo "<td><center>" . $patients['msd'] . "</center></td>";
                 echo "<td><center>" . $patients['OpdNo'] . "</center></td>";
                 if ($department != 1) {

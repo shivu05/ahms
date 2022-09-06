@@ -47,7 +47,7 @@ class Localreports extends SHV_Controller {
             while ($total > $step) {
                 $j++;
                 $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
-                (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept 
+                (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept,t.sr_id serial_number 
                 FROM treatmentdata t JOIN patientdata p JOIN deptper d 
                 WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code 
                 AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $step . ',2000';
@@ -232,7 +232,7 @@ class Localreports extends SHV_Controller {
 
         //$result = $this->db->query($query);
 
-        $total = 32296; //$result->num_rows();
+        $total = 32502; //$result->num_rows();
         $step = $j = 0;
         $html = array();
         while ($total > $step) {
@@ -250,7 +250,7 @@ class Localreports extends SHV_Controller {
             'end_date' => format_date($end_date)
         );
         //echo count($html);exit;
-        $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'OPD_PHARMA_REPORT_2021', true, true, 'F');
+        $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'MRN_OPD_PHARMA_REPORT_2021', true, true, 'F');
         echo 'Task completed<br/>';
         exit;
 //        echo '------------------------------------------------------------------';
