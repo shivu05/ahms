@@ -36,7 +36,7 @@ class Localreports extends SHV_Controller {
             set_time_limit(0);
             ini_set("pcre.backtrack_limit", "5000000");
             $input_array['start_date'] = $year . '-01-01';
-            $input_array['end_date'] = $year . '-12-31';
+            $input_array['end_date'] = $year . '-09-30';
             $input_array['department'] = 1;
 
             $return['total_rows'] = $this->db->query('SELECT ID FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
@@ -46,11 +46,11 @@ class Localreports extends SHV_Controller {
             $step = 0;
             while ($total > $step) {
                 $j++;
-                $query = 'SELECT t.ID,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
-                (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept,t.sr_id serial_number 
+                $query = 'SELECT t.ID as serial_number,t.monthly_sid as msd,t.OpdNo,t.deptOpdNo,t.PatType,CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name,Age,gender,address,city,t.diagnosis,t.Trtment,t.AddedBy,
+                (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept 
                 FROM treatmentdata t JOIN patientdata p JOIN deptper d 
                 WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code 
-                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID LIMIT ' . $step . ',2000';
+                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" ORDER BY t.ID '; //LIMIT ' . $step . ',2000
 
                 $result['data'] = $this->db->query($query)->result_array();
                 $step = $step + 2000;
@@ -65,6 +65,8 @@ class Localreports extends SHV_Controller {
                 $this->layout->data = $data;
                 $this->layout->headerFlag = false;
                 $html[] = $this->layout->render(array('view' => 'localreports/opd/export_opd'), true);
+                //if($j==2)
+                //pma($html,1);
             }
 
             $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
@@ -216,8 +218,8 @@ class Localreports extends SHV_Controller {
         echo 'Export started<br/>';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
-        $start_date = '2021-01-01';
-        $end_date = '2021-12-31';
+        $start_date = '2022-01-01';
+        $end_date = '2022-09-30';
         $data["is_print"] = true;
         $dept_condition = '';
 
@@ -232,7 +234,7 @@ class Localreports extends SHV_Controller {
 
         //$result = $this->db->query($query);
 
-        $total = 32502; //$result->num_rows();
+        $total = 23630; //$result->num_rows();
         $step = $j = 0;
         $html = array();
         while ($total > $step) {
@@ -250,7 +252,7 @@ class Localreports extends SHV_Controller {
             'end_date' => format_date($end_date)
         );
         //echo count($html);exit;
-        $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'MRN_OPD_PHARMA_REPORT_2021', true, true, 'F');
+        $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'VPRAMCB_OPD_PHARMA_REPORT_2021', true, true, 'F');
         echo 'Task completed<br/>';
         exit;
 //        echo '------------------------------------------------------------------';
@@ -286,6 +288,33 @@ class Localreports extends SHV_Controller {
 //            }
 //            $this->localgenerate_pdf($html, 'L', $title, './public/PHARMACY/' . 'OPD_PHARMA_REPORT_2021_' . $j, true, true, 'F');
 //        }
+    }
+
+    function kshara() {
+        echo 'KSHARA';
+        $query = "select * from vhms_main.data_reference_table";
+        $result_set = $this->db->query($query)->result_array();
+        //pma($result_set);
+        foreach ($result_set as $row) {
+            $query = "INSERT INTO ksharsutraregistery (OpdNo, ksharsType, ksharsDate, treatId, ksharaname, surgeon, asssurgeon, anaesthetic, anesthesia_type) select OpdNo,ksharsType,CameOn, a.ID, ksharaname, surgeon, asssurgeon, anaesthetic, anesthesia_type 
+                from treatmentdata a,vhms_main.ksharasutra_reference b where a.diagnosis=b.diagnosis and a.CameOn='" . $row['current_date'] . "' and a.department='SHALYA_TANTRA' order by rand() limit " . $row['kshara'] . " ";
+            $this->db->query($query);
+            echo $row['current_date'] . '-' . $row['kshara'] . '-- added<br/>';
+        }
+    }
+
+    function other_proc() {
+        echo "OTHER PROC";
+        $query = "select * from vhms_main.data_reference_table";
+        $result_set = $this->db->query($query)->result_array();
+        //pma($result_set);
+        foreach ($result_set as $row) {
+            $query = "INSERT INTO other_procedures_treatments (OpdNo, therapy_name, physician, treat_id, start_date, end_date) 
+                select OpdNo,therapy_name, 'Dr Physician',a.ID,a.CameOn,DATE_ADD(a.CameOn, INTERVAL b.diff DAY)  end_date 
+                from treatmentdata a,vhms_main.other_proc_reference b where a.diagnosis=b.diagnosis and a.CameOn='" . $row['current_date'] . "' and a.department='PRASOOTI_&_STRIROGA' order by rand() limit ".$row['other_proc']." ";
+            $this->db->query($query);
+            echo $row['current_date'] . '-' . $row['other_proc'] . '-- added<br/>';
+        }
     }
 
 }
