@@ -432,6 +432,11 @@ class Ipd extends SHV_Controller {
     }
 
     function bed_occupancy_chart_pdf() {
+        $db_name = '';
+        $sess_arr = $this->session->userdata('user_data');
+        if ($sess_arr['randkey'] != "") {
+            $db_name = substr(base64_decode($sess_arr['randkey']), -4);
+        }
         $data = array();
         $data['departments'] = $this->get_department_list('array');
 
@@ -454,7 +459,8 @@ class Ipd extends SHV_Controller {
         $this->load->helper('pdf');
         $content = $this->load->view('reports/ipd/bed_occ_chart_print_view', $data, true);
         $title = array(
-            'report_title' => 'BED OCCUPANCY REGISTER'
+            'report_title' => 'BED OCCUPANCY REGISTER',
+            'start_date' => $db_name,
         );
         generate_pdf($content, 'L', $title, 'vhms_bed_occupancy_count_report', TRUE, TRUE, 'I');
         exit;
