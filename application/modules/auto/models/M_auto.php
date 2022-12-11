@@ -563,6 +563,19 @@ class M_auto extends CI_Model {
         }// end if
     }
 
+    private function _check_occupation($age = 0, $occupation = '') {
+        $where = $child = '';
+        if ($age > 30) {
+            $where = " AND occupation !='STUDENT'";
+        }
+
+        if ($age > 15) {
+            $child = " AND occupation !='CHILD'";
+        }
+        $result_set = $this->db->query("SELECT occupation FROM master_occupation WHERE 1=1 $where " . " $child order by rand() limit 1")->row_array();
+        return $result_set['occupation'];
+    }
+
     private function _get_random_data($index = 0, $array = null) {
         if ($array) {
             if ($index >= count($array)) {
@@ -818,7 +831,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->age[$this->_index],
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
@@ -898,7 +911,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->age[$this->_index],
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
@@ -984,7 +997,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->_get_random_data($this->_index, $this->age),
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
@@ -1064,7 +1077,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->age[$this->_index],
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
@@ -1138,7 +1151,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->age[$this->_index],
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
@@ -1216,7 +1229,7 @@ class M_auto extends CI_Model {
                     "LastName" => $lname,
                     "Age" => $this->age[$this->_index],
                     "gender" => $sex,
-                    "occupation" => $occ,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
                     "address" => $this->_get_random_data($this->_index, $this->address),
                     "city" => $this->_get_random_data($this->_index, $this->city),
                     "AddedBy" => $addemailid,
