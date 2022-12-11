@@ -574,7 +574,7 @@ class Nursing_model extends CI_Model {
         $return = array();
         $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
             'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
-            '(REPLACE((t.department),"_"," ")) department', 'k.kriya_procedures procedures', 'sub_dept', 'ip.IpNo', 'k.id as kid', 'kriya_date');
+            '(REPLACE((t.department),"_"," ")) department', 'k.kriya_procedures procedures', 'sub_department sub_dept', 'ip.IpNo', 'k.id as kid', 'kriya_date');
 
         $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo
             AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND kriya_date >='" . $conditions['start_date'] . "'
@@ -614,7 +614,7 @@ class Nursing_model extends CI_Model {
             JOIN treatmentdata t, (SELECT @a:= 0) AS a
             JOIN patientdata p
             LEFT JOIN inpatientdetails ip ON ip.OpdNo=p.OpdNo
-            $where_cond ORDER BY serial_number,CameOn ASC";
+            $where_cond ORDER BY kriya_date ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 
