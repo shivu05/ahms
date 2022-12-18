@@ -376,7 +376,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->kayaDoc = $this->get_day_doctor($this->input->post('cdate'), "KAYACHIKITSA");
                 array_push($this->kayamed, $row->medicines);
@@ -390,7 +391,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
 
                 $this->shalyaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALYA_TANTRA");
@@ -404,7 +406,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->shalkayaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALAKYA_TANTRA");
             }
@@ -417,7 +420,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->tantraDoc = $this->get_day_doctor($this->input->post('cdate'), "PRASOOTI_&_STRIROGA");
             }
@@ -430,7 +434,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->swasthaDoc = $this->get_day_doctor($this->input->post('cdate'), "SWASTHAVRITTA");
             }
@@ -443,7 +448,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->pkDoc = $this->get_day_doctor($this->input->post('cdate'), "PANCHAKARMA");
             }
@@ -456,7 +462,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->bcDoc = $this->get_day_doctor($this->input->post('cdate'), "BALAROGA");
             }
@@ -469,7 +476,8 @@ class M_auto extends CI_Model {
                     'procedure' => $row->procedures,
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
-                    'gender' => $row->gender
+                    'gender' => $row->gender,
+                    'age' => $row->Age
                 );
                 $this->akDoc = $this->get_day_doctor($this->input->post('cdate'), "AATYAYIKACHIKITSA");
             }
@@ -717,6 +725,9 @@ class M_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
 
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
                 $this->add_to_pharmacy($treatid);
 
                 $labdisease = trim($diagnosis);
@@ -791,6 +802,10 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
                 $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
@@ -865,6 +880,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
                 $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
@@ -946,8 +964,10 @@ class M_auto extends CI_Model {
 
                 $treatid = $this->db->insert_id();
 
-                $this->add_to_pharmacy($treatid);
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
 
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
@@ -1031,8 +1051,10 @@ class M_auto extends CI_Model {
                     "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
-
                 $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
                 $this->add_to_pharmacy($treatid);
 
@@ -1111,6 +1133,9 @@ class M_auto extends CI_Model {
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
 
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
                 $labdisease = trim($diagnosis);
 
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
@@ -1184,8 +1209,10 @@ class M_auto extends CI_Model {
                     "medicines" => $treatment_details['medicines']
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
-
                 $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
                 $this->add_to_pharmacy($treatid);
 
@@ -1263,6 +1290,9 @@ class M_auto extends CI_Model {
                 );
                 $this->db->insert('treatmentdata', $treatment_arr);
                 $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
                 $this->add_to_pharmacy($treatid);
 
