@@ -124,4 +124,17 @@ class Test extends SHV_Controller {
         exit;
     }
 
+    function update_docs() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+
+        $doctors = $this->db->get('doctors_list')->result_array();
+        if (!empty($doctors)) {
+            foreach ($doctors as $row) {
+                pma($row);
+                $this->db->query("update patientdata set AddedBy='".$row['doctor_name']."' where dept=''");
+            }
+        }
+    }
+
 }

@@ -116,6 +116,13 @@ class Login extends SHV_Controller {
             echo json_encode(array('status' => false, 'msg' => 'Failed to update password. Try again', 'label' => 'Cancel', 'class' => 'btn-danger'));
         }
     }
+    
+    function man_update(){
+        echo 'hi';
+        $return = $this->simpleloginsecure->edit_password('admin@vedicsofts.com', '123456', 'Vhms@2023');
+        print_r($return);
+        echo 'bye';
+    }
 
     function home() {
         if ($this->rbac->is_admin()) {
