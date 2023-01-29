@@ -499,6 +499,29 @@ class Nursing_model extends CI_Model {
         $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
         return $return;
     }
+    
+    function get_panchakarma_complete_data() {
+        $return = array();
+        $columns = array('l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+            't.deptOpdNo', '(REPLACE((t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
+            'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
+            'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
+
+        $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>'' ";
+
+        $query = "SELECT " . join(',', $columns) . " FROM panchaprocedure l
+            JOIN treatmentdata t ON l.treatid = t.ID
+            JOIN patientdata p ON t.OpdNo = p.OpdNo
+            LEFT JOIN inpatientdetails i on i.OpdNo=l.opdno and i.treatId=t.ID  $where_cond
+            group by l.treatid ORDER BY l.date ASC";
+        $main_query = "SELECT @a:=@a+1 serial_number,B.* FROM ( $query ) B,(SELECT @a:= 0) AS a order by serial_number ";
+        $result = $this->db->query($main_query);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
+        return $return;
+        
+    }
 
     function get_panchakarma_procedure_count($conditions, $export_flag = false) {
         $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p

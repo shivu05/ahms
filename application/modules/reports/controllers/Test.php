@@ -465,6 +465,28 @@ class Test extends SHV_Controller {
         generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
         exit;
     }
+    
+    function export_panchakarma_complete_report() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = $this->input->post();
+
+        $data = $this->nursing_model->get_panchakarma_complete_data();
+        $data['is_print'] = true;
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma_complete'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'PANCHAKARMA REGISTER',
+            'department' => 'PANCHAKARMA',
+            'start_date' => '01-01-2023',
+            'end_date' => date('d-m-Y')
+        );
+
+        generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
+        exit;
+    }
 
     function export_panchakarma_report_tcf() {
         ini_set("memory_limit", "-1");

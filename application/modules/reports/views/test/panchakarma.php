@@ -1,7 +1,11 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Panchakarma report:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list"></i> Panchakarma report:</h3>
+                <a href="<?= base_url('panchakarma-complete-report') ?>" target="_blank">
+                    <button type="button" class="btn btn-sm btn-primary pull-right">Export full report</button>
+                </a>
+            </div>
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <form name="test_form" id="test_form" method="POST">
