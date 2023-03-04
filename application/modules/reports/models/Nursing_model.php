@@ -448,7 +448,7 @@ class Nursing_model extends CI_Model {
         //JOIN inpatientdetails i ON i.OpdNo=s.OpdNo and i.treatId=s.treatId and i.IpNo=s.ipdno 
         //echo $query;exit;
         $result = $this->db->query($query . ' ' . $limit);
-       
+
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
@@ -499,7 +499,7 @@ class Nursing_model extends CI_Model {
         $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
         return $return;
     }
-    
+
     function get_panchakarma_complete_data() {
         $return = array();
         $columns = array('l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
@@ -520,7 +520,6 @@ class Nursing_model extends CI_Model {
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
         return $return;
-        
     }
 
     function get_panchakarma_procedure_count($conditions, $export_flag = false) {
@@ -548,22 +547,22 @@ class Nursing_model extends CI_Model {
 
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
-        $columns = array('l.OpdNo', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
+        $columns = array('l.OpdNo', 'l.ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
             't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
             ' GROUP_CONCAT(testrange SEPARATOR "#") testrange', 'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
-                FROM labregistery l,(SELECT @a:= 0) AS a
-                JOIN patientdata p
-                JOIN treatmentdata t
-                JOIN lab_investigations li
-                JOIN lab_tests lt
-                JOIN lab_categories lc
-                WHERE l.OpdNo = p.OpdNo AND l.treatID = t.ID  AND li.lab_inv_id=l.testName
-                AND li.lab_test_id=lt.lab_test_id AND lt.lab_cat_id = lc.lab_cat_id
-                AND l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' group by l.treatID order by l.tested_date asc";
+                FROM labregistery l
+                JOIN patientdata p ON l.OpdNo = p.OpdNo 
+                LEFT JOIN inpatientdetails ip ON l.ipdno=ip.IpNo
+                JOIN treatmentdata t ON l.treatID = t.ID
+                JOIN lab_investigations li ON li.lab_inv_id=l.testName
+                JOIN lab_tests lt ON li.lab_test_id=lt.lab_test_id
+                JOIN lab_categories lc ON lt.lab_cat_id = lc.lab_cat_id,
+                (SELECT @a:= 0) AS a
+                WHERE l.testName <>'' AND l.tested_date >='" . $conditions['start_date'] . "' AND  l.tested_date <= '" . $conditions['end_date'] . "' group by l.treatID order by l.tested_date asc";
         $result = $this->db->query($query);
-        //echo $this->db->last_query();exit;
+
         if ($result->num_rows() > 0) {
             return $result->result(); //if data is true
         } else {

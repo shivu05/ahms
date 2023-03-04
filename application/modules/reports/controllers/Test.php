@@ -662,7 +662,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        generate_pdf($content, 'L', $title, 'lab_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'lab_report', true, true, 'I');
         exit;
     }
 
