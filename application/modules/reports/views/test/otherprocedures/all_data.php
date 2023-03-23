@@ -12,7 +12,8 @@
             <th>Department</th>
             <th>Procedure</th>
             <th>Physician</th>
-            <th>Date</th>
+            <th>Start Date</th>
+            <th>End Date</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +33,8 @@
                 $tr .= '<td>' . $row['department'] . '</td>';
                 $tr .= '<td>' . $row['therapy_name'] . '</td>';
                 $tr .= '<td>' . $row['physician'] . '</td>';
-                $tr .= '<td>' . $row['referred_date'] . '</td>';
+                $tr .= '<td>' . $row['start_date'] . '</td>';
+                $tr .= '<td>' . $row['end_date'] . '</td>';
                 //$tr .= "<td><center><i class='fa fa-edit hand_cursor edit' data-id='" . $row['id'] . "'></i></center></td>";
                 $tr .= '</tr>';
                 echo $tr;

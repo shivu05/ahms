@@ -465,7 +465,7 @@ class Test extends SHV_Controller {
         generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
         exit;
     }
-    
+
     function export_panchakarma_complete_report() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -861,9 +861,32 @@ class Test extends SHV_Controller {
 
     function fetch_oherprocedures_records() {
         $this->load->model('other_procedures_treatments');
-        $post_values = $this->input->post();
-        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($post_values);
-        $this->load->view('reports/test/otherprocedures/data_grid', $data);
+
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->other_procedures_treatments->get_other_procedures($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+
+        //$this->load->view('reports/test/otherprocedures/data_grid', $data);
+    }
+
+    function update_otherprocedure() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('other_procedures_treatments');
+            $post_values = $this->input->post();
+            $is_updated = $this->other_procedures_treatments->update_other_procedures($post_values, $post_values['ID']);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        }
     }
 
     function export_otherprocedures() {
@@ -873,7 +896,8 @@ class Test extends SHV_Controller {
 
         $input_array = $this->input->post();
 
-        $data['physic_list'] = $this->other_procedures_treatments->get_other_procedures($input_array, true);
+        $result_set = $this->other_procedures_treatments->get_other_procedures($input_array, true);
+        $data['physic_list'] = $result_set['data'];
         $this->layout->data = $data;
         $content = $this->layout->render(array('view' => 'reports/test/otherprocedures/data_grid'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
@@ -883,6 +907,32 @@ class Test extends SHV_Controller {
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
+        );
+
+        generate_pdf($content, 'L', $title, 'other_procedure_report', true, true, 'I');
+        exit;
+    }
+
+    //substr(base64_decode($this->rbac->get_selected_year()),-4)
+    function export_otherprocedures_full() {
+        $this->load->model('other_procedures_treatments');
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $enyear = $this->rbac->get_selected_year();
+        $year = substr(base64_decode($enyear), -4);
+
+        $cur_year = date('Y');
+        $result_set = $this->other_procedures_treatments->get_all_other_procedures();
+        $data['physic_list'] = $result_set['data'];
+        $this->layout->data = $data;
+        $content = $this->layout->render(array('view' => 'reports/test/otherprocedures/all_data'), true);
+        $print_dept = "CENTRAL";
+
+        $title = array(
+            'report_title' => 'OTHER PROCEDURE REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($year . '-01-01'),
+            'end_date' => ($cur_year == $year) ? format_date(date('Y-m-d')) : format_date($year . '-12-01')
         );
 
         generate_pdf($content, 'L', $title, 'other_procedure_report', true, true, 'I');
