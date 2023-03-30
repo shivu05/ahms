@@ -95,7 +95,7 @@
                 title: "Y.No",
                 class: "opd_no",
                 data: function (item) {
-                    return item.ID;
+                    return item.serial_number;
                 }
             },
             {

@@ -104,7 +104,7 @@ class Opd_model extends CI_Model {
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
 
-        $query = "SELECT " . implode(',', $columns) . " FROM treatmentdata t JOIN patientdata p JOIN deptper d $where_cond ORDER BY t.ID ASC";
+        $query = "SELECT ROW_NUMBER() OVER (ORDER BY t.ID ASC) AS serial_number," . implode(',', $columns) . " FROM treatmentdata t JOIN patientdata p JOIN deptper d $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 
