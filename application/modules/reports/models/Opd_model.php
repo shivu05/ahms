@@ -73,7 +73,7 @@ class Opd_model extends CI_Model {
             'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name', 'Age', 'gender', 'address', 'city', 't.diagnosis', 't.Trtment', 't.AddedBy', '(REPLACE((t.department),"_"," ")) department',
             'CameOn', 'd.ref_room ref_dept');
 
-        $where_cond = " WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code AND CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
+        $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -104,7 +104,10 @@ class Opd_model extends CI_Model {
 
         //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
 
-        $query = "SELECT ROW_NUMBER() OVER (ORDER BY t.ID ASC) AS serial_number," . implode(',', $columns) . " FROM treatmentdata t JOIN patientdata p JOIN deptper d $where_cond ORDER BY t.ID ASC";
+        $query = "SELECT " . implode(',', $columns) . " 
+            FROM treatmentdata t 
+            JOIN patientdata p ON t.OpdNo=p.OpdNo 
+            JOIN deptper d ON t.department=d.dept_unique_code $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
 
