@@ -71,7 +71,7 @@ class Opd_model extends CI_Model {
         $return = array();
         $columns = array('t.ID', 't.monthly_sid as msd', 't.OpdNo', 't.deptOpdNo', 't.PatType',
             'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name', 'Age', 'gender', 'address', 'city', 't.diagnosis', 't.Trtment', 't.AddedBy', '(REPLACE((t.department),"_"," ")) department',
-            'CameOn', 'd.ref_room ref_dept');
+            'CameOn', 'd.ref_room ref_dept','t.sequence');
 
         $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';

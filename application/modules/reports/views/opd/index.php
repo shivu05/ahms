@@ -94,8 +94,8 @@
             {
                 title: "Y.No",
                 class: "opd_no",
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
+                data: function (item) {
+                    return item.sequence;
                 }
             },
             {
