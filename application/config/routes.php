@@ -159,5 +159,8 @@ $route['add-sales'] = 'pharmacy/sales';
 $route['full-year-report'] = 'localreports/localreports/opd';
 $route['panchakarma-complete-report'] = 'reports/Test/export_panchakarma_complete_report';
 
+$route['other-procedure-statistics'] = 'reports/statistics/other_procedures';
+$route['physiotherapy-statistics'] = 'reports/statistics/physiotherapy';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

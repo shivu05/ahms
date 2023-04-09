@@ -132,9 +132,51 @@ class Test extends SHV_Controller {
         if (!empty($doctors)) {
             foreach ($doctors as $row) {
                 pma($row);
-                $this->db->query("update patientdata set AddedBy='".$row['doctor_name']."' where dept=''");
+                $this->db->query("update patientdata set AddedBy='" . $row['doctor_name'] . "' where dept=''");
             }
         }
+    }
+
+    function exe_db() {
+        $db_list = array(
+            'vhms_aamchkop_2021',
+            'vhms_aamchkop_2022',
+            'vhms_aamchkop_2023',
+            'vhms_ahms_uat',
+            'vhms_bamch_2021',
+            'vhms_bamch_2022',
+            'vhms_bamch_2023',
+            'vhms_biahgadag_2020',
+            'vhms_biahgadag_2021',
+            'vhms_biahgadag_2022',
+            'vhms_biahgadag_2023',
+            'vhms_kramch_2021',
+            'vhms_kramch_2022',
+            'vhms_kramch_2023',
+            'vhms_mrn_2021',
+            'vhms_mrn_2022',
+            'vhms_mrn_2023',
+            'vhms_pramch_2021',
+            'vhms_pramch_2022',
+            'vhms_pramch_2023',
+            'vhms_riamsh_2020',
+            'vhms_riamsh_2021',
+            'vhms_riamsh_2022',
+            'vhms_riamsh_2023',
+            'vhms_samcy_2021',
+            'vhms_samcy_2022',
+            'vhms_samcy_2023',
+            'vhms_vpramcb_2022',
+            'vhms_vpramcb_2023'
+        );
+        
+        $this->db->query("DELIMITER $$
+CREATE TRIGGER `add_opd_sequence` BEFORE INSERT ON `treatmentdata` FOR EACH ROW BEGIN
+SET @newsq = (SELECT MAX(sequence) FROM treatmentdata);
+SET NEW.sequence=@newsq+1;
+END
+$$
+DELIMITER ;");
     }
 
 }
