@@ -42,6 +42,12 @@
                                aria-describedby="anaestheticHelp" placeholder="Enter Anesthetist">
                         <small class="form-text text-muted" id="anaestheticHelp"></small>
                     </div>
+                    <div class="form-group">
+                        <label for="surgDate">Ref. Date:</label>
+                        <input class="form-control required date_picker" id="surgDate" name="surgDate" type="text" 
+                               aria-describedby="surgDateHelp" placeholder="Enter Ref. Date">
+                        <small class="form-text text-muted" id="surgDateHelp"></small>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -217,6 +223,7 @@
                 $('#surgery_modal_box #surgery_form #surgName').val(data.surgName);
                 $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
                 $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);
+                $('#surgery_modal_box #surgery_form #surgDate').val(data.surgDate);
                 $('#surgery_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
             });
         }
@@ -225,7 +232,8 @@
             messages: {
                 surgName: {required: 'Surgeon is empty'},
                 asssurgeon: {required: 'Asst. Surgeon is empty'},
-                anaesthetic: {required: 'Anesthetist is empty'}
+                anaesthetic: {required: 'Anesthetist is empty'},
+                surgDate: {required: 'Date is empty'}
             }
         });
 
