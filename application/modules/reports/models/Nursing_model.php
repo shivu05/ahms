@@ -406,7 +406,7 @@ class Nursing_model extends CI_Model {
 
     function get_surgery_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('s.ID', 's.OpdNo', '"" IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
+        $columns = array('s.ID as id', 's.OpdNo', '"" IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
             's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
             't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
 
@@ -451,7 +451,7 @@ class Nursing_model extends CI_Model {
 
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
-        $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN patientdata p JOIN ipdtreatment t JOIN inpatientdetails i WHERE s.OpdNo = p.OpdNo AND s.treatId = t.ID AND s.OpdNo=i.OpdNo')->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM surgeryregistery s JOIN treatmentdata t ON s.treatId = t.ID JOIN patientdata p ON s.OpdNo = p.OpdNo LEFT JOIN inpatientdetails i ON s.OpdNo=i.OpdNo WHERE 1=1 ')->num_rows();
         return $return;
     }
 

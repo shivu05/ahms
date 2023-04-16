@@ -5,6 +5,7 @@
             <div class="box-body">
                 <?php echo $top_form; ?>
                 <div id="patient_details">
+                    <input type="hidden" name="tab" id="tab" value="<?= base64_encode('surgeryregistery') ?>" />
                     <table class="table table-hover table-bordered dataTable" id="patient_table" width="100%"></table>
                 </div>
             </div>
@@ -81,7 +82,8 @@
     $(document).ready(function () {
         var is_admin = '<?= $is_admin ?>';
         $('#search_form').on('click', '#search', function () {
-            show_patients();
+            patient_table.clear();
+            patient_table.draw();
         });
         $('#search_form #export').on('click', '#export_to_pdf', function () {
             $('#search_form').submit();
@@ -174,59 +176,63 @@
             columns.push({
                 title: 'Action',
                 data: function (item) {
-                    return "<center><i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i>" + "</center>";
+                    return "<center><i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i>" + " | " +
+                            "<i class='fa fa-trash hand_cursor delete text-danger' data-id='" + item.id + "'></i>" + "</center>";
                 }
             });
         }
         var patient_table;
-        function show_patients() {
-            patient_table = $('#patient_table').DataTable({
-                'columns': columns,
-                'columnDefs': [
-                    {className: "", "targets": [4]}
-                ],
-                "bDestroy": true,
-                language: {
-                    sZeroRecords: "<div class='no_records'>No patients found</div>",
-                    sEmptyTable: "<div class='no_records'>No patients found</div>",
-                    sProcessing: "<div class='no_records'>Loading</div>",
+        // function show_patients() {
+        patient_table = $('#patient_table').DataTable({
+            'columns': columns,
+            'columnDefs': [
+                {className: "", "targets": [4]}
+            ],
+            "bDestroy": true,
+            language: {
+                sZeroRecords: "<div class='no_records'>No patients found</div>",
+                sEmptyTable: "<div class='no_records'>No patients found</div>",
+                sProcessing: "<div class='no_records'>Loading</div>",
+            },
+            'searching': true,
+            'paging': true,
+            'pageLength': 25,
+            'lengthChange': true,
+            'aLengthMenu': [10, 25, 50, 100],
+            'processing': true,
+            'serverSide': true,
+            'ordering': false,
+            'ajax': {
+                'url': base_url + 'reports/Test/get_surgery_report',
+                'type': 'POST',
+                'dataType': 'json',
+                'data': function (d) {
+                    return $.extend({}, d, {
+                        "search_form": $('#search_form').serializeArray()
+                    });
                 },
-                'searching': true,
-                'paging': true,
-                'pageLength': 25,
-                'lengthChange': true,
-                'aLengthMenu': [10, 25, 50, 100],
-                'processing': true,
-                'serverSide': true,
-                'ordering': false,
-                'ajax': {
-                    'url': base_url + 'reports/Test/get_surgery_report',
-                    'type': 'POST',
-                    'dataType': 'json',
-                    'data': function (d) {
-                        return $.extend({}, d, {
-                            "search_form": $('#search_form').serializeArray()
-                        });
-                    },
-                    drawCallback: function (response) {}
-                },
-                order: [[0, 'desc']],
-                info: true,
-                sScrollX: "100%",
-                sScrollXInner: "150%",
-                "bScrollCollapse": true
+                drawCallback: function (response) {}
+            },
+            order: [[0, 'desc']],
+            info: true,
+            sScrollX: "100%",
+            sScrollXInner: "150%",
+            "bScrollCollapse": true
 
-            });
-            $('#patient_table tbody').on('click', '.edit', function () {
-                var data = patient_table.row($(this).closest('tr')).data();
-                $('#surgery_modal_box #surgery_form #ID').val(data.ID);
-                $('#surgery_modal_box #surgery_form #surgName').val(data.surgName);
-                $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
-                $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);
-                $('#surgery_modal_box #surgery_form #surgDate').val(data.surgDate);
-                $('#surgery_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
-            });
-        }
+        });
+
+        $('#patient_table tbody').on('click', '.edit', function () {
+            var data = patient_table.row($(this).closest('tr')).data();
+            $('#surgery_modal_box #surgery_form #ID').val(data.ID);
+            $('#surgery_modal_box #surgery_form #surgName').val(data.surgName);
+            $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
+            $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);
+            $('#surgery_modal_box #surgery_form #surgDate').val(data.surgDate);
+            $('#surgery_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+        });
+
+
+        // }
 
         $('#surgery_form').validate({
             messages: {
@@ -270,6 +276,52 @@
             }
         });
 
+        $('#patient_table tbody').on('click', '.delete', function () {
+            var id = $(this).data('id');
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: 'Delete confirmation',
+                message: 'Are you sure want to delete the record?',
+                buttons: [{
+                        label: 'Yes',
+                        cssClass: 'btn-primary',
+                        autospin: true,
+                        action: function (dialog) {
+                            var table_name = $('#tab').val();
+                            var form_data = {
+                                'tab': table_name,
+                                'id': id
+                            };
+                            $.ajax({
+                                url: base_url + 'Common_methods/delete_records',
+                                type: 'POST',
+                                data: form_data,
+                                dataType: 'json',
+                                success: function (res) {
+                                    dialog.setMessage(res.msg);
+                                    $('#search_form search').trigger('click');
+                                    patient_table.clear();
+                                    patient_table.draw();
+                                    dialog.enableButtons(false);
+                                    setTimeout(function () {
+                                        dialog.close();
+                                    }, 3000);
+                                },
+                                error: function (err) {
+                                    console.log(err);
+                                    dialog.setMessage('Error in deleting record please refresh page and try again');
+                                }
+                            });
+                        }
+                    }, {
+                        label: 'No',
+                        cssClass: 'btn-danger',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }]
+            });
+        });
 
     });
 </script>
