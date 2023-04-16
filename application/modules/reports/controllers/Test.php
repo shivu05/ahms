@@ -880,7 +880,9 @@ class Test extends SHV_Controller {
         if ($this->input->is_ajax_request()) {
             $this->load->model('other_procedures_treatments');
             $post_values = $this->input->post();
-            $is_updated = $this->other_procedures_treatments->update_other_procedures($post_values, $post_values['ID']);
+            $id = $this->input->post('ID');
+            unset($post_values['id']);
+            $is_updated = $this->other_procedures_treatments->update_other_procedures($post_values, $id);
             if ($is_updated) {
                 echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
             } else {

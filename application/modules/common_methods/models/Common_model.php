@@ -112,4 +112,11 @@ class Common_model extends CI_Model {
         return $this->db->get('archived_data')->result_array();
     }
 
+    function delete($table_name, $where) {
+        if ($this->db->table_exists($table_name)) {
+            return $this->db->delete($table_name, $where);
+        }
+        return false;
+    }
+
 }

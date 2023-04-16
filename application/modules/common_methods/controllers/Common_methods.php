@@ -87,4 +87,22 @@ class Common_methods extends SHV_Controller {
         }
     }
 
+    function delete_records() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $table_name = base64_decode($this->input->post('tab'));
+            $id = $this->input->post('id');
+            $return = $this->common_model->delete($table_name, array('id' => $id));
+            $msg = '';
+            if ($return) {
+                $msg = 'Deleted successfully';
+            } else {
+                $msg = 'Failed to delete';
+            }
+            echo json_encode(array('msg' => $msg, 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
 }

@@ -66,6 +66,14 @@
                         <input class="form-control required" id="physician" name="physician" type="text" aria-describedby="physicianHelp" placeholder="Enter Physician">
                         <small class="form-text text-muted" id="physicianHelp"></small>
                     </div>
+                    <div class="form-group">
+                        <label for="physician">Start date:</label>
+                        <input class="form-control required date_picker" id="start_date" name="start_date" type="text" aria-describedby="start_dateHelp" placeholder="Enter Start date">
+                    </div>
+                    <div class="form-group">
+                        <label for="physician">End date:</label>
+                        <input class="form-control required date_picker" id="end_date" name="end_date" type="text" aria-describedby="start_dateHelp" placeholder="Enter Start date">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -166,7 +174,9 @@
             columns.push({
                 title: 'Action',
                 data: function (item) {
-                    return "<center><i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i>" + "</center>";
+                    console.log(item.id);
+                    return "<center><i class='fa fa-edit hand_cursor edit' data-id='" + item.id + "'></i>" + " | " +
+                            "<i class='fa fa-trash hand_cursor delete text-danger' data-id='" + item.id + "'></i>" + "</center>";
                 }
             });
         }
@@ -214,12 +224,16 @@
             var data = patient_table.row($(this).closest('tr')).data();
             $('#other_modal_box #edit_form #ID').val(data.id);
             $('#other_modal_box #edit_form #physician').val(data.physician);
+            $('#other_modal_box #edit_form #start_date').val(data.start_date);
+            $('#other_modal_box #edit_form #end_date').val(data.end_date);
             $('#other_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
         });
 
         $('#edit_form').validate({
             messages: {
-                physician: {required: 'Physician name is empty'}
+                physician: {required: 'Physician name is empty'},
+                start_date: {required: 'Start date is empty'},
+                end_date: {required: 'End date is empty'}
             }
         });
 
@@ -256,7 +270,52 @@
             }
         });
 
-
-
-    });
+        $('#patient_table tbody').on('click', '.delete', function () {
+            var id = $(this).data('id');
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                title: 'Delete confirmation',
+                message: 'Are you sure want to delete the record?',
+                buttons: [{
+                        label: 'Yes',
+                        cssClass: 'btn-primary',
+                        autospin: true,
+                        action: function (dialog) {
+                            var table_name = $('#tab').val();
+                            var form_data = {
+                                'tab': table_name,
+                                'id': id
+                            };
+                            $.ajax({
+                                url: base_url + 'Common_methods/delete_records',
+                                type: 'POST',
+                                data: form_data,
+                                dataType: 'json',
+                                success: function (res) {
+                                    dialog.setMessage(res.msg);
+                                    $('#search_form search').trigger('click');
+                                    patient_table.clear();
+                                    patient_table.draw();
+                                    dialog.enableButtons(false);
+                                    setTimeout(function () {
+                                        dialog.close();
+                                    }, 3000);
+                                },
+                                error: function (err) {
+                                    console.log(err);
+                                    dialog.setMessage('Error in deleting record please refresh page and try again');
+                                }
+                            });
+                        }
+                    }, {
+                        label: 'No',
+                        cssClass: 'btn-danger',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    }]
+            });
+        });
+    }
+    );
 </script>

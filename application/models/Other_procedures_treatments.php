@@ -16,7 +16,7 @@ class Other_procedures_treatments extends SHV_Model {
         $return = array();
         $columns = array('pt.id', 'pt.OpdNo', "CONCAT(coalesce(p.FirstName,''),' ',coalesce(p.LastName)) as name", 'p.Age', 'p.gender', 't.diagnosis',
             ' pt.IpNo', 'pt.therapy_name', 'pt.physician', '" ' . $conditions['end_date'] . '" as referred_date',
-            "ucfirst(REPLACE((t.department), '_', ' ')) department", 't.deptOpdNo');
+            "ucfirst(REPLACE((t.department), '_', ' ')) department", 't.deptOpdNo', 'pt.start_date', 'pt.end_date');
 
         $where_cond = " WHERE (pt.start_date <= '" . $conditions['start_date'] . "' AND pt.end_date >= '" . $conditions['end_date'] . "')";
 
@@ -62,7 +62,7 @@ class Other_procedures_treatments extends SHV_Model {
     function update_other_procedures($data, $id) {
         if (!empty($id)) {
             $this->db->where('id', $id);
-            return $this->db->update('other_procedures_treatments', array('physician' => $data['physician']));
+            return $this->db->update('other_procedures_treatments', $data);
         }
         return false;
     }
