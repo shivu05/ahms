@@ -275,7 +275,7 @@
                                 'id': id
                             };
                             $.ajax({
-                                url: base_url + 'Common_methods/delete_records',
+                                url: base_url + 'common_methods/delete_records',
                                 type: 'POST',
                                 data: form_data,
                                 dataType: 'json',
