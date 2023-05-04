@@ -53,7 +53,7 @@ class Ipd_model extends CI_Model {
         }
 
 //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
-        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails,
+        $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails i,
         (SELECT @a:= 0) AS a  $where_cond ORDER BY DoAdmission ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
