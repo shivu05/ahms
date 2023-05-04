@@ -56,7 +56,7 @@
                                     if (!empty($years)) {
                                         foreach ($years as $n) {
                                             $value = base64_encode($row['client_short_name'] . "_" . $n);
-											$site_access = (strtoupper($row['client_access'])=='N') ? $value." disabled='disabled'" : $value;
+											$site_access = (strtoupper($row['client_access'])=='N') ?  " disabled='disabled'" : "value='".$value."'";
 											$notice = (strtoupper($row['client_access'])=='N') ? '<small style="color:red;"> - License expired</small>' : '';
 											$style = (strtoupper($row['client_access'])=='N') ? 'style="color:red"' : '';
                                             echo '<option '.$style.' '.$site_access.'>' . $row['client_short_name'] . '-' . $n . $notice.'</option>';
