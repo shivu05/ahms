@@ -60,10 +60,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="default_modal_label">Discharge patient</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h4 class="modal-title" id="default_modal_label">Discharge patient</h4>
             </div>
             <div class="modal-body" id="default_modal_body">
                 <form class="form-horizontal" id="discharge_form">

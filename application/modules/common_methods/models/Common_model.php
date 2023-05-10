@@ -13,7 +13,7 @@ class Common_model extends CI_Model {
 
     function get_patient_info_by_ipd($where) {
         $columns = array('p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'i.IpNo',
-            'i.DoAdmission', 'i.DoAdmission', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment', 't.procedures');
+            'i.DoAdmission', 'i.DoDischarge', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment', 't.procedures');
         $this->db->select($columns);
         $this->db->join('patientdata p', 'p.OpdNo=i.OpdNo');
         $this->db->join('ipdtreatment t', 't.ipdno=i.IpNo');
