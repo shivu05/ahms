@@ -55,6 +55,7 @@ $route['logout'] = 'login/logout';
 $route['change-password'] = 'login/change_password';
 $route['check-password'] = 'login/check_current_pasword';
 $route['update-password'] = 'login/update_password';
+$route['set-default-usr-data'] = 'master/users/update_default_password';
 $route['dashboard'] = "home/Dashboard/index";
 
 $route['admin-dashboard'] = "home/dashboard/admin";

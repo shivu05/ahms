@@ -104,4 +104,24 @@ class Users extends SHV_Controller {
         }
     }
 
+    function update_default_password() {
+        if ($this->input->is_ajax_request()) {
+            $pass = $this->simpleloginsecure->get_hashed_pass('password');
+            $id = $this->input->post('id');
+            $where = array(
+                'ID' => $id
+            );
+            $update = array(
+                'user_password' => $pass
+            );
+
+            $is_updated = $this->users_model->update($update, $where);
+            if ($is_updated) {
+                echo json_encode(array('status' => 'Success', 'msg' => 'Updated successfully', 'p_class' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'Failed to Update', 'p_class' => 'danger'));
+            }
+        }
+    }
+
 }

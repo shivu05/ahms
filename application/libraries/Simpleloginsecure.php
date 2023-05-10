@@ -88,6 +88,15 @@ class Simpleloginsecure {
         return true;
     }
 
+    function get_hashed_pass($user_pass) {
+        if (!empty($user_pass)) {
+            //Hash user_pass using phpass
+            $hasher = new PasswordHash(PHPASS_HASH_STRENGTH, PHPASS_HASH_PORTABLE);
+            $user_pass_hashed = $hasher->HashPassword($user_pass);
+            return $user_pass_hashed;
+        }
+    }
+
     function create_user($user_email = '', $user_pass = '', $user_fname = '', $user_mobile = '', $user_type = '', $user_department = '', $auto_login = false) {
 
         $this->CI = & get_instance();

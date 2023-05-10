@@ -90,6 +90,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-info" name="reset_pass_btn" id="reset_pass_btn"><i class="fa fa-refresh"></i> Rest password</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" name="update_btn" id="update_btn">Update</button>
             </div>
@@ -166,7 +167,8 @@
                 title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>';
+                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' + 
+                            ' | <i class="fa fa-refresh hand_cursor text-warning" id="reset_pass_btn"></i>';
                 }
             }
         ];
@@ -203,7 +205,7 @@
             $('#user_edit_modal_box #user_department').val(data.department);
             if (data.user_type !== '4') {
                 $('#user_edit_modal_box #user_department').attr('disabled', 'disabled');
-            }else{
+            } else {
                 $('#user_edit_modal_box #user_department').removeAttr('disabled');
             }
             $('#user_edit_modal_box').modal('show');
@@ -232,6 +234,44 @@
                     }
                 });
             }
+        });
+
+        $('#users_table').on('click', '#reset_pass_btn', function () {
+            var data = user_table.row($(this).closest('tr')).data();
+            BootstrapDialog.show({
+                title: 'Password reset confirmation',
+                message: 'Are you sure want to reset password for this user?',
+                buttons: [{
+                        label: 'Yes',
+                        cssClass: 'btn-primary',
+                        action: function (dialog) {
+                            $.ajax({
+                                url: base_url + 'set-default-usr-data',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {id: data.ID},
+                                success: function () {
+                                    dialog.setMessage('Default password is set. Please update it without fail once you login into application');
+                                },
+                                error: function () {
+                                    dialog.setMessage('Failed to update password please try again');
+                                }
+                            });
+                            dialog.enableButtons(false);
+                            dialog.setClosable(false);
+                            setTimeout(function () {
+                                dialog.close();
+                            }, 5000);
+                        }
+                    }, {
+                        label: 'No',
+                        cssClass: 'btn-danger',
+                        action: function (dialog) {
+                            //dialog.setTitle('Title 2');
+                            dialog.close();
+                        }
+                    }]
+            });
         });
 
         var user_table = $('#users_table').DataTable({
