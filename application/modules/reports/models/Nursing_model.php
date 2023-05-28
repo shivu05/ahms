@@ -396,7 +396,7 @@ class Nursing_model extends CI_Model {
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM ksharsutraregistery k
                   JOIN treatmentdata t ON k.treatId=t.ID
                   JOIN patientdata p  ON t.OpdNo = p.OpdNo
-                  LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo, (SELECT @a:= 0) AS a $where_cond ORDER BY k.ksharsDate ASC";
+                  LEFT JOIN inpatientdetails ip ON ip.OpdNo = p.OpdNo and t.ID=ip.treatId, (SELECT @a:= 0) AS a $where_cond ORDER BY k.ksharsDate ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
