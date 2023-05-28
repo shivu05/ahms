@@ -406,7 +406,7 @@ class Nursing_model extends CI_Model {
 
     function get_surgery_data($conditions, $export_flag = false) {
         $return = array();
-        $columns = array('s.ID as id', 's.OpdNo', '"" IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
+        $columns = array('s.ID as id', 's.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
             's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
             't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
 
@@ -443,7 +443,8 @@ class Nursing_model extends CI_Model {
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . "
             FROM surgeryregistery s
             JOIN treatmentdata t  ON s.treatId=t.ID
-            JOIN patientdata p ON  t.OpdNo=p.OpdNo,
+            JOIN patientdata p ON  t.OpdNo=p.OpdNo
+            LEFT JOIN inpatientdetails i ON p.OpdNo=i.OpdNo and t.ID=i.treatId,
             (SELECT @a:= 0) AS a  $where_cond ORDER BY surgDate ASC";
         //JOIN inpatientdetails i ON i.OpdNo=s.OpdNo and i.treatId=s.treatId and i.IpNo=s.ipdno 
         //echo $query;exit;
