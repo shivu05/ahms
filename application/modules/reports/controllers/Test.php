@@ -480,8 +480,9 @@ class Test extends SHV_Controller {
         $title = array(
             'report_title' => 'PANCHAKARMA REGISTER',
             'department' => 'PANCHAKARMA',
-            'start_date' => '01-01-2023',
-            'end_date' => date('d-m-Y')
+            'start_date' => '01-01-2022',
+            //'end_date' => date('d-m-Y')
+            'end_date' => '31-12-2022'
         );
 
         generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');

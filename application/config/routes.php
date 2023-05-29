@@ -159,6 +159,7 @@ $route['add-sales'] = 'pharmacy/sales';
 
 $route['full-year-report'] = 'localreports/localreports/opd';
 $route['panchakarma-complete-report'] = 'reports/Test/export_panchakarma_complete_report';
+$route['full-opd-pharmacy-download'] = 'localreports/export_opd_sales';
 
 $route['other-procedure-statistics'] = 'reports/statistics/other_procedures';
 $route['physiotherapy-statistics'] = 'reports/statistics/physiotherapy';
