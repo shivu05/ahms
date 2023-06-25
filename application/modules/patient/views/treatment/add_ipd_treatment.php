@@ -440,8 +440,11 @@ if (!empty($lab_categories)) {
                                                 <div class="control-group col-md-6">											
                                                     <label class="control-label" for="surgerytype">Type of surgery:</label>
                                                     <div class="controls">
-                                                        <input id="surgerytype" type="text" name="surgerytype" class="form-control surgery_inputs" placeholder="Enter Type" autocomplete="off">
-                                                        <p class="help-block"></p>
+                                                        <select class="form-control surgery_inputs" name="surgerytype" id="surgerytype">
+                                                            <option value="">Choose one</option>
+                                                            <option value="MINOR">MINOR</option>
+                                                            <option value="MAJOR">MAJOR</option>
+                                                        </select>
                                                     </div> <!-- /controls -->				
                                                 </div> <!-- /control-group -->
                                             </div>
