@@ -9,7 +9,84 @@
     .select2-container{
         width: 100% !important;
     }
+
+
+    /*  bhoechie tab */
+    div.bhoechie-tab-container{
+        z-index: 10;
+        border:1px solid #ddd;
+        background-color: #ffffff;
+        padding: 0 !important;
+        border-radius: 4px;
+    }
+    div.bhoechie-tab-menu{
+        padding-right: 0;
+        padding-left: 0;
+        padding-bottom: 0;
+    }
+    div.bhoechie-tab-menu div.list-group{
+        margin-bottom: 0;
+    }
+    div.bhoechie-tab-menu div.list-group>a{
+        margin-bottom: 0;
+    }
+    div.bhoechie-tab-menu div.list-group>a .glyphicon,
+    div.bhoechie-tab-menu div.list-group>a .fa {
+        color: #5A55A3;
+    }
+    div.bhoechie-tab-menu div.list-group>a:first-child{
+        border-top-right-radius: 0;
+        -moz-border-top-right-radius: 0;
+    }
+    div.bhoechie-tab-menu div.list-group>a:last-child{
+        border-bottom-right-radius: 0;
+        -moz-border-bottom-right-radius: 0;
+    }
+    div.bhoechie-tab-menu div.list-group>a.active,
+    div.bhoechie-tab-menu div.list-group>a.active .glyphicon,
+    div.bhoechie-tab-menu div.list-group>a.active .fa{
+        background-color: #5A55A3;
+        background-image: #5A55A3;
+        color: #ffffff;
+    }
+    div.bhoechie-tab-menu div.list-group>a.active:after{
+        content: '';
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        margin-top: -13px;
+        border-left: 0;
+        border-bottom: 13px solid transparent;
+        border-top: 13px solid transparent;
+        border-left: 10px solid #5A55A3;
+    }
+
+    div.bhoechie-tab-content{
+        background-color: #ffffff;
+        /* border: 1px solid #eeeeee; */
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+
+    div.bhoechie-tab div.bhoechie-tab-content:not(.active){
+        display: none;
+    }
 </style>
+<?php
+$physiotherapy_markup = "";
+if (!empty($physic_list)) {
+    foreach ($physic_list as $row) {
+        $physiotherapy_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+    }
+}
+
+$other_proc_markup = "";
+if (!empty($other_proc_list)) {
+    foreach ($other_proc_list as $row) {
+        $other_proc_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+    }
+}
+?>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
@@ -149,8 +226,357 @@
         </div>
     </div>
 </div>
+<style>
+    #treatment_modal .form-horizontal .form-group .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        padding-left: 28px !important;
+        text-align: left;
+    }
+    .required:after {
+        content:" *";
+        color: red;
+    }
+</style>
+<!-- Large modal -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="treatment_modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Update treatment for <span style="color:#5A55A3" id="treatment_modal_opdno"></span></h4>
+            </div>
+            <div class="modal-body" style="padding:2px !important;">
+                <div class="row row-no-gutters">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab-container">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item active text-center">
+                                    PHYSIOTHERAPY
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    OTHERPROCEDURES
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    KRIYAKALPA
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    X-RAY
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    USG
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    ECG
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+                            <input type="hidden" name="ajaxopd" id="ajaxopd" />
+                            <input type="hidden" name="ajaxtid" id="ajaxtid" />
+                            <!-- flight section -->
+                            <div class="bhoechie-tab-content active">
+                                <!-- PHYSIOTHERAPY FORM - STARTS -->
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        PHYSIOTHERAPY
+                                    </h5>
+                                    <form class="form-horizontal" id="physiotherapy_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="physiotherapy_check" id="physiotherapy_check" />
+                                                    Refer for PHYSIOTHERAPY
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="physic_name" class="col-md-4 col-sm-4 control-label pull-left required">Physiotherapy name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <select id="physic_name" name="physic_name" class="form-control chosen-select physic_inputs" required="required">
+                                                    <option value="">Choose</option>
+                                                    <?= $physiotherapy_markup ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="start_date" class="col-md-4 col-sm-4 control-label required">Start date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="physic_date" type="text" name="start_date" class="form-control date_picker physic_inputs required" placeholder="Enter Start date" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="start_date" class="col-md-4 col-sm-4 control-label required">End date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="physic_date" type="text" name="end_date" class="form-control date_picker physic_inputs required" placeholder="Enter End date" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="physic_doc" class="col-md-4 col-sm-4 control-label required">Physician name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="physic_doc" type="text" name="physic_doc" class="form-control physic_inputs required" placeholder="Enter Doctor name" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md physic_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md physic_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- PHYSIOTHERAPY FORM - ENDS -->
+                            </div>
+                            <!-- train section -->
+                            <div class="bhoechie-tab-content">
+                                <!-- OTHERPROCEDURES FORM STARTS -->
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        OTHERPROCEDURES
+                                    </h5>
+                                    <form class="form-horizontal" id="otherprocedure_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="other_proc_check" id="other_proc_check" />
+                                                    Refer for OTHERPROCEDURE
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="other_proc_name required" class="col-md-4 col-sm-4 control-label pull-left required">Procedure name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <select id="other_proc_name" type="text" name="other_proc_name" class="chosen-select form-control othr_proc_inputs" required="required">
+                                                    <option value="">Choose</option>
+                                                    <?= $other_proc_markup ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="other_start_date required" class="col-md-4 col-sm-4 control-label required">Start date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="other_start_date" type="text" name="other_start_date" class="form-control date_picker othr_proc_inputs" placeholder="Enter Start date" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="other_end_date required" class="col-md-4 col-sm-4 control-label required">End date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="other_end_date" type="text" name="other_end_date" class="form-control date_picker othr_proc_inputs" placeholder="Enter End date" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="oth_proc_doc required" class="col-md-4 col-sm-4 control-label required">Physician name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="oth_proc_doc" type="text" name="oth_proc_doc" class="form-control othr_proc_inputs" placeholder="Enter Doctor name" autocomplete="off" required="required">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md othr_proc_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md othr_proc_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- OTHERPROCEDURE ENDS HERE -->
+                            </div>
+
+                            <!-- hotel search -->
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        KRIYAKALPA
+                                    </h5>
+                                    <form class="form-horizontal" id="kriyakalpa_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="kriyakalpa_check" id="kriyakalpa_check" /> 
+                                                    Refer for Kriyakalpa
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="kriya_procedures required" class="col-md-4 col-sm-4 control-label required">Procedures:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="kriya_procedures" required type="text" name="kriya_procedures" class="form-control kriya_inputs" placeholder="Enter Procedures"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="kriya_start_date required" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="kriya_start_date" required type="text" name="kriya_start_date" class="form-control date_picker kriya_inputs" placeholder="Enter Date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md kriya_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md kriya_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="bhoechie-tab-content">
+                                X-RAY
+                                <h4>Coming soon</h4>
+                            </div>
+                            <div class="bhoechie-tab-content">
+                                USG
+                                <h4>Coming soon</h4>
+                            </div>
+                            <div class="bhoechie-tab-content">
+                                ECG
+                                <h4>Coming soon</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
+
     $(document).ready(function () {
+        $.each(procedure_div_ids, function (i) {
+            $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
+            $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
+        });
+
+        $('#physiotherapy_check').change(function () {
+            if ($(this).is(":checked")) {
+                $('.physic_inputs').prop('disabled', false).trigger("chosen:updated");
+                $('.physic_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.physic_inputs').attr('disabled', 'disabled');
+                $('.physic_inputs').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+
+        $('#treatment_modal #physiotherapy_form').submit(function (e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #physiotherapy_form').serializeArray();
+            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
+            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            $.ajax({
+                url: base_url + 'store-physiotherapy',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $.notify({
+                        title: "PHYSIOTHERAPY",
+                        message: response.message,
+                        icon: 'fa fa-check'
+                    }, {
+                        element: '#physiotherapy_form',
+                        type: response.success
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #physiotherapy_form #reset').trigger('click');
+                        $('#treatment_modal #physiotherapy_form #physiotherapy_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#other_proc_check').change(function () {
+            if ($(this).is(":checked")) {
+                $('.othr_proc_inputs').prop('disabled', false).trigger("chosen:updated");
+                $('.othr_proc_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.othr_proc_inputs').attr('disabled', 'disabled');
+                $('.othr_proc_inputs').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+
+        $('#treatment_modal #otherprocedure_form').submit(function (e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #otherprocedure_form').serializeArray();
+            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
+            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            $.ajax({
+                url: base_url + 'store-other-procedures',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $.notify({
+                        title: "OTHER-PROCEDURES",
+                        message: response.message,
+                        icon: 'fa fa-check'
+                    }, {
+                        element: '#otherprocedure_form',
+                        type: response.success
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #otherprocedure_form #reset').trigger('click');
+                        $('#treatment_modal #otherprocedure_form #other_proc_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#kriyakalpa_check').change(function () {
+            if ($(this).is(":checked")) {
+                $('.kriya_inputs').prop('disabled', false).trigger("chosen:updated");
+                $('.kriya_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.kriya_inputs').attr('disabled', 'disabled');
+                $('.kriya_inputs').prop('disabled', true).trigger("chosen:updated");
+            }
+        });
+
+        $('#treatment_modal #kriyakalpa_form').submit(function (e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #kriyakalpa_form').serializeArray();
+            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
+            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            $.ajax({
+                url: base_url + 'store-kriyakalpa',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $.notify({
+                        title: "KRIYAKALPA",
+                        message: response.message,
+                        icon: 'fa fa-check'
+                    }, {
+                        element: '#kriyakalpa_form',
+                        type: response.success
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #kriyakalpa_form #reset').trigger('click');
+                        $('#treatment_modal #kriyakalpa_form #kriyakalpa_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+
+        $("div.bhoechie-tab-menu>div.list-group>a").click(function (e) {
+            e.preventDefault();
+            $(this).siblings('a.active').removeClass("active");
+            $(this).addClass("active");
+            var index = $(this).index();
+            $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+            $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+        });
+
+
+
         $('#search_form').on('click', '#search', function () {
             patient_table.clear();
             patient_table.draw();
@@ -264,7 +690,7 @@
                 }
             },
             {
-                title: "Case sheet",
+                title: "C.Sheet",
                 data: function (item) {
                     return '<i class="fa fa-download hand_cursor text-primary download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
                 }
@@ -272,7 +698,8 @@
             {
                 title: "Action",
                 data: function (item) {
-                    return '<i class="fa fa-edit hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
+                    return '<i class="fa fa-edit hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>'
+                            + ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>';
                 }
             }
         ];
@@ -321,6 +748,19 @@
             var treat_id = $(this).data('treat_id');
             window.location.href = base_url + 'patient/Treatment/print_case_sheet/' + opd + '/' + treat_id;
         });
+        $('#patient_table tbody').on('click', '.add_treatment_details', function () {
+            var opd = $(this).data('opd');
+            var name = $(this).data('name');
+            var tid = $(this).data('tid');
+            $('#treatment_modal #ajaxopd').val(opd);
+            $('#treatment_modal #ajaxtid').val(tid);
+            $('#treatment_modal').modal({
+                keyboard: false,
+                backdrop: 'static'
+            }, 'show');
+            $('#treatment_modal #treatment_modal_opdno').html('[' + opd + ' - ' + name + ']');
+        });
+
 
         $('#default_modal_box').on('change', '#department', function () {
             var dept_id = $('#department').val();

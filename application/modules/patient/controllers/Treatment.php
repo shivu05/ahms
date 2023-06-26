@@ -20,10 +20,14 @@ class Treatment extends SHV_Controller {
     }
 
     function show_patients() {
-        $this->scripts_include->includePlugins(array('datatables'), 'js');
-        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $this->load->model('master/master_physiotheraphy');
+        $this->load->model('master/master_other_procedures');
+        $this->scripts_include->includePlugins(array('datatables', 'chosen'), 'js');
+        $this->scripts_include->includePlugins(array('datatables', 'chosen'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
+        $data['physic_list'] = $this->master_physiotheraphy->all();
+        $data['other_proc_list'] = $this->master_other_procedures->all();
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -1039,6 +1043,79 @@ class Treatment extends SHV_Controller {
             generate_pdf($main_content, 'P', '', 'opd_case_sheets_' . time(), false, false, 'I');
             exit;
         }//if
+    }
+
+    public function save_kriyakalpa() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $insert_data = array(
+                'OpdNo' => $post_values['opd'],
+                'treat_id' => $post_values['tid'],
+                'kriya_procedures' => $post_values['kriya_procedures'],
+                'kriya_date' => $post_values['kriya_start_date'],
+            );
+            $this->load->model('kriyakalpa');
+            $is_inserted = $this->kriyakalpa->store($insert_data);
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'OK', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
+        } else {
+            echo json_encode(array('status' => 'NOK', 'message' => 'INVALID_REQUEST'));
+        }
+    }
+
+    public function save_other_procedures() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $insert_data = array(
+                'OpdNo' => $post_values['opd'],
+                'treat_id' => $post_values['tid'],
+                'therapy_name' => $post_values['other_proc_name'],
+                'physician' => $post_values['oth_proc_doc'],
+                'start_date' => $post_values['other_start_date'],
+                'end_date' => $post_values['other_end_date']
+            );
+            $this->load->model('other_procedures_treatments');
+            $is_inserted = false;
+            if (!empty($post_values['other_proc_name'])) {
+                $is_inserted = $this->other_procedures_treatments->store($insert_data);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'OK', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
+        } else {
+            echo json_encode(array('status' => 'NOK', 'message' => 'INVALID_REQUEST'));
+        }
+    }
+
+    public function save_physiotherapy() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $insert_data = array(
+                'OpdNo' => $post_values['opd'],
+                'treat_id' => $post_values['tid'],
+                'therapy_name' => $post_values['physic_name'],
+                'physician' => $post_values['physic_doc'],
+                'start_date' => $post_values['start_date'],
+                'end_date' => $post_values['end_date']
+            );
+            $this->load->model('physiotherapy_treatments');
+            $is_inserted = false;
+            if (!empty($post_values['physic_name'])) {
+                $is_inserted = $this->physiotherapy_treatments->store($insert_data);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'OK', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
+        } else {
+            echo json_encode(array('status' => 'NOK', 'message' => 'INVALID_REQUEST'));
+        }
     }
 
 }
