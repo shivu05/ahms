@@ -640,6 +640,7 @@ class M_auto extends CI_Model {
                 "attndedby" => $result['attndedby'],
                 "CameOn" => $date,
                 "attndedon" => $date,
+                "sub_department" => $result['sub_department'],
                 "AddedBy" => $result['AddedBy'],
                 "patType" => "Old Patient",
                 "medicines" => $result['medicines']
@@ -1467,5 +1468,4 @@ class M_auto extends CI_Model {
         $this->db->where('ID', $post_values['ID']);
         return $this->db->update('oldtable', $post_values);
     }
-
 }
