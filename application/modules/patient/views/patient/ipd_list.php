@@ -197,6 +197,12 @@ if (!empty($wards)) {
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="pat_assigned_doctor">Assigned doctor :</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="pat_assigned_doctor" name="pat_assigned_doctor" placeholder="Doctor"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
                         <div class="controls">
                             <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
@@ -545,7 +551,6 @@ if (!empty($wards)) {
                 data: {opd: opd_id, ipd: ipd_id},
                 dataType: 'json',
                 success: function (response) {
-                    console.log(response);
                     if (response.status) {
                         $('#patient_form #first_name').val(response.data.FirstName);
                         $('#patient_form #last_name').val(response.data.LastName);
@@ -556,6 +561,7 @@ if (!empty($wards)) {
                         $('#patient_form #DoAdmission').val(response.data.DoAdmission);
                         $('#patient_form #DoDischarge').val(response.data.DoDischarge);
                         $('#patient_form #NofDays').val(response.data.NofDays);
+                        $('#patient_form #pat_assigned_doctor').val(response.data.Doctor);
                         $('#patient_form #pat_diagnosis').val(response.data.diagnosis);
                         $('#patient_form #pat_treatment').val(response.data.Trtment);
                         $('#patient_form #bed_no').val(response.data.BedNo);
