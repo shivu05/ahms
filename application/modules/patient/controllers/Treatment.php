@@ -1118,4 +1118,28 @@ class Treatment extends SHV_Controller {
         }
     }
 
+    public function save_xray() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $insert_data = array(
+                'OpdNo' => $post_values['opd'],
+                'treatID' => $post_values['tid'],
+                'partOfXray' => $post_values['partxray'],
+                'refDocName' => $post_values['xraydocname'],
+                'refDate' => $post_values['xraydate']
+            );
+            $this->load->model('xrayregistery');
+            $is_inserted = false;
+            if (!empty($post_values['partxray'])) {
+                $is_inserted = $this->xrayregistery->store($insert_data);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'OK', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
+        } else {
+            echo json_encode(array('status' => 'NOK', 'message' => 'INVALID_REQUEST'));
+        }
+    }
 }

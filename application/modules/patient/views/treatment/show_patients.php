@@ -418,8 +418,45 @@ if (!empty($other_proc_list)) {
                                 </div>
                             </div>
                             <div class="bhoechie-tab-content">
-                                X-RAY
-                                <h4>Coming soon</h4>
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        X-RAY
+                                    </h5>
+                                    <form class="form-horizontal" id="xray_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="xray_check" id="xray_check" /> 
+                                                    Refer for X-Ray
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="partxray required" class="col-md-4 col-sm-4 control-label required">Part of X-Ray:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="partxray" type="text" name="partxray" class="form-control xray_inputs" placeholder="Enter X-Ray Part" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="xraydocname required" class="col-md-4 col-sm-4 control-label required">Referred Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="xraydocname" value="" type="text" name="xraydocname" class="form-control xray_inputs" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="xraydate required" class="col-md-4 col-sm-4 control-label required">Referred date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="xraydate" type="text" name="xraydate" class="form-control date_picker xray_inputs" placeholder="Enter referred date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md xray_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md xray_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                             <div class="bhoechie-tab-content">
                                 USG
@@ -565,6 +602,44 @@ if (!empty($other_proc_list)) {
             });
         });
 
+        $('#xray_check').change(function () {
+            if ($(this).is(":checked")) {
+                $('.xray_inputs').removeAttr('disabled');
+                copy_input_text('#doctor_name', '#xraydocname');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.xray_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #xray_form').submit(function (e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #xray_form').serializeArray();
+            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
+            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            $.ajax({
+                url: base_url + 'store-xray',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $.notify({
+                        title: "X-RAY",
+                        message: response.message,
+                        icon: 'fa fa-check'
+                    }, {
+                        element: '#xray_form',
+                        type: response.success
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #xray_form #reset').trigger('click');
+                        $('#treatment_modal #xray_form #xray_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
 
         $("div.bhoechie-tab-menu>div.list-group>a").click(function (e) {
             e.preventDefault();

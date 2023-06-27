@@ -167,6 +167,7 @@ $route['physiotherapy-statistics'] = 'reports/statistics/physiotherapy';
 $route['store-kriyakalpa'] = 'patient/treatment/save_kriyakalpa';
 $route['store-other-procedures'] = 'patient/treatment/save_other_procedures';
 $route['store-physiotherapy'] = 'patient/treatment/save_physiotherapy';
+$route['store-xray'] = 'patient/treatment/save_xray';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
