@@ -15,7 +15,7 @@ class Other_procedures_treatments extends SHV_Model {
 
         $return = array();
         $columns = array('pt.id', 'pt.OpdNo', "CONCAT(coalesce(p.FirstName,''),' ',coalesce(p.LastName)) as name", 'p.Age', 'p.gender', 't.diagnosis',
-            ' pt.IpNo', 'pt.therapy_name', 'pt.physician', '" ' . $conditions['end_date'] . '" as referred_date',
+            ' i.IpNo', 'pt.therapy_name', 'pt.physician', '" ' . $conditions['end_date'] . '" as referred_date',
             "ucfirst(REPLACE((t.department), '_', ' ')) department", 't.deptOpdNo', 'pt.start_date', 'pt.end_date');
 
         $where_cond = " WHERE (pt.start_date <= '" . $conditions['start_date'] . "' AND pt.end_date >= '" . $conditions['end_date'] . "')";
@@ -51,7 +51,8 @@ class Other_procedures_treatments extends SHV_Model {
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " 
             FROM other_procedures_treatments pt 
             JOIN treatmentdata t on pt.treat_id=t.ID 
-            JOIN patientdata p on t.OpdNo=p.OpdNo , (SELECT @a:= 0) AS a $where_cond";
+            JOIN patientdata p on t.OpdNo=p.OpdNo 
+            LEFT JOIN inpatientdetails i ON pt.treat_id=i.treatId , (SELECT @a:= 0) AS a $where_cond";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -71,14 +72,15 @@ class Other_procedures_treatments extends SHV_Model {
 
         $return = array();
         $columns = array('pt.id', 'pt.OpdNo', "CONCAT(coalesce(p.FirstName,''),' ',coalesce(p.LastName)) as name", 'p.Age', 'p.gender', 't.diagnosis',
-            ' pt.IpNo', 'pt.therapy_name', 'pt.physician', 'start_date', 'end_date',
+            ' i.IpNo', 'pt.therapy_name', 'pt.physician', 'start_date', 'end_date',
             "ucfirst(REPLACE((t.department), '_', ' ')) department", 't.deptOpdNo');
 
         $where_cond = "";
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " 
             FROM other_procedures_treatments pt 
             JOIN treatmentdata t on pt.treat_id=t.ID 
-            JOIN patientdata p on t.OpdNo=p.OpdNo , (SELECT @a:= 0) AS a $where_cond";
+            JOIN patientdata p on t.OpdNo=p.OpdNo 
+            LEFT JOIN inpatientdetails i ON pt.treat_id=i.treatId , (SELECT @a:= 0) AS a $where_cond order by pt.id";
         $result = $this->db->query($query);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();

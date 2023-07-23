@@ -90,7 +90,6 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" name="reset_pass_btn" id="reset_pass_btn"><i class="fa fa-refresh"></i> Rest password</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" name="update_btn" id="update_btn">Update</button>
             </div>
@@ -167,8 +166,8 @@
                 title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' + 
-                            ' | <i class="fa fa-refresh hand_cursor text-warning" id="reset_pass_btn"></i>';
+                    return '<i title="Edit user details" class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' + 
+                            ' | <i title="Reset password" class="fa fa-refresh hand_cursor text-warning" id="reset_pass_btn"></i>';
                 }
             }
         ];

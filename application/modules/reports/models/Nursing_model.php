@@ -548,14 +548,14 @@ class Nursing_model extends CI_Model {
 
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
-        $columns = array('l.OpdNo', 'l.ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
+        $columns = array('l.OpdNo', 'ip.IpNo ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
             't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
             ' GROUP_CONCAT(testrange SEPARATOR "#") testrange', 'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
                 FROM labregistery l
                 JOIN patientdata p ON l.OpdNo = p.OpdNo 
-                LEFT JOIN inpatientdetails ip ON l.ipdno=ip.IpNo
+                LEFT JOIN inpatientdetails ip ON l.treatID=ip.treatId
                 JOIN treatmentdata t ON l.treatID = t.ID
                 JOIN lab_investigations li ON li.lab_inv_id=l.testName
                 JOIN lab_tests lt ON li.lab_test_id=lt.lab_test_id
