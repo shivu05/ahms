@@ -16,7 +16,6 @@ class Reports extends SHV_Controller {
 
     public function show_lab_report($id = null) {
         $lab_data = $this->patient_reports->fetch_patient_lab_details($id);
-        pma($lab_data);
         $testname = explode(",", $lab_data['testName']);
         $lab_test_type = explode(",", $lab_data['lab_test_type']);
         $lab_cat_name = explode(",", $lab_data['lab_test_cat']);
@@ -54,13 +53,12 @@ class Reports extends SHV_Controller {
             $i++;
             $table .= $tr;
         }
-        //echo $table;
 
         $title = array(
             'report_title' => 'LAB REPORT',
         );
-
-        generate_pdf($table, 'P', $title, 'LAB_REPORT_', true, true, 'I');
+        $c_date = date('d_m_Y');
+        generate_pdf($table, 'P', $title, 'LAB_REPORT_' . $c_date, true, true, 'I');
         exit;
     }
 }
