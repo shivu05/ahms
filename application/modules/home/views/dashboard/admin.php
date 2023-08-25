@@ -53,6 +53,18 @@ if (!empty($dept_wise_data)) {
         );
     }
 }
+
+$ipdkoolarray = array();
+if (!empty($ipd_data)) {
+    foreach ($ipd_data as $pdata) {
+        $ipdkoolarray[] = array(
+            'Department' => ucfirst(strtolower(str_replace('_', ' ', $pdata['department']))),
+            'Total' => (int) $pdata['Total'],
+            'Male' => (int) $pdata['Male'],
+            'Female' => (int) $pdata['Female'],
+        );
+    }
+}
 ?>
 <style>
     .float-right{
@@ -63,7 +75,8 @@ if (!empty($dept_wise_data)) {
     <div class="box-header with-border"><h3 class="box-title">Department wise patients</h3></div>
     <div class="box-body">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <h4  class="text-blue">OPD Statistics</h4>
                 <?php
                 ColumnChart::create(array(
                     "dataSource" => $koolarray
@@ -78,6 +91,31 @@ if (!empty($dept_wise_data)) {
                         'Department' => array(),
                         'OLD' => array("footer" => "sum", 'cssClass' => 'float-right'),
                         'NEW' => array("footer" => "sum"),
+                        'Total' => array("footer" => "sum"),
+                        'Male' => array("footer" => "sum"),
+                        'Female' => array("footer" => "sum"),
+                    ),
+                    "cssClass" => array(
+                        "table" => "table table-hover table-bordered dataTable",
+                        "tf" => "alert-info"
+                    )
+                ));
+                ?>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-blue">IPD Statistics</h4>
+                <?php
+                ColumnChart::create(array(
+                    "dataSource" => $ipdkoolarray
+                ));
+                ?>
+                <hr/>
+                <?php
+                Table::create(array(
+                    "showFooter" => "bottom",
+                    "dataSource" => $ipdkoolarray,
+                    "columns" => array(
+                        'Department' => array(),
                         'Total' => array("footer" => "sum"),
                         'Male' => array("footer" => "sum"),
                         'Female' => array("footer" => "sum"),

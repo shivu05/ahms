@@ -47,6 +47,7 @@ class Dashboard extends SHV_Controller {
             $data = array();
             $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();
             $data['dept_wise_data'] = $this->dashboard_model->get_departmentwise_patient_count();
+            $data['ipd_data'] = $this->dashboard_model->get_ipd_patients_count();
 
             $this->layout->data = $data;
             $this->layout->render();

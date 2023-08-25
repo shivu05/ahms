@@ -30,5 +30,12 @@ class Dashboard_model extends CI_Model {
         mysqli_next_result($this->db->conn_id); //imp
         return $return;
     }
+    
+    function get_ipd_patients_count(){
+        $result = $this->db->query("CALL get_ipd_patient_count()");
+        $return = $result->result_array();
+        mysqli_next_result($this->db->conn_id); //imp
+        return $return;
+    }
 
 }
