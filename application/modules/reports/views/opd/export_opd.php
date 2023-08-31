@@ -69,7 +69,7 @@ $dept_room_array = array(
                 } else {
                     //echo "<td>" . $patients['diagnosis'] . "</td>";
                 }
-                echo "<td>" . $patients['department'] . "</td>";
+                echo "<td>" . $patients['department'] . "<br/><small>" . $patients['sub_department'] . "</small>" . "</td>";
                 if ($department == 1) {
                     echo "<td style='text-align: right;'><center>" . $patients['ref_dept'] . "</center></td>";
                 }

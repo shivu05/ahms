@@ -12,7 +12,7 @@
                         <label class="control-label sr-only">To:</label>
                         <input class="form-control date_picker" type="text" placeholder="To date" name="end_date" id="end_date" required="required" autocomplete="off">
                     </div>
-                    <div class="form-group col-md-3 col-sm-12">
+                    <div class="form-group col-md-2 col-sm-12">
                         <label class="control-label sr-only">Department:</label>
                         <select name="department" id="department" class="form-control" required="required">
                             <option value="">Select Department</option>
@@ -24,6 +24,12 @@
                                 }
                             }
                             ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 col-sm-12">
+                        <label class="control-label sr-only">Sub department:</label>
+                        <select name="sub_department" id="sub_department" class="form-control" required="required">
+                            <option value="">Select Sub department</option>
                         </select>
                     </div>
                     <div class="form-group col-md-4 col-sm-12 align-self-end">
@@ -66,8 +72,47 @@
 </style>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#sub_department').attr('disabled', true);
         $('#search_form').on('click', '#search', function () {
             show_patients();
+        });
+        $('#search_form').on('change', '#department', function () {
+            var dept_id = $('#department').val();
+            $.ajax({
+                url: base_url + 'patient/get_sub_department',
+                data: {'dept_id': dept_id},
+                dataType: 'json',
+                type: 'POST',
+                success: function (response) {
+                    if (response.sub_dept.length > 0) {
+                        var option = '';//'<option value="">Choose sub department</option>';
+                         option += '<option value="both">Both</option>';
+                        $.each(response.sub_dept, function (i) {
+                            option += '<option value="' + response.sub_dept[i].sub_dept_name + '">' + response.sub_dept[i].sub_dept_name + '</option>';
+                        });
+                        $('#sub_department').html(option);
+                        $('#sub_department').attr('disabled', false);
+                    } else {
+                        var option = '<option value="">Choose sub department</option>';
+                        $('#sub_department').html(option);
+                        $('#sub_department').attr('disabled', true);
+                    }
+
+                    if (response.doctors.length > 0) {
+                        var option = '<option value="">Choose doctor</option>';
+                        $.each(response.doctors, function (i) {
+                            option += '<option value="' + response.doctors[i].user_name + '">' + response.doctors[i].user_name + '</option>';
+                        });
+                        $('#doctor').html(option);
+                        $('#doctor').attr('disabled', false);
+                    } else {
+                        var option = '<option value="">Choose doctor</option>';
+                        $('#doctor').html(option);
+                        $('#doctor').attr('disabled', true);
+                    }
+                }
+
+            });
         });
         $('#search_form #export').on('click', '#export_to_xls', function (e) {
             e.preventDefault();
@@ -154,7 +199,7 @@
             {
                 title: "Department",
                 data: function (item) {
-                    return item.department;
+                    return item.department + '<br/> <small>'+item.sub_department+'</small>';
                 }
             },
             {

@@ -39,7 +39,16 @@ class Opd extends SHV_Controller {
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
         $data = $this->opd_model->get_opd_patients($input_array);
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        $print_subdept = '';
+        if (!empty($input_array['sub_department']) && ($input_array['sub_department'] != '' && $input_array['sub_department'] != 'both')) {
+            $print_subdept = $input_array['sub_department'];
+        } else if (!empty($input_array['sub_department']) && $input_array['sub_department'] == 'both') {
+            $print_subdept = '';
+        } else {
+            $print_subdept = '';
+        }
+
+        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . $print_subdept . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
         //return $return;
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data'], 'statistics' => $return);
@@ -51,7 +60,16 @@ class Opd extends SHV_Controller {
         $input_array['start_date'] = $this->input->post('start_date');
         $input_array['end_date'] = $this->input->post('end_date');
         $input_array['department'] = $this->input->post('department');
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        $input_array['sub_department'] = $this->input->post('sub_department');
+        //pma($input_array['sub_department'], 1);
+        $print_subdept = '';
+        if (!empty($input_array['sub_department']) && ($input_array['sub_department'] != '' && $input_array['sub_department'] != 'both')) {
+            $print_subdept = $input_array['sub_department'];
+        } else if (!empty($input_array['sub_department']) && $input_array['sub_department'] == 'both') {
+            $print_subdept = '';
+        }
+        //echo "call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . trim($print_subdept) . "')";exit;
+        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . trim($print_subdept) . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
         echo json_encode(array('statistics' => $return));
     }
@@ -87,11 +105,10 @@ class Opd extends SHV_Controller {
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
-
+        $print_subdept = ($input_array['sub_department'] == '' || $input_array['sub_department'] == 'both') ? "" : $input_array['sub_department'];
         $result = $this->opd_model->get_opd_patients($input_array, true);
-        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "')")->result_array();
+        $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . $print_subdept . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
-
         $data['opd_patients'] = $result['data'];
         $data['department'] = $input_array['department'];
         $data['opd_stats'] = $return;
@@ -99,10 +116,11 @@ class Opd extends SHV_Controller {
         $this->layout->headerFlag = false;
         $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
 //pma($html,1);
         $title = array(
             'report_title' => 'OPD REGISTER',
-            'department' => $print_dept,
+            'department' => $print_dept . '<br/><small>' . $print_subdept . '</small>',
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );
@@ -232,5 +250,4 @@ class Opd extends SHV_Controller {
         download_excel($export_array['data'], $file_name, $headings);
         exit;
     }
-
 }

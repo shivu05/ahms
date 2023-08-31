@@ -71,7 +71,7 @@ class Opd_model extends CI_Model {
         $return = array();
         $columns = array('t.ID', 't.monthly_sid as msd', 't.OpdNo', 't.deptOpdNo', 't.PatType',
             'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name', 'Age', 'gender', 'address', 'city', 't.diagnosis', 't.Trtment', 't.AddedBy', '(REPLACE((t.department),"_"," ")) department',
-            'CameOn', 'd.ref_room ref_dept','t.sequence');
+            'CameOn', 'd.ref_room ref_dept','t.sequence','COALESCE(t.sub_department,"") sub_department');
 
         $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';
@@ -95,6 +95,9 @@ class Opd_model extends CI_Model {
                         break;
                     case 'department':
                         $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    case 'sub_department':
+                        $where_cond .= ($val != 'both') ? " AND t.sub_department = '$val'" : '';
                         break;
                     default:
                         $where_cond .= " AND $col = '$val'";
