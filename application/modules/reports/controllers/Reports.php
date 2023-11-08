@@ -47,7 +47,7 @@ class Reports extends SHV_Controller {
             $tr = '<table nowrap="nowrap" class="table table-bordered" style="width:100%">';
             $tr .= '<tr><td style="width:33%;">' . $testname[$i] . '</td>';
             $tr .= '<td style="width:33%;">' . $testvalue[$i] . '</td>';
-            $tr .= '<td style="width:33%;">' . $testrange[$i] . '</td>';
+            $tr .= '<td style="width:33%;">' . @$testrange[$i] . '</td>';
             $tr .= '</tr>';
             $tr .= '</table>';
             $i++;

@@ -63,7 +63,7 @@ if (empty($patient)) {
                                 $tr .= '<td>' . $lab_test_type[$i] . '</td>';
                                 $tr .= '<td>' . $testname[$i] . '</td>';
                                 $tr .= '<td>' . $val . '</td>';
-                                $tr .= '<td>' . $testrange[$i] . '</td>';
+                                $tr .= '<td>' . @$testrange[$i] . '</td>';
                                 $i++;
                                 echo $tr;
                             }
