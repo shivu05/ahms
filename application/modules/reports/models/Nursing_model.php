@@ -524,8 +524,16 @@ class Nursing_model extends CI_Model {
     }
 
     function get_panchakarma_procedure_count($conditions, $export_flag = false) {
-        $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p
-             WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`";
+        /* $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p
+          WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`"; */
+        $query = "SELECT treatment,`procedure`,days as procedure_count 
+                  FROM ( 
+                    SELECT p.*,SUM((DATEDIFF(proc_end_date,`date`) + 1)) days 
+                    FROM panchaprocedure p 
+                    WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "'
+                    GROUP BY treatment,`procedure` 
+                  ) A 
+                 GROUP BY treatment,`procedure`";
         $query = $this->db->query($query);
         //echo $this->db->last_query();exit;
         if ($query->num_rows() > 0) {
@@ -548,7 +556,7 @@ class Nursing_model extends CI_Model {
 
     function get_lab_report($conditions, $export_flag = false) {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
-        $columns = array('l.treatID','l.OpdNo', 'ip.IpNo ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
+        $columns = array('l.treatID', 'l.OpdNo', 'ip.IpNo ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
             't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
             ' GROUP_CONCAT(testrange SEPARATOR "#") testrange', 'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
             'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
@@ -656,5 +664,4 @@ class Nursing_model extends CI_Model {
         }
         return false;
     }
-
 }

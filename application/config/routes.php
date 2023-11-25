@@ -170,5 +170,7 @@ $route['store-physiotherapy'] = 'patient/treatment/save_physiotherapy';
 $route['store-xray'] = 'patient/treatment/save_xray';
 $route['doctors-update'] = 'Updatedata/doctors';
 
+$route['fetch-patient-repo'] = 'reports/patient_reports/fetch_patient_repo';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
