@@ -20,12 +20,12 @@ class Ipd_model extends CI_Model {
     public function get_patients($conditions, $export_flag = FALSE) {
         $return = array();
         $columns = array(
-            'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE(ucfirst(ip.department),"_"," ")) department', 'WardNo', 'BedNo',
+            'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE((ip.department),"_"," ")) department', 'WardNo', 'BedNo',
             'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis','t.procedures', 'ip.status', 'NofDays'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
-            $user_dept_cond = " AND LOWER(department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
+            $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
         }
         $where_cond = " WHERE 1=1 $user_dept_cond ";
         //$where_cond = " WHERE ip.status='stillin' $user_dept_cond ";
