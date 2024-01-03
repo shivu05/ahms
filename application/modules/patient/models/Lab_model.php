@@ -29,6 +29,7 @@ class Lab_model extends CI_Model {
             'l.ID', 'l.OpdNo', 'refDocName', 'testName', 'testDate', 'treatID', 'testrange', 'testvalue', 'tested_date', 'CONCAT(FirstName," ",LastName) as name',
             'IF(l.ipdno is null ,(REPLACE((t.department),"_"," ")) ,(REPLACE((it.department),"_"," ")) ) department',
             'IF(l.ipdno is null ,(REPLACE((t.diagnosis),"_"," ")) ,(REPLACE((it.diagnosis),"_"," ")) ) diagnosis',
+            'tested_date', 'testvalue'
         );
 
         $cur_date = date('Y-m-d');
@@ -36,7 +37,8 @@ class Lab_model extends CI_Model {
         $search_value = trim($search_data['value']);
         $search = (isset($search_data) && $search_value != '') ? 'AND (l.OpdNo like "%' . $search_value . '%" 
             OR lower(t.department) like "%' . strtolower($search_value) . '%" ) ' : '';
-        $where_cond = " WHERE (tested_date is NULL AND testvalue IS NULL) $search ";
+        $where_cond = " WHERE 1=1  $search ";
+        //(tested_date is NULL AND testvalue IS NULL)
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
             $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
@@ -63,7 +65,7 @@ class Lab_model extends CI_Model {
         $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . " FROM labregistery l 
            JOIN treatmentdata t ON l.treatID=t.ID 
            LEFT JOIN ipdtreatment it on l.ipdno=it.ipdno
-           JOIN patientdata p ON p.OpdNo=l.OpdNo,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ";
+           JOIN patientdata p ON p.OpdNo=l.OpdNo,(SELECT @a:= 0) AS a $where_cond GROUP BY l.treatID ORDER BY tested_date";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
@@ -96,5 +98,4 @@ class Lab_model extends CI_Model {
                         ->get()
                         ->result_array();
     }
-
 }

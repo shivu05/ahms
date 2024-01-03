@@ -95,14 +95,26 @@
                 }
             },
             {
-                title: "Action",
+                title: "Tested date",
                 data: function (item) {
                     if (item.testvalue == '' || item.testvalue == null) {
-                        return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_lab" ' +
-                                ' data-opdno="' + item.OpdNo + '" data-treat_id="' + item.treatID + '" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                        return '<i class="fa fa-clock-o text-warning" data-toggle="tooltip" data-placement="left" title="Pending" aria-hidden="true"></i>';
                     } else {
-                        return '<center><i class="fa fa-pencil-square-o text-primary text-center fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+                        return item.tested_date + ' <i class="fa fa-check-circle text-success" title="Lab completed" aria-hidden="true"></i>';
                     }
+                }
+            },
+            {
+                title: "Action",
+                data: function (item) {
+                    return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_lab" ' +
+                            ' data-opdno="' + item.OpdNo + '" data-treat_id="' + item.treatID + '" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+//                    if (item.testvalue == '' || item.testvalue == null) {
+//                        return '<center><i class="fa fa-pencil-square-o text-primary text-center pointer edit_lab" ' +
+//                                ' data-opdno="' + item.OpdNo + '" data-treat_id="' + item.treatID + '" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+//                    } else {
+//                        return '<center><i class="fa fa-pencil-square-o text-primary text-center fa-disabled" data-id="' + item.ID + '" aria-hidden="true"></i></center>';
+//                    }
                 }
             }
         ];
@@ -135,7 +147,9 @@
                         "search_form": $('#test_form').serializeArray()
                     });
                 },
-                drawCallback: function (response) {}
+                drawCallback: function (response) {
+                    $('#patient_table').tooltip()
+                }
             },
             order: [[0, 'desc']],
             info: true,
