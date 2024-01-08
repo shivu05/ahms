@@ -169,6 +169,7 @@ $route['store-other-procedures'] = 'patient/treatment/save_other_procedures';
 $route['store-physiotherapy'] = 'patient/treatment/save_physiotherapy';
 $route['store-xray'] = 'patient/treatment/save_xray';
 $route['doctors-update'] = 'Updatedata/doctors';
+$route['store-swarnaprashana'] = 'patient/treatment/store_swarnaprashana';
 
 $route['fetch-patient-repo'] = 'reports/patient_reports/fetch_patient_repo';
 

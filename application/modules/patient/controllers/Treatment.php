@@ -1142,4 +1142,34 @@ class Treatment extends SHV_Controller {
             echo json_encode(array('status' => 'NOK', 'message' => 'INVALID_REQUEST'));
         }
     }
+
+    public function store_swarnaprashana() {
+        if ($this->input->is_ajax_request()) {
+            $post_values = $this->input->post();
+            $insert_data = array(
+                'opd_no' => $post_values['opd'],
+                'treat_id' => $post_values['tid'],
+                'date_month' => $post_values['date_month'],
+                'dose_time' => $post_values['dose_time'],
+                'consultant' => $post_values['consultant']
+            );
+            $this->load->model('swarnaprashana');
+            $is_inserted = false;
+            $age = $this->swarnaprashana->get_patient_age($post_values['opd'], array('Age'));
+            if ($age > 15) {
+                echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Age can not be greater than 15', 'type' => 'danger'));
+                exit;
+            }
+            if (!empty($post_values['date_month'])) {
+                $is_inserted = $this->swarnaprashana->store($insert_data);
+            }
+            if ($is_inserted) {
+                echo json_encode(array('status' => 'OK', 'icon' => 'fa-check', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
+        } else {
+            echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'INVALID_REQUEST', 'type' => 'danger'));
+        }
+    }
 }

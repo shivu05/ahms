@@ -269,6 +269,9 @@ if (!empty($other_proc_list)) {
                                 <a href="#" class="list-group-item text-center">
                                     ECG
                                 </a>
+                                <a href="#" class="list-group-item text-center">
+                                    Swarnaprashana
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
@@ -466,6 +469,47 @@ if (!empty($other_proc_list)) {
                                 ECG
                                 <h4>Coming soon</h4>
                             </div>
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        Swarnaprashana
+                                    </h5>
+                                    <form class="form-horizontal" id="swarnaprashana_form" name="swarnaprashana_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="swarnaprashana_check" id="swarnaprashana_check" /> 
+                                                    Refer for Swarnaprashana
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="date_month required" class="col-md-4 col-sm-4 control-label required">Date and Month of Swarnaprashana:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="date_month" type="text" name="date_month" class="form-control swarnaprashana_inputs required" placeholder="Select Month & year" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="dpse_time required" class="col-md-4 col-sm-4 control-label required">Time:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="dpse_time" type="time" name="dose_time" class="form-control swarnaprashana_inputs required" placeholder="Enter referred date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="consultant required" class="col-md-4 col-sm-4 control-label required">Referred Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="consultant" value="" type="text" name="consultant" class="form-control swarnaprashana_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md swarnaprashana_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md swarnaprashana_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -474,9 +518,18 @@ if (!empty($other_proc_list)) {
     </div>
 </div>
 <script type="text/javascript">
-    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
+        'kriya_inputs', 'swarnaprashana_inputs'];
 
     $(document).ready(function () {
+
+        $('#swarnaprashana_form #date_month').datepicker({
+            format: 'MM yyyy',
+            viewMode: "months",
+            minViewMode: "months",
+            autoclose: true
+        });
+
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
             $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
@@ -633,6 +686,45 @@ if (!empty($other_proc_list)) {
                     if (response.status == 'OK') {
                         $('#treatment_modal #xray_form #reset').trigger('click');
                         $('#treatment_modal #xray_form #xray_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#swarnaprashana_check').change(function () {
+            if ($(this).is(":checked")) {
+                $('.swarnaprashana_inputs').removeAttr('disabled');
+                //copy_input_text('#doctor_name', '#xraydocname');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.swarnaprashana_inputs').attr('disabled', 'disabled');
+            }
+        });
+        $('#treatment_modal #swarnaprashana_form').validate();
+        $('#treatment_modal #swarnaprashana_form').submit(function (e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #swarnaprashana_form').serializeArray();
+            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
+            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            $.ajax({
+                url: base_url + 'store-swarnaprashana',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function (response) {
+                    $.notify({
+                        title: "SWARNAPRASHANA",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#swarnaprashana_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #swarnaprashana_form #reset').trigger('click');
+                        $('#treatment_modal #swarnaprashana_form #swarnaprashana_check').attr('checked', false).trigger('change');
                     }
                 },
                 error: function (response) {

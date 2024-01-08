@@ -373,6 +373,7 @@ class Patient extends SHV_Controller {
         if ($ipd) {
             $this->load->model('patient/treatment_model');
             $data = array();
+            $app_settings = $this->application_settings(array('college_name'));
             $data['ipd'] = $ipd;
             $opd_data = $this->treatment_model->get_opd_by_ipd($ipd);
             $opd = $opd_data['OpdNo'];
@@ -422,7 +423,7 @@ class Patient extends SHV_Controller {
             $pat_table .= "</table><hr/>";
             $pat_table .= "<h3 style='text-align:center'>CONSENT FORM</h3>";
             $pat_table .= "<p style='text-align:justify;border:1px black solid;'>The under signed patient and/or responsible relatives here by consent/ or authorize to 
-                Bapuji Ayurvedic medicalcollege Hospital, physicians and medical persons to administer and perform medicaltreatment/ 
+                " . $app_settings['college_name'] . " , physicians and medical persons to administer and perform medicaltreatment/ 
                 panchakarma procedures/ surgery/ Ksharasutra/ ksharakarma/ agnikarma/ raktamokshana/and if necessary anesthesia.The doctors explained me about the disease, 
                 condition of the disease,prognosis,line of treatment and procedures ofsurgery and panchakarma in regional language. 
                 The Physicians ,Hospital faculty and hospital are not responsible for any sort of complications.</p>";
@@ -449,5 +450,4 @@ class Patient extends SHV_Controller {
             exit;
         }
     }
-
 }
