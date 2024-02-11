@@ -444,6 +444,44 @@ class Test extends SHV_Controller {
         echo $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma'), true);
     }
 
+    function edit_panchakarma_procedures() {
+        $id = $this->input->post('pid');
+        $data['result'] = $this->nursing_model->get_pancharama_procedure_details($id);
+        $data['is_print'] = false;
+        $data['pid'] = $id;
+        $this->load->model('master/panchakarma_model');
+        $data['pancha_procedures'] = $this->panchakarma_model->get_procedures();
+        $this->layout->data = $data;
+        echo $this->layout->render(array('view' => 'reports/test/panchakarma/frm_panchakarma_edit'), true);
+    }
+
+    function update_panchakarma_procedures() {
+        $input_array = $this->input->post();
+        $id = $this->input->post('pid');
+        $main_procedure_list = $input_array['pancha_procedure'];
+        $all_data = array();
+        $j = 0;
+        for ($i = 0; $i < count($main_procedure_list); $i++) {
+            $update_array = array(
+                'id' => $input_array['id'][$j],
+                'treatment' => $input_array['pancha_procedure'][$j],
+                'procedure' => $input_array['pancha_sub_procedure'][$j],
+                'date' => $input_array['pancha_proc_start_date'][$j],
+                'proc_end_date' => $input_array['pancha_proc_end_date'][$j],
+            );
+            $all_data[] = $update_array;
+
+            $j++;
+        }
+        //pma($all_data,1);
+        $is_updated = $this->nursing_model->update_panchakarma_details($all_data, $id);
+        if ($is_updated) {
+            echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+        } else {
+            echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+        }
+    }
+
     function export_panchakarma_report() {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -501,7 +539,7 @@ class Test extends SHV_Controller {
         $result = $this->nursing_model->get_panchakarma_data($input_array, true);
         //pma($result,1);
         /*
-         * 'l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
+         * 'l.opdno', 'p.deptOpdNo', 'CONCAT(p.FirstName, " ", p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
           'p.deptOpdNo', 'p.dept', 'GROUP_CONCAT(disease) as disease', 'GROUP_CONCAT(treatment) as treatment',
           'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'GROUP_CONCAT(docname) as docname',
           'GROUP_CONCAT(proc_end_date) as proc_end_date'
@@ -994,5 +1032,4 @@ class Test extends SHV_Controller {
         generate_pdf($content, 'L', $title, SHORT_NAME . '_DOCTORS_DUTY_REGISTER', true, true, 'D');
         exit;
     }
-
 }
