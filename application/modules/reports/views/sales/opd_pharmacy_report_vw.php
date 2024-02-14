@@ -48,9 +48,9 @@ if (empty($patient)) {
                         <table class="table table-bordered" cellspacing="0" width="70%" style="margin:auto;">
                             <tr class="info" style="color:black">
                                 <th style="width: 60%" width="60%">Product</th>
-                                <th width="20%">QTY</th>
+                                <th width="15%">QTY</th>
                                 <?php if (!$is_print): ?>
-                                    <th width="20%">Action</th>
+                                    <th width="25%">Action</th>
                                 <?php endif; ?>
                             </tr>
                             <?php
@@ -61,8 +61,8 @@ if (empty($patient)) {
                                         <td width="80%"><?php echo remove_chars_from_product($product[$i]); ?></td>
                                         <td width="10%" style="text-align: center;"><?php echo $qty[$i]; ?></td>
                                         <?php if (!$is_print): ?>
-                                            <td width="10%"><i class="fa fa-edit product_edit" style="color:green;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i> 
-                                                | <i class="fa fa-trash text-error product_delete" style="color:red;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i></td>
+                                            <td width="10%"><i class="glyphicon glyphicon-edit product_edit" style="color:green;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i> 
+                                                | <i class="glyphicon glyphicon-trash text-error product_delete" style="color:red;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i></td>
                                             <?php endif; ?>
                                     </tr>
                                     <?php

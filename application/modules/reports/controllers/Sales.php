@@ -22,8 +22,8 @@ class Sales extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Pharmcay";
         $this->layout->navDescr = "OPD pharmacy report";
-        $this->scripts_include->includePlugins(array('datatables'), 'js');
-        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        //$this->scripts_include->includePlugins(array('datatables'), 'js');
+        //$this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/sales/export_opd_sales');
         $data['dept_list'] = $this->get_department_list('array');
@@ -40,6 +40,34 @@ class Sales extends SHV_Controller {
         $data["is_print"] = false;
         $data["patient"] = $this->sales_entry->getSalesPharmacy($start_date, $end_date, $dept, 0);
         $this->load->view('reports/sales/opd_pharmacy_report_vw', $data);
+    }
+
+    function update_pharmacy() {
+        $post_values = $this->input->post();
+        if ($this->input->is_ajax_request()) {
+            $is_updated = $this->sales_entry->update_pharmacy_data($post_values);
+            if ($is_updated) {
+                echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+            }
+        } else {
+            echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+        }
+    }
+
+    function delete_pharmcy() {
+        $post_values = $this->input->post();
+        if ($this->input->is_ajax_request()) {
+            $is_deleted = $this->sales_entry->remove_pharmacy_data($post_values);
+            if ($is_deleted) {
+                echo json_encode(array('msg' => 'Deleted Successfully', 'status' => 'ok'));
+            } else {
+                echo json_encode(array('msg' => 'Failed to delete', 'status' => 'nok'));
+            }
+        } else {
+            echo json_encode(array('msg' => 'Failed to delete', 'status' => 'nok'));
+        }
     }
 
     function ipd() {
@@ -111,5 +139,4 @@ class Sales extends SHV_Controller {
         generate_pdf($content, 'L', $title, 'OPD_PHARMACY_REPORT_' . $reported_date);
         exit;
     }
-
 }

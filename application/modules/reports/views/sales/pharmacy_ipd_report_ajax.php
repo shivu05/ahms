@@ -3,7 +3,7 @@ if (empty($patient)) {
     echo "<h4 class='center red'>No Records found</h4>";
 } else {
     ?>
-    <table class="table table-bordered dataTable" cellspacing="0"  width="100%">
+    <table class="table table-bordered dataTable" id="ipd_pharma_table" cellspacing="0"  width="100%">
         <thead>
             <tr>
                 <th width="4%">Sl no.</th>
@@ -41,6 +41,7 @@ if (empty($patient)) {
                     <td><?php echo format_date($row->DoDischarge); ?></td>
                 </tr>
                 <?php
+                $product_ids = explode(',', $row->product_ids);
                 $product = explode(',', $row->product);
                 $batch = explode(',', $row->batch);
                 $qty = explode(',', $row->qty);
@@ -49,12 +50,17 @@ if (empty($patient)) {
                     <td colspan="11" cellspacing="0" style="boder:none;border-collapse:collapse;">
                         <table class="table table-bordered" cellspacing="0" width="70%" style="margin:auto;">
                             <tr class="info" style="color:black">
-                            <th width="80%">Product</th><!--<th width="20%">Batch No</th>--><th width="20%">QTY</th></tr>
+                                <th width="60%">Product</th>
+                                <th width="15%">QTY</th>
+                                <th width="25%">Action</th>
+                            </tr>
                             <?php for ($i = 0; $i < sizeof($product); $i++) { ?>
                                 <tr>
                                     <td width="80%"><?php echo remove_chars_from_product($product[$i]); ?></td>
                                     <!--<td><?php echo $batch[$i]; ?></td>-->
                                     <td><?php echo $qty[$i]; ?></td>
+                                    <td width="10%"><i class="glyphicon glyphicon-edit product_edit" style="color:green;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i> 
+                                        | <i class="glyphicon glyphicon-trash text-error product_delete" style="color:red;cursor: pointer;" data-id="<?= $product_ids[$i] ?>" data-prod_name="<?= $product[$i] ?>" data-prod_qty="<?= $qty[$i] ?>"></i></td>
                                 </tr>
                             <?php } ?>
                         </table>

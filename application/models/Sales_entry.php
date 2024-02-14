@@ -1,15 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Sales_entry
  *
- * @author Abhilasha
+ * @author Shivaraj Badiger
  */
 class Sales_entry extends SHV_Model {
 
@@ -58,4 +52,19 @@ class Sales_entry extends SHV_Model {
         }
     }
 
+    function update_pharmacy_data($input_array = NULL) {
+        if ($input_array) {
+            $this->db->where('id', $input_array['id']);
+            return $this->db->update('sales_entry', $input_array);
+        }
+        return false;
+    }
+
+    function remove_pharmacy_data($input_array = NULL) {
+        if ($input_array) {
+            $this->db->where('id', $input_array['id']);
+            return $this->db->delete('sales_entry');
+        }
+        return false;
+    }
 }
