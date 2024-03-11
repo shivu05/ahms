@@ -64,9 +64,13 @@
 <?php echo form_close(); ?>
 <script type="text/javascript">    // When the document is ready    
     $(document).ready(function () {
+        $('#gen_form').validate();
         $('.disable').click(function () {
-            $(this).prop('disabled', true);
-            $('#gen_form').submit();
+            if ($('#gen_form').valid()) {
+                $(this).prop('disabled', true);
+                $('#gen_form').submit();
+            }
+            return false;
         });
 
         $('#date').datepicker({
