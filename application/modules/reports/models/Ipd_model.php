@@ -19,8 +19,9 @@ class Ipd_model extends CI_Model {
 
         $return = array();
         $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department',
-            'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge',
-            'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
+            'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', ' COALESCE(admit_time,"00:00") admit_time',
+            'COALESCE(discharge_time,"00:00") discharge_time',
+            'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId', 'status');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 //$where_cond = " WHERE 1=1 ";
@@ -200,5 +201,4 @@ class Ipd_model extends CI_Model {
             return false;
         }
     }
-
 }

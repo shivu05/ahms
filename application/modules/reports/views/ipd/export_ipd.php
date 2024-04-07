@@ -37,8 +37,9 @@
                 echo "<td><center>" . $patients['WardNo'] . "</center></td>";
                 echo "<td><center>" . $patients['BedNo'] . "</center></td>";
                 echo "<td>" . $patients['diagnosis'] . "</td>";
-                echo "<td><center>" . format_date($patients['DoAdmission']) . "</center></td>";
-                echo "<td><center>" . format_date($patients['DoDischarge']) . "</center></td>";
+                echo "<td>" . format_date($patients['DoAdmission']) . " " . $patients['admit_time'] . "</td>";
+                $disch_time = ($patients['status'] == 'stillin') ? '' : $patients['discharge_time'];
+                echo "<td>" . format_date($patients['DoDischarge']) . " " . $disch_time . "</td>";
                 echo "<td><center>" . $patients['NofDays'] . "</center></td>";
                 echo "<td>" . $patients['Doctor'] . "</td>";
                 echo "<td>" . prepare_dept_name($patients['department']) . "</td>";

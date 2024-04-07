@@ -859,6 +859,10 @@ if (!empty($other_proc_list)) {
                                             <label>Admission date: </label>
                                             <input type="text" name="admit_date" id="admit_date" class="form-control date_picker" placeholder="Admission date"/>
                                         </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <label>Time: </label>
+                                            <input type="time" name="admit_time" id="admit_time" class="form-control" placeholder="Time" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

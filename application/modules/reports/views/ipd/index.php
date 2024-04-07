@@ -115,13 +115,17 @@
             {
                 title: "DOA",
                 data: function (item) {
-                    return item.DoAdmission;
+                    return item.DoAdmission + ' ' + item.admit_time;
                 }
             },
             {
                 title: "DOD",
                 data: function (item) {
-                    return item.DoDischarge;
+                    if (item.status === "stillin") {
+                        return item.DoDischarge;
+                    } else {
+                        return item.DoDischarge + ' ' + item.discharge_time;
+                    }
                 }
             },
             {

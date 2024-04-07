@@ -139,10 +139,11 @@ class Test extends SHV_Controller {
 
     function exe_db() {
         $db_list = $this->db->get('vhms_main.db_list')->result_array();
-        echo 'STARTED----------------------------------------------------------------------------------------------</br>';
+        echo 'STARTED<br/>----------------------------------------------------------------------------------------------</br>';
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
-                $updated = $this->db->query("UPDATE " . $row['db_name'] . ".`perm_master` SET `perm_status` = 'Inactive' WHERE perm_code='DELETE_RECORDS'");
+                //$updated = $this->db->query("UPDATE " . $row['db_name'] . ".`perm_master` SET `perm_status` = 'Inactive' WHERE perm_code='DELETE_RECORDS'");
+                $updated = $this->db->query("ALTER TABLE " . $row['db_name'] . ".`inpatientdetails` ADD COLUMN `admit_time` VARCHAR(45) NULL AFTER `sid`, ADD COLUMN `discharge_time` VARCHAR(45) NULL AFTER `admit_time`");
                 if ($updated):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
                 else:
@@ -152,7 +153,7 @@ class Test extends SHV_Controller {
                 sleep(1);
             }
         }
-        echo 'ENDED----------------------------------------------------------------------------------------------</br>';
+        echo 'ENDED<br/>----------------------------------------------------------------------------------------------</br>';
         echo 'Total count is: ' . count($db_list);
         exit;
     }

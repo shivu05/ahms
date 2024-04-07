@@ -8,3 +8,7 @@ CREATE TABLE `swarnaprashana` (
   `dose_time` VARCHAR(45) NULL,
   `consultant` VARCHAR(100) NULL,
   PRIMARY KEY (`id`));
+
+ALTER TABLE `inpatientdetails` 
+ADD COLUMN `admit_time` VARCHAR(45) NULL AFTER `sid`,
+ADD COLUMN `discharge_time` VARCHAR(45) NULL AFTER `admit_time`;

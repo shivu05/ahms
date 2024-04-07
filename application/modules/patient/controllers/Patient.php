@@ -257,12 +257,14 @@ class Patient extends SHV_Controller {
         $this->load->model('patient/treatment_model');
         $ipd = $this->input->post('dis_ipd');
         $discharge_date = $this->input->post('dod');
-        $note = $this->input->post('note');
+        $discharge_time = $this->input->post('discharge_time');
+        $note = $this->input->post('notes');
         $no_of_days = $this->input->post('days');
         $discharge_by = $this->input->post('treated');
 
         $discharge_arr = array(
             'DoDischarge' => $discharge_date,
+            'discharge_time' => $discharge_time,
             'DischargeNotes' => $note,
             'NofDays' => $no_of_days,
             'DischBy' => $discharge_by,

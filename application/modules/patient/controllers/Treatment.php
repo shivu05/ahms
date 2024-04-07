@@ -297,6 +297,7 @@ class Treatment extends SHV_Controller {
                 'Gender' => $this->input->post('gender'),
                 'diagnosis' => $this->input->post('diagnosis'),
                 'DoAdmission' => $this->input->post('admit_date'),
+                'admit_time' => $this->input->post('admit_time'),
                 'Doctor' => $this->input->post('doctor_name'),
                 'department' => $this->input->post('department'),
                 'BedNo' => $this->input->post('bed_no'),

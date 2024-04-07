@@ -81,6 +81,10 @@
                                 <td><input type="text" name="dod" id="dod" class="form-control todate required date_picker" required="required" placeholder="Discharge date" required="required" autocomplete="off"></td>
                             </tr>
                             <tr>
+                                <td>Discharge Time:<span class="err_msg">*</span> </td>
+                                <td><input type="time" name="discharge_time" id="discharge_time" class="form-control todate required" required="required" placeholder="Discharge time" required="required" autocomplete="off"></td>
+                            </tr>
+                            <tr>
                                 <td>Notes:</td>
                                 <td><textarea name="notes" id="notes" class="form-control" placeholder="Notes"></textarea></td>
                             </tr>
@@ -428,28 +432,31 @@ if (!empty($wards)) {
             });
         });
 
+        $('#discharge_form').validate();
         $('#discharge_modal_box').on('click', '#btn-ok', function () {
-            var form_data = $('#discharge_form').serializeArray();
-            $.ajax({
-                url: base_url + 'patient/patient/discharge_patient',
-                type: 'POST',
-                dataType: 'json',
-                data: form_data,
-                success: function (res) {
-                    console.log(res);
-                    if (res == 1) {
-                        patient_table.draw();
-                        $('#discharge_modal_box').modal('hide');
-                        $.notify({
-                            title: "Discharge Complete : ",
-                            message: "Patient discharged successfully",
-                            icon: 'fa fa-check'
-                        }, {
-                            type: "success"
-                        });
+            if ($('#discharge_form').valid()) {
+                var form_data = $('#discharge_form').serializeArray();
+                $.ajax({
+                    url: base_url + 'patient/patient/discharge_patient',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: form_data,
+                    success: function (res) {
+                        console.log(res);
+                        if (res == 1) {
+                            patient_table.draw();
+                            $('#discharge_modal_box').modal('hide');
+                            $.notify({
+                                title: "Discharge Complete : ",
+                                message: "Patient discharged successfully",
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         $('#discharge_form').on('change', '#dod', function () {
