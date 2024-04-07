@@ -13,7 +13,8 @@ class Common_model extends CI_Model {
 
     function get_patient_info_by_ipd($where) {
         $columns = array('p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'i.IpNo',
-            'i.DoAdmission', 'i.DoDischarge', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment', 't.procedures' ,'i.Doctor');
+            'i.DoAdmission', 'i.DoDischarge', 'i.NofDays', 'i.BedNo', 't.diagnosis', 't.Trtment', 't.procedures', 'i.Doctor',
+            ' COALESCE(admit_time,"00:00") admit_time', 'COALESCE(discharge_time,"00:00") discharge_time');
         $this->db->select($columns);
         $this->db->join('patientdata p', 'p.OpdNo=i.OpdNo');
         $this->db->join('ipdtreatment t', 't.ipdno=i.IpNo');
@@ -84,7 +85,9 @@ class Common_model extends CI_Model {
 
         $ipd_info = array(
             'DoAdmission' => $update['DoAdmission'],
+            'admit_time' => $update['admit_time'],
             'DoDischarge' => $update['DoDischarge'],
+            'discharge_time' => $update['discharge_time'],
             'NofDays' => $num_days,
             'diagnosis' => $update['pat_diagnosis'],
             'BedNo' => $update['selected_bed_no'],
@@ -119,5 +122,4 @@ class Common_model extends CI_Model {
         }
         return false;
     }
-
 }

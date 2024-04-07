@@ -172,12 +172,14 @@ if (!empty($wards)) {
                             <div class="form-group">
                                 <label for="DoAdmission">Date of Admission:</label>
                                 <input class="form-control required date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                                <input class="form-control required ipd_dates" id="admit_time" name="admit_time" type="time" placeholder="Time of Admisison">
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label for="DoDischarge">Date of Discharge</label>
                                 <input class="form-control date_picker ipd_dates" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
+                                <input class="form-control required ipd_dates" id="discharge_time" name="discharge_time" type="time" placeholder="Time of Discharge">
                             </div>
                         </div>
                     </div>
@@ -328,13 +330,17 @@ if (!empty($wards)) {
             {
                 title: "DOA",
                 data: function (item) {
-                    return item.DoAdmission;
+                    return item.DoAdmission + ' ' + item.admit_time;
                 }
             },
             {
                 title: "DOD",
                 data: function (item) {
-                    return item.DoDischarge;
+                    if (item.status === "stillin") {
+                        return item.DoDischarge;
+                    } else {
+                        return item.DoDischarge + ' ' + item.discharge_time;
+                    }
                 }
             },
             {
@@ -566,7 +572,18 @@ if (!empty($wards)) {
                         $('#patient_form #opd').val(response.data.OpdNo);
                         $('#patient_form #ipd').val(response.data.IpNo);
                         $('#patient_form #DoAdmission').val(response.data.DoAdmission);
+                        if (response.data.admit_time != "00:00") {
+                            $('#patient_form #admit_time').val(response.data.admit_time);
+                        } else {
+                            $('#patient_form #admit_time').val("");
+                        }
                         $('#patient_form #DoDischarge').val(response.data.DoDischarge);
+                        if (response.data.discharge_time != "00:00") {
+                            $('#patient_form #discharge_time').val(response.data.discharge_time);
+                        } else {
+                            $('#patient_form #discharge_time').val("");
+                        }
+
                         $('#patient_form #NofDays').val(response.data.NofDays);
                         $('#patient_form #pat_assigned_doctor').val(response.data.Doctor);
                         $('#patient_form #pat_diagnosis').val(response.data.diagnosis);

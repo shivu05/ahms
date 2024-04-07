@@ -21,7 +21,8 @@ class Ipd_model extends CI_Model {
         $return = array();
         $columns = array(
             'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE((ip.department),"_"," ")) department', 'WardNo', 'BedNo',
-            'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis','t.procedures', 'ip.status', 'NofDays'
+            'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis', 't.procedures', 'ip.status', 'NofDays',
+            ' COALESCE(admit_time,"00:00") admit_time', 'COALESCE(discharge_time,"00:00") discharge_time'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
@@ -113,5 +114,4 @@ class Ipd_model extends CI_Model {
         $return['total_rows'] = $this->db->count_all('inpatientdetails');
         return $return;
     }
-
 }
