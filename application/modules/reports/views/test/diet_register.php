@@ -48,6 +48,30 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="diet_delete_modal_box" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="modal-title" id="delete_modal_label">Confirmation</h5>
+            </div>
+            <div class="modal-body" id="delete_modal_body">
+                <form name="delete_form" id="delete_form" method="POST">
+                    <p>Are your sure to delete the diet records of IPD <span id="ipd_no_del"></span> ? </p>
+                    <input type="hidden" name="id" id="id" value=""/>
+                    <input type="hidden" name="tab" id="tab" value="<?= base64_encode('diet_register') ?>"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-remove"></i> Cancel</button>
+                <button type="button" class="btn btn-danger" id="btn-delete"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         var is_admin = '<?= $is_admin ?>';
@@ -137,7 +161,8 @@
             columns.push({
                 title: 'Action',
                 data: function (item) {
-                    return "<center>" + "<i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i>" + "</center>";
+                    return "<center>" + "<i class='fa fa-edit hand_cursor edit' data-id='" + item.ID + "'></i> | " +
+                            "<i class='fa fa-trash hand_cursor text-danger delete' data-id='" + item.ID + "'></i>" + "</center>";
                 }
             });
         }
@@ -185,16 +210,46 @@
                 $('#diet_modal_box #edit_form #evening').val(data.evening);
                 $('#diet_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
             });
-            $('#edit_form').validate({
-                messages: {
-                    morning: {required: 'Morning diet is empty'},
-                    after_noon: {required: 'After noon diet is empty'},
-                    evening: {required: 'Evening diet is empty'}
+
+            $('#patient_table tbody').on('click', '.delete', function () {
+                var data = patient_table.row($(this).closest('tr')).data();
+                $('#diet_delete_modal_box #delete_form #id').val(data.ID);
+                $('#diet_delete_modal_box #delete_form #ipd_no_del').val(data.ipd_no);
+                $('#diet_delete_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+            });
+        }
+
+        $('#diet_delete_modal_box').on('click', '#btn-delete', function () {
+            var form_data = $('#delete_form').serializeArray();
+            $.ajax({
+                url: base_url + 'remove_data',
+                type: 'POST',
+                dataType: 'json',
+                data: form_data,
+                success: function (res) {
+                    $('#diet_delete_modal_box').modal('hide');
+                    if (res.status) {
+                        $.notify({
+                            title: "Diet:",
+                            message: res.msg,
+                            icon: 'fa fa-check'
+                        }, {
+                            type: "success"
+                        });
+                        $('#search_form #search').trigger('click');
+                    } else {
+                        $.notify({
+                            title: "Diet:",
+                            message: res.msg,
+                            icon: 'fa fa-remove'
+                        }, {
+                            type: "danger"
+                        });
+                    }
                 }
             });
+        });
 
-
-        }
         $('#diet_modal_box').on('click', '#btn-update', function () {
             if ($('#edit_form').valid()) {
                 var form_data = $('#edit_form').serializeArray();

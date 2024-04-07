@@ -173,5 +173,7 @@ $route['store-swarnaprashana'] = 'patient/treatment/store_swarnaprashana';
 
 $route['fetch-patient-repo'] = 'reports/patient_reports/fetch_patient_repo';
 
+$route['remove_data'] = 'common_methods/delete_records';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
