@@ -1157,7 +1157,7 @@ class Treatment extends SHV_Controller {
             $this->load->model('swarnaprashana');
             $is_inserted = false;
             $age = $this->swarnaprashana->get_patient_age($post_values['opd'], array('Age'));
-            if ($age > 15) {
+            if ($age['Age'] > 15) {
                 echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Age can not be greater than 15', 'type' => 'danger'));
                 exit;
             }

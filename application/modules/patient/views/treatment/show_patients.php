@@ -486,7 +486,7 @@ if (!empty($other_proc_list)) {
                                         <div class="form-group col-sm-10 col-md-10">
                                             <label for="date_month required" class="col-md-4 col-sm-4 control-label required">Date and Month of Swarnaprashana:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                <input id="date_month" type="text" name="date_month" class="form-control swarnaprashana_inputs required" placeholder="Select Month & year" autocomplete="off">
+                                                <input id="date_month" type="text" name="date_month" class="form-control swarnaprashana_inputs date_picker required" placeholder="Select date" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-10 col-md-10">
@@ -523,12 +523,12 @@ if (!empty($other_proc_list)) {
 
     $(document).ready(function () {
 
-        $('#swarnaprashana_form #date_month').datepicker({
+        /*$('#swarnaprashana_form #date_month').datepicker({
             format: 'MM yyyy',
             viewMode: "months",
             minViewMode: "months",
             autoclose: true
-        });
+        });*/
 
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');

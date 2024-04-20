@@ -35,4 +35,58 @@ class Patient_reports extends CI_Model {
         }
         return false;
     }
+
+    function get_swarnaprashana_report($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array('k.opd_no', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
+            'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
+            '(REPLACE((t.department),"_"," ")) department', 'sub_department sub_dept', 'date_month', 'dose_time', 'consultant');
+
+        $where_cond = " WHERE k.opd_no=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND date_month >='" . $conditions['start_date'] . "'
+                AND date_month <='" . $conditions['end_date'] . "'";
+        //$where_cond = " WHERE 1=1 ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
+            FROM swarnaprashana k
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
+            $where_cond ORDER BY date_month ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM swarnaprashana k
+            JOIN treatmentdata t ON k.opd_no=t.OpdNo AND k.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
 }

@@ -26,4 +26,6 @@ class Patient_report_model extends CI_Model {
         }
         return false;
     }
+
+    
 }
