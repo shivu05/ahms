@@ -2,8 +2,8 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-pulse"></i> Swarnaprashana:</h3>
-                <a class="btn btn-warning btn-sm pull-right" href="<?php echo base_url('other-procedure-statistics'); ?>">Statistics</a>
-                <a class="btn btn-info btn-sm pull-right" style="margin-right:10px;" target="_blank" href="<?php echo base_url('reports/Test/export_otherprocedures_full'); ?>">Export all data</a>
+                <!--<a class="btn btn-warning btn-sm pull-right" href="<?php echo base_url('other-procedure-statistics'); ?>">Statistics</a>
+                <a class="btn btn-info btn-sm pull-right" style="margin-right:10px;" target="_blank" href="<?php echo base_url('reports/Test/export_otherprocedures_full'); ?>">Export all data</a>-->
             </div>
             <div class="box-body">
                 <?php echo $top_form; ?>

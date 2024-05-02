@@ -142,9 +142,29 @@ class Test extends SHV_Controller {
         echo 'STARTED<br/>----------------------------------------------------------------------------------------------</br>';
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
-                //$updated = $this->db->query("UPDATE " . $row['db_name'] . ".`perm_master` SET `perm_status` = 'Inactive' WHERE perm_code='DELETE_RECORDS'");
-                $updated = $this->db->query("ALTER TABLE " . $row['db_name'] . ".`inpatientdetails` ADD COLUMN `admit_time` VARCHAR(45) NULL AFTER `sid`, ADD COLUMN `discharge_time` VARCHAR(45) NULL AFTER `admit_time`");
-                if ($updated):
+                $perm_params = array(
+                    'perm_code' => 'SWARNAPRASHANA',
+                    'perm_desc' => 'Swarnaprashana',
+                    'perm_order' => 9,
+                    'perm_label' => 9,
+                    'perm_parent' => 8,
+                    'perm_class' => '',
+                    'perm_url' => 'list-swarnaprashana',
+                    'perm_status' => 'Active',
+                    'perm_icon' => 'fa fa-list',
+                    'last_updated_id' => 1
+                );
+                $perm_master = $this->db->insert('perm_master', $perm_params);
+                $insert_id = $this->db->insert_id();
+                $role_params = array(
+                    'role_id' => 1,
+                    'perm_id' => $insert_id,
+                    'status' => 'Active',
+                    'last_updated_id' => 1,
+                    'access_perm' => 2
+                );
+                $role_perm = $this->db->insert('role_perm', $role_params);
+                if ($perm_master && $role_perm):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
                 else:
                     echo 'Failed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
