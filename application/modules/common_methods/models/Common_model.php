@@ -53,7 +53,7 @@ class Common_model extends CI_Model {
 
     function get_laboratory_investigation_list($tests) {
         if (!empty($tests)) {
-            $query = "SELECT * FROM lab_investigations l where lab_test_id ='" . $tests . "'";
+            $query = "SELECT * FROM lab_investigations l where lab_test_id ='" . $tests . "' AND test_status='ACTIVE'";
             return $this->db->query($query)->result_array();
         } else {
             return NULL;

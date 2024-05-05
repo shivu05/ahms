@@ -6,6 +6,14 @@ if (!empty($categories)) {
     }
 }
 ?>
+<style>
+    td[data-result-val="N"] {
+        color: red;
+    }
+    td[data-result-val="Y"] {
+        color: green;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="box box-primary">
@@ -24,11 +32,13 @@ if (!empty($categories)) {
                             <th>Test name</th>
                             <th>Investigation</th>
                             <th>Test reference</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
+                        //pma($result_set,1);
                         if (!empty($result_set)) {
                             $i = 0;
                             $tr = '';
@@ -40,6 +50,7 @@ if (!empty($categories)) {
                                 $tr .= '<td>' . $row['lab_test_name'] . '</td>';
                                 $tr .= '<td>' . $row['lab_inv_name'] . '</td>';
                                 $tr .= '<td class="lab_test_range">' . $row['lab_test_reference'] . '</td>';
+                                $tr .= '<td data-result-val="' . $row['inv_color'] . '" class="lab_test_status">' . $row['test_status'] . '</td>';
                                 $tr .= '<td><i class="fa fa-edit hand_cursor text-primary edit_lab" data-inv_id="' . $row['lab_inv_id'] . '"></i></td>';
                                 $tr .= '</tr>';
                             }
@@ -68,6 +79,13 @@ if (!empty($categories)) {
                             <label class="control-label">Test range:</label>
                             <input type="hidden" name="inv_id" id="inv_id"/>
                             <input class="form-control" type="text" placeholder="Test range" name="test_range" id="test_range" required="required" autocomplete="off">
+                        </div>
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label class="control-label">Test status:</label>
+                            <select class="form-control" name='test_status' id="test_status" required='required'>
+                                <option value='ACTIVE'>ACTIVE</option>
+                                <option value="INACTIVE">INACTIVE</option>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -199,10 +217,12 @@ if (!empty($categories)) {
         $('#lab_info_table').dataTable();
         $('#lab_info_table').on('click', '.edit_lab', function () {
             var inv_id = $(this).data('inv_id');
-            var range = $(this).closest('td').prev('.lab_test_range').text();
+            var range = $(this).closest('td').prev('td').prev('.lab_test_range').text();
+            var status = $(this).closest('td').prev('.lab_test_status').text();
             $('#test_form #inv_id').val(inv_id);
             $('#test_form #test_range').val(range);
-            $('#test_modal_box').modal('show');
+            $('#test_form #test_status').val(status).trigger('change');
+            $('#test_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
         });
         $('#test_modal_box').on('click', '#btn-ok', function () {
             var form_data = $('#test_form').serializeArray();
@@ -295,7 +315,7 @@ if (!empty($categories)) {
                     $.notify({
                         title: res.title,
                         message: res.msg,
-                        icon: 'fa fa-check',
+                        icon: 'fa fa-check'
                     }, {
                         type: res.type,
                     });

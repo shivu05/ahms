@@ -26,9 +26,11 @@ class Laboratory extends SHV_Controller {
     function update_lab_reference() {
         if ($this->input->is_ajax_request()) {
             $test_range = $this->input->post('test_range');
+            $test_status = $this->input->post('test_status');
             $inv_id = $this->input->post('inv_id');
             $update_arr = array(
-                'lab_test_reference' => $test_range
+                'lab_test_reference' => $test_range,
+                'test_status' => $test_status
             );
             $is_updated = $this->lab_investigations->update($update_arr, $inv_id);
             if ($is_updated) {
@@ -171,5 +173,4 @@ class Laboratory extends SHV_Controller {
             echo json_encode(array('data' => $options));
         }
     }
-
 }
