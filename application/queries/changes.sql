@@ -25,7 +25,7 @@ CREATE TABLE autoclave_register (
 
 
 ALTER TABLE `lab_investigations` 
-ADD COLUMN `status` VARCHAR(45) NULL DEFAULT 'ACTIVE' AFTER `lab_test_reference`;
+ADD COLUMN `test_status` VARCHAR(45) NULL DEFAULT 'ACTIVE' AFTER `lab_test_reference`;
 ALTER TABLE `lab_investigations` 
 CHANGE COLUMN `status` `test_status` VARCHAR(45) NULL DEFAULT 'ACTIVE' ;
 
