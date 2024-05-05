@@ -178,5 +178,10 @@ $route['fetch-patient-repo'] = 'reports/patient_reports/fetch_patient_repo';
 
 $route['remove_data'] = 'common_methods/delete_records';
 
+$route['autoclave-register'] = 'register/autoclave/index';
+$route['fetch-autoclave-list'] = 'register/autoclave/fetch_list';
+$route['print-autoclave-list'] = 'register/autoclave/export_data';
+$route['store-autoclave-indfo'] = 'register/autoclave/store_data';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

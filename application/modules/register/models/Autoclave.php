@@ -7,9 +7,7 @@
  */
 class Autoclave extends SHV_Model {
 
-    private $_table_name = 'autoclave_register';
-
     public function __construct() {
-        parent::__construct($this->_table_name);
+        parent::__construct('autoclave_register');
     }
 }
