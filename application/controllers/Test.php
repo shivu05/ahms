@@ -142,6 +142,7 @@ class Test extends SHV_Controller {
         echo 'STARTED<br/>----------------------------------------------------------------------------------------------</br>';
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
+                echo 'for DB: ' . $row['db_name'] . '--!';
                 /* $perm_params = array(
                   'perm_code' => 'SWARNAPRASHANA',
                   'perm_desc' => 'Swarnaprashana',
@@ -164,7 +165,15 @@ class Test extends SHV_Controller {
                   'access_perm' => 2
                   );
                   $role_perm = $this->db->insert('role_perm', $role_params); */
-                $alter = $this->db->query("ALTER TABLE `lab_investigations`  ADD COLUMN `test_status` VARCHAR(45) NULL DEFAULT 'ACTIVE' AFTER `lab_test_reference`");
+                $alter = $this->db->query("CREATE TABLE `autoclave_register` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `DrumNo` varchar(50) DEFAULT NULL,
+                `DrumStartTime` datetime DEFAULT NULL,
+                `DrumEndTime` datetime DEFAULT NULL,
+                `SupervisorName` varchar(150) DEFAULT NULL,
+                `Remarks` text DEFAULT NULL,
+                PRIMARY KEY (`id`)
+              ) ENGINE=InnoDB AUTO_INCREMENT=1");
                 if ($alter):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
                 else:

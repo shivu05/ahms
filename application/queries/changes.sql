@@ -29,3 +29,9 @@ ADD COLUMN `test_status` VARCHAR(45) NULL DEFAULT 'ACTIVE' AFTER `lab_test_refer
 ALTER TABLE `lab_investigations` 
 CHANGE COLUMN `status` `test_status` VARCHAR(45) NULL DEFAULT 'ACTIVE' ;
 
+INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_url`, `perm_status`, `perm_icon`, `last_updated_id`) VALUES ('REGISTER', 'Registers', '8', '8', '0', '#', 'Active', 'fa fa-book', '1');
+INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_url`, `perm_status`, `perm_icon`, `last_updated_id`) VALUES ('AUTOCLAVE', 'Autoclave', '1', '1', '60', 'autoclave-register', 'Active', 'fa fa-book', '1');
+
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '60', 'Active', '1', '2');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '61', 'Active', '1', '2');
+
