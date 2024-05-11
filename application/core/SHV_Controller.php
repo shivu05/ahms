@@ -27,7 +27,7 @@ class SHV_Controller extends MX_Controller {
     }
 
     /**
-     * @param: String dvs / ''
+     * @param: String ahms / ''
      * @return: NA
      * @desc: To initialize rest client for both dvs and ems
      * @author: Shivaraj B
@@ -36,7 +36,6 @@ class SHV_Controller extends MX_Controller {
 
         $this->Ipaddress = 'localhost';
         $this->Config = array(
-            //'server' => 'http://' . $this->Ipaddress . '/ion.dvs/5_Coding/Branches/dvs_ide_1.6_work/',
             'server' => APP_BASE,
             'http_auth' => 'basic',
             'http_user' => 'admin',
@@ -141,5 +140,4 @@ class SHV_Controller extends MX_Controller {
             return 'N';
         }
     }
-
 }

@@ -183,5 +183,7 @@ $route['fetch-autoclave-list'] = 'register/autoclave/fetch_list';
 $route['print-autoclave-list'] = 'register/autoclave/export_data';
 $route['store-autoclave-indfo'] = 'register/autoclave/store_data';
 
+$route['manage-beds'] = 'master/beds';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

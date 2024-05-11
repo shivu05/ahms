@@ -315,7 +315,7 @@ $config['rest_ip_blacklist'] = '';
   | 127.0.0.1 and 0.0.0.0 are allowed by default
   |
  */
-$config['rest_ip_whitelist'] = '10.91.40.30';
+$config['rest_ip_whitelist'] = '';
 
 /* End of file config.php */
 /* Location: ./system/application/config/rest.php */

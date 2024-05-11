@@ -262,8 +262,14 @@ class treatment_model extends CI_Model {
     }
 
     public function update_bed_details($opd_id) {
+        $update_data = array(
+            'OpdNo' => NULL,
+            'bedstatus' => 'Available',
+            'treatId' => NULL,
+            'IpNo' => NULL
+        );
         $this->db->where('OpdNo', $opd_id);
-        return $this->db->update('bed_details', array('bedstatus' => 'Available'));
+        return $this->db->update('bed_details', $update_data);
     }
 
     public function discharge_patient($ipd, $discharge) {

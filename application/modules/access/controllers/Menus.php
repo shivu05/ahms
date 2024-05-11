@@ -12,7 +12,7 @@ class Menus extends SHV_Controller {
             redirect('login');
         }
         $this->load->model('perm_master');
-        $this->initialize_rest_client('ahms');
+        $this->initialize_rest_client();
         $this->layout->title="Menus";
     }
 
