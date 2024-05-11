@@ -143,38 +143,38 @@ class Test extends SHV_Controller {
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
                 echo 'for DB: ' . $row['db_name'] . '--!';
-                /* $perm_params = array(
-                  'perm_code' => 'SWARNAPRASHANA',
-                  'perm_desc' => 'Swarnaprashana',
-                  'perm_order' => 9,
-                  'perm_label' => 9,
-                  'perm_parent' => 8,
-                  'perm_class' => '',
-                  'perm_url' => 'list-swarnaprashana',
-                  'perm_status' => 'Active',
-                  'perm_icon' => 'fa fa-list',
-                  'last_updated_id' => 1
-                  );
-                  $perm_master = $this->db->insert('perm_master', $perm_params);
-                  $insert_id = $this->db->insert_id();
-                  $role_params = array(
-                  'role_id' => 1,
-                  'perm_id' => $insert_id,
-                  'status' => 'Active',
-                  'last_updated_id' => 1,
-                  'access_perm' => 2
-                  );
-                  $role_perm = $this->db->insert('role_perm', $role_params); */
-                $alter = $this->db->query("CREATE TABLE `autoclave_register` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `DrumNo` varchar(50) DEFAULT NULL,
-                `DrumStartTime` datetime DEFAULT NULL,
-                `DrumEndTime` datetime DEFAULT NULL,
-                `SupervisorName` varchar(150) DEFAULT NULL,
-                `Remarks` text DEFAULT NULL,
-                PRIMARY KEY (`id`)
-              ) ENGINE=InnoDB AUTO_INCREMENT=1");
-                if ($alter):
+                $perm_params = array(
+                    'perm_code' => 'BED_MANAGEMENT',
+                    'perm_desc' => 'Bed management',
+                    'perm_order' => 10,
+                    'perm_label' => 10,
+                    'perm_parent' => 2,
+                    'perm_class' => '',
+                    'perm_url' => 'manage-beds',
+                    'perm_status' => 'Active',
+                    'perm_icon' => 'fa fa-list',
+                    'last_updated_id' => 1
+                );
+                $perm_master = $this->db->insert('perm_master', $perm_params);
+                $insert_id = $this->db->insert_id();
+                $role_params = array(
+                    'role_id' => 1,
+                    'perm_id' => $insert_id,
+                    'status' => 'Active',
+                    'last_updated_id' => 1,
+                    'access_perm' => 2
+                );
+                $role_perm = $this->db->insert('role_perm', $role_params);
+                /*             $alter = $this->db->query("CREATE TABLE `autoclave_register` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `DrumNo` varchar(50) DEFAULT NULL,
+                  `DrumStartTime` datetime DEFAULT NULL,
+                  `DrumEndTime` datetime DEFAULT NULL,
+                  `SupervisorName` varchar(150) DEFAULT NULL,
+                  `Remarks` text DEFAULT NULL,
+                  PRIMARY KEY (`id`)
+                  ) ENGINE=InnoDB AUTO_INCREMENT=1"); */
+                if ($perm_master && $role_perm):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
                 else:
                     echo 'Failed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
