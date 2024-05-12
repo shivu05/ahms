@@ -155,7 +155,7 @@ class Test extends SHV_Controller {
                     'perm_icon' => 'fa fa-list',
                     'last_updated_id' => 1
                 );
-                $perm_master = $this->db->insert('perm_master', $perm_params);
+                $perm_master = $this->db->insert($row['db_name'] . '.perm_master', $perm_params);
                 $insert_id = $this->db->insert_id();
                 $role_params = array(
                     'role_id' => 1,
@@ -164,7 +164,7 @@ class Test extends SHV_Controller {
                     'last_updated_id' => 1,
                     'access_perm' => 2
                 );
-                $role_perm = $this->db->insert('role_perm', $role_params);
+                $role_perm = $this->db->insert($row['db_name'] . '.role_perm', $role_params);
                 //$alter = $this->db->query("");
                 if ($perm_master && $role_perm):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
