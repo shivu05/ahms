@@ -143,29 +143,40 @@ class Test extends SHV_Controller {
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
                 echo 'for DB: ' . $row['db_name'] . '--!';
-                /*$perm_params = array(
-                    'perm_code' => 'BED_MANAGEMENT',
-                    'perm_desc' => 'Bed management',
-                    'perm_order' => 10,
-                    'perm_label' => 10,
-                    'perm_parent' => 2,
-                    'perm_class' => '',
-                    'perm_url' => 'manage-beds',
-                    'perm_status' => 'Active',
-                    'perm_icon' => 'fa fa-list',
-                    'last_updated_id' => 1
-                );
-                $perm_master = $this->db->insert('perm_master', $perm_params);
-                $insert_id = $this->db->insert_id();
-                $role_params = array(
-                    'role_id' => 1,
-                    'perm_id' => $insert_id,
-                    'status' => 'Active',
-                    'last_updated_id' => 1,
-                    'access_perm' => 2
-                );
-                $role_perm = $this->db->insert('role_perm', $role_params);*/
-                $alter = $this->db->query("update bed_details set OpdNo=NULL,treatID=NULL,IpNo=NULL where bedstatus='Available'");
+                /* $perm_params = array(
+                  'perm_code' => 'BED_MANAGEMENT',
+                  'perm_desc' => 'Bed management',
+                  'perm_order' => 10,
+                  'perm_label' => 10,
+                  'perm_parent' => 2,
+                  'perm_class' => '',
+                  'perm_url' => 'manage-beds',
+                  'perm_status' => 'Active',
+                  'perm_icon' => 'fa fa-list',
+                  'last_updated_id' => 1
+                  );
+                  $perm_master = $this->db->insert('perm_master', $perm_params);
+                  $insert_id = $this->db->insert_id();
+                  $role_params = array(
+                  'role_id' => 1,
+                  'perm_id' => $insert_id,
+                  'status' => 'Active',
+                  'last_updated_id' => 1,
+                  'access_perm' => 2
+                  );
+                  $role_perm = $this->db->insert('role_perm', $role_params); */
+                $alter = $this->db->query("CREATE TABLE `fumigation_register` (
+                                            `id` INT NOT NULL AUTO_INCREMENT,
+                                            `fumigation_mothod` VARCHAR(200) NULL,
+                                            `chemical_used` VARCHAR(250) NULL,
+                                            `start_time` VARCHAR(45) NULL,
+                                            `end_time` VARCHAR(45) NULL,
+                                            `ot_number` VARCHAR(45) NULL,
+                                            `neutralization` VARCHAR(200) NULL,
+                                            `superviser_name` VARCHAR(100) NULL,
+                                            `remarks` VARCHAR(200) NULL,
+                                            `f_date` DATE NULL,
+                                            PRIMARY KEY (`id`))");
                 if ($alter):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
                 else:

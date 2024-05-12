@@ -183,6 +183,11 @@ $route['fetch-autoclave-list'] = 'register/autoclave/fetch_list';
 $route['print-autoclave-list'] = 'register/autoclave/export_data';
 $route['store-autoclave-indfo'] = 'register/autoclave/store_data';
 
+$route['fumigation-register'] = 'register/fumigation/index';
+$route['fetch-fumigation-list'] = 'register/fumigation/fetch_list';
+$route['print-fumigation-list'] = 'register/fumigation/export_data';
+$route['store-fumigation-info'] = 'register/fumigation/store_data';
+
 $route['manage-beds'] = 'master/beds';
 
 $route['404_override'] = '';

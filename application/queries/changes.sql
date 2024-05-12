@@ -35,3 +35,22 @@ INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`,
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '60', 'Active', '1', '2');
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '61', 'Active', '1', '2');
 
+
+CREATE TABLE `fumigation_register` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `fugimation_mothod` VARCHAR(200) NULL,
+  `chemical_used` VARCHAR(250) NULL,
+  `start_time` VARCHAR(45) NULL,
+  `end_time` VARCHAR(45) NULL,
+  `ot_number` VARCHAR(45) NULL,
+  `neutralization` VARCHAR(200) NULL,
+  `superviser_name` VARCHAR(100) NULL,
+  `remarks` VARCHAR(200) NULL,
+  `f_date` DATE NULL,
+  PRIMARY KEY (`id`));
+ALTER TABLE `fumigation_register` 
+CHANGE COLUMN `fugimation_mothod` `fumigation_mothod` VARCHAR(200) NULL DEFAULT NULL ;
+
+INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_url`, `perm_status`, `perm_icon`, `last_updated_id`)
+ VALUES ('AUTOCLAVE', 'Autoclave', '1', '1', '60', 'autoclave-register', 'Active', 'fa fa-book', '1');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '61', 'Active', '1', '2');
