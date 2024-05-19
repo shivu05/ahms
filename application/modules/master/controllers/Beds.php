@@ -21,7 +21,12 @@ class Beds extends SHV_Controller {
         $this->layout->render();
     }
 
-    public function fetch_beds_list() {
-        
+    public function bed_allocation() {
+        $this->load->model('master/bed_details');
+        $data['beds_list'] = $this->bed_details->all();
+        $this->load->model('master/bed_details');
+        $data['beds_list'] = $this->bed_details->all();
+        $this->layout->data = $data;
+        $this->layout->render();
     }
 }

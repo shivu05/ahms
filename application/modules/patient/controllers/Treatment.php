@@ -837,15 +837,20 @@ class Treatment extends SHV_Controller {
             $pat_table .= "<td width='50%'><b>DATE:</b> " . $treat_data['CameOn'] . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
-            $pat_table .= "<td width='50%'><b>Name:</b> " . $treat_data['FirstName'] . "</td>";
+            $pat_table .= "<td width='50%'><b>NAME:</b> " . $treat_data['FirstName'] . "</td>";
             $pat_table .= "<td width='50%'><b>AGE:</b> " . $treat_data['Age'] . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>GENDER:</b> </td>";
+            $pat_table .= "<td width='50%'><b>OCCUPATION:</b> </td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
             $pat_table .= "<td width='50%'><b>ADDRESS:</b>  " . $treat_data['address'] . $treat_data['city'] . "</td>";
-            $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . "</td>";
+            $pat_table .= "<td width='50%'><b>MARITAL STATUS:</b> MARRIED | UNMARRIED</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
             $pat_table .= "<td width='50%'><b>DOCTOR:</b> " . $treat_data['AddedBy'] . " </td>";
+            $pat_table .= "<td width='50%'><b>DEPARTMENT:</b> " . ucfirst(strtolower(str_replace('_', ' ', $treat_data['department']))) . " </td>";
             $pat_table .= "</tr>";
             $pat_table .= "</table><hr/>";
 
@@ -884,6 +889,7 @@ class Treatment extends SHV_Controller {
             $treat_table .= "<tr>";
             $treat_table .= "<td style='font-size:10pt' width='50%'>Pulse:</td>";
             $treat_table .= "<td style='font-size:10pt' width='50%'>BP:</td>";
+            $treat_table .= "<td style='font-size:10pt' width='50%'>Height:</td>";
             $treat_table .= "</tr>";
             $treat_table .= "<tr>";
             $treat_table .= "<td style='font-size:10pt' width='50%'>Resp Rate:</td>";
