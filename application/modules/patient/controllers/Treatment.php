@@ -841,7 +841,7 @@ class Treatment extends SHV_Controller {
             $pat_table .= "<td width='50%'><b>AGE:</b> " . $treat_data['Age'] . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
-            $pat_table .= "<td width='50%'><b>GENDER:</b> </td>";
+            $pat_table .= "<td width='50%'><b>GENDER:</b> " . $treat_data['gender'] . "</td>";
             $pat_table .= "<td width='50%'><b>OCCUPATION:</b> </td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
