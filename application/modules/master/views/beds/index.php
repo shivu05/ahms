@@ -5,7 +5,7 @@ function show_bed_status($data) {
         return '<i class="fa fa-bed fa-2x text-success" style="cursor: pointer;" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Available"></i>';
     } else {
         return '<i class="fa fa-bed fa-2x disabled text-warning" style="cursor: pointer;" aria-hidden="true" aria-hidden="true" data-toggle="tooltip" data-placement="left" '
-                . ' title="Not Available: OPD - ' . $data["OpdNo"] . '"></i>';
+                . ' title="Not Available: OPD - ' . $data["OpdNo"] . ' IPD - ' . $data["IpNo"] . '"></i>';
     }
 }
 ?>
@@ -21,6 +21,7 @@ function show_bed_status($data) {
                     <th>Ward</th>
                     <th>Department</th>
                     <th>C.OPD</th>
+                    <th>C.IPD</th>
                     <th>Status</th>
                     </thead>
                     <tbody>
@@ -34,6 +35,7 @@ function show_bed_status($data) {
                                 $tr .= '<td>' . $row['wardno'] . '</td>';
                                 $tr .= '<td>' . $row['department'] . '</td>';
                                 $tr .= '<td>' . $row['OpdNo'] . '</td>';
+                                $tr .= '<td>' . $row['IpNo'] . '</td>';
                                 $tr .= '<td>' . show_bed_status($row) . '</td>';
                                 $tr .= '</tr>';
                             }
