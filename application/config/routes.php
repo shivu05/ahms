@@ -189,6 +189,7 @@ $route['print-fumigation-list'] = 'register/fumigation/export_data';
 $route['store-fumigation-info'] = 'register/fumigation/store_data';
 
 $route['manage-beds'] = 'master/beds';
+$route['update-bed'] = 'master/beds/update';
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
