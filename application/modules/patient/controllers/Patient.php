@@ -272,7 +272,7 @@ class Patient extends SHV_Controller {
         );
 
         $opd_data = $this->treatment_model->get_opd_by_ipd($ipd);
-        $this->treatment_model->update_bed_details($opd_data['OpdNo']);
+        $this->treatment_model->update_bed_details($opd_data['BedNo']);
         $is_updated = $this->treatment_model->discharge_patient($ipd, $discharge_arr);
         $this->add_nursing_indent($ipd);
         if ($is_updated) {

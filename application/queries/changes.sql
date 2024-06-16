@@ -54,3 +54,7 @@ CHANGE COLUMN `fugimation_mothod` `fumigation_mothod` VARCHAR(200) NULL DEFAULT 
 INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_url`, `perm_status`, `perm_icon`, `last_updated_id`)
  VALUES ('AUTOCLAVE', 'Autoclave', '1', '1', '60', 'autoclave-register', 'Active', 'fa fa-book', '1');
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '61', 'Active', '1', '2');
+
+
+ALTER TABLE `bed_details` 
+ADD COLUMN `bed_category` VARCHAR(45) NULL AFTER `IpNo`;

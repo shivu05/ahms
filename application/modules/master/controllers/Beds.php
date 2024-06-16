@@ -34,7 +34,8 @@ class Beds extends SHV_Controller {
             $post_values = $this->input->post();
             $this->load->model('master/bed_details');
             $data = array(
-                'department' => $post_values['department']
+                'department' => $post_values['department'],
+                'bed_category' => $post_values['bed_category']
             );
             $is_updated = $this->bed_details->update($data, array('id' => $post_values['id']));
             if ($is_updated) {

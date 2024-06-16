@@ -179,7 +179,7 @@ if (!empty($wards)) {
                             <div class="form-group">
                                 <label for="DoDischarge">Date of Discharge</label>
                                 <input class="form-control date_picker ipd_dates" id="DoDischarge" name="DoDischarge" type="text" placeholder="Date of Discharge">
-                                <input class="form-control required ipd_dates" id="discharge_time" name="discharge_time" type="time" placeholder="Time of Discharge">
+                                <input class="form-control ipd_dates" id="discharge_time" name="discharge_time" type="time" placeholder="Time of Discharge">
                             </div>
                         </div>
                     </div>
@@ -448,7 +448,6 @@ if (!empty($wards)) {
                     dataType: 'json',
                     data: form_data,
                     success: function (res) {
-                        console.log(res);
                         if (res == 1) {
                             patient_table.draw();
                             $('#discharge_modal_box').modal('hide');
@@ -467,7 +466,7 @@ if (!empty($wards)) {
 
         $('#discharge_form').on('change', '#dod', function () {
             var doa = $('#dis_doa').val();
-            var dod = $('#dod').val();
+            var dod = trim($('#dod').val());
 
             $.ajax({
                 url: base_url + 'patient/patient/date_difference/',
@@ -484,7 +483,7 @@ if (!empty($wards)) {
 
         $('#patient_form').on('change', '.ipd_dates', function () {
             var doa = $('#DoAdmission').val();
-            var dod = $('#DoDischarge').val();
+            var dod = trim($('#DoDischarge').val());
             if (doa && dod) {
                 $.ajax({
                     url: base_url + 'patient/patient/date_difference/',

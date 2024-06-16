@@ -11,7 +11,8 @@ function show_bed_status($data) {
 
 function validate_edit($data) {
     if ($data['bedstatus'] == 'Available') {
-        return '<i class="fa fa-edit fa-1x text-primary edit_bed_loc" data-dept="' . $data['department'] . '" data-bed_id="' . $data['id'] . '" style="cursor: pointer;" aria-hidden="true" data-toggle="tooltip" data-placement="left"></i>';
+        return '<i class="fa fa-edit fa-1x text-primary edit_bed_loc" data-dept="' . $data['department'] . '" data-bed_id="' . $data['id'] . '" '
+                . ' data-bed_type="'.$data['bed_category'].'" style="cursor: pointer;" aria-hidden="true" data-toggle="tooltip" data-placement="left"></i>';
     } else {
         return '<i class="fa fa-edit fa-1x disabled text-warning" style="cursor: pointer;" aria-hidden="true" aria-hidden="true" data-toggle="tooltip" data-placement="left" '
                 . ' title="Please discharge patient to update bed details"></i>';
@@ -28,6 +29,7 @@ function validate_edit($data) {
                     <th>Sl.No</th>
                     <th>Bed No</th>
                     <th>Ward</th>
+                    <th>Type</th>
                     <th>Department</th>
                     <th>C.OPD</th>
                     <th>C.IPD</th>
@@ -43,6 +45,7 @@ function validate_edit($data) {
                                 $tr .= '<td>' . $row['id'] . '</td>';
                                 $tr .= '<td>' . $row['bedno'] . '</td>';
                                 $tr .= '<td>' . $row['wardno'] . '</td>';
+                                $tr .= '<td>' . $row['bed_category'] . '</td>';
                                 $tr .= '<td>' . $row['department'] . '</td>';
                                 $tr .= '<td>' . $row['OpdNo'] . '</td>';
                                 $tr .= '<td>' . $row['IpNo'] . '</td>';
@@ -88,6 +91,16 @@ function validate_edit($data) {
                             ?>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="bed_category">Bed category:</label>
+                        <select name="bed_category" id="bed_category" class="form-control" required="required">
+                            <option value="">Select Category</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="general">General</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -111,6 +124,7 @@ function validate_edit($data) {
         $('#bed_list_grid').on('click', '.edit_bed_loc', function () {
             $('#bed_form #id').val($(this).data('bed_id'));
             $('#bed_form #department').val($(this).data('dept'));
+            $('#bed_form #bed_category').val($(this).data('bed_type'));
             $('#bed_modal_box').modal('show');
         });
 

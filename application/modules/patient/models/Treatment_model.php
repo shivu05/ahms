@@ -236,7 +236,7 @@ class treatment_model extends CI_Model {
     }
 
     public function get_opd_by_ipd($ipd_no) {
-        $this->db->select('OpdNo');
+        //$this->db->select('OpdNo');
         return $this->db->get_where('inpatientdetails', array('IpNo' => $ipd_no))->row_array();
     }
 
@@ -261,14 +261,14 @@ class treatment_model extends CI_Model {
         }
     }
 
-    public function update_bed_details($opd_id) {
+    public function update_bed_details($bed_no) {
         $update_data = array(
             'OpdNo' => NULL,
             'bedstatus' => 'Available',
             'treatId' => NULL,
             'IpNo' => NULL
         );
-        $this->db->where('OpdNo', $opd_id);
+        $this->db->where('bedno', $bed_no);
         return $this->db->update('bed_details', $update_data);
     }
 
