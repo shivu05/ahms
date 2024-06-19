@@ -466,7 +466,7 @@ if (!empty($wards)) {
 
         $('#discharge_form').on('change', '#dod', function () {
             var doa = $('#dis_doa').val();
-            var dod = trim($('#dod').val());
+            var dod = $('#dod').val();
 
             $.ajax({
                 url: base_url + 'patient/patient/date_difference/',
@@ -483,7 +483,7 @@ if (!empty($wards)) {
 
         $('#patient_form').on('change', '.ipd_dates', function () {
             var doa = $('#DoAdmission').val();
-            var dod = trim($('#DoDischarge').val());
+            var dod = $('#DoDischarge').val();
             if (doa && dod) {
                 $.ajax({
                     url: base_url + 'patient/patient/date_difference/',
