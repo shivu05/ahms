@@ -6,6 +6,10 @@
     .type{
         text-align: center;
     }
+
+    .text_center{
+        text-align: center;
+    }
     .select2-container{
         width: 100% !important;
     }
@@ -524,11 +528,12 @@ if (!empty($other_proc_list)) {
     $(document).ready(function () {
 
         /*$('#swarnaprashana_form #date_month').datepicker({
-            format: 'MM yyyy',
-            viewMode: "months",
-            minViewMode: "months",
-            autoclose: true
-        });*/
+         format: 'MM yyyy',
+         viewMode: "months",
+         minViewMode: "months",
+         autoclose: true
+         });*/
+
 
         $.each(procedure_div_ids, function (i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
@@ -858,6 +863,7 @@ if (!empty($other_proc_list)) {
             },
             {
                 title: "C.Sheet",
+                class: "text_center",
                 data: function (item) {
                     return '<i class="fa fa-download hand_cursor text-primary download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
                 }
@@ -865,13 +871,29 @@ if (!empty($other_proc_list)) {
             {
                 title: "Action",
                 data: function (item) {
-                    return '<i class="fa fa-edit hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>'
+                    return '<i class="fa fa-edit  hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>'
                             + ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>';
+                }
+            },
+            {
+                title: "Status",
+                class: "text_center",
+                data: function (item) {
+                    if (item.attndedon === '' || item.attndedon === null) {
+                        return '<i class="fa fa-clock-o hand_cursor text-warning text-center" data-toggle="tooltip" data-placement="left" title="Treatment Pending" aria-hidden="true"></i>';
+                    } else {
+                        return '<i class="fa fa-check-circle hand_cursor text-success text-center" data-toggle="tooltip" data-placement="left" title="Treatment Completed" aria-hidden="true"></i>';
+                    }
                 }
             }
         ];
         var patient_table = $('#patient_table').DataTable({
             'columns': columns,
+            "fnInitComplete": function (oSettings, json) {
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
+            },
             createdRow: function (row, data, dataIndex) {
                 $(row).attr('data-treat_id', data.ID);
                 $(row).attr('data-opd_id', data.OpdNo);
