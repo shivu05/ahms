@@ -132,7 +132,7 @@ class SHV_Controller extends MX_Controller {
     function check_doctors_duty_records() {
         $query = "SELECT count(*) as doc_duty_count FROM users u 
             JOIN doctorsduty d ON u.ID=d.doc_id 
-            JOIN week_days wd ON d.day=wd.week_id";
+            JOIN week_days wd ON d.day=wd.week_id WHERE u.user_department <> 'AGADATANTRA'";
         $count = $this->db->query($query)->row()->doc_duty_count;
         if ($count > 0 && $count == 56) {
             return 'Y';

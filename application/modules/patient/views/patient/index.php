@@ -167,10 +167,12 @@
                         });
                         $('#doctor').html(option);
                         $('#doctor').attr('disabled', false);
+                        $('#doctor_err_msg').html('');
                     } else {
                         var option = '<option value="">Choose doctor</option>';
                         $('#doctor').html(option);
                         $('#doctor').attr('disabled', true);
+                        $('#doctor').prev().append('<p id="doctor_err_msg" style="color:red;">Selected department has no doctors registered or duty days not updated</p>');
                     }
                 }
 
