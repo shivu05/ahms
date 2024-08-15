@@ -47,10 +47,9 @@ class Department_model extends CI_Model {
         return $result->result_array();
     }
 
-    function update_dept_percentage($dept_id, $perc) {
+    function update_dept_percentage($dept_id, $data = array()) {
         $this->db->where('ID', $dept_id);
-        return $this->db->update('deptper', array('percentage' => $perc));
+        return $this->db->update('deptper', $data);
         //echo $this->db->last_query();
     }
-
 }

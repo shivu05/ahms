@@ -44,13 +44,17 @@ class Department extends SHV_Controller {
 
     function update_dept_percentage() {
         $perc = $this->input->post('perc');
+        $bed_count = $this->input->post('bed_count');
         $dept_id = $this->input->post('dept_id');
-        $is_updated = $this->department_model->update_dept_percentage($dept_id, $perc);
+        $update_data = array(
+            'percentage' => $perc,
+            'bed_count' => $bed_count
+        );
+        $is_updated = $this->department_model->update_dept_percentage($dept_id, $update_data);
         if ($is_updated) {
             echo json_encode(array('status' => TRUE));
         } else {
             echo json_encode(array('status' => FALSE));
         }
     }
-
 }
