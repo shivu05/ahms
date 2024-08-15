@@ -16,7 +16,7 @@ class Beds extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables', 'js'));
         $this->scripts_include->includePlugins(array('datatables', 'css'));
         $this->load->model('master/bed_details');
-        $data['beds_list'] = $this->bed_details->all();
+        $data['beds_list'] = $this->bed_details->filter('*', array('bedno !=' => 0));
         $data['dept_list'] = $this->get_department_list('array');
         $this->layout->data = $data;
         $this->layout->render();
