@@ -162,9 +162,9 @@ class treatment_model extends CI_Model {
         if ($all_beds) {
             $where = '';
         }
-        $query = "SELECT id,department,wardno,group_concat(bedno) as beds,group_concat(lower(concat(bedno,'#',bedstatus)) order by bedno) bedstatus
-            FROM bed_details b where 1=1 $where
-            group by department,wardno order by wardno";
+        $query = "SELECT id,department,wardno,group_concat(bedno ORDER BY id) as beds,group_concat(lower(concat(bedno,'#',bedstatus)) order by id) bedstatus
+            FROM bed_details b where bedno !='0' $where
+            group by department order by bedno";
         return $this->db->query($query)->result_array();
     }
 

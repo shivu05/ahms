@@ -9,7 +9,7 @@
                             <tr style="background: grey;color:white;">
                                 <th class="text-center">Sl. No</th>
                                 <th>Department name</th>
-                                <th>% required</th>
+                                <th>OPD percentage</th>
                                 <th>Bed count</th>
                                 <th>Action</th>
                             </tr>
