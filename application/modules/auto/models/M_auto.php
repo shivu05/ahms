@@ -94,8 +94,9 @@ class M_auto extends CI_Model {
                     UNION ALL 
                     SELECT 0 dept_count,dept_unique_code department FROM deptper dd
                   ) A 
-                  JOIN deptper dept ON dept.dept_unique_code=A.department and dept.dept_unique_code <> 'AGADATANTRA'
+                  JOIN deptper dept ON dept.dept_unique_code=A.department 
                   GROUP BY dept_unique_code";
+        //and dept.dept_unique_code <> 'AGADATANTRA'
         $dept_counts = $this->db->query($query)->result_array();
         $count = 0;
         foreach ($dept_counts as $dc) {
