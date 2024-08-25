@@ -22,10 +22,10 @@ class M_auto extends CI_Model {
     private $bcdiagnosis, $bccomplaints, $bcprocedure, $bcTreatment, $bcDoc, $bcmed;
     /* Department Lists of Emergency */
     private $akdiagnosis, $akcomplaints, $akprocedure, $akTreatment, $akDoc, $akmed;
-    private $addedby;
+    private $addedby, $agadaDoc;
     private $countkayachik, $countshalakya, $countshallya, $counttantra, $countSwastha, $countpanchakar, $countbalachik, $countemergency;
     private $tobeentkayachik, $tobeentshalakya, $tobeentshallya, $tobeenttantra, $toBeEntSwastha, $tobeentpanchakar, $tobeentbalachik, $tobeentemergency;
-    private $kayachikper, $shalakyaper, $shallyaper, $tantraper, $swasthaPer, $panchakarper, $balachikper, $emergencyper, $shalakyaSubBranch;
+    private $kayachikper, $shalakyaper, $shallyaper, $tantraper, $swasthaPer, $panchakarper, $balachikper, $emergencyper, $shalakyaSubBranch, $agadatantraper;
     private $_dept_percentage_arr, $_entered_records_arr, $_total_records_to_be_entered, $_treatment_data;
     private $_department_data = array(), $_index = 0, $_pancha_count = 5;
 
@@ -77,6 +77,7 @@ class M_auto extends CI_Model {
         $this->countbalachik = $this->countemergency = $this->tobeentkayachik = $this->tobeentshalakya = $this->tobeentshallya = $this->tobeenttantra = 0;
         $this->toBeEntSwastha = $this->tobeentpanchakar = $this->tobeentbalachik = $this->tobeentemergency = $this->kayachikper = $this->shalakyaper = 0;
         $this->shallyaper = $this->tantraper = $this->swasthaPer = $this->panchakarper = $this->balachikper = $this->emergencyper = 0;
+        $this->agadaDoc = "";
 
         //new code update
         $this->_dept_percentage_arr = $this->_entered_records_arr = array();
@@ -311,6 +312,7 @@ class M_auto extends CI_Model {
         $this->swasthaPer = $this->_entered_records_arr['swasthavritta']['per'];
         $this->shallyaper = $this->_entered_records_arr['shalya_tantra']['per'];
         $this->emergencyper = $this->_entered_records_arr['aatyayikachikitsa']['per'];
+        $this->agadatantraper = $this->_entered_records_arr['agadatantra']['per'];
 
         $tobeentkayachik = $this->calculate_department_entry_count($this->kayachikper, $target, $this->_entered_records_arr['kayachikitsa']['count']);
         $tobeentshalakya = $this->calculate_department_entry_count($this->shalakyaper, $target, $this->_entered_records_arr['shalakya_tantra']['count']);
@@ -320,6 +322,7 @@ class M_auto extends CI_Model {
         $tobeentpanchakar = $this->calculate_department_entry_count($this->panchakarper, $target, $this->_entered_records_arr['panchakarma']['count']);
         $tobeentbalachik = $this->calculate_department_entry_count($this->balachikper, $target, $this->_entered_records_arr['balaroga']['count']);
         $tobeentemergency = $this->calculate_department_entry_count($this->emergencyper, $target, $this->_entered_records_arr['aatyayikachikitsa']['count']);
+        $tobeenteragada = $this->calculate_department_entry_count($this->agadatantraper, $target, $this->_entered_records_arr['agadatantra']['count']);
 
         $this->_entered_records_arr['kayachikitsa']['total'] = $tobeentkayachik;
         $this->_entered_records_arr['shalakya_tantra']['total'] = $tobeentshalakya;
@@ -329,8 +332,9 @@ class M_auto extends CI_Model {
         $this->_entered_records_arr['panchakarma']['total'] = $tobeentpanchakar;
         $this->_entered_records_arr['balaroga']['total'] = $tobeentbalachik;
         $this->_entered_records_arr['aatyayikachikitsa']['total'] = $tobeentemergency;
+        $this->_entered_records_arr['agadatantra']['total'] = $tobeenteragada;
 
-        $totalentry = ($tobeentkayachik + $tobeentshalakya + $tobeentshallya + $tobeenttantra + $toBeEntSwastha + $tobeentpanchakar + $tobeentbalachik + $tobeentemergency);
+        $totalentry = ($tobeentkayachik + $tobeentshalakya + $tobeentshallya + $tobeenttantra + $toBeEntSwastha + $tobeentpanchakar + $tobeentbalachik + $tobeentemergency + $tobeenteragada);
 
         $this->_total_records_to_be_entered = $totalentry;
         $this->calculate_new_old_patient_count();
@@ -482,6 +486,20 @@ class M_auto extends CI_Model {
                 );
                 $this->akDoc = $this->get_day_doctor($this->input->post('cdate'), "AATYAYIKACHIKITSA");
             }
+
+            if ($row->department == "AGADATANTRA") {
+                $this->_treatment_data["AGADATANTRA"][] = array(
+                    'diagnosis' => $row->diagnosis,
+                    'complaints' => $row->complaints,
+                    'treatment' => $row->Trtment,
+                    'procedure' => $row->procedures,
+                    'medicines' => $row->medicines,
+                    'sub_dept' => $row->sub_dept,
+                    'gender' => $row->gender,
+                    'age' => $row->Age
+                );
+                $this->agadaDoc = $this->get_day_doctor($this->input->post('cdate'), "AGADATANTRA");
+            }
         }// end of old for
         $this->shuffle();
 
@@ -525,6 +543,10 @@ class M_auto extends CI_Model {
 
             if (strtolower($k[1]) == strtolower("AATYAYIKACHIKITSA")) {
                 $this->enter_aatyayikachikitsa_patient_details($k, $cdate);
+            }
+
+            if (strtolower($k[1]) == strtolower("AGADATANTRA")) {
+                $this->enter_agadatantra_patient_details($k, $cdate);
             }
         }
 
@@ -1303,6 +1325,86 @@ class M_auto extends CI_Model {
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
                 $this->_index++;
             }
+        }
+    }
+
+    function enter_agadatantra_patient_details($arr, $cdate) {
+        $addemailid = $this->session->userdata('user_name');
+        $dept_name = 'AGADATANTRA';
+        if (strtolower($arr[0]) != strtolower('old')) {
+            $this->_index = $this->_check_valid_index($this->_index, $dept_name);
+            $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
+
+            if ($getDeptNum != "" || strlen($getDeptNum) > 0) {
+                $deptNum = $getDeptNum + 1;
+                $gender = $this->gender[$this->_index];
+                $sex = 'Male';
+                if (!$this->_is_female_gender($gender)) {
+                    $fname = $this->firstname[$this->_index];
+                    $lname = $this->lastname[$this->_index];
+                    $occ = $this->occupation[$this->_index];
+                } else {
+                    $fname = $this->femfirstname[$this->_index];
+                    $lname = $this->femLastName[$this->_index];
+                    $occ = $this->femoccp[$this->_index];
+                    $sex = "Female";
+                }
+                $uid = $this->uuid->v5('AnSh');
+                $data = array(
+                    "deptOpdNo" => $deptNum,
+                    "FirstName" => $fname,
+                    "MidName" => '',
+                    "LastName" => $lname,
+                    "Age" => $this->age[$this->_index],
+                    "gender" => $sex,
+                    "occupation" => $this->_check_occupation($this->age[$this->_index], $occ),
+                    "address" => $this->_get_random_data($this->_index, $this->address),
+                    "city" => $this->_get_random_data($this->_index, $this->city),
+                    "AddedBy" => $addemailid,
+                    "entrydate" => $cdate,
+                    "dept" => $dept_name,
+                    "sid" => $uid
+                );
+                $this->db->insert('patientdata', $data);
+                $last_id = $this->db->insert_id();
+
+                $this->_index = $this->_check_list_index($this->_treatment_data[$dept_name], $this->_index);
+                $treatment_details = $this->_get_diagnosis_by_gender($this->_treatment_data[$dept_name], $sex);
+
+                $diagnosis = $treatment_details['diagnosis'];
+                $docname = $this->akDoc;
+                $treatment_arr = array(
+                    "deptOpdNo" => $deptNum,
+                    "Trtment" => $treatment_details['treatment'],
+                    "OpdNo" => $last_id,
+                    "diagnosis" => $diagnosis,
+                    "complaints" => $treatment_details['complaints'],
+                    "department" => $dept_name,
+                    "procedures" => $treatment_details['procedure'],
+                    "InOrOutPat" => "FollowUp",
+                    "attndedby" => $docname,
+                    "CameOn" => $cdate,
+                    "attndedon" => $cdate,
+                    "AddedBy" => $docname,
+                    "patType" => "New Patient",
+                    "medicines" => $treatment_details['medicines']
+                );
+                $this->db->insert('treatmentdata', $treatment_arr);
+                $treatid = $this->db->insert_id();
+
+                $this->db->where('OpdNo', $last_id);
+                $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
+                $this->add_to_pharmacy($treatid);
+
+                $labdisease = trim($diagnosis);
+
+                $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
+                $this->_index++;
+            }
+        } else {
+            $this->add_old_patient_data($dept_name, $cdate);
+            $this->_index++;
         }
     }
 
