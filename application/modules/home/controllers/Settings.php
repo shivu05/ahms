@@ -30,7 +30,7 @@ class Settings extends SHV_Controller {
         } else {
             $config = array();
         }
-     
+
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload('college_logo')) {
             if ($this->input->post('logo_name') && empty($_FILES['college_logo']['name'])) {
@@ -52,7 +52,7 @@ class Settings extends SHV_Controller {
             'printing_style' => $this->input->post('printing_style'),
             'logo' => $this->input->post('logo'),
             'admin_email' => $this->input->post('config_email'),
-            'logo_img'=> file_get_contents($_FILES['college_logo']['tmp_name'])
+            'logo_img' => file_get_contents($_FILES['college_logo']['tmp_name'])
         );
         $this->settings_model->save_settings($form_data);
         redirect('home/Settings', true);
@@ -100,11 +100,10 @@ class Settings extends SHV_Controller {
             $is_deleted = $this->settings_model->remove_patient_data_by_date($date);
         }
         if ($is_deleted) {
-            $this->session->set_flashdata('noty_msg', 'Deleted successfully');
+            $this->session->set_flashdata('noty_msg_del', 'Deleted successfully');
         } else {
-            $this->session->set_flashdata('noty_msg', 'Failed to delete, try again');
+            $this->session->set_flashdata('noty_msg_del', 'Failed to delete, try again');
         }
         redirect('delete-data');
     }
-
 }

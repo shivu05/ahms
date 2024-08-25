@@ -9,8 +9,8 @@
                     <div class="row">
                         <div class="col-md-12 text-success">
                             <?php
-                            if ($this->session->flashdata('noty_msg') != '') {
-                                echo $this->session->flashdata('noty_msg');
+                            if ($this->session->flashdata('noty_msg_del') != '') {
+                                echo $this->session->flashdata('noty_msg_del');
                             }
                             ?>
                         </div>

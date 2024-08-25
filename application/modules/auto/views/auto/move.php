@@ -4,6 +4,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="fa fa-database"></i> Record analysis:</h3>
                 <a class="pull-right btn btn-primary btn-sm" href="<?php echo base_url('show-ref'); ?>"><i class="fa fa-eye"></i> View patient data</a>
+                <a class="pull-right btn btn-warning btn-sm" style="margin-right: 1%;" href="<?php echo base_url('delete-data'); ?>"><i class="fa fa-trash"></i> Remove data</a>
             </div>
             <form action="<?php echo base_url('analyse-data'); ?>" method="POST" name="gen_form" id="gen_form">
                 <div class="box-body">
