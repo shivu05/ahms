@@ -1372,7 +1372,7 @@ class M_auto extends CI_Model {
                 $treatment_details = $this->_get_diagnosis_by_gender($this->_treatment_data[$dept_name], $sex);
 
                 $diagnosis = $treatment_details['diagnosis'];
-                $docname = $this->akDoc;
+                $docname = $this->agadaDoc;
                 $treatment_arr = array(
                     "deptOpdNo" => $deptNum,
                     "Trtment" => $treatment_details['treatment'],
