@@ -21,7 +21,7 @@ class Auto extends SHV_Controller {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Patients";
         $this->layout->title = "Record analysis";
-        if (md5($this->input->post('key_word')) == "9eb80e31381f8509f062dd01a8b2b758") {
+        if ($this->input->post('key_word') == AUTO_PASS) {
             $n = $this->check_doctors_duty_records();
             $data['doc_duty_count'] = $n;
             $this->layout->data = $data;
@@ -83,7 +83,6 @@ class Auto extends SHV_Controller {
             echo json_encode(array('status' => false, 'msg' => 'Failed to update try again', 'type' => 'danger'));
         }
     }
-
 }
 
 //end of c_auto
