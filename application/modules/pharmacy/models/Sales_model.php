@@ -73,4 +73,16 @@ class Sales_model extends CI_Model {
         return false;
     }
 
+    public function get_sales() {
+        $this->db->select('sales.*, medicines.name as medicine_name, customers.name as customer_name');
+        $this->db->from('sales');
+        $this->db->join('medicines', 'sales.medicine_id = medicines.id');
+        $this->db->join('customers', 'sales.customer_id = customers.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function add_sale($data) {
+        return $this->db->insert('sales', $data);
+    }
 }

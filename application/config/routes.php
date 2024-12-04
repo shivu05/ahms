@@ -191,5 +191,13 @@ $route['store-fumigation-info'] = 'register/fumigation/store_data';
 $route['manage-beds'] = 'master/beds';
 $route['update-bed'] = 'master/beds/update';
 
+$route['medicine'] = 'pharmacy/medicine/index';
+$route['medicine/add'] = 'pharmacy/medicine/add';
+$route['medicine/edit/(:any)'] = 'pharmacy/medicine/edit/$1';
+$route['medicine/delete/(:any)'] = 'pharmacy/medicine/delete/$1';
+
+$route['sales'] = 'pharmacy/sales/index';
+$route['sales/add'] = 'pharmacy/sales/add';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

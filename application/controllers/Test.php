@@ -180,4 +180,58 @@ class Test extends SHV_Controller {
         echo 'Total count is: ' . count($db_list);
         exit;
     }
+
+    function add_nursing_indent() {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $this->db->from('ipdtreatment it');
+        $this->db->join('inpatientdetails ip', 'it.ipdno=ip.IpNo');
+        //$this->db->where('it.ipdno', $ipd);
+        $treat_data = $this->db->get()->result_array();
+
+        foreach ($treat_data as $treat) {
+            $products = explode(',', $treat['Trtment']);
+            $days = $treat['NofDays'];
+            $doa = $treat['DoAdmission'];
+            foreach ($products as $product) {
+                if (strpos($product, 'BD') || strpos($product, 'BID')) {
+                    $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
+                    for ($i = 0; $i < $days; $i++) {
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i) . ' days'));
+                        $form_data = array(
+                            'indentdate' => $doi,
+                            'ipdno' => $treat['IpNo'],
+                            'opdno' => $treat['OpdNo'],
+                            'product' => $product,
+                            'morning' => $int,
+                            'afternoon' => 0,
+                            'night' => $int,
+                            'totalqty' => 2,
+                            'treatid' => $treat['ID'],
+                        );
+                        $this->db->insert('indent', $form_data);
+                    }
+                } else if (strpos($product, 'TD') || strpos($product, 'TID')) {
+                    $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
+                    for ($i = 0; $i < $days; $i++) {
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i + 1) . ' days'));
+                        $form_data = array(
+                            'indentdate' => $doi,
+                            'ipdno' => $treat['IpNo'],
+                            'opdno' => $treat['OpdNo'],
+                            'product' => $product,
+                            'morning' => $int,
+                            'afternoon' => $int,
+                            'night' => $int,
+                            'totalqty' => 3,
+                            'treatid' => $treat['ID'],
+                        );
+                        $this->db->insert('indent', $form_data);
+                    }
+                }
+            }
+     //       $this->db->where('ID', $treat['IpNo']);
+       //     $this->db->update('ipdtreatment', array('status' => 'Treated'));
+        }
+    }
 }

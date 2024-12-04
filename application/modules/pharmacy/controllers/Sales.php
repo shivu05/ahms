@@ -14,11 +14,31 @@ class Sales extends SHV_Controller {
     }
 
     public function index() {
-        $this->scripts_include->includePlugins(array('typeahead'));
-        $data = array();
-        $data['product_list'] = $this->sales_model->get_product_list();
-        $this->layout->data = $data;
-        $this->layout->render();
+//        $this->scripts_include->includePlugins(array('typeahead'));
+//        $data = array();
+//        $data['product_list'] = $this->sales_model->get_product_list();
+//        $this->layout->data = $data;
+//        $this->layout->render();
+        $data['sales'] = $this->Sales_model->get_sales();
+        $this->load->view('sales_list', $data);
+    }
+
+    public function add() {
+        if ($this->input->post()) {
+            $data = array(
+                'medicine_id' => $this->input->post('medicine_id'),
+                'customer_id' => $this->input->post('customer_id'),
+                'quantity' => $this->input->post('quantity')
+            );
+            $this->Sales_model->add_sale($data);
+            redirect('sales');
+        } else {
+            $this->load->model('Medicine_model');
+            $this->load->model('Customer_model');
+            $data['medicines'] = $this->Medicine_model->get_medicines();
+            $data['customers'] = $this->Customer_model->get_customers();
+            $this->load->view('add_sale', $data);
+        }
     }
 
     public function fetch_patient_data() {
@@ -60,5 +80,4 @@ class Sales extends SHV_Controller {
             echo json_encode(array('status' => 'ok'));
         }
     }
-
 }

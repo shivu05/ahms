@@ -692,18 +692,18 @@ if (!empty($other_proc_list)) {
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <select class="form-control chosen-select pancha_procedure pancha_input" name="pancha_procedure[]" id="pancha_procedure_1">
+                                                                    <select class="form-control chosen-select pancha_procedure pancha_input" required name="pancha_procedure[]" id="pancha_procedure_1">
                                                                         <option value="">Choose procedure</option>
                                                                         <?= $panchakarma_markup ?>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control pancha_sub_procedure chosen-select pancha_input" name="pancha_sub_procedure[]" id="pancha_sub_procedure">
+                                                                    <select class="form-control pancha_sub_procedure chosen-select pancha_input" required name="pancha_sub_procedure[]" id="pancha_sub_procedure">
                                                                         <option value="">Choose sub procedure</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type="text" class="form-control date_picker pancha_input" name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
-                                                                <td><input type="text" class="form-control date_picker pancha_input" name="pancha_proc_end_date[]" pancha_proc_end_date/></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_end_date[]" id="pancha_proc_end_date"/></td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
