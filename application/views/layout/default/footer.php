@@ -22,6 +22,8 @@
 <footer class="main-footer" id="footer">
     <div class="containers">
         <div class="pull-left hidden-xs" style="margin-left: 15px !important">
+            <?php $clientIp = getClientIpAddress(); ?>
+            <span class="pull-right text-info">You IP address : <?= htmlspecialchars(@$clientIp); ?></span>
             <?php /*if ($_SERVER['REQUEST_SCHEME'] == 'https') { ?>
                 <span id="siteseal"><script async type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=M2aqKksIVkB3SLxKB93DbZs9NdJf8Q6EcjBPOpys606nTeqV3RLBERrnXeqU"></script></span>
             <?php } */?>

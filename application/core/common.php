@@ -530,3 +530,26 @@ if (!function_exists('getDBName')) {
     }
 
 }
+
+if (!function_exists('getClientIpAddress')) {
+
+    function getClientIpAddress() {
+        // Check for shared internet/ISP-provided IPs
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        // Check for proxy or load balancer
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            // If multiple IPs are present, take the first one
+            $ip = explode(',', $ip)[0];
+        }
+        // Fallback to remote address
+        else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return trim($ip);
+    }
+
+}
