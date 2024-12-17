@@ -43,6 +43,8 @@ class Localreports extends SHV_Controller {
             } else {
                 $input_array['end_date'] = $current_data;
             }
+            $query = $this->db->query("select max(CameOn) max_date from treatmentdata")->row_array();
+            $input_array['end_date'] = $query['max_date'];
             $input_array['department'] = 1;
 
             $return['total_rows'] = $this->db->query('SELECT ID FROM treatmentdata t JOIN patientdata p ON t.OpdNo=p.OpdNo WHERE CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" and trim(t.CameOn) != ""')->num_rows();
@@ -255,5 +257,4 @@ class Localreports extends SHV_Controller {
             echo $row['current_date'] . '-' . $row['other_proc'] . '-- added<br/>';
         }
     }
-
 }
