@@ -58,3 +58,14 @@ INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `acc
 
 ALTER TABLE `bed_details` 
 ADD COLUMN `bed_category` VARCHAR(45) NULL AFTER `IpNo`;
+
+
+CREATE TABLE `billing` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `patient_name` VARCHAR(255),
+    `opdno` INT,
+    `ipdno` INT,
+    `service_name` VARCHAR(255),
+    `amount` DECIMAL(10, 2),
+    `date` DATETIME DEFAULT CURRENT_TIMESTAMP
+);

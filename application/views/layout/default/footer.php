@@ -31,6 +31,6 @@
         <div class="pull-right hidden-xs" style="margin-right: 15px !important">
             v 1.0
         </div>
-        <strong style="margin-top: 1%;"> AYUSH -Copyright © <?= date('Y') ?> by <a href="http://ayushsoftwares.com/" target="_blank">AYUSH Softwares</a></strong>    
+        <strong style="margin-top: 1%;"> DTS -Copyright © <?= date('Y') ?> by <a href="http://www.dharanitechsolutions.com/" target="_blank">Dharani Tech Solutions</a></strong>    
     </div>
 </footer>
