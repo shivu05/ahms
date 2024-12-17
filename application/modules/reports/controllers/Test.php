@@ -514,13 +514,15 @@ class Test extends SHV_Controller {
         $this->layout->data = $data;
         $content = $this->layout->render(array('view' => 'reports/test/panchakarma/dt_panchakarma_complete'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+        $query = $this->db->query("select max(CameOn) max_date from treatmentdata")->row_array();
+        $end_date = $query['max_date'];
 
         $title = array(
             'report_title' => 'PANCHAKARMA REGISTER',
             'department' => 'PANCHAKARMA',
-            'start_date' => '01-01-2022',
+            'start_date' => '01-01-' . date('Y'),
             //'end_date' => date('d-m-Y')
-            'end_date' => '31-12-2022'
+            'end_date' => $end_date
         );
 
         generate_pdf($content, 'L', $title, 'panchakarma_report.pdf', true, true, 'I');
