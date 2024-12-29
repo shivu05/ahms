@@ -187,8 +187,8 @@ class Localreports extends SHV_Controller {
         echo 'Export started<br/>';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
-        $start_date = '2023-01-01';
-        $end_date = '2023-12-31';
+        $start_date = '2024-01-01';
+        $end_date = '2024-12-20';
         $data["is_print"] = true;
         $dept_condition = '';
 

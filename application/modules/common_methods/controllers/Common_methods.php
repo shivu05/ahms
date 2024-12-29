@@ -27,6 +27,26 @@ class Common_methods extends SHV_Controller {
         }
     }
 
+    function get_patients() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $opd = $this->input->post('opd');
+            echo json_encode(array('data' => $this->common_model->get_patient_info_by_opd($opd), 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
+    function get_ipd_patients() {
+        if ($this->input->is_ajax_request()) {
+            $this->load->model('common_methods/common_model');
+            $ipd = $this->input->post('ipd');
+            echo json_encode(array('data' => $this->common_model->get_patient_info_by_ipd(array('IpNo' => $ipd)), 'status' => 'true'));
+        } else {
+            echo json_encode(array('data' => NULL, 'status' => 'false'));
+        }
+    }
+
     function get_ipd_patient_details() {
         if ($this->input->is_ajax_request()) {
             $this->load->model('common_methods/common_model');
@@ -104,5 +124,4 @@ class Common_methods extends SHV_Controller {
             echo json_encode(array('data' => NULL, 'status' => 'false'));
         }
     }
-
 }

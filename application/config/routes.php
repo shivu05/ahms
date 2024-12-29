@@ -199,5 +199,11 @@ $route['medicine/delete/(:any)'] = 'pharmacy/medicine/delete/$1';
 $route['sales'] = 'pharmacy/sales/index';
 $route['sales/add'] = 'pharmacy/sales/add';
 
+$route['bill-services'] = 'bills/bill_services';
+$route['service-groups'] = 'bills/service_groups';
+$route['add-opd-bill'] = 'bills/patients_bill/add_opd_bill';
+$route['add-ipd-bill'] = 'bills/patients_bill/add_ipd_bill';
+$route['get-service-details'] = 'bills/bill_services/get_service_details';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

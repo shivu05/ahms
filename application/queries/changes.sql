@@ -69,3 +69,37 @@ CREATE TABLE `billing` (
     `amount` DECIMAL(10, 2),
     `date` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE `service_groups` (
+    `group_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `group_name` VARCHAR(255) NOT NULL,
+    `description` VARCHAR(500)
+);
+
+CREATE TABLE `bill_services` (
+    `service_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `service_name` VARCHAR(255) NOT NULL,
+    `group_id` INT NOT NULL,
+    `price` DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (`group_id`) REFERENCES `service_groups`(`group_id`)
+);
+
+CREATE TABLE `opd_billing` (
+    `billing_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `opd_no` INT NOT NULL,
+    `service_id` INT NOT NULL,
+    `billing_date` DATE NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (`opd_no`) REFERENCES `patientdata`(`OpdNo`),
+    FOREIGN KEY (`service_id`) REFERENCES `bill_services`(`service_id`)
+);
+
+CREATE TABLE `ipd_billing` (
+    `billing_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `ipd_no` INT NOT NULL,
+    `service_id` INT NOT NULL,
+    `billing_date` DATE NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (`ipd_no`) REFERENCES `inpatientdetails`(`IpNo`),
+    FOREIGN KEY (`service_id`) REFERENCES `bill_services`(`service_id`)
+);
