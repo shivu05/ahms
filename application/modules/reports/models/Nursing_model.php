@@ -461,7 +461,9 @@ class Nursing_model extends CI_Model {
         $columns = array('l.treatid', 'l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
             't.deptOpdNo', '(REPLACE((t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
             'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
-            'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
+            'GROUP_CONCAT(proc_end_date) as proc_end_date',
+            '(CASE WHEN proc_end_date IS NOT NULL AND i.DoDischarge IS NOT NULL AND i.DoDischarge !="--" AND proc_end_date > i.DoDischarge THEN "" ELSE i.IpNo END) AS IpNo',
+            '"' . $conditions['end_date'] . '" as selected_date');
 
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''
             AND (l.date <= '" . $conditions['start_date'] . "' AND l.proc_end_date >= '" . $conditions['end_date'] . "')  ";
