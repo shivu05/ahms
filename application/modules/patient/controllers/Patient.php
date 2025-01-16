@@ -246,11 +246,19 @@ class Patient extends SHV_Controller {
 
     function date_difference() {
         date_default_timezone_set("Asia/Kolkata");
-        $from = strtotime($this->input->post('dod'));
-        $to = strtotime($this->input->post('doa'));
-        $difference = $from - $to;
-        $days = floor($difference / (60 * 60 * 24));
-        echo json_encode($days);
+//        echo $from = strtotime($this->input->post('dod'));
+//        echo $to = strtotime($this->input->post('doa'));
+//        $difference = $from - $to;
+//        $days = floor($difference / (60 * 60 * 24));
+        // Convert to DateTime objects
+        $to = $this->input->post('dod');
+        $start_date = $this->input->post('doa');
+        $start = new DateTime($start_date);
+        $end = new DateTime($to);
+        $end->modify('+1 day');
+        $interval = $start->diff($end);
+        $total_days = $interval->days;
+        echo json_encode($total_days);
     }
 
     function discharge_patient() {
