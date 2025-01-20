@@ -520,7 +520,16 @@ class Ipd extends SHV_Controller {
         $data['show_date'] = 0;
         $this->load->helper('pdf');
         $content = $this->load->view('reports/ipd/monthly_opd_ipd_count_print', $data, true);
-        $title = array();
+
+        $db_name = '';
+        $sess_arr = $this->session->userdata('user_data');
+        if ($sess_arr['randkey'] != "") {
+            $db_name = substr(base64_decode($sess_arr['randkey']), -4);
+        }
+        $title = array(
+            'report_title' => 'IPD-OPD REGISTER',
+            'start_date' => $db_name
+        );
         generate_pdf($content, 'L', $title, 'MONTHWISE_IPD_REPORT', TRUE, TRUE, 'I');
         exit;
     }
