@@ -418,4 +418,19 @@ class treatment_model extends CI_Model {
     public function insert_kriyakalpa($post_data) {
         return $this->db->insert('kriyakalpa', $post_data);
     }
+
+    public function check_opdno_status($opd_no) {
+        $this->db->select('IpNo');
+        $this->db->from('inpatientdetails');
+        $this->db->where('OpdNo', $opd_no);
+        $this->db->where('status', 'stillin');
+        $result = $this->db->get()->row_array();
+    
+        if (!empty($result)) {
+            return $result['IpNo'];
+        } else {
+            return false;
+        }
+    }
+
 }

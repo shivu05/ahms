@@ -1,8 +1,9 @@
 <style type="text/css">
     .accordion h1,
-    .accordion a{
-        color:#007b5e;
+    .accordion a {
+        color: #007b5e;
     }
+
     .accordion .btn-link {
         font-weight: 400;
         color: #007b5e;
@@ -18,11 +19,11 @@
         font-size: 12px !important;
     }
 
-    .accordion .card-header .btn.collapsed .fa.main{
-        display:none;
+    .accordion .card-header .btn.collapsed .fa.main {
+        display: none;
     }
 
-    .accordion .card-header .btn .fa.main{
+    .accordion .card-header .btn .fa.main {
         background: #007b5e;
         padding: 10px 8px;
         color: #ffffff;
@@ -33,7 +34,7 @@
         top: 10px;
         border-top-right-radius: 7px;
         border-bottom-right-radius: 7px;
-        display:block;
+        display: block;
     }
 </style>
 <?php
@@ -69,7 +70,7 @@ if (!empty($other_proc_list)) {
         <div class="box box-primary" style="border-top: 5px solid #009688;">
             <div class="box-body">
                 <div class="text-center" style="margin: auto;text-align: center;">
-                    <img class="img-responsive rounded" style="text-align: center;margin: auto" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100"/>
+                    <img class="img-responsive rounded" style="text-align: center;margin: auto" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100" />
                 </div>
                 <h4 style="margin-top: 2%;" class="text-center"><?php echo $patient_details['FirstName'] . ' ' . $patient_details['LastName']; ?></h4>
                 <ul class="list-group list-group-flush">
@@ -90,9 +91,9 @@ if (!empty($other_proc_list)) {
                 ?>
                 <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
                     <!--hiddden fields-->
-                    <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>"/>
-                    <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $opd; ?>"/>
-                    <input type="hidden" name="department" id="department" value="<?php echo $curr_dept; ?>"/>
+                    <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>" />
+                    <input type="hidden" name="opd_no" id="opd_no" value="<?php echo $opd; ?>" />
+                    <input type="hidden" name="department" id="department" value="<?php echo $curr_dept; ?>" />
                     <div class="box box-primary">
                         <div class="box-body">
                             <h6>
@@ -101,19 +102,19 @@ if (!empty($other_proc_list)) {
                                 <?php endif; ?>
                                 <?php if (isset($current_treatment['CameOn']) && trim($current_treatment['CameOn']) != ''): ?>
                                     <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span>
-                                    <?php endif; ?>   
+                                    <?php endif; ?>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-info btn-sm pull-right" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
-                                </span>
+                                    </span>
                             </h6>
-                            <hr/>
+                            <hr />
                             <?php if (!empty($treatment_details)): ?>
                                 <div class="box-group" id="accordion">
                                     <?php
                                     $i = 0;
                                     foreach ($treatment_details as $treatment) {
                                         $i++;
-                                        ?>
+                                    ?>
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">
@@ -153,7 +154,7 @@ if (!empty($other_proc_list)) {
                                     <?php } ?>
                                 </div>
                             <?php endif; ?>
-                            <hr/>
+                            <hr />
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
@@ -187,14 +188,14 @@ if (!empty($other_proc_list)) {
                                     }
                                     ?>
                                     </select>-->
-                                    <textarea class="form-control prescription_inputs"  onkeyup="this.value = this.value.toUpperCase();" name="diagnosis" id="diagnosis"></textarea>
+                                    <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();" name="diagnosis" id="diagnosis"></textarea>
                                 </div>
                             </div>
-                            <hr/>
+                            <hr />
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Treatment: <span class="text-danger">*</span></label>
-                                   <!-- <select class="form-control select2 prescription_inputs" name="treatment[]" id="treatment" multiple="multiple" data-placeholder="Choose Medicines">
+                                    <!-- <select class="form-control select2 prescription_inputs" name="treatment[]" id="treatment" multiple="multiple" data-placeholder="Choose Medicines">
                                         <option value="">choose medicine</option>
                                     <?php
                                     if (!empty($medicines)) {
@@ -204,7 +205,7 @@ if (!empty($other_proc_list)) {
                                     }
                                     ?>
                                     </select>-->
-                                    <textarea class="form-control prescription_inputs"  onkeyup="this.value = this.value.toUpperCase();" name="treatment" id="treatment"></textarea>
+                                    <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();" name="treatment" id="treatment"></textarea>
                                 </div>
                                 <!--<div class="col-md-6 col-sm-12">
                                     <label>Panchakarma procedures: <span class="text-danger">*</span></label>
@@ -219,7 +220,7 @@ if (!empty($other_proc_list)) {
                                     <input type="text" name="panch_days" id="panch_days" placeholder="Days" class="form-control" value="7"/>
                                 </div>-->
                             </div>
-                            <hr/>
+                            <hr />
                             <!-- <div class="row">
                                  <div class="col-md-4">
                                      <label>Medicine name: <span class="text-danger">*</span></label>
@@ -287,7 +288,7 @@ if (!empty($other_proc_list)) {
                             </div><!-- end of trearment div-->
 
                             <!-- Tests -->
-                            <hr/>
+                            <hr />
                             <div class="row" style="margin-bottom: 2rem;">
                                 <div class="col-md-12">
                                     <h3>Procedures:</h3>
@@ -308,12 +309,12 @@ if (!empty($other_proc_list)) {
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade" id="birth">
                                                 <div id="Birth">
-                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="birth_check" id="birth_check"/> Birth Register</h5>
+                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="birth_check" id="birth_check" /> Birth Register</h5>
                                                     <div class="row">
                                                         <div class="control-group col-md-6">
                                                             <label class="control-label" for="delivery">Details of delivery:</label>
                                                             <div class="controls">
-                                                                <textarea id="delivery" type="text" name="delivery" placeholder="Delivery details" class="form-control birth_input" ></textarea>
+                                                                <textarea id="delivery" type="text" name="delivery" placeholder="Delivery details" class="form-control birth_input"></textarea>
                                                             </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                         <div class="control-group col-md-6">
@@ -330,7 +331,7 @@ if (!empty($other_proc_list)) {
                                                         <div class="control-group col-md-6">
                                                             <label class="control-label" for="weight">Baby weight:</label>
                                                             <div class="controls">
-                                                                <input id="weight" type="text" name="weight" class="form-control birth_input" placeholder="Baby weight" >
+                                                                <input id="weight" type="text" name="weight" class="form-control birth_input" placeholder="Baby weight">
                                                             </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                         <div class="control-group col-md-6">
@@ -417,7 +418,7 @@ if (!empty($other_proc_list)) {
                                             </div>
                                             <div class="tab-pane fade" id="ecg">
                                                 <div id="ECG">
-                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="ecg_check" id="ecg_check"/> ECG Register</h5>
+                                                    <h5 style="margin-top: 2%;"><input type="checkbox" name="ecg_check" id="ecg_check" /> ECG Register</h5>
                                                     <div class="control-group col-4">
                                                         <label class="control-label" for="ecgdocname">Referred Doctor Name:</label>
                                                         <div class="controls">
@@ -676,7 +677,7 @@ if (!empty($other_proc_list)) {
 
                                                 </div>
                                             </div>
-                                            <div  class="tab-pane fade" id="panchakarma_treatment">
+                                            <div class="tab-pane fade" id="panchakarma_treatment">
                                                 <div id="panchakarma_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="panchakarma_check" id="panchakarma_check" /> Refer for Panchakarma</h4>
                                                     <input type="hidden" name="tab_row_count" id="tab_row_count" value="1" />
@@ -702,8 +703,8 @@ if (!empty($other_proc_list)) {
                                                                         <option value="">Choose sub procedure</option>
                                                                     </select>
                                                                 </td>
-                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_start_date[]" id="pancha_proc_start_date"/></td>
-                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_end_date[]" id="pancha_proc_end_date"/></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_start_date[]" id="pancha_proc_start_date" /></td>
+                                                                <td><input type="text" class="form-control date_picker pancha_input required" required name="pancha_proc_end_date[]" id="pancha_proc_end_date" /></td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -718,7 +719,7 @@ if (!empty($other_proc_list)) {
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div  class="tab-pane fade" id="physiotherapy">
+                                            <div class="tab-pane fade" id="physiotherapy">
                                                 <div id="physiotherapy_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="physiotherapy_check" id="physiotherapy_check" /> Refer for Physiotherapy</h4>
                                                     <div class="row">
@@ -755,7 +756,7 @@ if (!empty($other_proc_list)) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div  class="tab-pane fade" id="othertherapy">
+                                            <div class="tab-pane fade" id="othertherapy">
                                                 <div id="physiotherapy_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="other_proc_check" id="other_proc_check" /> Refer for Other Procedures</h4>
                                                     <div class="row">
@@ -792,14 +793,14 @@ if (!empty($other_proc_list)) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div  class="tab-pane fade" id="kriyakalpa">
+                                            <div class="tab-pane fade" id="kriyakalpa">
                                                 <div id="kriyakalpa_div" style="margin-top: 2%;">
                                                     <h4><input type="checkbox" name="kriyakalpa_check" id="kriyakalpa_check" /> Refer for Kriyakalpa</h4>
                                                     <div class="row">
                                                         <div class="control-group col-md-3">
                                                             <label class="control-label" for="kriya_procedures">Procedures:</label>
                                                             <div class="controls">
-                                                                <input id="kriya_procedures" type="text" name="kriya_procedures" class="form-control kriya_inputs" placeholder="Enter Procedures"/>
+                                                                <input id="kriya_procedures" type="text" name="kriya_procedures" class="form-control kriya_inputs" placeholder="Enter Procedures" />
                                                                 <p class="help-block">Enter comma separated data</p>
                                                             </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
@@ -811,7 +812,7 @@ if (!empty($other_proc_list)) {
                                                             </div> <!-- /controls -->
                                                         </div> <!-- /control-group -->
                                                     </div>
-                                                </div>    
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -819,6 +820,11 @@ if (!empty($other_proc_list)) {
                             </div>
                             <!--end of tests-->
                             <div class="admin_div">
+                                <?php if (isset($ipd_status) && $ipd_status !== false): ?>
+                                    <div class="alert alert-warning">
+                                        Patient is already admitted and IPD: <?php echo $ipd_status; ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="toggle-flip">
                                     <label>
                                         <input type="checkbox" name="admit" id="admit"> Admit
@@ -857,7 +863,7 @@ if (!empty($other_proc_list)) {
                                     <div class="row" style="">
                                         <div class="col-md-4 col-sm-12">
                                             <label>Admission date: </label>
-                                            <input type="text" name="admit_date" id="admit_date" class="form-control date_picker" placeholder="Admission date"/>
+                                            <input type="text" name="admit_date" id="admit_date" class="form-control date_picker" placeholder="Admission date" />
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <label>Time: </label>
@@ -873,7 +879,7 @@ if (!empty($other_proc_list)) {
                                 <button class="btn btn-danger"><i class="fa fa-refresh"></i> Reset</button>
                             </div>
                         </div>
-                        <br/>
+                        <br />
                     </div>
 
                 </form>
@@ -882,19 +888,44 @@ if (!empty($other_proc_list)) {
     </div><!-- col-9 -->
 </div>
 <script type="text/javascript">
-    $(function () {
-        $('.chosen-select').chosen({width: '100%'});
-        $('.chosen-select-deselect').chosen({allow_single_deselect: true});
+    $(function() {
+        $('.chosen-select').chosen({
+            width: '100%'
+        });
+        $('.chosen-select-deselect').chosen({
+            allow_single_deselect: true
+        });
     });
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
-    $(document).ready(function () {
-        $.each(procedure_div_ids, function (i) {
+    $(document).ready(function() {
+
+        var ipd_status = '<?php echo  $ipd_status; ?>';
+        if (ipd_status) {
+            $('#admit').prop('disabled', true);
+            $.notify({
+                title: "Admission Status:",
+                message: "Patient is already admitted",
+                icon: 'fa fa-info-circle',
+            }, {
+                type: "warning",
+            });
+        }
+
+        $('#admit').click(function() {
+            if ($(this).is(":checked")) {
+                $('#admit_form').show();
+            } else if ($(this).is(":not(:checked)")) {
+                $('#admit_form').hide();
+            }
+        });
+
+        $.each(procedure_div_ids, function(i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
             $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
         });
 
-        $('#add_prescription').click(function () {
+        $('#add_prescription').click(function() {
             if ($(this).is(":checked")) {
                 $('.prescription_inputs').removeAttr('disabled');
             } else if ($(this).is(":not(:checked)")) {
@@ -902,7 +933,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#ecg_check').click(function () {
+        $('#ecg_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.ecg_inputs').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#ecgdocname');
@@ -911,7 +942,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#birth_check').click(function () {
+        $('#birth_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.birth_input').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#ecgdocname');
@@ -920,7 +951,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#usg_check').click(function () {
+        $('#usg_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.usg_inputs').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#usgdocname');
@@ -929,7 +960,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#xray_check').click(function () {
+        $('#xray_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.xray_inputs').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#xraydocname');
@@ -938,7 +969,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#kshara_check').click(function () {
+        $('#kshara_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.kshara_inputs').removeAttr('disabled');
             } else if ($(this).is(":not(:checked)")) {
@@ -946,7 +977,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#surgery_check').click(function () {
+        $('#surgery_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.surgery_inputs').removeAttr('disabled');
             } else if ($(this).is(":not(:checked)")) {
@@ -954,7 +985,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#lab_check').click(function () {
+        $('#lab_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.lab_inputs').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#labdocname');
@@ -963,7 +994,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#panchakarma_check').click(function () {
+        $('#panchakarma_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.pancha_input').prop('disabled', false).trigger("chosen:updated");
                 $('.pancha_input').removeAttr('disabled');
@@ -973,7 +1004,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#physiotherapy_check').click(function () {
+        $('#physiotherapy_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.physic_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.physic_inputs').removeAttr('disabled');
@@ -983,7 +1014,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#other_proc_check').click(function () {
+        $('#other_proc_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.othr_proc_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.othr_proc_inputs').removeAttr('disabled');
@@ -993,7 +1024,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#kriyakalpa_check').click(function () {
+        $('#kriyakalpa_check').click(function() {
             if ($(this).is(":checked")) {
                 $('.kriya_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.kriya_inputs').removeAttr('disabled');
@@ -1003,7 +1034,7 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#copy_diagnosis').click(function () {
+        $('#copy_diagnosis').click(function() {
             if ($(this).is(":checked")) {
                 if ($('#diagnosis').val().length <= 0) {
                     $.notify({
@@ -1021,25 +1052,27 @@ if (!empty($other_proc_list)) {
                 $('#pancha_disease').val('');
             }
         });
-        $('#admit').click(function () {
+        $('#admit').click(function() {
             if ($(this).is(":checked")) {
                 $('#admit_form').show();
             } else if ($(this).is(":not(:checked)")) {
                 $('#admit_form').hide();
             }
         });
-        $('#lab_cat_table').on('change', '.lab_category', function () {
+        $('#lab_cat_table').on('change', '.lab_category', function() {
             var dom = $(this);
             $.ajax({
                 url: base_url + 'common_methods/fetch_laboratory_test_list',
                 type: 'POST',
-                data: {category: $(this).val()},
+                data: {
+                    category: $(this).val()
+                },
                 dataType: 'json',
-                success: function (res) {
+                success: function(res) {
                     if (res.status) {
                         var list = res.data;
                         var options = '<option value="">Choose test</option>';
-                        $.each(list, function (i, item) {
+                        $.each(list, function(i, item) {
                             options += '<option value="' + item.lab_test_id + '">' + item.lab_test_name + '</option>';
                         });
                         dom.closest('td').next('td').find('.lab_test').html(options);
@@ -1048,25 +1081,27 @@ if (!empty($other_proc_list)) {
                         alert('something went wrong try again');
                     }
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('ERROR! ');
                     console.log(xhr.responseText);
                 }
             });
         });
 
-        $('#lab_cat_table').on('change', '.lab_test', function () {
+        $('#lab_cat_table').on('change', '.lab_test', function() {
             var dom = $(this);
             $.ajax({
                 url: base_url + 'common_methods/fetch_laboratory_investigation_list',
                 type: 'POST',
-                data: {tests: $(this).val()},
+                data: {
+                    tests: $(this).val()
+                },
                 dataType: 'json',
-                success: function (res) {
+                success: function(res) {
                     if (res.status) {
                         var list = res.data;
                         var options = '<option value="">Choose Investigations</option>';
-                        $.each(list, function (i, item) {
+                        $.each(list, function(i, item) {
                             options += '<option value="' + item.lab_inv_id + '">' + item.lab_inv_name + '</option>';
                         });
                         dom.closest('td').next('td').find('.lab_investigations').html(options);
@@ -1075,59 +1110,65 @@ if (!empty($other_proc_list)) {
                         alert('something went wrong try again');
                     }
                 },
-                error: function (error) {
+                error: function(error) {
                     console.log('ERROR! ');
                     console.log(xhr.responseText);
                 }
             });
         });
 
-        $('#panchakarma_table').on('change', '.pancha_procedure', function () {
+        $('#panchakarma_table').on('change', '.pancha_procedure', function() {
             var panchaprocedure = $(this).val();
             var dom = $(this);
             $.ajax({
                 url: base_url + 'master/panchakarma/fetch_sub_procedures',
-                data: {'proc_name': panchaprocedure},
+                data: {
+                    'proc_name': panchaprocedure
+                },
                 dataType: 'json',
                 type: 'POST',
-                success: function (response) {
+                success: function(response) {
                     var sub_proc_options = '<option value="">choose sub procedure</option>';
                     if (response.status) {
                         var sub_proc = response.data;
-                        $.each(sub_proc, function (i) {
+                        $.each(sub_proc, function(i) {
                             sub_proc_options += '<option value="' + sub_proc[i].sub_proc_name + '">' + sub_proc[i].sub_proc_name + '</option>';
                         });
                         dom.closest('td').next('td').find('.pancha_sub_procedure').html(sub_proc_options);
                         dom.closest('td').next('td').find('.pancha_sub_procedure').trigger("chosen:updated");
                     }
                 },
-                error: function (xhr, errorType, exception) {
+                error: function(xhr, errorType, exception) {
                     console.log('ERROR! ');
                     console.log(xhr.responseText);
                 }
             });
         });
 
-        $('#add_row').on('click', function () {
+        $('#add_row').on('click', function() {
             var n = $('#tab_row_count').val();
             $('#tab_row_count').val(n + 1);
             var markup = '<tr>' + '<td>' +
-                    '<select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_' + (n + 1) + '">' +
-                    '<option value="">Choose procedure</option>' +
-                    panchakarma_markup +
-                    '</select>' +
-                    '</td>' +
-                    '<td>' +
-                    '<select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">' +
-                    '<option value="">Choose sub procedure</option>' +
-                    '</select>' +
-                    '</td>' +
-                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_start_date[]" id = "pancha_proc_start_date" />' + '</td>' +
-                    '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_end_date[]" pancha_proc_end_date />' + '</td>' +
-                    '</tr>';
+                '<select class="form-control chosen-select pancha_procedure" name="pancha_procedure[]" id="pancha_procedure_' + (n + 1) + '">' +
+                '<option value="">Choose procedure</option>' +
+                panchakarma_markup +
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<select class="form-control pancha_sub_procedure chosen-select" name="pancha_sub_procedure[]" id="pancha_sub_procedure">' +
+                '<option value="">Choose sub procedure</option>' +
+                '</select>' +
+                '</td>' +
+                '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_start_date[]" id = "pancha_proc_start_date" />' + '</td>' +
+                '<td>' + '<input type="text" class="form-control date_picker" name = "pancha_proc_end_date[]" pancha_proc_end_date />' + '</td>' +
+                '</tr>';
             $('#panchakarma_table').append(markup);
-            $(".pancha_procedure").chosen({width: '100%'});
-            $(".pancha_sub_procedure").chosen({width: '100%'});
+            $(".pancha_procedure").chosen({
+                width: '100%'
+            });
+            $(".pancha_sub_procedure").chosen({
+                width: '100%'
+            });
             $('.date_picker').datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -1138,31 +1179,36 @@ if (!empty($other_proc_list)) {
         });
         var lab_cat_markup = '<?= $lab_categories_markup ?>';
 
-        $('#add_lab_row').on('click', function () {
+        $('#add_lab_row').on('click', function() {
             var n = $('#tab_lab_row_count').val();
             $('#tab_lab_row_count').val(n + 1);
             var markup = '<tr>' + '<td>' +
-                    '<select class="form-control chosen-select lab_category" name="lab_category[]" id="lab_category_' + (n + 1) + '">' +
-                    '<option value="">Choose Category</option>' +
-                    lab_cat_markup +
-                    '</select>' +
-                    '</td>' +
-                    '<td>' +
-                    '<select class="form-control lab_test chosen-select" name="lab_test[]" id="lab_test_' + (n + 1) + '">' +
-                    '<option value="">Choose Test</option>' +
-                    '</select>' +
-                    '</td>' +
-                    '<td>' +
-                    '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" multiple id="lab_investigations_' + (n + 1) + '">' +
-                    '<option value="">Choose Investigations</option>' +
-                    '</select>'
-                    + '</td>' +
-                    '</tr>';
+                '<select class="form-control chosen-select lab_category" name="lab_category[]" id="lab_category_' + (n + 1) + '">' +
+                '<option value="">Choose Category</option>' +
+                lab_cat_markup +
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<select class="form-control lab_test chosen-select" name="lab_test[]" id="lab_test_' + (n + 1) + '">' +
+                '<option value="">Choose Test</option>' +
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<select class="form-control lab_investigations chosen-select" name="lab_investigations[]" multiple id="lab_investigations_' + (n + 1) + '">' +
+                '<option value="">Choose Investigations</option>' +
+                '</select>' +
+                '</td>' +
+                '</tr>';
             $('#lab_cat_table').append(markup);
-            $(".lab_category").chosen({width: '100%'});
-            $(".lab_test").chosen({width: '100%'});
-            $(".lab_investigations").chosen({width: '100%'});
+            $(".lab_category").chosen({
+                width: '100%'
+            });
+            $(".lab_test").chosen({
+                width: '100%'
+            });
+            $(".lab_investigations").chosen({
+                width: '100%'
+            });
         });
     });
-
 </script>

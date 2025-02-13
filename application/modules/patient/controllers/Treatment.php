@@ -60,6 +60,7 @@ class Treatment extends SHV_Controller {
         $this->load->model('purchase_variables');
         $data = array();
         $data['opd'] = $opd;
+        $data['ipd_status'] = $this->treatment_model->check_opdno_status($opd);
         $data['treat_id'] = $treat_id;
         $data['patient_details'] = $this->treatment_model->get_patient_basic_details($opd);
         $data['treatment_details'] = $this->treatment_model->get_treatment_history($opd);
