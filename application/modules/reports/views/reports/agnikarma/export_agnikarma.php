@@ -9,7 +9,6 @@
                 <th style="width: 160px;text-align: left;">Ref Date</th>
                 <th style="width: 150px;text-align: left;">Doctor Name</th>
                 <th style="width: 200px;text-align: left;">Treatment Notes</th>
-                <th style="width: 160px;text-align: left;">Last Updates</th>
             </tr>
         </thead>
         <tbody>
@@ -25,12 +24,11 @@
                     $tr .= '<td>' . $row['ref_date'] . '</td>';
                     $tr .= '<td>' . $row['doctor_name'] . '</td>';
                     $tr .= '<td>' . $row['treatment_notes'] . '</td>';
-                    $tr .= '<td>' . $row['last_updates'] . '</td>';
                     $tr .= '</tr>';
                 }
                 echo $tr;
             } else {
-                echo '<tr><td colspan=8>No records found</td></tr>';
+                echo '<tr><td colspan=7>No records found</td></tr>';
             }
             ?>
         </tbody>
