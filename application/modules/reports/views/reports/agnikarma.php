@@ -57,9 +57,21 @@
                 }
             },
             {
-                title: "Treat ID",
+                title: "Name",
                 data: function (item) {
-                    return item.treat_id;
+                    return item.FirstName;
+                }
+            },
+            {
+                title: "Age",
+                data: function (item) {
+                    return item.Age;
+                }
+            },
+            {
+                title: "Gender",
+                data: function (item) {
+                    return item.gender;
                 }
             },
             {
@@ -72,6 +84,12 @@
                 title: "Doctor Name",
                 data: function (item) {
                     return item.doctor_name;
+                }
+            },
+            {
+                title: "Diagnosis",
+                data: function (item) {
+                    return item.diagnosis;
                 }
             },
             {

@@ -92,7 +92,7 @@ class Patient_reports extends CI_Model {
 
     function get_agnikarma_report($conditions, $export_flag = FALSE) {
         $return = array();
-        $columns = array('a.id', 'a.opd_no', 'a.ipd_no', 'a.treat_id', 'a.ref_date', 'a.doctor_name', 'a.treatment_notes', 'a.last_updates');
+        $columns = array('a.id', 'a.opd_no', 'a.ipd_no', 'p.FirstName','p.Age','p.gender','t.diagnosis','a.treat_id', 'a.ref_date', 'a.doctor_name', 'a.treatment_notes', 'a.last_updates');
 
         $where_cond = " WHERE a.opd_no=t.OpdNo AND a.treat_id=t.ID AND t.OpdNo=p.OpdNo
             AND a.ref_date >='" . $conditions['start_date'] . "'
