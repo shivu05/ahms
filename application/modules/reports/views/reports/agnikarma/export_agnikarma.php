@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th class="sl_no" style="width: 50px;text-align: left;">Sl.No</th>
-                <th style="width: 160px;text-align: left;">Ref Date</th>
+                <th style="width: 100px;text-align: left;">Ref Date</th>
                 <th class="sl_no" style="width: 50px;text-align: left;">C.OPD</th>
                 <th class="sl_no" style="width: 50px;text-align: left;">C.IPD</th>
                 <th style="width: 120px;text-align: left;">Name</th>
@@ -11,7 +11,7 @@
                 <th style="width: 60px;text-align: left;">Gender</th>
                 <th style="width: 150px;text-align: left;">Doctor Name</th>
                 <th style="width: 150px;text-align: left;">Diagnosis</th>
-                <th style="width: 200px;text-align: left;">Treatment Notes</th>
+                <th style="width: 150px;text-align: left;">Treatment Notes</th>
             </tr>
         </thead>
         <tbody>
