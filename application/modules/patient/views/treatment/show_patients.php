@@ -1,59 +1,69 @@
 <style type="text/css">
-    .opd_no{
+    .opd_no {
         cursor: pointer;
-        width:60px !important;
+        width: 60px !important;
     }
-    .type{
+
+    .type {
         text-align: center;
     }
 
-    .text_center{
+    .text_center {
         text-align: center;
     }
-    .select2-container{
+
+    .select2-container {
         width: 100% !important;
     }
 
 
     /*  bhoechie tab */
-    div.bhoechie-tab-container{
+    div.bhoechie-tab-container {
         z-index: 10;
-        border:1px solid #ddd;
+        border: 1px solid #ddd;
         background-color: #ffffff;
         padding: 0 !important;
         border-radius: 4px;
     }
-    div.bhoechie-tab-menu{
+
+    div.bhoechie-tab-menu {
         padding-right: 0;
         padding-left: 0;
         padding-bottom: 0;
     }
-    div.bhoechie-tab-menu div.list-group{
+
+    div.bhoechie-tab-menu div.list-group {
         margin-bottom: 0;
     }
-    div.bhoechie-tab-menu div.list-group>a{
+
+    div.bhoechie-tab-menu div.list-group>a {
         margin-bottom: 0;
     }
+
     div.bhoechie-tab-menu div.list-group>a .glyphicon,
     div.bhoechie-tab-menu div.list-group>a .fa {
         color: #5A55A3;
     }
-    div.bhoechie-tab-menu div.list-group>a:first-child{
+
+    div.bhoechie-tab-menu div.list-group>a:first-child {
         border-top-right-radius: 0;
         -moz-border-top-right-radius: 0;
     }
-    div.bhoechie-tab-menu div.list-group>a:last-child{
+
+    div.bhoechie-tab-menu div.list-group>a:last-child {
         border-bottom-right-radius: 0;
         -moz-border-bottom-right-radius: 0;
     }
+
     div.bhoechie-tab-menu div.list-group>a.active,
     div.bhoechie-tab-menu div.list-group>a.active .glyphicon,
-    div.bhoechie-tab-menu div.list-group>a.active .fa{
+    div.bhoechie-tab-menu div.list-group>a.active .fa {
         background-color: #5A55A3;
         background-image: #5A55A3;
         color: #ffffff;
     }
-    div.bhoechie-tab-menu div.list-group>a.active:after{
+
+    div.bhoechie-tab-menu div.list-group>a.active:after {
         content: '';
         position: absolute;
         left: 100%;
@@ -65,14 +75,14 @@
         border-left: 10px solid #5A55A3;
     }
 
-    div.bhoechie-tab-content{
+    div.bhoechie-tab-content {
         background-color: #ffffff;
         /* border: 1px solid #eeeeee; */
         padding-left: 20px;
         padding-top: 10px;
     }
 
-    div.bhoechie-tab div.bhoechie-tab-content:not(.active){
+    div.bhoechie-tab div.bhoechie-tab-content:not(.active) {
         display: none;
     }
 </style>
@@ -94,7 +104,9 @@ if (!empty($other_proc_list)) {
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-pencil"></i> OPD Treatment</h3></div>
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-pencil"></i> OPD Treatment</h3>
+            </div>
             <div class="box-body">
                 <form class="form-horizontal" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/treatment/export'); ?>">
                     <div class="row">
@@ -159,7 +171,7 @@ if (!empty($other_proc_list)) {
     </div>
 </div>
 
-<div class="modal fade" id="treatment_edit_modal" data-backdrop="static" data-keyboard="false"  tabindex="-1" role="dialog" aria-labelledby="treatment_edit_modal_title" aria-hidden="true">
+<div class="modal fade" id="treatment_edit_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="treatment_edit_modal_title" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -174,13 +186,13 @@ if (!empty($other_proc_list)) {
                     <div class="control-group">
                         <label class="control-label" for="pat_name">Name:</label>
                         <div class="controls">
-                            <input type="text" class="form-control required" id="pat_name" name="pat_name" placeholder="Name"/>
+                            <input type="text" class="form-control required" id="pat_name" name="pat_name" placeholder="Name" />
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="pat_age">Age:</label>
                         <div class="controls">
-                            <input type="number" class="form-control required" id="pat_age" name="pat_age" placeholder="Age"/>
+                            <input type="number" class="form-control required" id="pat_age" name="pat_age" placeholder="Age" />
                         </div>
                     </div>
                     <div class="control-group">
@@ -194,7 +206,7 @@ if (!empty($other_proc_list)) {
                     <div class="control-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
                         <div class="controls">
-                            <input type="text" class="form-control required" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
+                            <input type="text" class="form-control required" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis" />
                             <input type="hidden" id="treat_id" name="treat_id" />
                             <input type="hidden" id="opd" name="opd" />
                         </div>
@@ -209,7 +221,7 @@ if (!empty($other_proc_list)) {
                     <div class="control-group">
                         <label class="control-label" for="pat_procedure">Procedures:</label>
                         <div class="controls">
-                            <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure"/>
+                            <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure" />
                         </div>
                     </div>
                     <div class="control-group">
@@ -237,8 +249,9 @@ if (!empty($other_proc_list)) {
         padding-left: 28px !important;
         text-align: left;
     }
+
     .required:after {
-        content:" *";
+        content: " *";
         color: red;
     }
 </style>
@@ -275,6 +288,9 @@ if (!empty($other_proc_list)) {
                                 </a>
                                 <a href="#" class="list-group-item text-center">
                                     Swarnaprashana
+                                </a>
+                                <a href="#" class="list-group-item text-center">
+                                    Agnikarma
                                 </a>
                             </div>
                         </div>
@@ -398,7 +414,7 @@ if (!empty($other_proc_list)) {
                                         <div class="form-group col-sm-10 col-md-10">
                                             <div class="checkbox">
                                                 <label class="" style="padding-left:46px !important;">
-                                                    <input type="checkbox" name="kriyakalpa_check" id="kriyakalpa_check" /> 
+                                                    <input type="checkbox" name="kriyakalpa_check" id="kriyakalpa_check" />
                                                     Refer for Kriyakalpa
                                                 </label>
                                             </div>
@@ -433,7 +449,7 @@ if (!empty($other_proc_list)) {
                                         <div class="form-group col-sm-10 col-md-10">
                                             <div class="checkbox">
                                                 <label class="" style="padding-left:46px !important;">
-                                                    <input type="checkbox" name="xray_check" id="xray_check" /> 
+                                                    <input type="checkbox" name="xray_check" id="xray_check" />
                                                     Refer for X-Ray
                                                 </label>
                                             </div>
@@ -482,7 +498,7 @@ if (!empty($other_proc_list)) {
                                         <div class="form-group col-sm-10 col-md-10">
                                             <div class="checkbox">
                                                 <label class="" style="padding-left:46px !important;">
-                                                    <input type="checkbox" name="swarnaprashana_check" id="swarnaprashana_check" /> 
+                                                    <input type="checkbox" name="swarnaprashana_check" id="swarnaprashana_check" />
                                                     Refer for Swarnaprashana
                                                 </label>
                                             </div>
@@ -514,6 +530,47 @@ if (!empty($other_proc_list)) {
                                     </form>
                                 </div>
                             </div>
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                    AGNIKARMA
+                                    </h5>
+                                    <form class="form-horizontal" id="agnikarma_form" name="agnikarma_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="agnikarma_check" id="agnikarma_check" />
+                                                    Refer for Agnikarma
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="ref_date required" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="ref_date" type="text" required="required" name="ref_date" class="form-control agnikarma_inputs date_picker required" placeholder="Select date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_name required" class="col-md-4 col-sm-4 control-label required">Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="doctor_name" value="" required="required" type="text" name="doctor_name" class="form-control agnikarma_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="treatment_notes" class="col-md-4 col-sm-4 control-label">Medical Notes: (Optional)</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="treatment_notes" value="" type="text" name="treatment_notes" class="form-control agnikarma_inputs" placeholder="Enter Medical notes" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md agnikarma_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md agnikarma_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -523,9 +580,10 @@ if (!empty($other_proc_list)) {
 </div>
 <script type="text/javascript">
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
-        'kriya_inputs', 'swarnaprashana_inputs'];
+        'kriya_inputs', 'swarnaprashana_inputs','agnikarma_inputs'
+    ];
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         /*$('#swarnaprashana_form #date_month').datepicker({
          format: 'MM yyyy',
@@ -535,12 +593,12 @@ if (!empty($other_proc_list)) {
          });*/
 
 
-        $.each(procedure_div_ids, function (i) {
+        $.each(procedure_div_ids, function(i) {
             $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
             $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
         });
 
-        $('#physiotherapy_check').change(function () {
+        $('#physiotherapy_check').change(function() {
             if ($(this).is(":checked")) {
                 $('.physic_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.physic_inputs').removeAttr('disabled');
@@ -550,17 +608,23 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#treatment_modal #physiotherapy_form').submit(function (e) {
+        $('#treatment_modal #physiotherapy_form').submit(function(e) {
             e.preventDefault();
             var form_data = $('#treatment_modal #physiotherapy_form').serializeArray();
-            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
-            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
             $.ajax({
                 url: base_url + 'store-physiotherapy',
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $.notify({
                         title: "PHYSIOTHERAPY",
                         message: response.message,
@@ -574,13 +638,13 @@ if (!empty($other_proc_list)) {
                         $('#treatment_modal #physiotherapy_form #physiotherapy_check').attr('checked', false).trigger('change');
                     }
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log(response);
                 }
             });
         });
 
-        $('#other_proc_check').change(function () {
+        $('#other_proc_check').change(function() {
             if ($(this).is(":checked")) {
                 $('.othr_proc_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.othr_proc_inputs').removeAttr('disabled');
@@ -590,17 +654,23 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#treatment_modal #otherprocedure_form').submit(function (e) {
+        $('#treatment_modal #otherprocedure_form').submit(function(e) {
             e.preventDefault();
             var form_data = $('#treatment_modal #otherprocedure_form').serializeArray();
-            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
-            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
             $.ajax({
                 url: base_url + 'store-other-procedures',
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $.notify({
                         title: "OTHER-PROCEDURES",
                         message: response.message,
@@ -614,13 +684,13 @@ if (!empty($other_proc_list)) {
                         $('#treatment_modal #otherprocedure_form #other_proc_check').attr('checked', false).trigger('change');
                     }
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log(response);
                 }
             });
         });
 
-        $('#kriyakalpa_check').change(function () {
+        $('#kriyakalpa_check').change(function() {
             if ($(this).is(":checked")) {
                 $('.kriya_inputs').prop('disabled', false).trigger("chosen:updated");
                 $('.kriya_inputs').removeAttr('disabled');
@@ -630,17 +700,23 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#treatment_modal #kriyakalpa_form').submit(function (e) {
+        $('#treatment_modal #kriyakalpa_form').submit(function(e) {
             e.preventDefault();
             var form_data = $('#treatment_modal #kriyakalpa_form').serializeArray();
-            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
-            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
             $.ajax({
                 url: base_url + 'store-kriyakalpa',
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $.notify({
                         title: "KRIYAKALPA",
                         message: response.message,
@@ -654,13 +730,13 @@ if (!empty($other_proc_list)) {
                         $('#treatment_modal #kriyakalpa_form #kriyakalpa_check').attr('checked', false).trigger('change');
                     }
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log(response);
                 }
             });
         });
 
-        $('#xray_check').change(function () {
+        $('#xray_check').change(function() {
             if ($(this).is(":checked")) {
                 $('.xray_inputs').removeAttr('disabled');
                 copy_input_text('#doctor_name', '#xraydocname');
@@ -669,17 +745,23 @@ if (!empty($other_proc_list)) {
             }
         });
 
-        $('#treatment_modal #xray_form').submit(function (e) {
+        $('#treatment_modal #xray_form').submit(function(e) {
             e.preventDefault();
             var form_data = $('#treatment_modal #xray_form').serializeArray();
-            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
-            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
             $.ajax({
                 url: base_url + 'store-xray',
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $.notify({
                         title: "X-RAY",
                         message: response.message,
@@ -693,13 +775,13 @@ if (!empty($other_proc_list)) {
                         $('#treatment_modal #xray_form #xray_check').attr('checked', false).trigger('change');
                     }
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log(response);
                 }
             });
         });
 
-        $('#swarnaprashana_check').change(function () {
+        $('#swarnaprashana_check').change(function() {
             if ($(this).is(":checked")) {
                 $('.swarnaprashana_inputs').removeAttr('disabled');
                 //copy_input_text('#doctor_name', '#xraydocname');
@@ -708,17 +790,23 @@ if (!empty($other_proc_list)) {
             }
         });
         $('#treatment_modal #swarnaprashana_form').validate();
-        $('#treatment_modal #swarnaprashana_form').submit(function (e) {
+        $('#treatment_modal #swarnaprashana_form').submit(function(e) {
             e.preventDefault();
             var form_data = $('#treatment_modal #swarnaprashana_form').serializeArray();
-            form_data.push({name: 'opd', value: $('#ajaxopd').val()});
-            form_data.push({name: 'tid', value: $('#ajaxtid').val()});
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
             $.ajax({
                 url: base_url + 'store-swarnaprashana',
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $.notify({
                         title: "SWARNAPRASHANA",
                         message: response.message,
@@ -732,13 +820,61 @@ if (!empty($other_proc_list)) {
                         $('#treatment_modal #swarnaprashana_form #swarnaprashana_check').attr('checked', false).trigger('change');
                     }
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log(response);
                 }
             });
         });
 
-        $("div.bhoechie-tab-menu>div.list-group>a").click(function (e) {
+        $('#agnikarma_check').change(function() {
+            if ($(this).is(":checked")) {
+                $('.agnikarma_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.agnikarma_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #agnikarma_form').submit(function(e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #agnikarma_form').serializeArray();
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
+            form_data.push({
+                name: 'ipd',
+                value: null
+            });
+            $.ajax({
+                url: base_url + 'store-agnikarma',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function(response) {
+                    $.notify({
+                        title: "AGNIKARMA",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#agnikarma_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #agnikarma_form #reset').trigger('click');
+                        $('#treatment_modal #agnikarma_form #agnikarma_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
             e.preventDefault();
             $(this).siblings('a.active').removeClass("active");
             $(this).addClass("active");
@@ -749,11 +885,11 @@ if (!empty($other_proc_list)) {
 
 
 
-        $('#search_form').on('click', '#search', function () {
+        $('#search_form').on('click', '#search', function() {
             patient_table.clear();
             patient_table.draw();
         });
-        $('#search_form #export').on('click', '#export_to_xls', function (e) {
+        $('#search_form #export').on('click', '#export_to_xls', function(e) {
             e.preventDefault();
             //$('#search_form').submit();
             var form_data = $('#search_form').serializeArray();
@@ -761,14 +897,16 @@ if (!empty($other_proc_list)) {
                 url: base_url + 'reports/Opd/export_patients_list',
                 type: 'POST',
                 dataType: 'json',
-                data: {search_form: form_data},
-                success: function (data) {
+                data: {
+                    search_form: form_data
+                },
+                success: function(data) {
                     download(data.file, data.file_name, 'application/octet-stream');
                 }
             });
         });
 
-        $('#search_form #export').on('click', '#export_cs', function (e) {
+        $('#search_form #export').on('click', '#export_cs', function(e) {
             e.preventDefault();
             $('<input>').attr({
                 type: 'hidden',
@@ -778,11 +916,10 @@ if (!empty($other_proc_list)) {
             }).appendTo('#search_form');
             $('#search_form').submit();
         });
-        var columns = [
-            {
+        var columns = [{
                 title: "OPD",
                 class: "opd_no",
-                data: function (item) {
+                data: function(item) {
                     if (item.attndedon) {
                         return '<span class="badge badge-primary" disabled="disabled">' + item.OpdNo + '</span>';
                     } else {
@@ -792,31 +929,31 @@ if (!empty($other_proc_list)) {
             },
             {
                 title: "Name",
-                data: function (item) {
+                data: function(item) {
                     return item.FirstName + ' ' + item.LastName;
                 }
             },
             {
                 title: "Age",
-                data: function (item) {
+                data: function(item) {
                     return item.Age;
                 }
             },
             {
                 title: "Gender",
-                data: function (item) {
+                data: function(item) {
                     return item.gender;
                 }
             },
-//            {
-//                title: "Address",
-//                data: function (item) {
-//                    return item.address;
-//                }
-//            },
+            //            {
+            //                title: "Address",
+            //                data: function (item) {
+            //                    return item.address;
+            //                }
+            //            },
             {
                 title: "City",
-                data: function (item) {
+                data: function(item) {
                     var patient_address = item.city;
                     if (item.address) {
                         patient_address = item.address + ', ' + item.city;
@@ -826,32 +963,32 @@ if (!empty($other_proc_list)) {
             },
             {
                 title: "Occupation",
-                data: function (item) {
+                data: function(item) {
                     return item.occupation;
                 }
             },
             {
                 title: "Diagnosis",
-                data: function (item) {
+                data: function(item) {
                     return item.diagnosis;
                 }
             },
             {
                 title: "Department",
-                data: function (item) {
+                data: function(item) {
                     return item.department;
                 }
             },
             {
                 title: "Came on",
-                data: function (item) {
+                data: function(item) {
                     return item.CameOn;
                 }
             },
             {
                 title: "Type",
                 class: 'type',
-                data: function (item) {
+                data: function(item) {
                     if (item.PatType == 'Old Patient') {
                         return '<span style="color:orange">O</span>';
                     } else if (item.PatType == 'New Patient') {
@@ -864,21 +1001,21 @@ if (!empty($other_proc_list)) {
             {
                 title: "C.Sheet",
                 class: "text_center",
-                data: function (item) {
+                data: function(item) {
                     return '<i class="fa fa-download hand_cursor text-primary download_case_sheet" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>';
                 }
             },
             {
                 title: "Action",
-                data: function (item) {
-                    return '<i class="fa fa-edit  hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>'
-                            + ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>';
+                data: function(item) {
+                    return '<i class="fa fa-edit  hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>' +
+                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>';
                 }
             },
             {
                 title: "Status",
                 class: "text_center",
-                data: function (item) {
+                data: function(item) {
                     if (item.attndedon === '' || item.attndedon === null) {
                         return '<i class="fa fa-clock-o hand_cursor text-warning text-center" data-toggle="tooltip" data-placement="left" title="Treatment Pending" aria-hidden="true"></i>';
                     } else {
@@ -889,18 +1026,19 @@ if (!empty($other_proc_list)) {
         ];
         var patient_table = $('#patient_table').DataTable({
             'columns': columns,
-            "fnInitComplete": function (oSettings, json) {
-                $(function () {
+            "fnInitComplete": function(oSettings, json) {
+                $(function() {
                     $('[data-toggle="tooltip"]').tooltip();
                 });
             },
-            createdRow: function (row, data, dataIndex) {
+            createdRow: function(row, data, dataIndex) {
                 $(row).attr('data-treat_id', data.ID);
                 $(row).attr('data-opd_id', data.OpdNo);
             },
-            'columnDefs': [
-                {className: "", "targets": [4]}
-            ],
+            'columnDefs': [{
+                className: "",
+                "targets": [4]
+            }],
             language: {
                 sZeroRecords: "<div class='no_records'>No patients found</div>",
                 sEmptyTable: "<div class='no_records'>No patients found</div>",
@@ -918,26 +1056,28 @@ if (!empty($other_proc_list)) {
                 'url': base_url + 'patient/treatment/get_patients_for_treatment',
                 'type': 'POST',
                 'dataType': 'json',
-                'data': function (d) {
+                'data': function(d) {
                     return $.extend({}, d, {
                         "search_form": $('#search_form').serializeArray()
                     });
                 }
             },
-            order: [[0, 'desc']],
+            order: [
+                [0, 'desc']
+            ],
             info: true,
             "scrollX": true
         });
-        $('#patient_table tbody').on('click', 'tr td.opd_no', function () {
+        $('#patient_table tbody').on('click', 'tr td.opd_no', function() {
             var data = patient_table.row(this).data();
             window.location.href = base_url + 'add-opd-treatment/' + data.OpdNo + '/' + data.ID;
         });
-        $('#patient_table tbody').on('click', '.download_case_sheet', function () {
+        $('#patient_table tbody').on('click', '.download_case_sheet', function() {
             var opd = $(this).data('opd');
             var treat_id = $(this).data('treat_id');
             window.location.href = base_url + 'patient/Treatment/print_case_sheet/' + opd + '/' + treat_id;
         });
-        $('#patient_table tbody').on('click', '.add_treatment_details', function () {
+        $('#patient_table tbody').on('click', '.add_treatment_details', function() {
             var opd = $(this).data('opd');
             var name = $(this).data('name');
             var tid = $(this).data('tid');
@@ -951,18 +1091,20 @@ if (!empty($other_proc_list)) {
         });
 
 
-        $('#default_modal_box').on('change', '#department', function () {
+        $('#default_modal_box').on('change', '#department', function() {
             var dept_id = $('#department').val();
             $.ajax({
                 url: base_url + 'master/Department/get_sub_departments',
                 type: 'POST',
-                data: {dept_id: dept_id},
+                data: {
+                    dept_id: dept_id
+                },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     console.log(response)
                     if (response.sub_departments.length > 0) {
                         var option = '<option value="">Choose sub department';
-                        $.each(response.sub_departments, function (i) {
+                        $.each(response.sub_departments, function(i) {
                             option += '<option value"' + response.sub_departments[i].sub_dept_id + '">' + response.sub_departments[i].sub_dept_name + '</option>'
                         });
                         $('#sub_branch').html(option);
@@ -972,7 +1114,7 @@ if (!empty($other_proc_list)) {
                     }
                     if (response.doctors.length > 0) {
                         var option = '<option value="">Choose doctor</option>';
-                        $.each(response.doctors, function (i) {
+                        $.each(response.doctors, function(i) {
                             option += '<option value"' + response.doctors[i].doctorname + '">' + response.doctors[i].doctorname + '</option>'
                         });
                         $('#doctor_name').html(option);
@@ -984,7 +1126,7 @@ if (!empty($other_proc_list)) {
                 }
             });
         });
-        $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
+        $('#default_modal_box .modal-footer').on('click', '#btn-ok', function() {
             alert();
             var form_data = $('#send_patient_for_followup').serializeArray();
             $.ajax({
@@ -992,13 +1134,13 @@ if (!empty($other_proc_list)) {
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (res) {
+                success: function(res) {
                     console.log(res);
                 }
             });
         });
         $('#treatment_edit_form').validate();
-        $('#patient_table tbody').on('click', '.edit_treatment_data', function () {
+        $('#patient_table tbody').on('click', '.edit_treatment_data', function() {
             $('#treatment_edit_form .control-group').removeClass('error');
             var opd = $(this).data('opd');
             var treat_id = $(this).data('treat_id');
@@ -1006,9 +1148,12 @@ if (!empty($other_proc_list)) {
             $.ajax({
                 url: base_url + 'patient/treatment/fetch_treatment_data',
                 type: 'POST',
-                data: {'opd': opd, 'treat_id': treat_id},
+                data: {
+                    'opd': opd,
+                    'treat_id': treat_id
+                },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $('#treatment_edit_form #pat_name').val(response.data.FirstName);
                     $('#treatment_edit_form #pat_age').val(response.data.Age);
                     $("input[name=pat_gender][value='" + response.data.gender + "']").prop("checked", true);
@@ -1019,7 +1164,7 @@ if (!empty($other_proc_list)) {
                     $('#treatment_edit_form #pat_procedure').val(response.data.procedures);
                     $('#treatment_edit_form #AddedBy').val(response.data.AddedBy);
                     var option = '';
-                    $.each(response.doctors_list, function (i) {
+                    $.each(response.doctors_list, function(i) {
                         var is_selected = '';
                         if (response.data.AddedBy == response.doctors_list[i].user_name) {
                             is_selected = 'selected="selected"';
@@ -1034,7 +1179,7 @@ if (!empty($other_proc_list)) {
 
         });
 
-        $('#treatment_edit_modal').on('click', '#btn-update', function () {
+        $('#treatment_edit_modal').on('click', '#btn-update', function() {
             var form_data = $('#treatment_edit_modal #treatment_edit_form').serializeArray();
             if ($('#treatment_edit_form').valid()) {
                 $.ajax({
@@ -1042,7 +1187,7 @@ if (!empty($other_proc_list)) {
                     type: 'POST',
                     data: form_data,
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         $('#treatment_edit_modal').modal('hide');
                         if (response.status == true) {
                             $.notify({
@@ -1069,13 +1214,14 @@ if (!empty($other_proc_list)) {
             }
         });
     });
+
     function get_patient_info_by_opd(data) {
         $.ajax({
             type: "POST",
             url: base_url + 'master/Department/get_department_list',
             data: {},
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 var table = "<form name='send_patient_for_followup' id='send_patient_for_followup' method='POST'>";
                 table += "<table class='table'>";
                 if (response.length > 0) {
@@ -1083,7 +1229,7 @@ if (!empty($other_proc_list)) {
                     var i = 0;
                     dept_option += "<select name='department' id='department' class='form-control required'>";
                     dept_option += "<option value=''>Select Department</option>";
-                    $.each(response, function () {
+                    $.each(response, function() {
                         dept_option += "<option value='" + response[i]['dept_unique_code'] + "'>" + response[i]['department'] + "</option>";
                         i++;
                     });
@@ -1104,15 +1250,17 @@ if (!empty($other_proc_list)) {
                 table += "</form>";
                 $('#default_modal_box #default_modal_label').html('Send patient for OPD');
                 $('#default_modal_box #default_modal_body').html(table);
-                $('#default_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+                $('#default_modal_box').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }, 'show');
                 $('#date').datepicker({
                     format: "yyyy-mm-dd",
                     autoclose: true,
                     todayHighlight: true
                 });
             },
-            error: function () {},
+            error: function() {},
         });
     }
-
 </script>

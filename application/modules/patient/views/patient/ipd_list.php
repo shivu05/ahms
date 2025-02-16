@@ -1,17 +1,90 @@
 <style type="text/css">
-    .ipd_no,.opd_no{
+    .ipd_no,
+    .opd_no {
         text-align: right;
         cursor: pointer;
+    }
+
+
+    /*  bhoechie tab */
+    div.bhoechie-tab-container {
+        z-index: 10;
+        border: 1px solid #ddd;
+        background-color: #ffffff;
+        padding: 0 !important;
+        border-radius: 4px;
+    }
+
+    div.bhoechie-tab-menu {
+        padding-right: 0;
+        padding-left: 0;
+        padding-bottom: 0;
+    }
+
+    div.bhoechie-tab-menu div.list-group {
+        margin-bottom: 0;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a {
+        margin-bottom: 0;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a .glyphicon,
+    div.bhoechie-tab-menu div.list-group>a .fa {
+        color: #5A55A3;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a:first-child {
+        border-top-right-radius: 0;
+        -moz-border-top-right-radius: 0;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a:last-child {
+        border-bottom-right-radius: 0;
+        -moz-border-bottom-right-radius: 0;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a.active,
+    div.bhoechie-tab-menu div.list-group>a.active .glyphicon,
+    div.bhoechie-tab-menu div.list-group>a.active .fa {
+        background-color: #5A55A3;
+        background-image: #5A55A3;
+        color: #ffffff;
+    }
+
+    div.bhoechie-tab-menu div.list-group>a.active:after {
+        content: '';
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        margin-top: -13px;
+        border-left: 0;
+        border-bottom: 13px solid transparent;
+        border-top: 13px solid transparent;
+        border-left: 10px solid #5A55A3;
+    }
+
+    div.bhoechie-tab-content {
+        background-color: #ffffff;
+        /* border: 1px solid #eeeeee; */
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+
+    div.bhoechie-tab div.bhoechie-tab-content:not(.active) {
+        display: none;
     }
 </style>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-users"></i> IPD patients:</h3></div>
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-users"></i> IPD patients:</h3>
+            </div>
             <div class="box-body">
                 <?php
                 if (!empty($this->session->flashdata('noty_msg'))) {
-                    ?>
+                ?>
                     <div class="bs-component">
                         <div class="alert alert-dismissible alert-success">
                             <button class="close" type="button" data-dismiss="alert">×</button>
@@ -20,7 +93,7 @@
                             </p>
                         </div>
                     </div>
-                    <?php
+                <?php
                 }
                 ?>
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('patient/patient/export_patients_list_pdf'); ?>">
@@ -74,7 +147,8 @@
                             <tr>
                                 <td>IPD:</td>
                                 <td><input type="text" name="dis_ipd" id="dis_ipd" class="form-control" readonly="readonly" autocomplete="off">
-                                    <input type="hidden" name="dis_doa" id="dis_doa"/></td>
+                                    <input type="hidden" name="dis_doa" id="dis_doa" />
+                                </td>
                             </tr>
                             <tr>
                                 <td>Discharge Date:<span class="err_msg">*</span> </td>
@@ -205,13 +279,13 @@ if (!empty($wards)) {
                     <div class="form-group">
                         <label class="control-label" for="pat_assigned_doctor">Assigned doctor :</label>
                         <div class="controls">
-                            <input type="text" class="form-control" id="pat_assigned_doctor" name="pat_assigned_doctor" placeholder="Doctor"/>
+                            <input type="text" class="form-control" id="pat_assigned_doctor" name="pat_assigned_doctor" placeholder="Doctor" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="pat_diagnosis">Diagnosis:</label>
                         <div class="controls">
-                            <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis"/>
+                            <input type="text" class="form-control" id="pat_diagnosis" name="pat_diagnosis" placeholder="Diagnisis" />
                             <input type="hidden" id="ipd" name="ipd" />
                             <input type="hidden" id="opd" name="opd" />
                         </div>
@@ -226,7 +300,7 @@ if (!empty($wards)) {
                     <div class="control-group">
                         <label class="control-label" for="pat_procedure">Procedures:</label>
                         <div class="controls">
-                            <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure"/>
+                            <input type="text" class="form-control" id="pat_procedure" name="pat_procedure" placeholder="Procedure" />
                         </div>
                     </div>
                 </form>
@@ -238,15 +312,117 @@ if (!empty($wards)) {
         </div>
     </div>
 </div>
+<style>
+    #treatment_modal .form-horizontal .form-group .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        padding-left: 28px !important;
+        text-align: left;
+    }
+
+    .required:after {
+        content: " *";
+        color: red;
+    }
+</style>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="treatment_modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="gridSystemModalLabel">Add treatment for <span style="color:#5A55A3" id="treatment_modal_opdno"></span></h4>
+            </div>
+            <div class="modal-body" style="padding:2px !important;">
+                <div class="row row-no-gutters">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab-container">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item text-center active">
+                                    Agnikarma
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+                            <input type="hidden" name="ajaxopd" id="ajaxopd" />
+                            <input type="hidden" name="ajaxtid" id="ajaxtid" />
+                            <input type="hidden" name="ajaxipd" id="ajaxipd" />
+                            <!-- flight section -->
+                            <div class="bhoechie-tab-content active">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        AGNIKARMA
+                                    </h5>
+                                    <form class="form-horizontal" id="agnikarma_form" name="agnikarma_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="agnikarma_check" id="agnikarma_check" />
+                                                    Refer for Agnikarma
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="ref_date required" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="ref_date" type="text" required="required" name="ref_date" class="form-control agnikarma_inputs date_picker required" placeholder="Select date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_name required" class="col-md-4 col-sm-4 control-label required">Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="doctor_name" value="" required="required" type="text" name="doctor_name" class="form-control agnikarma_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="treatment_notes" class="col-md-4 col-sm-4 control-label">Medical Notes: (Optional)</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="treatment_notes" value="" type="text" name="treatment_notes" class="form-control agnikarma_inputs" placeholder="Enter Medical notes" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md agnikarma_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md agnikarma_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
+    var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
+        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs'
+    ];
 
-    $(document).ready(function () {
-        $('#search_form').on('click', '#search', function () {
+    $(document).ready(function() {
+
+        $.each(procedure_div_ids, function(i) {
+            $('.' + procedure_div_ids[i]).attr('disabled', 'disabled');
+            $('.' + procedure_div_ids[i]).prop('disabled', true).trigger("chosen:updated");
+        });
+
+        $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
+            e.preventDefault();
+            $(this).siblings('a.active').removeClass("active");
+            $(this).addClass("active");
+            var index = $(this).index();
+            $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+            $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+        });
+
+        $('#search_form').on('click', '#search', function() {
             patient_table.clear();
             patient_table.draw();
         });
-        $('#search_form #export').on('click', '#export_to_xls', function (e) {
+        $('#search_form #export').on('click', '#export_to_xls', function(e) {
             e.preventDefault();
             //$('#search_form').submit();
             var form_data = $('#search_form').serializeArray();
@@ -254,88 +430,89 @@ if (!empty($wards)) {
                 url: base_url + 'patient/patient/export_patients_list',
                 type: 'POST',
                 dataType: 'json',
-                data: {search_form: form_data},
-                success: function (data) {
+                data: {
+                    search_form: form_data
+                },
+                success: function(data) {
                     download(data.file, data.file_name, 'application/octet-stream');
                 }
             });
         });
 
-        $('#search_form #export').on('click', '#export_to_pdf', function () {
+        $('#search_form #export').on('click', '#export_to_pdf', function() {
             $('#search_form').submit();
         });
-        var columns = [
-            {
+        var columns = [{
                 title: "IPD",
                 class: "ipd_no",
-                data: function (item) {
+                data: function(item) {
                     return '<span class="badge badge-danger" data-ipd_no=' + item.IpNo + '>' + item.IpNo + '</span>';
                 }
             },
             {
                 title: "OPD",
                 class: "opd_no",
-                data: function (item) {
+                data: function(item) {
                     return item.OpdNo;
                 }
             },
             {
                 title: "Name",
-                data: function (item) {
+                data: function(item) {
                     return item.FName;
                 }
             },
             {
                 title: "Age",
-                data: function (item) {
+                data: function(item) {
                     return item.Age;
                 }
             },
             {
                 title: "Gender",
-                data: function (item) {
+                data: function(item) {
                     return item.Gender;
                 }
             },
             {
                 title: "Department",
-                data: function (item) {
+                data: function(item) {
                     return item.department;
                 }
             },
             {
                 title: "Diagnosis",
-                data: function (item) {
+                data: function(item) {
                     return item.diagnosis;
                 }
             },
             {
                 title: "Ward",
-                data: function (item) {
+                data: function(item) {
                     return item.WardNo;
                 }
             },
             {
                 title: "Bed",
-                data: function (item) {
+                data: function(item) {
                     return item.BedNo;
                 }
             },
             {
                 title: "Assigned doctor",
-                data: function (item) {
+                data: function(item) {
                     return item.Doctor;
                 }
             },
             {
                 title: "DOA",
-                data: function (item) {
+                data: function(item) {
                     return item.DoAdmission + ' ' + item.admit_time;
                 }
             },
             {
                 title: "DOD",
-                data: function (item) {
+                data: function(item) {
                     if (item.status === "stillin") {
                         return item.DoDischarge;
                     } else {
@@ -345,13 +522,13 @@ if (!empty($wards)) {
             },
             {
                 title: "Days",
-                data: function (item) {
+                data: function(item) {
                     return item.NofDays;
                 }
             },
             {
                 title: "Discharge",
-                data: function (item) {
+                data: function(item) {
                     if (item.status == 'stillin') {
                         return '<button class="btn btn-danger btn-sm discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
                     } else {
@@ -361,7 +538,7 @@ if (!empty($wards)) {
             },
             {
                 title: "Action",
-                data: function (item) {
+                data: function(item) {
                     /*if (item.status == 'stillin') {
                      return "<i class='fa fa-download text-disabled' style='pointer-events: none;'></i>";
                      } else {
@@ -370,8 +547,9 @@ if (!empty($wards)) {
                      
                      }*/
                     return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
-                            ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>'
-                            + ' | <i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i>';
+                        ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>' +
+                        ' | <i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i>' +
+                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-ipd="' + item.IpNo + '" data-tid="' + item.treatId + '" data-opd="' + item.OpdNo + '" data-name="' + item.FName + '" id="add_treatment_details"></i>';
 
                 }
             }
@@ -379,9 +557,10 @@ if (!empty($wards)) {
 
         var patient_table = $('#patient_table').DataTable({
             'columns': columns,
-            'columnDefs': [
-                {className: "", "targets": [4]}
-            ],
+            'columnDefs': [{
+                className: "",
+                "targets": [4]
+            }],
             language: {
                 sZeroRecords: "<div class='no_records'>No patients found</div>",
                 sEmptyTable: "<div class='no_records'>No patients found</div>",
@@ -398,28 +577,45 @@ if (!empty($wards)) {
                 'url': base_url + 'patient/patient/get_ipd_patients_list',
                 'type': 'POST',
                 'dataType': 'json',
-                'data': function (d) {
+                'data': function(d) {
                     return $.extend({}, d, {
                         "search_form": $('#search_form').serializeArray()
                     });
                 }
             },
-            order: [[0, 'desc']],
+            order: [
+                [0, 'desc']
+            ],
             info: true,
             scrollX: true,
             ordering: false,
 
         });
 
-        patient_table.on('draw', function () {
+        patient_table.on('draw', function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
-        $('#patient_table tbody').on('click', '.ipd_no', function () {
+        $('#patient_table tbody').on('click', '.ipd_no', function() {
             var ipd_id = $(this).find('span').data('ipd_no');
             window.location = base_url + 'patient/Treatment/add_ipd_treatment/' + ipd_id + '';
         });
 
-        $('#patient_table tbody').on('click', '.discharge', function () {
+        $('#patient_table tbody').on('click', '.add_treatment_details', function() {
+            var opd = $(this).data('opd');
+            var ipd = $(this).data('ipd');
+            var name = $(this).data('name');
+            var tid = $(this).data('tid');
+            $('#treatment_modal #ajaxopd').val(opd);
+            $('#treatment_modal #ajaxipd').val(ipd);
+            $('#treatment_modal #ajaxtid').val(tid);
+            $('#treatment_modal').modal({
+                keyboard: false,
+                backdrop: 'static'
+            }, 'show');
+            $('#treatment_modal #treatment_modal_opdno').html('[C.OPD: ' + opd + ' | C.IPD: ' + ipd + ' - ' + name + ']');
+        });
+
+        $('#patient_table tbody').on('click', '.discharge', function() {
             $('#discharge_form').find("input[type=text],input[name=days], textarea").val("")
             var ipd_id = $(this).data('ipd_id');
             var doa = $(this).data('doa');
@@ -428,7 +624,10 @@ if (!empty($wards)) {
             $('#discharge_modal_box #treated').val($(this).data('doctor_name'));
 
 
-            $('#discharge_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+            $('#discharge_modal_box').modal({
+                backdrop: 'static',
+                keyboard: false
+            }, 'show');
             var date = new Date(doa);
             $('.date_picker').datepicker({
                 format: "yyyy-mm-dd",
@@ -439,7 +638,7 @@ if (!empty($wards)) {
         });
 
         $('#discharge_form').validate();
-        $('#discharge_modal_box').on('click', '#btn-ok', function () {
+        $('#discharge_modal_box').on('click', '#btn-ok', function() {
             if ($('#discharge_form').valid()) {
                 var form_data = $('#discharge_form').serializeArray();
                 $.ajax({
@@ -447,7 +646,7 @@ if (!empty($wards)) {
                     type: 'POST',
                     dataType: 'json',
                     data: form_data,
-                    success: function (res) {
+                    success: function(res) {
                         if (res == 1) {
                             patient_table.draw();
                             $('#discharge_modal_box').modal('hide');
@@ -464,7 +663,7 @@ if (!empty($wards)) {
             }
         });
 
-        $('#discharge_form').on('change', '#dod', function () {
+        $('#discharge_form').on('change', '#dod', function() {
             var doa = $('#dis_doa').val();
             var dod = $('#dod').val();
 
@@ -472,8 +671,11 @@ if (!empty($wards)) {
                 url: base_url + 'patient/patient/date_difference/',
                 type: 'POST',
                 dataType: 'json',
-                data: {doa: doa, dod: dod},
-                success: function (res) {
+                data: {
+                    doa: doa,
+                    dod: dod
+                },
+                success: function(res) {
                     if (!isNaN(res)) {
                         $('#days').val(res);
                     }
@@ -481,7 +683,7 @@ if (!empty($wards)) {
             });
         });
 
-        $('#patient_form').on('change', '.ipd_dates', function () {
+        $('#patient_form').on('change', '.ipd_dates', function() {
             var doa = $('#DoAdmission').val();
             var dod = $('#DoDischarge').val();
             if (doa && dod) {
@@ -489,8 +691,11 @@ if (!empty($wards)) {
                     url: base_url + 'patient/patient/date_difference/',
                     type: 'POST',
                     dataType: 'json',
-                    data: {doa: doa, dod: dod},
-                    success: function (res) {
+                    data: {
+                        doa: doa,
+                        dod: dod
+                    },
+                    success: function(res) {
                         if (!isNaN(res)) {
                             $('#NofDays').val(res);
                         }
@@ -499,18 +704,20 @@ if (!empty($wards)) {
             }
         });
 
-        $('#default_modal_box').on('change', '#department', function () {
+        $('#default_modal_box').on('change', '#department', function() {
             var dept_id = $('#department').val();
             $.ajax({
                 url: base_url + 'master/Department/get_sub_departments',
                 type: 'POST',
-                data: {dept_id: dept_id},
+                data: {
+                    dept_id: dept_id
+                },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     console.log(response)
                     if (response.sub_departments.length > 0) {
                         var option = '<option value="">Choose sub department';
-                        $.each(response.sub_departments, function (i) {
+                        $.each(response.sub_departments, function(i) {
                             option += '<option value"' + response.sub_departments[i].sub_dept_id + '">' + response.sub_departments[i].sub_dept_name + '</option>'
                         });
                         $('#sub_branch').html(option);
@@ -520,7 +727,7 @@ if (!empty($wards)) {
                     }
                     if (response.doctors.length > 0) {
                         var option = '<option value="">Choose doctor</option>';
-                        $.each(response.doctors, function (i) {
+                        $.each(response.doctors, function(i) {
                             option += '<option value="' + response.doctors[i].doctorname + '">' + response.doctors[i].doctorname + '</option>'
                         });
                         $('#doctor_name').html(option);
@@ -534,35 +741,38 @@ if (!empty($wards)) {
         });
 
 
-        $('#default_modal_box .modal-footer').on('click', '#btn-ok', function () {
+        $('#default_modal_box .modal-footer').on('click', '#btn-ok', function() {
             var form_data = $('#send_patient_for_followup').serializeArray();
             $.ajax({
                 url: base_url + "patient/patient/followup",
                 type: 'POST',
                 data: form_data,
                 dataType: 'json',
-                success: function (res) {
+                success: function(res) {
                     console.log(res);
                 }
             });
         });
 
-        $('#patient_table tbody').on('click', '.download_case_sheet', function () {
+        $('#patient_table tbody').on('click', '.download_case_sheet', function() {
             var ipd = $(this).data('ipd');
             window.open(base_url + 'patient/print_ipd_case_sheet/' + ipd, '_blank');
             //window.location.href = base_url + 'patient/print_ipd_case_sheet/' + ipd;
         });
 
-        $('#patient_table tbody').on('click', '.edit_patient', function () {
+        $('#patient_table tbody').on('click', '.edit_patient', function() {
             var opd_id = $(this).data('opd');
             var ipd_id = $(this).data('ipd');
             $('#patient_modal_box #ipd_no_span').html(ipd_id).css('color', 'brown');
             $.ajax({
                 url: base_url + "common_methods/get_ipd_patient_details",
                 type: 'POST',
-                data: {opd: opd_id, ipd: ipd_id},
+                data: {
+                    opd: opd_id,
+                    ipd: ipd_id
+                },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     if (response.status) {
                         $('#patient_form #first_name').val(response.data.FirstName);
                         $('#patient_form #last_name').val(response.data.LastName);
@@ -594,16 +804,19 @@ if (!empty($wards)) {
                     }
                 }
             });
-            $('#patient_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+            $('#patient_modal_box').modal({
+                backdrop: 'static',
+                keyboard: false
+            }, 'show');
         });
 
-        $('#patient_form #bed_no').on('change', function () {
+        $('#patient_form #bed_no').on('change', function() {
             var selected_bed = $(this).val();
             $('#patient_form #selected_bed_no').val(selected_bed);
         });
 
         $('#patient_form').validate();
-        $('#patient_modal_box').on('click', '#btn-ok', function () {
+        $('#patient_modal_box').on('click', '#btn-ok', function() {
 
             if ($('#patient_form').valid()) {
                 var form_data = $('#patient_form').serializeArray();
@@ -613,10 +826,10 @@ if (!empty($wards)) {
                     type: 'POST',
                     data: form_data,
                     dataType: 'json',
-                    beforeSend: function (xhr) {
+                    beforeSend: function(xhr) {
                         $('.loading-box').show();
                     },
-                    success: function (response) {
+                    success: function(response) {
                         $('.loading-box').hide();
                         if (response.status) {
                             $('#patient_modal_box').modal('hide');
@@ -652,6 +865,56 @@ if (!empty($wards)) {
                 });
             }
         });
+
+        //code for handling pop up for treatment details
+
+        $('#agnikarma_check').change(function() {
+            if ($(this).is(":checked")) {
+                $('.agnikarma_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.agnikarma_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #agnikarma_form').submit(function(e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #agnikarma_form').serializeArray();
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
+            form_data.push({
+                name: 'ipd',
+                value: $('#ajaxipd').val()
+            });
+            $.ajax({
+                url: base_url + 'store-agnikarma',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function(response) {
+                    $.notify({
+                        title: "AGNIKARMA",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#agnikarma_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #agnikarma_form #reset').trigger('click');
+                        $('#treatment_modal #agnikarma_form #agnikarma_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
     });
 
     function get_patient_info_by_opd(data) {
@@ -660,7 +923,7 @@ if (!empty($wards)) {
             url: base_url + 'master/Department/get_department_list',
             data: {},
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 var table = "<form name='send_patient_for_followup' id='send_patient_for_followup' method='POST'>";
                 table += "<table class='table'>";
                 if (response.length > 0) {
@@ -668,7 +931,7 @@ if (!empty($wards)) {
                     var i = 0;
                     dept_option += "<select name='department' id='department' class='form-control required'>";
                     dept_option += "<option value=''>Select Department</option>";
-                    $.each(response, function () {
+                    $.each(response, function() {
                         dept_option += "<option value='" + response[i]['dept_unique_code'] + "'>" + response[i]['department'] + "</option>";
                         i++;
                     });
@@ -689,15 +952,17 @@ if (!empty($wards)) {
                 table += "</form>";
                 $('#default_modal_box #default_modal_label').html('Send patient for OPD');
                 $('#default_modal_box #default_modal_body').html(table);
-                $('#default_modal_box').modal({backdrop: 'static', keyboard: false}, 'show');
+                $('#default_modal_box').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }, 'show');
                 $('#date').datepicker({
                     format: "yyyy-mm-dd",
                     autoclose: true,
                     todayHighlight: true
                 });
             },
-            error: function () {},
+            error: function() {},
         });
     }
-
 </script>

@@ -205,5 +205,13 @@ $route['add-opd-bill'] = 'bills/patients_bill/add_opd_bill';
 $route['add-ipd-bill'] = 'bills/patients_bill/add_ipd_bill';
 $route['get-service-details'] = 'bills/bill_services/get_service_details';
 
+$route['store-agnikarma'] = 'register/agnikarma/store';
+$route['update-agnikarma'] = 'register/agnikarma/update';
+$route['agnikarma'] = 'register/agnikarma/index';
+$route['agnikarma/edit/(:any)'] = 'register/agnikarma/edit/$1';
+$route['agnikarma/delete/(:any)'] = 'register/agnikarma/delete/$1';
+$route['fetch-agnikarma'] = 'reports/get_agnikarma_patients_list';
+$route['export-agnikarma'] = 'reports/export_agnikarma';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

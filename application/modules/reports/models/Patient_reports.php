@@ -89,4 +89,54 @@ class Patient_reports extends CI_Model {
             JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         return $return;
     }
+
+    function get_agnikarma_report($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array('a.id', 'a.opd_no', 'a.ipd_no', 'a.treat_id', 'a.ref_date', 'a.doctor_name', 'a.treatment_notes', 'a.last_updates');
+
+        $where_cond = " WHERE a.opd_no=t.OpdNo AND a.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND a.ref_date >='" . $conditions['start_date'] . "'
+            AND a.ref_date <='" . $conditions['end_date'] . "'";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'opd_no':
+                        $where_cond .= " AND a.opd_no='$val'";
+                        break;
+                    case 'doctor_name':
+                        $where_cond .= " AND a.doctor_name LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
+            FROM agnikarma_opd_ipd_register a
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
+            $where_cond ORDER BY a.ref_date ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM agnikarma_opd_ipd_register a
+            JOIN treatmentdata t ON a.opd_no=t.OpdNo AND a.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
 }

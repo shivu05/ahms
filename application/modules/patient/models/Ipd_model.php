@@ -22,7 +22,7 @@ class Ipd_model extends CI_Model {
         $columns = array(
             'ip.IpNo', 'ip.OpdNo', 'FName', 'Age', 'Gender', '(REPLACE((ip.department),"_"," ")) department', 'WardNo', 'BedNo',
             'DoAdmission', 'DoDischarge', 'Doctor', 't.diagnosis', 't.procedures', 'ip.status', 'NofDays',
-            ' COALESCE(admit_time,"00:00") admit_time', 'COALESCE(discharge_time,"00:00") discharge_time'
+            ' COALESCE(admit_time,"00:00") admit_time', 'COALESCE(discharge_time,"00:00") discharge_time','treatId'
         );
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {

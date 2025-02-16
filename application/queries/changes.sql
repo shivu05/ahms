@@ -103,3 +103,13 @@ CREATE TABLE `ipd_billing` (
     FOREIGN KEY (`ipd_no`) REFERENCES `inpatientdetails`(`IpNo`),
     FOREIGN KEY (`service_id`) REFERENCES `bill_services`(`service_id`)
 );
+
+
+CREATE TABLE `agnikarma_opd_ipd_register` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `opd_no` INT NULL,
+  `ipd_no` INT NULL,
+  `ref_date` DATE NULL,
+  `doctor_name` VARCHAR(100) NULL,
+  `last_updates` DATETIME NULL DEFAULT current_timestamp,
+  PRIMARY KEY (`id`));
