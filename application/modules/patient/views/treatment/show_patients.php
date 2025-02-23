@@ -292,6 +292,9 @@ if (!empty($other_proc_list)) {
                                 <a href="#" class="list-group-item text-center">
                                     Agnikarma
                                 </a>
+                                <a href="#" class="list-group-item text-center">
+                                    Cupping
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
@@ -533,7 +536,7 @@ if (!empty($other_proc_list)) {
                             <div class="bhoechie-tab-content">
                                 <div class="row">
                                     <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
-                                    AGNIKARMA
+                                        AGNIKARMA
                                     </h5>
                                     <form class="form-horizontal" id="agnikarma_form" name="agnikarma_form">
                                         <div class="form-group col-sm-10 col-md-10">
@@ -571,6 +574,72 @@ if (!empty($other_proc_list)) {
                                     </form>
                                 </div>
                             </div>
+
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        Cupping Register
+                                    </h5>
+                                    <form class="form-horizontal" id="cupping_form" name="cupping_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="cupping_check" id="cupping_check" />
+                                                    Refer for Cupping
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="ref_date" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="ref_date" type="text" required="required" name="ref_date" class="form-control cupping_inputs date_picker required" placeholder="Select date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_name" class="col-md-4 col-sm-4 control-label required">Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="doctor_name" value="" required="required" type="text" name="doctor_name" class="form-control cupping_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="type_of_cupping" class="col-md-4 col-sm-4 control-label required">Type of Cupping:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <select id="type_of_cupping" name="type_of_cupping" class="form-control cupping_inputs required">
+                                                    <option value="">Choose</option>
+                                                    <option value="Dry Cupping">Dry Cupping</option>
+                                                    <option value="Wet Cupping">Wet Cupping</option>
+                                                    <option value="Fire Cupping">Fire Cupping</option>
+                                                    <option value="Oil Cupping">Oil Cupping</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="site_of_application" class="col-md-4 col-sm-4 control-label required">Site of Application:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="site_of_application" value="" required="required" type="text" name="site_of_application" class="form-control cupping_inputs required" placeholder="Enter Site of Application" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="no_of_cups_used" class="col-md-4 col-sm-4 control-label required">Number of Cups Used:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="no_of_cups_used" value="" required="required" type="number" name="no_of_cups_used" class="form-control cupping_inputs required" placeholder="Enter Number of Cups Used" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="treatment_notes" class="col-md-4 col-sm-4 control-label">Medical Notes: (Optional)</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="treatment_notes" value="" type="text" name="treatment_notes" class="form-control cupping_inputs" placeholder="Enter Medical notes" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md cupping_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md cupping_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -580,7 +649,7 @@ if (!empty($other_proc_list)) {
 </div>
 <script type="text/javascript">
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
-        'kriya_inputs', 'swarnaprashana_inputs','agnikarma_inputs'
+        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs','cupping_inputs'
     ];
 
     $(document).ready(function() {
@@ -866,6 +935,50 @@ if (!empty($other_proc_list)) {
                     if (response.status == 'OK') {
                         $('#treatment_modal #agnikarma_form #reset').trigger('click');
                         $('#treatment_modal #agnikarma_form #agnikarma_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#cupping_check').change(function() {
+            if ($(this).is(":checked")) {
+                $('.cupping_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.cupping_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #cupping_form').submit(function(e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #cupping_form').serializeArray();
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
+            $.ajax({
+                url: base_url + 'store-cupping',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function(response) {
+                    $.notify({
+                        title: "CUPPING",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#cupping_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #cupping_form #reset').trigger('click');
+                        $('#treatment_modal #cupping_form #cupping_check').attr('checked', false).trigger('change');
                     }
                 },
                 error: function(response) {

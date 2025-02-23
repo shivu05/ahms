@@ -213,5 +213,10 @@ $route['agnikarma/delete/(:any)'] = 'register/agnikarma/delete/$1';
 $route['fetch-agnikarma'] = 'reports/get_agnikarma_patients_list';
 $route['export-agnikarma'] = 'reports/export_agnikarma';
 
+$route['store-cupping'] = 'register/cupping/store';
+$route['cupping'] = 'reports/cupping';
+$route['fetch-cupping'] = 'reports/get_cupping_patients_list';
+$route['export-cupping'] = 'reports/export_cupping';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

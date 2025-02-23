@@ -139,4 +139,54 @@ class Patient_reports extends CI_Model {
             JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         return $return;
     }
+
+    function get_cupping_report($conditions, $export_flag = FALSE) {
+        $return = array();
+        $columns = array('c.id', 'c.opd_no', 'c.ipd_no', 'p.FirstName', 'p.Age', 'p.gender', 't.diagnosis', 'c.treat_id', 'c.ref_date', 'c.doctor_name', 'c.type_of_cupping', 'c.site_of_application', 'c.no_of_cups_used', 'c.treatment_notes', 'c.last_updates');
+    
+        $where_cond = " WHERE c.opd_no=t.OpdNo AND c.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND c.ref_date >='" . $conditions['start_date'] . "'
+            AND c.ref_date <='" . $conditions['end_date'] . "'";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+    
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'opd_no':
+                        $where_cond .= " AND c.opd_no='$val'";
+                        break;
+                    case 'doctor_name':
+                        $where_cond .= " AND c.doctor_name LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+    
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
+            FROM cupping_opd_ipd_register c
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
+            $where_cond ORDER BY c.ref_date ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+    
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM cupping_opd_ipd_register c
+            JOIN treatmentdata t ON c.opd_no=t.OpdNo AND c.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
 }

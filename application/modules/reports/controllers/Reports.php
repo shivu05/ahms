@@ -5,11 +5,13 @@
  *
  * @author shivarajkumar.badige
  */
-class Reports extends SHV_Controller {
+class Reports extends SHV_Controller
+{
 
     private $_is_admin = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "IPD";
@@ -17,7 +19,8 @@ class Reports extends SHV_Controller {
         $this->_is_admin = $this->rbac->is_admin();
     }
 
-    public function show_lab_report($id = null) {
+    public function show_lab_report($id = null)
+    {
         $lab_data = $this->patient_reports->fetch_patient_lab_details($id);
         $testname = explode(",", $lab_data['testName']);
         $lab_test_type = explode(",", $lab_data['lab_test_type']);
@@ -65,7 +68,8 @@ class Reports extends SHV_Controller {
         exit;
     }
 
-    function swarnaprashana() {
+    function swarnaprashana()
+    {
         $this->layout->title = "Swarnaprashana";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Swarnaprashana";
@@ -80,7 +84,8 @@ class Reports extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_swarnaprashana_patients_list() {
+    function get_swarnaprashana_patients_list()
+    {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -93,7 +98,8 @@ class Reports extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function export_swarnaprashana() {
+    function export_swarnaprashana()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -119,7 +125,8 @@ class Reports extends SHV_Controller {
         exit;
     }
 
-    function agnikarma() {
+    function agnikarma()
+    {
         $this->layout->title = "Agnikarma";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "Agnikarma";
@@ -134,7 +141,8 @@ class Reports extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_agnikarma_patients_list() {
+    function get_agnikarma_patients_list()
+    {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -147,7 +155,8 @@ class Reports extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function export_agnikarma() {
+    function export_agnikarma()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -170,6 +179,63 @@ class Reports extends SHV_Controller {
 
         $current_date = format_date($input_array['start_date']);
         generate_pdf($html, 'L', $title, 'AGNIKARMA_REPORT_' . $current_date, true, true, 'D');
+        exit;
+    }
+
+    function cupping()
+    {
+        $this->layout->title = "Cupping";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Cupping";
+        $this->layout->navDescr = "Cupping";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'export-cupping', false, false);
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_cupping_patients_list()
+    {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->patient_reports->get_cupping_report($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function export_cupping()
+    {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->patient_reports->get_cupping_report($input_array, true);
+        $this->layout->data = $result;
+        $html = $this->layout->render(array('view' => 'reports/reports/cupping/export_cupping'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'CUPPING REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        $current_date = format_date($input_array['start_date']);
+        generate_pdf($html, 'L', $title, 'CUPPING_REPORT_' . $current_date, true, true, 'D');
         exit;
     }
 }
