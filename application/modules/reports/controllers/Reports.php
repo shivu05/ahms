@@ -238,4 +238,61 @@ class Reports extends SHV_Controller
         generate_pdf($html, 'L', $title, 'CUPPING_REPORT_' . $current_date, true, true, 'D');
         exit;
     }
+
+    function jaloukavacharana()
+    {
+        $this->layout->title = "Jaloukavacharana";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Jaloukavacharana";
+        $this->layout->navDescr = "Jaloukavacharana";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'export-jaloukavacharana', false, false);
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_jaloukavacharana_patients_list()
+    {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->patient_reports->get_jaloukavacharana_report($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function export_jaloukavacharana()
+    {
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        $input_array = array();
+
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+
+        $result = $this->patient_reports->get_jaloukavacharana_report($input_array, true);
+        $this->layout->data = $result;
+        $html = $this->layout->render(array('view' => 'reports/reports/jaloukavacharana/export_jaloukavacharana'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        $title = array(
+            'report_title' => 'JALOUKAVACHARANA REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        $current_date = format_date($input_array['start_date']);
+        generate_pdf($html, 'L', $title, 'JALOUKAVACHARANA_REPORT_' . $current_date, true, true, 'D');
+        exit;
+    }
 }

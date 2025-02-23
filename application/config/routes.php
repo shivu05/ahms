@@ -218,5 +218,15 @@ $route['cupping'] = 'reports/cupping';
 $route['fetch-cupping'] = 'reports/get_cupping_patients_list';
 $route['export-cupping'] = 'reports/export_cupping';
 
+$route['store-jaloukavacharana'] = 'register/jaloukavacharana/create';
+$route['jaloukavacharana/get/(:num)'] = 'jaloukavacharana/get/$1';
+$route['jaloukavacharana/get'] = 'jaloukavacharana/get';
+$route['jaloukavacharana/update/(:num)'] = 'jaloukavacharana/update/$1';
+$route['jaloukavacharana/delete/(:num)'] = 'jaloukavacharana/delete/$1';
+$route['jaloukavacharana'] = 'reports/jaloukavacharana';
+$route['fetch-jaloukavacharana'] = 'reports/get_jaloukavacharana_patients_list';
+$route['export-jaloukavacharana'] = 'reports/export_jaloukavacharana';
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

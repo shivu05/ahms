@@ -113,3 +113,33 @@ CREATE TABLE `agnikarma_opd_ipd_register` (
   `doctor_name` VARCHAR(100) NULL,
   `last_updates` DATETIME NULL DEFAULT current_timestamp,
   PRIMARY KEY (`id`));
+
+  CREATE TABLE `cupping_opd_ipd_register` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `opd_no` int(11) DEFAULT NULL,
+  `ipd_no` int(11) DEFAULT NULL,
+  `treat_id` int(11) DEFAULT NULL,
+  `ref_date` date DEFAULT NULL,
+  `doctor_name` varchar(100) DEFAULT NULL,
+  `type_of_cupping` varchar(100) DEFAULT NULL,
+  `site_of_application` varchar(100) DEFAULT NULL,
+  `no_of_cups_used` int(11) DEFAULT NULL,
+  `treatment_notes` text DEFAULT NULL,
+  `last_updates` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE `jaloukavacharana_opd_ipd_register` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `opd_no` INT NOT NULL,
+    `ipd_no` INT NULL,
+    `ref_date` DATE NOT NULL,
+    `doctor_name` VARCHAR(100) NOT NULL,
+    `procedure_details` TEXT NULL,
+    `doctor_remarks` TEXT NULL,
+    `last_updated` DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_opd` FOREIGN KEY (`opd_no`) REFERENCES `patientdata`(`OpdNo`) ON DELETE CASCADE,
+    CONSTRAINT `fk_ipd` FOREIGN KEY (`ipd_no`) REFERENCES `inpatientdetails`(`IpNo`) ON DELETE SET NULL
+);
