@@ -143,3 +143,16 @@ CREATE TABLE `jaloukavacharana_opd_ipd_register` (
     CONSTRAINT `fk_opd` FOREIGN KEY (`opd_no`) REFERENCES `patientdata`(`OpdNo`) ON DELETE CASCADE,
     CONSTRAINT `fk_ipd` FOREIGN KEY (`ipd_no`) REFERENCES `inpatientdetails`(`IpNo`) ON DELETE SET NULL
 );
+
+CREATE TABLE `siravyadana_opd_ipd_register` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `opd_no` int(11) NOT NULL,
+  `ipd_no` int(11) DEFAULT NULL,
+  `treat_id` int(11) DEFAULT NULL,
+  `ref_date` date NOT NULL,
+  `doctor_name` varchar(100) NOT NULL,
+  `procedure_details` text DEFAULT NULL,
+  `doctor_remarks` text DEFAULT NULL,
+  `last_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

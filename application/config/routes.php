@@ -227,6 +227,11 @@ $route['jaloukavacharana'] = 'reports/jaloukavacharana';
 $route['fetch-jaloukavacharana'] = 'reports/get_jaloukavacharana_patients_list';
 $route['export-jaloukavacharana'] = 'reports/export_jaloukavacharana';
 
+$route['store-siravyadana'] = 'register/siravyadana/store';
+$route['siravyadana'] = 'reports/siravyadana';
+$route['fetch-siravyadana'] = 'reports/get_siravyadana_patients_list';
+$route['export-siravyadana'] = 'reports/export_siravyadana';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

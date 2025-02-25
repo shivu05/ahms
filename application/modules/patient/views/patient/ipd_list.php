@@ -347,6 +347,9 @@ if (!empty($wards)) {
                                 <a href="#" class="list-group-item text-center">
                                     Jaloukavacharana
                                 </a>
+                                <a href="#" class="list-group-item text-center">
+                                    Siravyadana
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
@@ -490,7 +493,7 @@ if (!empty($wards)) {
                                         <div class="form-group col-sm-10 col-md-10">
                                             <label for="procedure_details" class="col-md-4 col-sm-4 control-label required">Procedure Details:</label>
                                             <div class="col-md-6 col-sm-6">
-                                                <textarea id="procedure_details" value="" type="text" name="procedure_details" class="form-control jaloukavacharana_inputs required" placeholder="Enter Procedure Details" autocomplete="off"></textarea>
+                                                <textarea id="procedure_details" value="" required="required" type="text" name="procedure_details" class="form-control jaloukavacharana_inputs required" placeholder="Enter Procedure Details" autocomplete="off"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-10 col-md-10">
@@ -508,6 +511,53 @@ if (!empty($wards)) {
                                     </form>
                                 </div>
                             </div>
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        Siravyadana Register
+                                    </h5>
+                                    <form class="form-horizontal" id="siravyadana_form" name="siravyadana_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="siravyadana_check" id="siravyadana_check" />
+                                                    Refer for Siravyadana
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="ref_date" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="ref_date" type="text" required="required" name="ref_date" class="form-control siravyadana_inputs date_picker required" placeholder="Select date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_name" class="col-md-4 col-sm-4 control-label required">Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="doctor_name" value="" required="required" type="text" name="doctor_name" class="form-control siravyadana_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="procedure_details" class="col-md-4 col-sm-4 control-label required">Procedure Details:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="procedure_details" value="" required="required" type="text" name="procedure_details" class="form-control siravyadana_inputs required" placeholder="Enter Procedure Details" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_remarks" class="col-md-4 col-sm-4 control-label">Doctor Remarks:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="doctor_remarks" value="" type="text" name="doctor_remarks" class="form-control siravyadana_inputs" placeholder="Enter Doctor Remarks" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md siravyadana_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md siravyadana_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -518,7 +568,7 @@ if (!empty($wards)) {
 
 <script type="text/javascript">
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
-        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs', 'cupping_inputs', 'jaloukavacharana_inputs'
+        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs', 'cupping_inputs', 'jaloukavacharana_inputs', 'siravyadana_inputs'
     ];
 
     $(document).ready(function() {
@@ -1123,6 +1173,54 @@ if (!empty($wards)) {
                     if (response.status == 'OK') {
                         $('#treatment_modal #jaloukavacharana_form #reset').trigger('click');
                         $('#treatment_modal #jaloukavacharana_form #jaloukavacharana_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#siravyadana_check').change(function() {
+            if ($(this).is(":checked")) {
+                $('.siravyadana_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.siravyadana_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #siravyadana_form').submit(function(e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #siravyadana_form').serializeArray();
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
+            form_data.push({
+                name: 'ipd',
+                value: $('#ajaxipd').val()
+            });
+            $.ajax({
+                url: base_url + 'store-siravyadana',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function(response) {
+                    $.notify({
+                        title: "SIRAVYADANA",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#siravyadana_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #siravyadana_form #reset').trigger('click');
+                        $('#treatment_modal #siravyadana_form #siravyadana_check').attr('checked', false).trigger('change');
                     }
                 },
                 error: function(response) {

@@ -281,4 +281,55 @@ class Patient_reports extends CI_Model
             JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         return $return;
     }
+
+    function get_siravyadana_report($conditions, $export_flag = FALSE)
+    {
+        $return = array();
+        $columns = array('s.id', 's.opd_no', 's.ipd_no', 'p.FirstName', 'p.Age', 'p.gender', 't.diagnosis', 's.treat_id', 's.ref_date', 's.doctor_name', 's.procedure_details', 's.doctor_remarks', 's.last_updated');
+
+        $where_cond = " WHERE s.opd_no=t.OpdNo AND s.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND s.ref_date >='" . $conditions['start_date'] . "'
+            AND s.ref_date <='" . $conditions['end_date'] . "'";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'opd_no':
+                        $where_cond .= " AND s.opd_no='$val'";
+                        break;
+                    case 'doctor_name':
+                        $where_cond .= " AND s.doctor_name LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
+            FROM siravyadana_opd_ipd_register s
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
+            $where_cond ORDER BY s.ref_date ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM siravyadana_opd_ipd_register s
+            JOIN treatmentdata t ON s.opd_no=t.OpdNo AND s.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
 }
