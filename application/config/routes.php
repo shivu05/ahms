@@ -232,6 +232,11 @@ $route['siravyadana'] = 'reports/siravyadana';
 $route['fetch-siravyadana'] = 'reports/get_siravyadana_patients_list';
 $route['export-siravyadana'] = 'reports/export_siravyadana';
 
+$route['store-wound-dressing'] = 'register/wounddressing/store';
+$route['wound-dressing'] = 'reports/wound_dressing';
+$route['fetch-wound-dressing'] = 'reports/get_wound_dressing_patients_list';
+$route['export-wound_dressing'] = 'reports/export_wound_dressing';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

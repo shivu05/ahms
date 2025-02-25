@@ -332,4 +332,55 @@ class Patient_reports extends CI_Model
             JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
         return $return;
     }
+
+    function get_wound_dressing_report($conditions, $export_flag = FALSE)
+    {
+        $return = array();
+        $columns = array('w.id', 'w.opd_no', 'w.ipd_no', 'p.FirstName', 'p.Age', 'p.gender', 't.diagnosis', 'w.treat_id', 'w.ref_date', 'w.wound_location', 'w.wound_type', 'w.dressing_material', 'w.doctor_name', 'w.next_dressing_date', 'w.doctor_remarks', 'w.last_updated');
+
+        $where_cond = " WHERE w.opd_no=t.OpdNo AND w.treat_id=t.ID AND t.OpdNo=p.OpdNo
+            AND w.ref_date >='" . $conditions['start_date'] . "'
+            AND w.ref_date <='" . $conditions['end_date'] . "'";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'opd_no':
+                        $where_cond .= " AND w.opd_no='$val'";
+                        break;
+                    case 'doctor_name':
+                        $where_cond .= " AND w.doctor_name LIKE '%$val%'";
+                        break;
+                    case 'department':
+                        $where_cond .= ($val != 1) ? " AND t.department = '$val'" : '';
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT @a:=@a+1 serial_number," . join(',', $columns) . "
+            FROM wound_dressing_opd_ipd_register w
+            JOIN treatmentdata t, (SELECT @a:= 0) AS a
+            JOIN patientdata p
+            $where_cond ORDER BY w.ref_date ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM wound_dressing_opd_ipd_register w
+            JOIN treatmentdata t ON w.opd_no=t.OpdNo AND w.treat_id=t.ID
+            JOIN patientdata p ON t.OpdNo=p.OpdNo')->num_rows();
+        return $return;
+    }
 }

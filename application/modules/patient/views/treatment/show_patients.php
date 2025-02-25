@@ -301,6 +301,9 @@ if (!empty($other_proc_list)) {
                                 <a href="#" class="list-group-item text-center">
                                     Siravyadana
                                 </a>
+                                <a href="#" class="list-group-item text-center">
+                                    Wound dressing
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
@@ -742,6 +745,72 @@ if (!empty($other_proc_list)) {
                                     </form>
                                 </div>
                             </div>
+
+                            <div class="bhoechie-tab-content">
+                                <div class="row">
+                                    <h5 class="text-capitalize headline" style="padding-left: 15px !important;margin-top: 3px !important;font-size: larger;font-weight: bold;">
+                                        Wound Dressing
+                                    </h5>
+                                    <form class="form-horizontal" id="wound_dressing_form" name="wound_dressing_form">
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <div class="checkbox">
+                                                <label class="" style="padding-left:46px !important;">
+                                                    <input type="checkbox" name="wound_dressing_check" id="wound_dressing_check" />
+                                                    Refer for Wound Dressing
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="ref_date" class="col-md-4 col-sm-4 control-label required">Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="ref_date" type="text" required="required" name="ref_date" class="form-control wound_dressing_inputs date_picker required" placeholder="Select date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="wound_location" class="col-md-4 col-sm-4 control-label required">Wound Location:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="wound_location" value="" required="required" type="text" name="wound_location" class="form-control wound_dressing_inputs required" placeholder="Enter Wound Location" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="wound_type" class="col-md-4 col-sm-4 control-label required">Wound Type:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="wound_type" value="" required="required" type="text" name="wound_type" class="form-control wound_dressing_inputs required" placeholder="Enter Wound Type" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="dressing_material" class="col-md-4 col-sm-4 control-label required">Dressing Material:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="dressing_material" value="" type="text" name="dressing_material" class="form-control wound_dressing_inputs required" placeholder="Enter Dressing Material" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_name" class="col-md-4 col-sm-4 control-label required">Doctor Name:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="doctor_name" value="" required="required" type="text" name="doctor_name" class="form-control wound_dressing_inputs required" placeholder="Enter Doctor Name" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="next_dressing_date" class="col-md-4 col-sm-4 control-label">Next Dressing Date:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input id="next_dressing_date" value="" type="text" name="next_dressing_date" class="form-control wound_dressing_inputs date_picker" placeholder="Select Next Dressing Date" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-10 col-md-10">
+                                            <label for="doctor_remarks" class="col-md-4 col-sm-4 control-label">Doctor Remarks:</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <textarea id="doctor_remarks" value="" type="text" name="doctor_remarks" class="form-control wound_dressing_inputs" placeholder="Enter Doctor Remarks" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-5 col-md-10" style="padding-left: 5% !important;">
+                                                <button type="submit" name="submit" id="submit" class="btn btn-primary btn-md wound_dressing_inputs"><i class="fa fa-save"></i> Save</button>
+                                                <button type="reset" name="reset" id="reset" class="btn btn-danger btn-md wound_dressing_inputs"><i class="fa fa-refresh"></i> Reset</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -751,7 +820,7 @@ if (!empty($other_proc_list)) {
 </div>
 <script type="text/javascript">
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
-        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs', 'cupping_inputs', 'jaloukavacharana_inputs', 'siravyadana_inputs'
+        'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs', 'cupping_inputs', 'jaloukavacharana_inputs', 'siravyadana_inputs', 'wound_dressing_inputs'
     ];
 
     $(document).ready(function() {
@@ -1169,6 +1238,50 @@ if (!empty($other_proc_list)) {
                     if (response.status == 'OK') {
                         $('#treatment_modal #siravyadana_form #reset').trigger('click');
                         $('#treatment_modal #siravyadana_form #siravyadana_check').attr('checked', false).trigger('change');
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        });
+
+        $('#wound_dressing_check').change(function() {
+            if ($(this).is(":checked")) {
+                $('.wound_dressing_inputs').removeAttr('disabled');
+            } else if ($(this).is(":not(:checked)")) {
+                $('.wound_dressing_inputs').attr('disabled', 'disabled');
+            }
+        });
+
+        $('#treatment_modal #wound_dressing_form').submit(function(e) {
+            e.preventDefault();
+            var form_data = $('#treatment_modal #wound_dressing_form').serializeArray();
+            form_data.push({
+                name: 'opd',
+                value: $('#ajaxopd').val()
+            });
+            form_data.push({
+                name: 'tid',
+                value: $('#ajaxtid').val()
+            });
+            $.ajax({
+                url: base_url + 'store-wound-dressing',
+                type: 'POST',
+                data: form_data,
+                dataType: 'json',
+                success: function(response) {
+                    $.notify({
+                        title: "WOUND DRESSING",
+                        message: response.message,
+                        icon: 'fa ' + response.icon
+                    }, {
+                        element: '#wound_dressing_form',
+                        type: response.type
+                    });
+                    if (response.status == 'OK') {
+                        $('#treatment_modal #wound_dressing_form #reset').trigger('click');
+                        $('#treatment_modal #wound_dressing_form #wound_dressing_check').attr('checked', false).trigger('change');
                     }
                 },
                 error: function(response) {
