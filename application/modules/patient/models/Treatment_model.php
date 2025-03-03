@@ -56,7 +56,7 @@ class treatment_model extends CI_Model {
 
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
-            $user_dept_cond = " AND LOWER(t.department) = LOWER('" . display_department($this->rbac->get_user_department()) . "')";
+            $user_dept_cond = " AND LOWER(t.department) = LOWER('" . $this->rbac->get_user_department() . "')";
         }
         $cur_date = date('Y-m-d');
         if (isset($conditions['all_patients']) && $conditions['all_patients'] == '1') {
