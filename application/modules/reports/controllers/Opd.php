@@ -9,12 +9,14 @@ ini_set("memory_limit", "-1");
 set_time_limit(0);
 
 class Opd extends SHV_Controller {
+    private $_is_admin = false;
 
     public function __construct() {
         parent::__construct();
         $this->load->model('reports/opd_model');
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "OPD";
+        $this->_is_admin = $this->rbac->is_admin();
     }
 
     function index() {
@@ -25,6 +27,7 @@ class Opd extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }

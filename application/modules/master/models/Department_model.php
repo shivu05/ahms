@@ -11,30 +11,45 @@
  *
  * @author Shivaraj
  */
-class Department_model extends CI_Model {
+class Department_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    function get_departments() {
-        return $this->db->get('deptper')->result_array();
+
+    function get_departments()
+    {
+        $user_id = $this->rbac->get_uid();
+        $this->db->select('deptper.*');
+        $this->db->from('deptper');
+        if($this->rbac->is_admin() == 0){
+            $this->db->join('users', 'users.user_department=deptper.dept_unique_code');
+            $this->db->where('users.ID', $user_id);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
     }
 
-    function get_sub_departments($dept) {
+    function get_sub_departments($dept)
+    {
         $this->db->from('sub_department s');
         $this->db->join('deptper d', 's.parent_dept_id=d.ID');
         $this->db->where('LOWER(d.dept_unique_code)', strtolower($dept));
         return $this->db->get()->result_array();
     }
 
-    function get_doctors_by_dept($dept) {
+    function get_doctors_by_dept($dept)
+    {
         $this->db->distinct();
         $this->db->select('DISTINCT(doctorname)');
         return $this->db->get_where('doctors', array('doctortype' => $dept))->result_array();
     }
 
-    function get_doctors_info($doc_id = NULL) {
+    function get_doctors_info($doc_id = NULL)
+    {
         if ($doc_id != NULL) {
             $this->db->where('d.id', $doc_id);
         }
@@ -47,7 +62,8 @@ class Department_model extends CI_Model {
         return $result->result_array();
     }
 
-    function update_dept_percentage($dept_id, $data = array()) {
+    function update_dept_percentage($dept_id, $data = array())
+    {
         $this->db->where('ID', $dept_id);
         return $this->db->update('deptper', $data);
         //echo $this->db->last_query();

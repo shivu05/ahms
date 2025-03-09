@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-book"></i> IPD report:</h3></div>
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-book"></i> IPD report:</h3>
+            </div>
             <div class="box-body">
                 <form class="row" name="search_form" id="search_form" method="POST" target="_blank" action="<?php echo base_url('reports/Ipd/export_to_pdf'); ?>">
                     <div class="form-group col-md-2 col-sm-12">
@@ -16,8 +18,10 @@
                         <label class="control-label sr-only">Department:</label>
                         <select name="department" id="department" class="form-control" required="required">
                             <option value="">Select Department</option>
-                            <option value="1">Central</option>
                             <?php
+                            if ($is_admin) {
+                                echo '<option value="1">Central IPD</option>';
+                            }
                             if (!empty($dept_list)) {
                                 foreach ($dept_list as $dept) {
                                     echo "<option value='" . $dept['dept_unique_code'] . "'>" . $dept['department'] . "</option>";
@@ -54,73 +58,72 @@
 </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#search_form').on('click', '#search', function () {
+    $(document).ready(function() {
+        $('#search_form').on('click', '#search', function() {
             show_patients();
         });
-        $('#search_form #export').on('click', '#export_to_pdf', function () {
+        $('#search_form #export').on('click', '#export_to_pdf', function() {
             $('#search_form').submit();
         });
 
-        var columns = [
-            {
+        var columns = [{
                 title: "IPD",
                 class: "ipd_no",
-                data: function (item) {
+                data: function(item) {
                     return item.IpNo;
                 }
             },
             {
                 title: "OPD",
                 class: "opd_no",
-                data: function (item) {
+                data: function(item) {
                     return item.OpdNo;
                 }
             },
             {
                 title: "Name",
-                data: function (item) {
+                data: function(item) {
                     return item.FName;
                 }
             },
             {
                 title: "Age",
-                data: function (item) {
+                data: function(item) {
                     return item.Age;
                 }
             },
             {
                 title: "Gender",
-                data: function (item) {
+                data: function(item) {
                     return item.Gender;
                 }
             },
             {
                 title: "Diagnosis",
-                data: function (item) {
+                data: function(item) {
                     return item.diagnosis;
                 }
             },
             {
                 title: "Ward",
-                data: function (item) {
+                data: function(item) {
                     return item.WardNo;
                 }
             }, {
                 title: "Bed",
-                data: function (item) {
+                data: function(item) {
                     return item.BedNo;
                 }
             },
             {
                 title: "DOA",
-                data: function (item) {
+                data: function(item) {
                     return item.DoAdmission + ' ' + item.admit_time;
                 }
             },
             {
                 title: "DOD",
-                data: function (item) {
+                data: function(item) {
                     if (item.status === "stillin") {
                         return item.DoDischarge;
                     } else {
@@ -130,31 +133,33 @@
             },
             {
                 title: "Days",
-                data: function (item) {
+                data: function(item) {
                     return item.NofDays;
                 }
             },
             {
                 title: "Doctor",
-                data: function (item) {
+                data: function(item) {
                     return item.Doctor;
                 }
             },
             {
                 title: "Department",
-                data: function (item) {
+                data: function(item) {
                     return item.department;
                 }
             }
         ];
         var patient_table = '';
+
         function show_patients() {
             var statistics = '';
             patient_table = $('#patient_table').DataTable({
                 'columns': columns,
-                'columnDefs': [
-                    {className: "", "targets": [4]}
-                ],
+                'columnDefs': [{
+                    className: "",
+                    "targets": [4]
+                }],
                 "bDestroy": true,
                 language: {
                     sZeroRecords: "<div class='no_records'>No patients found</div>",
@@ -173,17 +178,19 @@
                     'url': base_url + 'reports/Ipd/get_patients_list',
                     'type': 'POST',
                     'dataType': 'json',
-                    'data': function (d) {
+                    'data': function(d) {
                         return $.extend({}, d, {
                             "search_form": $('#search_form').serializeArray()
                         });
                     },
-                    drawCallback: function (response) {
+                    drawCallback: function(response) {
                         statistics = response.statistics;
 
                     }
                 },
-                order: [[0, 'desc']],
+                order: [
+                    [0, 'desc']
+                ],
                 info: true,
                 sScrollX: true
             });
@@ -197,7 +204,7 @@
                 type: 'POST',
                 dataType: 'json',
                 data: form_data,
-                success: function (response) {
+                success: function(response) {
                     stats = response.statistics;
                     console.log(stats);
                     var total = 0;
@@ -205,10 +212,10 @@
                     var female_total = 0;
                     var table = "<hr/><h4>IPD STATISTICS:</h4><hr>";
                     table += "<table width='50%' class='table table-bordered dataTable' style='margin-left: auto;margin-right: auto;'>";
-                    table += "<thead><tr><th width='30%'><center>Department</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th>"
-                            + "</tr></thead>";
+                    table += "<thead><tr><th width='30%'><center>Department</center></th><th><center>Total</center></th><th><center>Male</center></th><th><center>Female</center></th>" +
+                        "</tr></thead>";
                     table += "<tbody>";
-                    $.each(stats, function (i) {
+                    $.each(stats, function(i) {
                         table += "<tr>";
                         table += "<td>" + stats[i].department + "</td>";
                         table += "<td style='text-align: right;'>" + stats[i].Total + "</td>";
@@ -226,7 +233,7 @@
                     //alert('Hi');
                     $('#patient_statistics').html(table);
                 },
-                error: function (err) {
+                error: function(err) {
                     console.log(err.responseText);
                 }
             });

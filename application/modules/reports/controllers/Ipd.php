@@ -7,11 +7,13 @@
  */
 class Ipd extends SHV_Controller {
 
+    private $_is_admin = false;
     public function __construct() {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "IPD";
         $this->load->model('reports/ipd_model');
+        $this->_is_admin = $this->rbac->is_admin();
     }
 
     function index() {
@@ -19,6 +21,7 @@ class Ipd extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
