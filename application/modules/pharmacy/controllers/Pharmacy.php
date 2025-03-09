@@ -1,79 +1,121 @@
 <?php
-
-// Pharmacy Controller (Add CRUD for Medicines)
-class Pharmacy extends SHV_Controller {
-
-    public function __construct() {
+// application/controllers/Pharmacy.php
+class Pharmacy extends SHV_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Pharmacy_model');
-        $this->load->helper('url');
-        $this->load->library('form_validation');
     }
 
-    // Medicines Management Page
-    public function medicines() {
+    public function index()
+    {
+        $this->layout->title = "Pharmacy Management";
+        $this->scripts_include->includePlugins(array('jq_validation', 'chosen', 'datatables'), 'js');
+        $this->scripts_include->includePlugins(array('chosen', 'datatables'), 'css');
         $this->layout->render();
     }
 
-    // Get Medicines (Server-side DataTable Processing)
-    public function get_medicines() {
-        $list = $this->Pharmacy_model->get_datatables();
-        $data = [];
+    public function fetch_medicines()
+    {
+        $list = $this->Pharmacy_model->get_medicines_datatables();
+        $data = array();
         $no = $_POST['start'];
-        foreach ($list as $medicine) {
+        foreach ($list as $med) {
             $no++;
-            $row = [];
-            $row[] = $medicine->name;
-            $row[] = $medicine->brand;
-            $row[] = $medicine->price;
-            $row[] = $medicine->stock;
-            $row[] = $medicine->expiry_date;
-            $row[] = '<button class="btn btn-primary btn-sm edit" data-id="' . $medicine->id . '">Edit</button> <button class="btn btn-danger btn-sm delete" data-id="' . $medicine->id . '">Delete</button>';
-
+            $row = array();
+            $row[] = $med->name;
+            $row[] = $med->batch_no;
+            $row[] = $med->expiry_date;
+            $row[] = $med->price;
+            $row[] = $med->gst;
+            $row[] = $med->discount;
+            $row[] = $med->stock;
+            $row[] = '<button class="btn btn-warning btn-edit" data-id="' . $med->id . '">Edit</button> '
+                . '<button class="btn btn-danger btn-delete" data-id="' . $med->id . '">Delete</button>';
             $data[] = $row;
         }
 
-        $output = [
+        $output = array(
             "draw" => $_POST['draw'],
             "recordsTotal" => $this->Pharmacy_model->count_all(),
             "recordsFiltered" => $this->Pharmacy_model->count_filtered(),
             "data" => $data,
-        ];
-
+        );
         echo json_encode($output);
     }
 
-    // Save Medicine (Add/Edit)
-    public function save_medicine() {
+    public function add_medicine()
+    {
         $this->form_validation->set_rules('name', 'Name', 'required');
-        $this->form_validation->set_rules('price', 'Price', 'required|decimal');
-        $this->form_validation->set_rules('stock', 'Stock', 'required|integer');
-        $this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
+        $this->form_validation->set_rules('batch_no', 'Batch No', 'required');
+        $this->form_validation->set_rules('price', 'Price', 'required|numeric');
 
         if ($this->form_validation->run() == FALSE) {
-            echo json_encode(['status' => FALSE, 'errors' => validation_errors()]);
-        } else {
-            $data = [
-                'name' => $this->input->post('name'),
-                'brand' => $this->input->post('brand'),
-                'price' => $this->input->post('price'),
-                'stock' => $this->input->post('stock'),
-                'expiry_date' => $this->input->post('expiry_date')
-            ];
+            echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => validation_errors(), 'type' => 'danger'));
+            return;
+        }
 
-            if ($this->input->post('id')) {
-                $this->Pharmacy_model->update_medicine($this->input->post('id'), $data);
+        $data = array(
+            'name' => $this->input->post('name'),
+            'batch_no' => $this->input->post('batch_no'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'price' => $this->input->post('price'),
+            'gst' => $this->input->post('gst'),
+            'discount' => $this->input->post('discount'),
+            'stock' => $this->input->post('stock')
+        );
+
+        $id = $this->input->post('id');
+        if ($id) {
+            // Update existing record
+            $update_status = $this->Pharmacy_model->update_medicine($id, $data);
+            if ($update_status) {
+                echo json_encode(array('status' => 'OK', 'icon' => 'fa-check', 'message' => 'Updated successfully', 'type' => 'success'));
             } else {
-                $this->Pharmacy_model->add_medicine($data);
+                echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Failed to update data', 'type' => 'danger'));
             }
-
-            echo json_encode(['status' => TRUE]);
+        } else {
+            // Insert new record
+            $insert_status = $this->Pharmacy_model->insert_medicine($data);
+            if ($insert_status) {
+                echo json_encode(array('status' => 'OK', 'icon' => 'fa-check', 'message' => 'Inserted successfully', 'type' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Failed to insert data', 'type' => 'danger'));
+            }
         }
     }
 
-    // Delete Medicine
-    public function delete_medicine($id) {
-        $this->Pharmacy_model->delete_medicine($id);
-        echo json_encode(['status' => TRUE]);
+    public function edit_medicine($id)
+    {
+        $data = $this->Pharmacy_model->get_medicine_by_id($id);
+        echo json_encode($data);
+    }
+
+    public function update_medicine()
+    {
+        $id = $this->input->post('id');
+        $data = array(
+            'name' => $this->input->post('name'),
+            'batch_no' => $this->input->post('batch_no'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'price' => $this->input->post('price'),
+            'gst' => $this->input->post('gst'),
+            'discount' => $this->input->post('discount'),
+            'stock' => $this->input->post('stock')
+        );
+        $this->Pharmacy_model->update_medicine($id, $data);
+        echo json_encode(array("status" => "updated"));
+    }
+
+    public function delete_medicine()
+    {
+        $id = $this->input->post('id');
+        $is_deleted = $this->Pharmacy_model->delete_medicine($id);
+        if ($is_deleted) {
+            echo json_encode(array('status' => 'OK', 'icon' => 'fa-check', 'message' => 'Deleted successfully', 'type' => 'success'));
+        } else {
+            echo json_encode(array('status' => 'NOK', 'icon' => 'fa-cross', 'message' => 'Failed to delete data', 'type' => 'danger'));
+        }
     }
 }
