@@ -1,14 +1,17 @@
 <?php
 
 class Common_methods extends SHV_Controller {
+    private $_is_admin = false;
 
     public function __construct() {
         parent::__construct();
+        $this->_is_admin = $this->rbac->is_admin();
     }
 
     function date_dept_selection_form($url, $dept_hide = false, $delete_btn_active = true, $is_arch_report = false) {
         $this->load->model('common_methods/common_model');
         $data['submit_url'] = base_url($url);
+        $data['is_admin'] = $this->_is_admin;
         $data['dept_hide'] = $dept_hide;
         $data['delete_btn_active'] = $delete_btn_active;
         $data['dept_list'] = $this->get_department_list('array');
