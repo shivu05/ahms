@@ -8,10 +8,12 @@
 ini_set("memory_limit", "-1");
 set_time_limit(0);
 
-class Opd extends SHV_Controller {
+class Opd extends SHV_Controller
+{
     private $_is_admin = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('reports/opd_model');
         $this->layout->navIcon = 'fa fa-users';
@@ -19,7 +21,8 @@ class Opd extends SHV_Controller {
         $this->_is_admin = $this->rbac->is_admin();
     }
 
-    function index() {
+    function index()
+    {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD patients";
         $this->layout->navDescr = "Out Patient Department";
@@ -32,7 +35,8 @@ class Opd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_patients_list() {
+    function get_patients_list()
+    {
         $this->update_monthly_no();
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
@@ -58,7 +62,8 @@ class Opd extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function get_statistics() {
+    function get_statistics()
+    {
         $input_array = array();
         $input_array['start_date'] = $this->input->post('start_date');
         $input_array['end_date'] = $this->input->post('end_date');
@@ -77,7 +82,8 @@ class Opd extends SHV_Controller {
         echo json_encode(array('statistics' => $return));
     }
 
-    function update_monthly_no() {
+    function update_monthly_no()
+    {
         $count = $this->db->query("select count(*) as count from treatmentdata where monthly_sid=0 OR monthly_sid is NULL")->row_array();
         if (!empty($count) && $count['count'] > 0) {
             $this->db->trans_start();
@@ -99,7 +105,8 @@ class Opd extends SHV_Controller {
         }
     }
 
-    function export_to_pdf() {
+    function export_to_pdf()
+    {
         $this->load->helper('mpdf');
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
@@ -120,7 +127,7 @@ class Opd extends SHV_Controller {
         $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
-//pma($html,1);
+        //pma($html,1);
         $title = array(
             'report_title' => 'OPD REGISTER',
             'department' => $print_dept . '<br/><small>' . $print_subdept . '</small>',
@@ -133,7 +140,8 @@ class Opd extends SHV_Controller {
         exit;
     }
 
-    function export_to_tcpdf() {
+    function export_to_tcpdf()
+    {
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -146,26 +154,26 @@ class Opd extends SHV_Controller {
         $result = $this->opd_model->get_opd_patients($input_array, true);
         $patients = $result['data'];
 
-//        $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '5');
-//        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
-//        if ($input_array['department'] != 1) {
-//            $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
-//        }
-//        $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
-//        $headers['name'] = array('name' => 'Name', 'width' => '20');
-//        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '5');
-//        $headers['gender'] = array('name' => 'Sex', 'width' => '5');
-//        $headers['city'] = array('name' => 'Place', 'width' => '10');
-//        if ($input_array['department'] != 1) {
-//            $headers['diagnosis'] = array('name' => 'Diagnosis', 'width' => '10');
-//            $headers['Trtment'] = array('name' => 'Treatment', 'width' => '17');
-//            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '12');
-//        } else {
-//            $headers['diagnosis'] = array('name' => 'Complaints', 'width' => '17');
-//        }
-//        $headers['department'] = array('name' => 'Department', 'width' => '13');
-//        //$headers['ref_room'] = array('name' => 'Ref. room', 'align' => 'C', 'width' => '3');
-//        $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
+        //        $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '5');
+        //        $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
+        //        if ($input_array['department'] != 1) {
+        //            $headers['deptOpdNo'] = array('name' => 'D.OPD', 'align' => 'C', 'width' => '5');
+        //        }
+        //        $headers['PatType'] = array('name' => 'Type', 'align' => 'C', 'width' => '5');
+        //        $headers['name'] = array('name' => 'Name', 'width' => '20');
+        //        $headers['Age'] = array('name' => 'Age', 'align' => 'C', 'width' => '5');
+        //        $headers['gender'] = array('name' => 'Sex', 'width' => '5');
+        //        $headers['city'] = array('name' => 'Place', 'width' => '10');
+        //        if ($input_array['department'] != 1) {
+        //            $headers['diagnosis'] = array('name' => 'Diagnosis', 'width' => '10');
+        //            $headers['Trtment'] = array('name' => 'Treatment', 'width' => '17');
+        //            $headers['AddedBy'] = array('name' => 'Doctor', 'width' => '12');
+        //        } else {
+        //            $headers['diagnosis'] = array('name' => 'Complaints', 'width' => '17');
+        //        }
+        //        $headers['department'] = array('name' => 'Department', 'width' => '13');
+        //        //$headers['ref_room'] = array('name' => 'Ref. room', 'align' => 'C', 'width' => '3');
+        //        $headers['CameOn'] = array('name' => 'Date', 'width' => '10');
         if ($input_array['department'] != 1) {
             $headers['serial_number'] = array('name' => '#', 'align' => 'C', 'width' => '4');
             $headers['OpdNo'] = array('name' => 'C.OPD', 'align' => 'C', 'width' => '7');
@@ -222,11 +230,12 @@ class Opd extends SHV_Controller {
         exit;
     }
 
-    function export_patients_list() {
+    function export_patients_list()
+    {
         $this->load->helper('to_excel');
 
         $headings = array(
-            'ID' => 'Yr.No.',
+            'sequence' => 'Yr.No.',
             'msd' => 'M.No.',
             'OpdNo' => 'C.OPD',
             'deptOpdNo' => 'D.OPD',
@@ -234,12 +243,12 @@ class Opd extends SHV_Controller {
             'name' => 'Name',
             'Age' => 'Age',
             'gender' => 'Gender',
-            'address' => 'Address',
-            'city' => 'City',
+            'place' => 'Place',
             'diagnosis' => 'Diagnosis',
             'Trtment' => 'Treatment',
             'AddedBy' => 'Doctor',
             'department' => 'Department',
+            'sub_department' => 'Sub Department',
             'CameOn' => 'Date',
             'ref_dept' => 'Ref.Room No'
         );
@@ -248,8 +257,8 @@ class Opd extends SHV_Controller {
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
-        $export_array = $this->opd_model->get_opd_patients($input_array, true);
-        $file_name = 'opd_patient_list.xlsx';
+        $export_array = $this->opd_model->get_opd_patients_excel($input_array, true);
+        $file_name = 'vhms_opd_report_' . $input_array['start_date'] . '.xlsx';
         download_excel($export_array['data'], $file_name, $headings);
         exit;
     }

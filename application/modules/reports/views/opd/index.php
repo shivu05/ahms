@@ -47,7 +47,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
-                                    <!--<li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>-->
+                                    <li><a class="dropdown-item" href="#" id="export_to_xls">.xls</a></li>
                                 </ul>
                             </div>
                         </div>

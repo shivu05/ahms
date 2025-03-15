@@ -11,20 +11,47 @@
  *
  * @author Shivaraj
  */
-class Ipd_model extends CI_Model {
+class Ipd_model extends CI_Model
+{
 
-    function get_ipd_patients($conditions, $export_flag = FALSE) {
+    function get_ipd_patients($conditions, $export_flag = FALSE, $export_type = 'pdf')
+    {
         $query = "UPDATE inpatientdetails i, bed_details b SET i.WardNo=b.wardno WHERE i.BedNo = b.bedno";
         $this->db->query($query);
 
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department',
-            'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', ' COALESCE(admit_time,"00:00") admit_time',
+        $columns = array(
+            'IpNo',
+            'OpdNo',
+            'deptOpdNo',
+            'FName',
+            'Age',
+            'Gender',
+            '(REPLACE((department),"_"," ")) department',
+            'WardNo',
+            'BedNo',
+            'diagnosis',
+            'DoAdmission',
+            'DoDischarge',
+            'COALESCE(admit_time,"00:00") admit_time',
             'COALESCE(discharge_time,"00:00") discharge_time',
-            'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId', 'status');
+            'COALESCE(DischargeNotes, "") DischargeNotes',
+            'NofDays',
+            'Doctor',
+            'DischBy',
+            'treatId',
+            'status'
+        );
+        // Remove 'treatId' from columns if export_type is not 'pdf'
+        if ($export_type !== 'pdf') {
+            $key = array_search('treatId', $columns);
+            if ($key !== false) {
+                unset($columns[$key]);
+            }
+        }
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
-//$where_cond = " WHERE 1=1 ";
+        //$where_cond = " WHERE 1=1 ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
@@ -53,7 +80,7 @@ class Ipd_model extends CI_Model {
             }
         }
 
-//$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
         $query = "SELECT @a:=@a+1 serial_number, " . join(',', $columns) . " FROM inpatientdetails i,
         (SELECT @a:= 0) AS a  $where_cond ORDER BY IpNo,DoAdmission ASC";
         $result = $this->db->query($query . ' ' . $limit);
@@ -63,7 +90,8 @@ class Ipd_model extends CI_Model {
         return $return;
     }
 
-    function get_ipd_patients_count($conditions) {
+    function get_ipd_patients_count($conditions)
+    {
 
         if ($conditions['department'] == 1) {
             $query = "SELECT (REPLACE((department),'_',' ')) department,Total,Male,Female FROM(
@@ -86,10 +114,28 @@ class Ipd_model extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
-    function get_bed_occpd_patients($conditions, $export_flag = FALSE) {
+    function get_bed_occpd_patients($conditions, $export_flag = FALSE)
+    {
         $return = array();
-        $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department', 'WardNo', 'BedNo', 'diagnosis',
-            'DoAdmission', 'DoDischarge', 'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId');
+        $columns = array(
+            'IpNo',
+            'OpdNo',
+            'deptOpdNo',
+            'FName',
+            'Age',
+            'Gender',
+            '(REPLACE((department),"_"," ")) department',
+            'WardNo',
+            'BedNo',
+            'diagnosis',
+            'DoAdmission',
+            'DoDischarge',
+            'DischargeNotes',
+            'NofDays',
+            'Doctor',
+            'DischBy',
+            'treatId'
+        );
 
         //$where_cond = " WHERE 1 = 1 ";
         $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
@@ -135,7 +181,8 @@ class Ipd_model extends CI_Model {
         return $return;
     }
 
-    function get_bed_occupied_statistics($where) {
+    function get_bed_occupied_statistics($where)
+    {
         $query = $this->db->query("CALL get_bed_occupancy('" . $where['department'] . "', '" . $where['start_date'] . "', '" . $where['end_date'] . "')");
         mysqli_next_result($this->db->conn_id); //imp
         if ($query->num_rows() > 0) {
@@ -145,7 +192,8 @@ class Ipd_model extends CI_Model {
         }
     }
 
-    function get_departmentwise_bed_count() {
+    function get_departmentwise_bed_count()
+    {
         $query = $this->db->query("SELECT count(*) as sum,department from bed_details where department NOT IN ('Aatyayikachikitsa','Swasthavritta') group by department");
         if ($query->num_rows() > 0) {
             return $query->result(); //if data is true
@@ -154,17 +202,20 @@ class Ipd_model extends CI_Model {
         }
     }
 
-    function get_bed_count_by_dept() {
+    function get_bed_count_by_dept()
+    {
         $query = "select bed_count,dept_unique_code department from deptper";
         return $this->db->query($query)->result_array();
     }
 
-    function get_monthwise_bed_occupancy($month, $dept) {
+    function get_monthwise_bed_occupancy($month, $dept)
+    {
         $query = $this->db->query("SELECT coalesce(sum(nofDays),0) as sum FROM inpatientdetails where department='$dept' AND MONTHNAME(DoAdmission)='$month'");
         return $query->result();
     }
 
-    function get_month_wise_opd_ipd_report() {
+    function get_month_wise_opd_ipd_report()
+    {
         $dept_res = $this->db->select('dept_unique_code')->get('deptper');
         $dept_res = $dept_res->result_array();
         $opd_ipd_arr = array();
@@ -186,7 +237,8 @@ class Ipd_model extends CI_Model {
         }
     }
 
-    function get_month_wise_ipd_report() {
+    function get_month_wise_ipd_report()
+    {
         $dept_res = $this->db->select('dept_unique_code')->get('deptper');
         $dept_res = $dept_res->result_array();
         if (!empty($dept_res)) {

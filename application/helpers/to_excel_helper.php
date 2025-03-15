@@ -46,7 +46,7 @@ if (!function_exists('download_excel')) {
 
             $col = 1;
             foreach ($db_columns as $field) {
-                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($col, $row, trim($data_val[$field]));
+                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($col, $row, trim($data_val[$field] ?? ''));
                 $col++;
             }
 

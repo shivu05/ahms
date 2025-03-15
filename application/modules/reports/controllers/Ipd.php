@@ -5,10 +5,12 @@
  *
  * @author Shivaraj
  */
-class Ipd extends SHV_Controller {
+class Ipd extends SHV_Controller
+{
 
     private $_is_admin = false;
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "IPD";
@@ -16,7 +18,8 @@ class Ipd extends SHV_Controller {
         $this->_is_admin = $this->rbac->is_admin();
     }
 
-    function index() {
+    function index()
+    {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
@@ -26,7 +29,8 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_patients_list() {
+    function get_patients_list()
+    {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -40,7 +44,8 @@ class Ipd extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function get_statistics() {
+    function get_statistics()
+    {
         $input_array = array();
         $input_array['start_date'] = $this->input->post('start_date');
         $input_array['end_date'] = $this->input->post('end_date');
@@ -49,7 +54,8 @@ class Ipd extends SHV_Controller {
         echo json_encode(array('statistics' => $return));
     }
 
-    function export_to_pdf() {
+    function export_to_pdf()
+    {
         $this->load->helper('mpdf');
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
@@ -80,7 +86,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function export_to_tcpdf() {
+    function export_to_tcpdf()
+    {
         $this->layout->title = 'IPD Report';
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -130,7 +137,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    public function bed_occupied_report() {
+    public function bed_occupied_report()
+    {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD BED";
         $this->layout->navDescr = "";
@@ -143,7 +151,8 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_bed_patients_list() {
+    function get_bed_patients_list()
+    {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -157,7 +166,8 @@ class Ipd extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function export_bed_to_pdf() {
+    function export_bed_to_pdf()
+    {
         $this->load->helper('mpdf');
         $this->layout->title = 'OPD Report';
         ini_set("memory_limit", "-1");
@@ -188,7 +198,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function export_bed_to_tcpdf() {
+    function export_bed_to_tcpdf()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $input_array = array();
@@ -273,7 +284,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function export_bed_to_pdf_tcp() {
+    function export_bed_to_pdf_tcp()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $data = array();
@@ -404,7 +416,8 @@ class Ipd extends SHV_Controller {
         return $pdf->Output('bed_occupied_ipd_report.pdf', 'I');
     }
 
-    function bed_occupancy_chart() {
+    function bed_occupancy_chart()
+    {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD";
         $this->layout->navDescr = "";
@@ -417,7 +430,18 @@ class Ipd extends SHV_Controller {
         $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
         //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
         $months_arr = array(
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
         );
         $data_bed = array();
         foreach ($months_arr as $month) {
@@ -434,7 +458,8 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function bed_occupancy_chart_pdf() {
+    function bed_occupancy_chart_pdf()
+    {
         $db_name = '';
         $sess_arr = $this->session->userdata('user_data');
         if ($sess_arr['randkey'] != "") {
@@ -446,7 +471,18 @@ class Ipd extends SHV_Controller {
         $data['dept_bed_count'] = $this->ipd_model->get_departmentwise_bed_count();
         //$data['dept_bed_count'] = $this->ipd_model->get_bed_count_by_dept();
         $months_arr = array(
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
         );
         $data_bed = array();
         foreach ($months_arr as $month) {
@@ -469,7 +505,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function monthly_io_report() {
+    function monthly_io_report()
+    {
         $this->layout->title = "OPD-IPD";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD-IPD Report";
@@ -483,7 +520,8 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function monthly_ipd_report() {
+    function monthly_ipd_report()
+    {
         $this->layout->title = "IPD";
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD Report";
@@ -498,7 +536,8 @@ class Ipd extends SHV_Controller {
         $this->layout->render();
     }
 
-    function monthly_ipd_report_pdf() {
+    function monthly_ipd_report_pdf()
+    {
         ini_set('memory_limit', '-1');
         ini_set('max_execution_time', '-1'); //300 seconds = 5 minutes
         $db_name = '';
@@ -518,7 +557,8 @@ class Ipd extends SHV_Controller {
         exit;
     }
 
-    function monthly_ipd_opd_report_pdf() {
+    function monthly_ipd_opd_report_pdf()
+    {
         $data['result'] = $this->ipd_model->get_month_wise_opd_ipd_report();
         $data['show_date'] = 0;
         $this->load->helper('pdf');
@@ -534,6 +574,46 @@ class Ipd extends SHV_Controller {
             'start_date' => $db_name
         );
         generate_pdf($content, 'L', $title, 'MONTHWISE_IPD_REPORT', TRUE, TRUE, 'I');
+        exit;
+    }
+
+    function export_ipd_to_excel()
+    {
+        $this->load->helper('to_excel');
+        // $columns = array('IpNo', 'OpdNo', 'deptOpdNo', 'FName', 'Age', 'Gender', '(REPLACE((department),"_"," ")) department',
+        // 'WardNo', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', ' COALESCE(admit_time,"00:00") admit_time',
+        // 'COALESCE(discharge_time,"00:00") discharge_time',
+        // 'DischargeNotes', 'NofDays', 'Doctor', 'DischBy', 'treatId', 'status');
+        $headings = array(
+            'serial_number' => 'Sl. No',
+            'IpNo' => 'CIPD',
+            'OpdNo' => 'C.OPD',
+            'deptOpdNo' => 'D.OPD',
+            'FName' => 'Name',
+            'Age' => 'Age',
+            'gender' => 'Gender',
+            'department' => 'Department',
+            'WardNo' => 'Ward',
+            'BedNo' => 'Bed',
+            'diagnosis' => 'Diagnosis',
+            'DoAdmission' => 'Admission',
+            'admit_time' => 'Admit Time',
+            'DoDischarge' => 'Discharge',
+            'discharge_time' => 'Discharge Time',
+            'DischargeNotes' => 'Discharge Notes',
+            'NofDays' => 'Days',
+            'Doctor' => 'Doctor',
+            'DischBy' => 'Discharge By',
+            'status' => 'Status'
+        );
+
+        $input_array = array();
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+        $export_array = $this->ipd_model->get_ipd_patients($input_array, true,'xlsx');
+        $file_name = 'vhms_ipd_report_' . $input_array['start_date'] . '.xlsx';
+        download_excel($export_array['data'], $file_name, $headings);
         exit;
     }
 }
