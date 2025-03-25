@@ -12,10 +12,12 @@
  */
 class Medicines extends SHV_Controller {
 
+    private $_is_admin;
     public function __construct() {
         parent::__construct();
         $this->load->model('Medicines_model');
         $this->load->library('form_validation');
+        $this->_is_admin = $this->rbac->is_admin();
     }
 
     // Load medicines management page
@@ -26,6 +28,8 @@ class Medicines extends SHV_Controller {
         $this->layout->navDescr = "";
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
         $this->layout->render();
     }
 
@@ -41,19 +45,22 @@ class Medicines extends SHV_Controller {
 
         $data = [
             'name' => $this->input->post('name'),
-            'brand' => $this->input->post('brand'),
+            'generic_name' => $this->input->post('generic_name'),
+            'dosage' => $this->input->post('dosage'),
+            'form' => $this->input->post('form'),
+            'manufacturer' => $this->input->post('manufacturer'),
+            'ndc' => $this->input->post('ndc'),
             'description' => $this->input->post('description'),
-            'price' => $this->input->post('price'),
-            'stock' => $this->input->post('stock'),
-            'minimum_stock' => $this->input->post('minimum_stock'),
-            'batch_number' => $this->input->post('batch_number'),
-            'expiry_date' => $this->input->post('expiry_date'),
-            'manufacture_date' => $this->input->post('manufacture_date'),
+            'controlled_substance' => $this->input->post('controlled_substance') ? 1 : 0,
+            'requires_prescription' => $this->input->post('requires_prescription') ? 1 : 0,
+            'storage_conditions' => $this->input->post('storage_conditions'),
+            'side_effects' => $this->input->post('side_effects'),
+            'interactions' => $this->input->post('interactions'),
+            'unit_price' => $this->input->post('unit_price'),
+            'reorder_level' => $this->input->post('reorder_level'),
             'category' => $this->input->post('category'),
-            'prescription_required' => $this->input->post('prescription_required') ? 1 : 0,
-            'supplier_name' => $this->input->post('supplier_name'),
-            'supplier_contact' => $this->input->post('supplier_contact'),
-            'last_restock_date' => $this->input->post('last_restock_date')
+            'image' => $this->input->post('image'),
+            'date_added' => date('Y-m-d')
         ];
 
         $this->Medicines_model->save($data);
@@ -72,19 +79,22 @@ class Medicines extends SHV_Controller {
 
         $data = [
             'name' => $this->input->post('name'),
-            'brand' => $this->input->post('brand'),
+            'generic_name' => $this->input->post('generic_name'),
+            'dosage' => $this->input->post('dosage'),
+            'form' => $this->input->post('form'),
+            'manufacturer' => $this->input->post('manufacturer'),
+            'ndc' => $this->input->post('ndc'),
             'description' => $this->input->post('description'),
-            'price' => $this->input->post('price'),
-            'stock' => $this->input->post('stock'),
-            'minimum_stock' => $this->input->post('minimum_stock'),
-            'batch_number' => $this->input->post('batch_number'),
-            'expiry_date' => $this->input->post('expiry_date'),
-            'manufacture_date' => $this->input->post('manufacture_date'),
+            'controlled_substance' => $this->input->post('controlled_substance') ? 1 : 0,
+            'requires_prescription' => $this->input->post('requires_prescription') ? 1 : 0,
+            'storage_conditions' => $this->input->post('storage_conditions'),
+            'side_effects' => $this->input->post('side_effects'),
+            'interactions' => $this->input->post('interactions'),
+            'unit_price' => $this->input->post('unit_price'),
+            'reorder_level' => $this->input->post('reorder_level'),
             'category' => $this->input->post('category'),
-            'prescription_required' => $this->input->post('prescription_required') ? 1 : 0,
-            'supplier_name' => $this->input->post('supplier_name'),
-            'supplier_contact' => $this->input->post('supplier_contact'),
-            'last_restock_date' => $this->input->post('last_restock_date')
+            'image' => $this->input->post('image'),
+            'last_updated' => date('Y-m-d')
         ];
 
         $this->Medicines_model->update(['id' => $this->input->post('id')], $data);
@@ -100,9 +110,13 @@ class Medicines extends SHV_Controller {
     // Validation rules
     private function _validate() {
         $this->form_validation->set_rules('name', 'Name', 'required');
-        $this->form_validation->set_rules('price', 'Price', 'required|numeric');
-        $this->form_validation->set_rules('stock', 'Stock', 'required|integer');
-        $this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
+        $this->form_validation->set_rules('generic_name', 'Generic Name', 'required');
+        $this->form_validation->set_rules('dosage', 'Dosage', 'required');
+        $this->form_validation->set_rules('form', 'Form', 'required');
+        $this->form_validation->set_rules('manufacturer', 'Manufacturer', 'required');
+        $this->form_validation->set_rules('unit_price', 'Unit Price', 'required|numeric');
+        $this->form_validation->set_rules('reorder_level', 'Reorder Level', 'required|numeric');
+        $this->form_validation->set_rules('category', 'Category', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             echo json_encode([

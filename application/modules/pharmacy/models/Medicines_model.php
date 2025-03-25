@@ -3,8 +3,8 @@
 class Medicines_model extends CI_Model {
 
     private $table = 'medicines';
-    private $column_order = ['id', 'name', 'brand', 'price', 'stock', 'expiry_date'];
-    private $column_search = ['name', 'brand', 'category'];
+    private $column_order = ['id', 'name', 'generic_name', 'dosage', 'form', 'manufacturer', 'ndc', 'description', 'controlled_substance', 'requires_prescription', 'storage_conditions', 'side_effects', 'interactions', 'unit_price', 'reorder_level', 'category', 'image', 'date_added', 'last_updated'];
+    private $column_search = ['name', 'generic_name', 'category'];
     private $order = ['id' => 'asc'];
 
     public function get_datatables() {
