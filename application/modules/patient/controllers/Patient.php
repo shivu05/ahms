@@ -5,16 +5,19 @@
  *
  * @author Shivaraj
  */
-class Patient extends SHV_Controller {
+class Patient extends SHV_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('reports/opd_model');
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "OPD";
     }
 
-    function index() {
+    function index()
+    {
         $this->layout->title = "OPD Registration";
         $this->scripts_include->includePlugins(array('jq_validation'), 'js');
         $this->scripts_include->includePlugins(array('jq_validation'), 'css');
@@ -27,7 +30,154 @@ class Patient extends SHV_Controller {
         $this->layout->render();
     }
 
-    function patient_list() {
+    function opd_registration()
+    {
+        $this->layout->title = "OPD Registration";
+        $this->scripts_include->includePlugins(array('jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('jq_validation'), 'css');
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "OPD";
+        $this->layout->navDescr = "OPD Screening";
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function store_patient_info()
+    {
+        $this->load->model('patient/patient_model');
+        $user_id = $this->rbac->get_uid();
+        $uid = $this->uuid->v5('AnSh');
+        $data = [
+            'FirstName' => $this->input->post('first_name'),
+            'LastName' => $this->input->post('last_name'),
+            'Age' => $this->input->post('age'),
+            'gender' => $this->input->post('gender'),
+            'mob' => $this->input->post('mobile'),
+            'city' => $this->input->post('place'),
+            'occupation' => $this->input->post('occupation'),
+            'address' => $this->input->post('address'),
+            'entrydate' => $this->input->post('consultation_date'),
+            'sid' => $uid,
+            'AddedBy' => $user_id
+        ];
+
+        $insert_id = $this->patient_model->insert_patient($data);
+
+        if ($insert_id) {
+            echo json_encode(['status' => 'success', 'message' => 'Patient registered successfully!', 'opd_no' => $insert_id]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to register patient.']);
+        }
+    }
+
+    function generate_opd_card()
+    {
+        require_once './vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => [90, 80], // Width x Height in mm, customize as per card size
+            'margin_top' => 5,
+            'margin_bottom' => 5,
+            'margin_left' => 5,
+            'margin_right' => 5,
+        ]);
+        ini_set("pcre.backtrack_limit", "10000000");
+
+        $this->load->model('patient/patient_model');
+        $opd_id = $this->input->get('opd_id');
+        $patient_data = $this->patient_model->get_patient_info($opd_id);
+        $patient_data = $patient_data['opd_data'][0];
+        if ($patient_data) {
+            $config = $this->db->get('config');
+            $config = $config->row_array();
+            
+            //Html page design
+            $header = '<table width="100%" style="margin-bottom: 2px; " border="0" cellspacing="0" cellpadding="0">'
+                . '<tr>'
+                . '<td width="15%" style="text-align: center;" border="0" padding="1px">'
+                . '<img src="data:image/png;base64,' . base64_encode($config['logo_img']) . '" width="60px" height="60px" />'
+                . '</td>'
+                . '<td width="85%" style="text-align: left;" border="0">'
+                . '<h6 style="margin: 1pt; font-size: 10pt;">' . $config["college_name"] . '</h6>'
+                . '</td>'
+                . '</tr>'
+                . '</table>
+                <span style="font-size:6pt;text-align:justify;">(Permitted by Govt. of karnataka, Affiliated to Rajiv Ghandhi University of Heath Science (RGUHS) Karnataka
+                 Bangaluru, Recognized by National Commission for Indian System of Medicine(NCISM) New Delhi & Ministry of AYUSH New Delhi)</span>
+                <hr style="margin: 2px 0; border: none; border-top: 1px solid #000;" />';
+
+            $opdBox = '
+<div style="text-align: center; margin-bottom: 10px; margin-left:35px;">
+    <div style="
+        display: inline-block;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 8px;
+        width: 200px;
+        font-family: sans-serif;
+        text-align: center;
+    ">
+        <div style="
+            font-size: 10pt;
+            font-weight: bold;
+            background-color: #e6f2ff;
+            padding: 4px 0;
+            border-bottom: 1px solid #ccc;
+        ">
+            Out Patient Department
+        </div>
+        <div style="
+            font-size: 14pt;
+            margin-top: 8px;
+            font-weight: bold;
+        ">
+            ' . $patient_data['OpdNo'] . '
+        </div>
+    </div>
+</div>
+';
+$qr = '
+            <div style="text-align: right; margin-top: 2px;">
+                <barcode code="' . $patient_data['OpdNo'] . '" type="QR" size="1" error="M" />
+            </div>';
+            $html = '<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px; height: 100%;">' 
+            . $header . '
+            <p style="margin: 2px 4px;"><b>Name:</b> ' . $patient_data['name'] . ' (' . $patient_data['gender'] . ')' . ' (' . $patient_data['Age'] . ') </p>'
+             . $opdBox . 
+             '<p style="margin: 2px 4px;font-size:12px"><b>Date:</b>'.$patient_data['entrydate'].'</p>'.
+             '<p style="margin: 2px 4px;font-size:10px"><b>Please bring this card for every visit.</b></p>'.
+             '</div>';
+
+            $mpdf->WriteHTML($html);
+            $mpdf->AddPage();
+            
+            // Page 2: Back Side – Instructions
+            $back = '
+<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px; height: 100%;">
+    <h3 style="text-align:center;">-: Information for Public :-</h3>
+    <ol style="font-size:10px">
+        <li>This hospital is a public run institution.</li>
+        <li>The services here is your right, their growth is your responsibility.</li>
+        <li>Seek medical advice for treatment of disease and protection of heath</li>
+        <li>Special ayurveda, Yoga and Naturopathy available</li>
+    </ol>
+    '.$qr.'
+</div>';
+
+
+            $mpdf->WriteHTML($back);
+
+            $mpdf->Output('opd_card.pdf', 'I'); // 'I' for inline display; use 'D' to force download
+
+            exit;
+        } else {
+            echo 'No patient data found for the given OPD ID.';
+        }
+    }
+
+    function patient_list()
+    {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "OPD";
         $this->layout->navDescr = "Out Patient Department";
@@ -38,7 +188,34 @@ class Patient extends SHV_Controller {
         $this->layout->render();
     }
 
-    function update_patient_personal_information() {
+    function opd_screening_list()
+    {
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "OPD";
+        $this->layout->navDescr = "Out Patient Department";
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_patients_list_screening()
+    {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->opd_model->get_patients_screening($input_array);
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
+        echo json_encode($response);
+    }
+
+    function update_patient_personal_information()
+    {
         if ($this->input->is_ajax_request()) {
             $this->load->model('patient/patient_model');
             $post_values = $this->input->post();
@@ -51,11 +228,13 @@ class Patient extends SHV_Controller {
         }
     }
 
-    function sub_dept() {
+    function sub_dept()
+    {
         return $this->get_sub_department();
     }
 
-    function get_patients_list() {
+    function get_patients_list()
+    {
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
@@ -68,7 +247,8 @@ class Patient extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function export_patients_list() {
+    function export_patients_list()
+    {
         $this->load->helper('to_excel');
         $search_criteria = NULL;
         $input_array = array();
@@ -97,7 +277,8 @@ class Patient extends SHV_Controller {
         ob_end_flush();
     }
 
-    function save() {
+    function save()
+    {
         $this->load->model('patient/treatment_model');
         $max = $this->get_next_dept_opd($this->input->post('department'));
         if ($max != NULL) {
@@ -106,15 +287,16 @@ class Patient extends SHV_Controller {
             $dept_opd_count = 1;
         }
         $is_inserted = $this->treatment_model->add_patient_for_treatment($this->input->post());
-//        if ($is_inserted) {
-//            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
-//        } else {
-//            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
-//        }
+        //        if ($is_inserted) {
+        //            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
+        //        } else {
+        //            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
+        //        }
         redirect('patient');
     }
 
-    function export_pdf() {
+    function export_pdf()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $this->load->helper('pdf');
@@ -133,7 +315,8 @@ class Patient extends SHV_Controller {
         generate_pdf($content);
     }
 
-    function export_patients_list_pdf() {
+    function export_patients_list_pdf()
+    {
 
         ini_set("memory_limit", "-1");
         set_time_limit(0);
@@ -165,14 +348,16 @@ class Patient extends SHV_Controller {
         exit;
     }
 
-    function get_patient_by_opd() {
+    function get_patient_by_opd()
+    {
         $opd_id = $this->input->post('opd_id');
         $data['patient_data'] = $this->opd_model->get_patient_by_opd($opd_id);
         //$data['dept_list'] = $this->department_model->get_department_list();
         echo json_encode($data);
     }
 
-    function followup() {
+    function followup()
+    {
         $pat_type = OLD_PATIENT;
         $dept_opd = $this->get_next_dept_opd($this->input->post('department'));
         $treat_data = array(
@@ -187,7 +372,38 @@ class Patient extends SHV_Controller {
         echo $this->opd_model->store_treatment("add", $treat_data);
     }
 
-    function old_patient_entry() {
+    function followup_opd_screening()
+    {
+        $pat_type = NEW_PATIENT;
+        $dept_opd = $this->get_next_dept_opd($this->input->post('department'));
+        $treat_data = array(
+            'OpdNo' => $this->input->post('opd'),
+            'deptOpdNo' => $dept_opd,
+            'PatType' => $pat_type,
+            'department' => $this->input->post('department'),
+            'sub_department' => $this->input->post('sub_branch'),
+            'AddedBy' => $this->input->post('doctor_name'),
+            'CameOn' => $this->input->post('date'),
+        );
+
+        $vitals_data = array(
+            'opd_no' => $this->input->post('opd'),
+            'date' => $this->input->post('date'),
+            'blood_pressure' => $this->input->post('blood_pressure'),
+            'pulse_rate' => $this->input->post('pulse_rate'),
+            'respiratory_rate' => $this->input->post('respiratory_rate'),
+            'body_temperature' => $this->input->post('body_temperature'),
+            'spo2' => $this->input->post('oxygen_saturation'),
+            'weight' => $this->input->post('weight'),
+        );
+
+        $this->db->insert('patient_vitals', $vitals_data);
+
+        echo $this->opd_model->store_treatment("add", $treat_data);
+    }
+
+    function old_patient_entry()
+    {
         $dept_opd_count = 0;
         $deptname = $this->input->post('department');
         $opd = $this->input->post('opd');
@@ -214,7 +430,8 @@ class Patient extends SHV_Controller {
         redirect('patient/view', 'refresh');
     }
 
-    function ipd_list() {
+    function ipd_list()
+    {
         $this->load->model('patient/treatment_model');
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
@@ -228,7 +445,8 @@ class Patient extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_ipd_patients_list() {
+    function get_ipd_patients_list()
+    {
         $this->load->model('patient/ipd_model');
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
@@ -244,12 +462,13 @@ class Patient extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function date_difference() {
+    function date_difference()
+    {
         date_default_timezone_set("Asia/Kolkata");
-//        echo $from = strtotime($this->input->post('dod'));
-//        echo $to = strtotime($this->input->post('doa'));
-//        $difference = $from - $to;
-//        $days = floor($difference / (60 * 60 * 24));
+        //        echo $from = strtotime($this->input->post('dod'));
+        //        echo $to = strtotime($this->input->post('doa'));
+        //        $difference = $from - $to;
+        //        $days = floor($difference / (60 * 60 * 24));
         // Convert to DateTime objects
         $to = $this->input->post('dod');
         $start_date = $this->input->post('doa');
@@ -261,7 +480,8 @@ class Patient extends SHV_Controller {
         echo json_encode($total_days);
     }
 
-    function discharge_patient() {
+    function discharge_patient()
+    {
         $this->load->model('patient/treatment_model');
         $ipd = $this->input->post('dis_ipd');
         $discharge_date = $this->input->post('dod');
@@ -290,7 +510,8 @@ class Patient extends SHV_Controller {
         }
     }
 
-    function add_nursing_indent($ipd) {
+    function add_nursing_indent($ipd)
+    {
         $this->db->from('ipdtreatment it');
         $this->db->join('inpatientdetails ip', 'it.ipdno=ip.IpNo');
         $this->db->where('it.ipdno', $ipd);
@@ -304,7 +525,7 @@ class Patient extends SHV_Controller {
                 if (strpos($product, 'BD') || strpos($product, 'BID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
-                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i) . ' days'));
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ($i) . ' days'));
                         $form_data = array(
                             'indentdate' => $doi,
                             'ipdno' => $treat['IpNo'],
@@ -321,7 +542,7 @@ class Patient extends SHV_Controller {
                 } else if (strpos($product, 'TD') || strpos($product, 'TID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
-                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i + 1) . ' days'));
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ($i + 1) . ' days'));
                         $form_data = array(
                             'indentdate' => $doi,
                             'ipdno' => $treat['IpNo'],
@@ -342,7 +563,8 @@ class Patient extends SHV_Controller {
         }
     }
 
-    function indent_list() {
+    function indent_list()
+    {
         $this->layout->navTitleFlag = false;
         $this->layout->navTitle = "IPD patients";
         $this->layout->navDescr = "In Patient Department";
@@ -353,7 +575,8 @@ class Patient extends SHV_Controller {
         $this->layout->render();
     }
 
-    function get_indent_patients() {
+    function get_indent_patients()
+    {
         $this->load->model('patient/ipd_model');
         $input_array = array();
         foreach ($this->input->post('search_form') as $search_data) {
@@ -367,11 +590,13 @@ class Patient extends SHV_Controller {
         echo json_encode($response);
     }
 
-    function search_patient() {
+    function search_patient()
+    {
         $this->layout->render();
     }
 
-    function fetch_patient_info() {
+    function fetch_patient_info()
+    {
         $this->load->model('patient_model');
         $opd = $this->input->post('opd_id');
         $data["patient_data"] = $this->patient_model->get_patient_info($opd);
@@ -379,7 +604,8 @@ class Patient extends SHV_Controller {
         $this->load->view('patient/patient/patient_view_ajax', $data);
     }
 
-    function print_ipd_case_sheet($ipd = null) {
+    function print_ipd_case_sheet($ipd = null)
+    {
         if ($ipd) {
             $this->load->model('patient/treatment_model');
             $data = array();

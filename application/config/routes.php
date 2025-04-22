@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
   | -------------------------------------------------------------------------
@@ -236,6 +236,8 @@ $route['store-wound-dressing'] = 'register/wounddressing/store';
 $route['wound-dressing'] = 'reports/wound_dressing';
 $route['fetch-wound-dressing'] = 'reports/get_wound_dressing_patients_list';
 $route['export-wound_dressing'] = 'reports/export_wound_dressing';
+
+$route['generate-opd-card/(:any)'] = 'patient/generate_opd_card/$1';
 
 
 $route['404_override'] = '';

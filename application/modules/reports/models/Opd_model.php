@@ -63,6 +63,56 @@ class Opd_model extends CI_Model
         return $return;
     }
 
+    public function get_patients_screening($conditions, $export_flag = FALSE)
+    {
+        $return = array();
+        $columns = array(
+            'OpdNo',
+            'FirstName',
+            'LastName',
+            'Age',
+            'gender',
+            'city',
+            'occupation',
+            'address',
+            '(CASE WHEN sid IS NULL THEN "##" ELSE sid END) sid'
+        );
+        $where_cond = " WHERE 1=1 ";
+        $limit = ' LIMIT 100';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'OpdNo':
+                        $where_cond .= " AND OpdNo='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    case 'sid':
+                        $where_cond .= " AND sid LIKE '%$val%'";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        $query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond AND OpdNo NOT IN (SELECT OpdNo FROM treatmentdata)";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->count_all('patientdata');
+        return $return;
+    }
+
     function get_patient_by_opd($opd)
     {
         $patient_data = $this->db->get_where('patientdata', array('OpdNo' => $opd));

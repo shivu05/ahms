@@ -156,3 +156,17 @@ CREATE TABLE `siravyadana_opd_ipd_register` (
   `last_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE patient_vitals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    opd_no VARCHAR(20) NOT NULL,
+    date DATE NOT NULL,
+    blood_pressure VARCHAR(20), -- e.g., '120/80'
+    pulse_rate INT,             -- in beats per minute
+    respiratory_rate INT,       -- in breaths per minute
+    body_temperature DECIMAL(5,2), -- in Celsius or Fahrenheit, based on system
+    spo2 INT,                   -- Oxygen Saturation in %
+    weight DECIMAL(5,2),        -- in kg (or lbs, based on system)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
