@@ -478,6 +478,10 @@ INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`) VALU
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`) VALUES ('7', '29', 'Active', '1');
 UPDATE `perm_master` SET `perm_url` = 'opd-registration' WHERE (`perm_id` = '29');
 
-
+INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_class`, `perm_url`, `perm_status`, `perm_attr`, `perm_icon`, `last_updated_id`, `last_updated_date`) 
+VALUES ('OPD_SCREENING_LIST', 'Screening list', '4', '4', '4', '', 'patient/opd_screening_list', 'Active', '', '', '1', CURRENT_TIMESTAMP);
+INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES (NULL, '1', '66', 'Active', '1', CURRENT_TIMESTAMP, '1');
+INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES (NULL, '4', '66', 'Active', '1', CURRENT_TIMESTAMP, '1');
+INSERT INTO `role_perm` (`role_perm_id`, `role_id`, `perm_id`, `status`, `last_updated_id`, `last_updated_date`, `access_perm`) VALUES (NULL, '7', '66', 'Active', '1', CURRENT_TIMESTAMP, '1');
 
 
