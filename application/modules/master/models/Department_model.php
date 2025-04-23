@@ -25,7 +25,7 @@ class Department_model extends CI_Model
         $user_id = $this->rbac->get_uid();
         $this->db->select('deptper.*');
         $this->db->from('deptper');
-        if($this->rbac->is_admin() == 0){
+        if ($this->rbac->is_admin() == 0 && !$this->rbac->has_role('OPDSCR')) {
             $this->db->join('users', 'users.user_department=deptper.dept_unique_code');
             $this->db->where('users.ID', $user_id);
         }

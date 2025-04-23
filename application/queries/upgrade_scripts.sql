@@ -470,3 +470,14 @@ UPDATE `deptper` SET `bed_count` = '9' WHERE (`ID` = '5');
 UPDATE `deptper` SET `bed_count` = '9' WHERE (`ID` = '8');
 UPDATE `deptper` SET `bed_count` = '0' WHERE (`ID` = '9');
 UPDATE `deptper` SET `bed_count` = '0' WHERE (`ID` = '10');
+
+INSERT INTO `role_master` (`role_name`, `role_code`, `last_updated_by`) VALUES ('OPDSCR', 'OPDSCR', '1');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`) VALUES ('7', '1', 'Active', '1');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`) VALUES ('7', '4', 'Active');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`) VALUES ('7', '5', 'Active', '1');
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`) VALUES ('7', '29', 'Active', '1');
+UPDATE `perm_master` SET `perm_url` = 'opd-registration' WHERE (`perm_id` = '29');
+
+
+
+

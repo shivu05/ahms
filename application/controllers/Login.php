@@ -5,15 +5,18 @@
  *
  * @author Shivaraj
  */
-class Login extends SHV_Controller {
+class Login extends SHV_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->layout->layout = 'login_layout';
         $this->layout->title = 'Login';
     }
 
-    function index() {
+    function index()
+    {
         $key = fetchProjectDir();
         $this->load->model('ClientInfo');
         $accessConfig = $this->ClientInfo->fetch_config_years($key);
@@ -27,7 +30,8 @@ class Login extends SHV_Controller {
         $this->layout->render();
     }
 
-    function validate() {
+    function validate()
+    {
         $data["title"] = "Login Page";
         $this->form_validation->set_rules('loginname', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
@@ -45,7 +49,6 @@ class Login extends SHV_Controller {
                 show_error('Unathorised access! Please contact administrator <a href="' . base_url() . '" >Home</a>', 500);
                 exit;
             } else {
-                
             }
 
             $this->session->set_userdata('randkey', $year);
@@ -62,7 +65,8 @@ class Login extends SHV_Controller {
         }
     }
 
-    function authenticate() {
+    function authenticate()
+    {
         $postvalues = $this->session->userdata('configs');
         $this->session->set_userdata('configs', NULL);
         $dbname = $this->session->userdata('randkey');
@@ -74,7 +78,8 @@ class Login extends SHV_Controller {
         }
     }
 
-    function logout() {
+    function logout()
+    {
         $this->simpleloginsecure->logout();
         //remove all session data
         $this->output->set_header('refresh:3; url=' . base_url());
@@ -85,7 +90,8 @@ class Login extends SHV_Controller {
         redirect(base_url(), true);
     }
 
-    function change_password() {
+    function change_password()
+    {
         if ($this->rbac->is_login()) {
             $this->layout->title = 'Change password';
             $this->layout->layout = 'default';
@@ -96,7 +102,8 @@ class Login extends SHV_Controller {
         }
     }
 
-    function check_current_pasword() {
+    function check_current_pasword()
+    {
         $user_name = $this->rbac->get_email();
         $current_password = $this->input->post('current_password');
         if ($this->simpleloginsecure->login($user_name, $current_password)) {
@@ -106,7 +113,8 @@ class Login extends SHV_Controller {
         }
     }
 
-    function update_password() {
+    function update_password()
+    {
         $user_name = $this->rbac->get_email();
         $current_password = $this->input->post('current_password');
         $new_password = $this->input->post('new_password');
@@ -116,15 +124,17 @@ class Login extends SHV_Controller {
             echo json_encode(array('status' => false, 'msg' => 'Failed to update password. Try again', 'label' => 'Cancel', 'class' => 'btn-danger'));
         }
     }
-    
-    function man_update(){
+
+    function man_update()
+    {
         echo 'hi';
         $return = $this->simpleloginsecure->edit_password('admin@vedicsofts.com', '123456', 'Vhms@2023');
         print_r($return);
         echo 'bye';
     }
 
-    function home() {
+    function home()
+    {
         if ($this->rbac->is_admin()) {
             redirect('admin-dashboard');
         } else if ($this->rbac->is_doctor()) {
@@ -137,12 +147,15 @@ class Login extends SHV_Controller {
             redirect('home/usg');
         } else if ($this->rbac->has_role('LAB')) {
             redirect('home/lab');
+        } else if ($this->rbac->has_role('OPDSCR')) {
+            redirect('home/opdscr_dashboard');
         } else {
             redirect('home/user');
         }
     }
 
-    function generate_meds() {
+    function generate_meds()
+    {
         $this->db->limit(10);
         $this->db->where('department <>', 'Swasthavritta');
         $treatment_data = $this->db->get('treatmentdata')->result_array();
@@ -195,5 +208,4 @@ class Login extends SHV_Controller {
           }
           } */
     }
-
 }

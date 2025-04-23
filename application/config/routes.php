@@ -65,6 +65,10 @@ $route['home/xray'] = "home/dashboard/xray_dashabord";
 $route['home/ecg'] = "home/dashboard/ecg_dashboard";
 $route['home/usg'] = "home/dashboard/usg_dashboard";
 $route['home/lab'] = "home/dashboard/lab_dashboard";
+$route['home/opdscr_dashboard'] = "home/dashboard/opdscr_dashboard";
+
+$route['opd-registration'] = "patient/opd_registration";
+$route['opd-screening-list'] = "patient/opd_screening_list";
 
 $route['xray-info'] = "patient/xray";
 $route['ecg-info'] = "patient/ecg";
