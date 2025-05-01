@@ -152,11 +152,11 @@
                             </tr>
                             <tr>
                                 <td>Discharge Date:<span class="err_msg">*</span> </td>
-                                <td><input type="text" name="dod" id="dod" class="form-control todate required date_picker" required="required" placeholder="Discharge date" required="required" autocomplete="off"></td>
+                                <td><input type="text" name="dod" id="dod" class="form-control todate date_picker" required="required" placeholder="Discharge date" required="required" autocomplete="off"></td>
                             </tr>
                             <tr>
                                 <td>Discharge Time:<span class="err_msg">*</span> </td>
-                                <td><input type="time" name="discharge_time" id="discharge_time" class="form-control todate required" required="required" placeholder="Discharge time" required="required" autocomplete="off"></td>
+                                <td><input type="time" name="discharge_time" id="discharge_time" class="form-control todate" required="required" placeholder="Discharge time" required="required" autocomplete="off"></td>
                             </tr>
                             <tr>
                                 <td>Notes:</td>
@@ -245,8 +245,8 @@ if (!empty($wards)) {
                         <div class="col-md-6 col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label for="DoAdmission">Date of Admission:</label>
-                                <input class="form-control required date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
-                                <input class="form-control required ipd_dates" id="admit_time" name="admit_time" type="time" placeholder="Time of Admisison">
+                                <input class="form-control date_picker ipd_dates" id="DoAdmission" name="DoAdmission" type="text" placeholder="Date of Admisison">
+                                <input class="form-control ipd_dates" id="admit_time" name="admit_time" type="time" placeholder="Time of Admisison">
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-6 col-sm-12">
