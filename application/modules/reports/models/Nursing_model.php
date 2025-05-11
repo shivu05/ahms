@@ -260,7 +260,7 @@ class Nursing_model extends CI_Model {
     function get_birth_data($conditions, $export_flag = false) {
 
         $return = array();
-        $columns = array('b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype',
+        $columns = array('b.ID', 'b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype',
             'i.IpNo', 'i.deptOpdNo', 'i.FName', 'i.Age', 'i.diagnosis', 'babygender', 'babyWeight', 'fatherName', 'DoAdmission');
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
@@ -615,7 +615,7 @@ class Nursing_model extends CI_Model {
     }
 
     function delete_record($table, $where) {
-        return $this->db->delete($table, $where);
+         return $this->db->delete($table, $where);
     }
 
     function get_kriyakalp_data($conditions, $export_flag = FALSE) {

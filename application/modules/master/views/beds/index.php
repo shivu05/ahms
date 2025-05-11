@@ -22,7 +22,9 @@ function validate_edit($data) {
 <div class="row">
     <div class="col-md-12">
         <div class="box box-primary">
-            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list-alt"></i> Beds list:</h3></div>
+            <div class="box-header with-border"><h3 class="box-title"><i class="fa fa-list-alt"></i> Beds list:</h3>
+        <a href="<?= base_url('refresh-beds')?>" target="_blank" class="btn btn-sm btn-primary pull-right"> Refresh beds</a>
+        </div>
             <div class="box-body">
                 <table class="table table-bordered dataTable" id="bed_list_grid">
                     <thead>

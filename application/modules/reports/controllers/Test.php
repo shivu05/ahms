@@ -808,7 +808,7 @@ class Test extends SHV_Controller {
         $this->scripts_include->includePlugins(array('datatables'), 'js');
         $this->scripts_include->includePlugins(array('datatables'), 'css');
         $data = array();
-        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery', false, false);
+        $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_delivery');
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
@@ -836,7 +836,7 @@ class Test extends SHV_Controller {
             'end_date' => format_date($input_array['end_date'])
         );
 
-        generate_pdf($content, 'L', $title, 'birth_report.pdf', true, true, 'I');
+        generate_pdf($content, 'L', $title, 'birth_report', true, true, 'I');
         exit;
     }
 

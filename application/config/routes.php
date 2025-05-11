@@ -194,6 +194,7 @@ $route['store-fumigation-info'] = 'register/fumigation/store_data';
 
 $route['manage-beds'] = 'master/beds';
 $route['update-bed'] = 'master/beds/update';
+$route['refresh-beds'] = 'master/beds/refresh_beds';
 
 $route['medicine'] = 'pharmacy/medicine/index';
 $route['medicine/add'] = 'pharmacy/medicine/add';
