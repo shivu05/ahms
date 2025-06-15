@@ -162,10 +162,10 @@
 
         var columns = [
             {
-                title: "Unique ID",
+                title: "UHID",
                 class: "unique_id",
                 data: function (item) {
-                    var unique_id = item.sid;
+                    var unique_id = item.uhid;
                     if (unique_id == 'null') {
                         unique_id = '--';
                     }

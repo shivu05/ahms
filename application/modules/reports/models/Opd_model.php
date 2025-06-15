@@ -25,7 +25,7 @@ class Opd_model extends CI_Model
             'city',
             'occupation',
             'address',
-            '(CASE WHEN sid IS NULL THEN "##" ELSE sid END) sid'
+            '(CASE WHEN UHID IS NULL THEN "##" ELSE UHID END) uhid'
         );
         $where_cond = " WHERE 1=1 ";
         $limit = ' LIMIT 100';
