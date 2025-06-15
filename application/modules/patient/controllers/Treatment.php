@@ -821,7 +821,7 @@ class Treatment extends SHV_Controller {
     function print_case_sheet($opd = null, $treat_id = null) {
         if ($opd) {
             $treat_data = $this->treatment_model->get_patient_treatment($opd, $treat_id);
-//            /pma($treat_data, 1);
+//pma($treat_data, 1);
             $this->load->helper('mpdf');
             $config = $this->db->get('config');
             $config = $config->row_array();
@@ -833,6 +833,9 @@ class Treatment extends SHV_Controller {
             $pat_table .= $header;
             $pat_table .= '<table class="table"  width="100%"><tr><td align="center" width="100%" style="font-size:14pt">Out Patient Card</td></tr></table><br/>';
             $pat_table .= "<table class='' width='100%' style='font-size:10pt'>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td colspan='2' width='50%'><b>UHID:</b> " . $treat_data['UHID'] . "</td>";
+            $pat_table .= "</tr>";
             $pat_table .= "<tr>";
             $pat_table .= "<td  width='50%'><b>OPD NO:</b> " . $treat_data['OpdNo'] . "</td>";
             $pat_table .= "<td width='50%'><b>DATE:</b> " . $treat_data['CameOn'] . "</td>";
