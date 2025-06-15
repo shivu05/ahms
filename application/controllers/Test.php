@@ -11,21 +11,24 @@
  *
  * @author Abhilasha
  */
-class Test extends SHV_Controller {
+class Test extends SHV_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function uuid_gen() {
+    public function uuid_gen()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $this->load->library('uuid');
-//        echo $this->uuid->v3('AnSh');
-//        echo '<br/>';
-//        echo $this->uuid->v4();
-//        echo '<br/>';
-//        echo $this->uuid->v5('AnSh');
+        //        echo $this->uuid->v3('AnSh');
+        //        echo '<br/>';
+        //        echo $this->uuid->v4();
+        //        echo '<br/>';
+        //        echo $this->uuid->v5('AnSh');
         //$this->db->query("ALTER TABLE patientdata CHANGE COLUMN `sid` `sid` VARCHAR(200) NULL DEFAULT NULL");
         $result = $this->db->get('patientdata')->result_array();
         if (!empty($result)) {
@@ -38,7 +41,8 @@ class Test extends SHV_Controller {
         }
     }
 
-    function print_pdf() {
+    function print_pdf()
+    {
         $this->load->helper('mpdf');
         $config = $this->db->get('config');
         $config = $config->row_array();
@@ -124,7 +128,8 @@ class Test extends SHV_Controller {
         exit;
     }
 
-    function update_docs() {
+    function update_docs()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
 
@@ -137,35 +142,36 @@ class Test extends SHV_Controller {
         }
     }
 
-    function exe_db() {
+    function exe_db()
+    {
         $db_list = $this->db->get('vhms_main.db_list')->result_array();
         echo 'STARTED<br/>----------------------------------------------------------------------------------------------</br>';
         if (!empty($db_list)) {
             foreach ($db_list as $row) {
                 echo 'for DB: ' . $row['db_name'] . '--!';
-//                $perm_params = array(
-//                    'perm_code' => 'FUMIGATION_REGISTER',
-//                    'perm_desc' => 'Fumigation',
-//                    'perm_order' => 2,
-//                    'perm_label' => 2,
-//                    'perm_parent' => 61,
-//                    'perm_class' => '',
-//                    'perm_url' => 'fumigation-register',
-//                    'perm_status' => 'Active',
-//                    'perm_icon' => 'fa fa-list',
-//                    'last_updated_id' => 1
-//                );
-//                $perm_master = $this->db->insert($row['db_name'] . '.perm_master', $perm_params);
-//                $insert_id = $this->db->insert_id();
-//                $role_params = array(
-//                    'role_id' => 1,
-//                    'perm_id' => $insert_id,
-//                    'status' => 'Active',
-//                    'last_updated_id' => 1,
-//                    'access_perm' => 2
-//                );
-//                $role_perm = $this->db->insert($row['db_name'] . '.role_perm', $role_params);
-//                
+                //                $perm_params = array(
+                //                    'perm_code' => 'FUMIGATION_REGISTER',
+                //                    'perm_desc' => 'Fumigation',
+                //                    'perm_order' => 2,
+                //                    'perm_label' => 2,
+                //                    'perm_parent' => 61,
+                //                    'perm_class' => '',
+                //                    'perm_url' => 'fumigation-register',
+                //                    'perm_status' => 'Active',
+                //                    'perm_icon' => 'fa fa-list',
+                //                    'last_updated_id' => 1
+                //                );
+                //                $perm_master = $this->db->insert($row['db_name'] . '.perm_master', $perm_params);
+                //                $insert_id = $this->db->insert_id();
+                //                $role_params = array(
+                //                    'role_id' => 1,
+                //                    'perm_id' => $insert_id,
+                //                    'status' => 'Active',
+                //                    'last_updated_id' => 1,
+                //                    'access_perm' => 2
+                //                );
+                //                $role_perm = $this->db->insert($row['db_name'] . '.role_perm', $role_params);
+                //                
                 $alter = $this->db->query("ALTER TABLE `bed_details` ADD COLUMN `bed_category` VARCHAR(45) NULL AFTER `IpNo`");
                 if ($alter):
                     echo 'Executed on ' . $row['db_name'] . ' at ' . date('dd-mm-YYYY hh:mm:ss') . '</br>';
@@ -181,7 +187,8 @@ class Test extends SHV_Controller {
         exit;
     }
 
-    function add_nursing_indent() {
+    function add_nursing_indent()
+    {
         ini_set("memory_limit", "-1");
         set_time_limit(0);
         $this->db->from('ipdtreatment it');
@@ -197,7 +204,7 @@ class Test extends SHV_Controller {
                 if (strpos($product, 'BD') || strpos($product, 'BID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
-                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i) . ' days'));
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ($i) . ' days'));
                         $form_data = array(
                             'indentdate' => $doi,
                             'ipdno' => $treat['IpNo'],
@@ -214,7 +221,7 @@ class Test extends SHV_Controller {
                 } else if (strpos($product, 'TD') || strpos($product, 'TID')) {
                     $int = intval(preg_replace('/[^0-9]+/', '', $product), 10);
                     for ($i = 0; $i < $days; $i++) {
-                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ( $i + 1) . ' days'));
+                        $doi = date('Y-m-d', strtotime($treat['DoAdmission'] . ' + ' . ($i + 1) . ' days'));
                         $form_data = array(
                             'indentdate' => $doi,
                             'ipdno' => $treat['IpNo'],
@@ -230,8 +237,61 @@ class Test extends SHV_Controller {
                     }
                 }
             }
-     //       $this->db->where('ID', $treat['IpNo']);
-       //     $this->db->update('ipdtreatment', array('status' => 'Treated'));
+            //       $this->db->where('ID', $treat['IpNo']);
+            //     $this->db->update('ipdtreatment', array('status' => 'Treated'));
         }
+    }
+    public function generate_existing_uhids()
+    {
+        // Step 1: Get hospital/college code
+        $config = $this->db->get('config')->row();
+        $college_code = $config->college_id ?? 'UNKNOWN';
+
+        // Step 2: Get all patients without UHID
+        $this->db->select('OpdNo, entrydate');
+        $this->db->where('UHID IS NULL', null, false);
+        $this->db->order_by('entrydate, OpdNo');
+        $patients = $this->db->get('patientdata')->result();
+
+        foreach ($patients as $patient) {
+            $entry_date = $patient->entrydate;
+            $opd_no = $patient->OpdNo;
+
+            // Check if entry_date is valid
+            $date_obj = DateTime::createFromFormat('Y-m-d', $entry_date);
+            if (!$date_obj) {
+                log_message('error', "Invalid date for OpdNo: {$opd_no}");
+                continue;
+            }
+
+            $short_date = $date_obj->format('ymd');
+            $sql_date = $date_obj->format('Y-m-d');
+
+            // Step 3: Get or insert daily sequence
+            $existing = $this->db->get_where('uhid_sequence', [
+                'seq_date' => $sql_date,
+                'hospital_code' => $college_code
+            ])->row();
+
+            if ($existing) {
+                $daily_seq = $existing->daily_seq + 1;
+                $this->db->update('uhid_sequence', ['daily_seq' => $daily_seq], ['id' => $existing->id]);
+            } else {
+                $daily_seq = 1;
+                $this->db->insert('uhid_sequence', [
+                    'seq_date' => $sql_date,
+                    'hospital_code' => $college_code,
+                    'daily_seq' => $daily_seq
+                ]);
+            }
+
+            // Step 4: Generate UHID
+            $uhid = 'VH-' . $college_code . '-' . $short_date . '-' . str_pad($daily_seq, 4, '0', STR_PAD_LEFT);
+
+            // Step 5: Update patientdata
+            $this->db->update('patientdata', ['UHID' => $uhid], ['OpdNo' => $opd_no]);
+        }
+
+        echo "UHID generation complete for existing records.";
     }
 }

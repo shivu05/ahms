@@ -1,7 +1,9 @@
 <?php $is_admin = $this->rbac->is_admin(); ?>
 <div class="col-md-12">
     <div class="box box-primary">
-        <div class="box-header with-border"><h3 class="box-title">Configuration settings:</h3></div>
+        <div class="box-header with-border">
+            <h3 class="box-title">Configuration settings:</h3>
+        </div>
         <div class="box-body">
             <!-- Custom Tabs -->
             <div class="nav-tabs-custom">
@@ -9,7 +11,7 @@
                     <?php if ($is_admin): ?>
                         <li class="active"><a href="#user-settings" data-toggle="tab" aria-expanded="true">Settings</a></li>
                     <?php endif; ?>
-                    <li class="<?= (!$is_admin) ? 'active' : '' ?>"><a class="" href="#profile-settings" data-toggle="tab" aria-expanded="false">Profile</a></li>
+                    <li class=""><a class="" href="#profile-settings" data-toggle="tab" aria-expanded="false">Profile</a></li>
                 </ul>
                 <div class="tab-content">
                     <?php if ($is_admin) { ?>
@@ -29,6 +31,11 @@
                                     <div class="col-md-8 mb-4">
                                         <label>College name:</label>
                                         <textarea class="form-control required" name="college_name" id="college_name"><?php echo trim($settings['college_name']); ?></textarea>
+                                    </div>
+                                    <div class="col-md-8 mb-4">
+                                        <label>College code:</label>
+                                        <input class="form-control required" name="college_id" id="college_id" type="text" value="<?php echo trim($settings['college_id']); ?>">
+                                        <small class="form-text text-danger" id="college_idHelp">Please do not update College ID once set as it will be used for UHID Generation</small>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -55,14 +62,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
-                                        <label for="exampleInputFile">College logo:</label><br/>
-                                        <input type="file" name="college_logo" class="span4" id="college_logo" value="abc.png"/>
-                                        <input type="hidden" name="logo_name" id="logo_name" value="<?php echo $settings['logo']; ?>"/>
+                                        <label for="exampleInputFile">College logo:</label><br />
+                                        <input type="file" name="college_logo" class="span4" id="college_logo" value="abc.png" />
+                                        <input type="hidden" name="logo_name" id="logo_name" value="<?php echo $settings['logo']; ?>" />
 
                                     </div>
                                     <div class="col-md-4 mb-4">
-                                        <img src="<?php echo base_url('assets/' . $settings['logo']); ?>" width="90px" height="90px"/>
-                                        <?php /*echo '<img src="data:image/png;base64,'.base64_encode($settings['logo_img']).'" width="90px" height="90px"/>'; */?>
+                                        <img src="<?php echo base_url('assets/' . $settings['logo']); ?>" width="90px" height="90px" />
+                                        <?php /*echo '<img src="data:image/png;base64,'.base64_encode($settings['logo_img']).'" width="90px" height="90px"/>'; */ ?>
                                     </div>
                                 </div>
                                 <div class="row mb-10">
@@ -101,11 +108,11 @@
                 <!-- /.tab-content -->
             </div>
             <!-- nav-tabs-custom -->
-        </div>        
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         var hash = window.location.hash;
         if ('#profile-settings' === hash) {
             $('.user-settings').removeClass('active show');

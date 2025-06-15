@@ -1,6 +1,7 @@
 <?php
 
-class M_auto extends CI_Model {
+class M_auto extends CI_Model
+{
 
     private $addemailid, $countOld, $CountNew, $comparestr, $totalentry, $patPercent, $patTypeList;
     public $firstname = array(), $midname, $lastname, $age, $gender, $occupation, $address, $city, $department;
@@ -28,8 +29,10 @@ class M_auto extends CI_Model {
     private $kayachikper, $shalakyaper, $shallyaper, $tantraper, $swasthaPer, $panchakarper, $balachikper, $emergencyper, $shalakyaSubBranch, $agadatantraper;
     private $_dept_percentage_arr, $_entered_records_arr, $_total_records_to_be_entered, $_treatment_data;
     private $_department_data = array(), $_index = 0, $_pancha_count = 5;
+    private $_college_id = '';
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->addemailid = "";
         $this->countOld = $this->CountNew = 0;
@@ -43,6 +46,9 @@ class M_auto extends CI_Model {
         foreach ($dept_data as $row) {
             $this->_treatment_data[$row] = array();
         }
+
+        $config = $this->db->get('config')->row(); // assuming only one row exists
+        $this->_college_id = $config->college_id ?? 'VHMS';
 
         /* $this->firstname = array(); */
         $this->midname = $this->lastname = $this->age = $this->gender = $this->occupation = $this->address = $this->city = array();
@@ -86,7 +92,8 @@ class M_auto extends CI_Model {
         $this->addedby = "";
     }
 
-    function auto_master($target, $cdate, $newpatient, $pancha_count) {
+    function auto_master($target, $cdate, $newpatient, $pancha_count)
+    {
         shuffle($this->firstname);
 
         $query = "SELECT sum(dept_count) as dept_count,A.department,dept.percentage FROM ( 
@@ -119,7 +126,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    private function insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept) {
+    private function insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept)
+    {
         if (strtolower(trim($labdisease)) == strtolower("AMAVATA")) {
             $this->InsertLabRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
             $this->InsertXrayRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
@@ -257,9 +265,9 @@ class M_auto extends CI_Model {
         } else if (strtolower(trim($labdisease)) == strtolower(trim("PAKSHAGHATA")) || strtolower(trim($labdisease)) == strtolower(trim("ARDITA")) || strtolower(trim($labdisease)) == strtolower(trim("V.RAKTACHAP")) || strtolower(trim($labdisease)) == strtolower(trim("HYPERTENSION")) || strtolower(trim($labdisease)) == strtolower(trim("AMLAPITTA"))) {
             $this->InsertECGRegistry($last_id, $treatid, $cdate, $labdisease, $docname);
         }
-//        if (strtolower($dept) == strtolower('Panchakarma')) {
-//            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname);
-//        }
+        //        if (strtolower($dept) == strtolower('Panchakarma')) {
+        //            $this->InsertPanchaProcedure($last_id, $treatid, $cdate, $labdisease, $docname);
+        //        }
         /* if (strtolower($dept) == strtolower('Panchakarma')) {
           $j = $this->db->get('panchaprocedure')->num_rows();
           if ($j <= $this->_pancha_count) {
@@ -268,7 +276,8 @@ class M_auto extends CI_Model {
           } */
     }
 
-    function calculate_new_old_patient_count() {
+    function calculate_new_old_patient_count()
+    {
         $type_arr = array('new', 'old');
         foreach ($this->_entered_records_arr as $dept => $vals) {
             $new_count = 0;
@@ -296,7 +305,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function insertextradata($diff, $cdate, $target, $newpatient, $pancha_count) {
+    function insertextradata($diff, $cdate, $target, $newpatient, $pancha_count)
+    {
 
         $addemailid = $this->session->userdata('user_name');
         $this->_index = 0;
@@ -500,7 +510,7 @@ class M_auto extends CI_Model {
                 );
                 $this->agadaDoc = $this->get_day_doctor($this->input->post('cdate'), "AGADATANTRA");
             }
-        }// end of old for
+        } // end of old for
         $this->shuffle();
 
         //main logic starts
@@ -554,7 +564,8 @@ class M_auto extends CI_Model {
         $this->session->set_flashdata('noty_msg', @$target . " Records added successfully");
     }
 
-    private function _get_diagnosis_by_gender($dg_arr = array(), $gender = '') {
+    private function _get_diagnosis_by_gender($dg_arr = array(), $gender = '')
+    {
         if ($this->_is_female_gender($gender)) {
             $new_arr = array_filter($dg_arr, function ($ar) {
                 return ($ar['gender'] == 'Female');
@@ -568,7 +579,8 @@ class M_auto extends CI_Model {
         return $dg_arr[array_rand($new_arr)];
     }
 
-    public function add_to_pharmacy($treat_id) {
+    public function add_to_pharmacy($treat_id)
+    {
         $this->db->where('ID', $treat_id);
         $this->db->where('department <>', 'SWASTHAVRITTA');
         $treatment_data = $this->db->get('treatmentdata')->row_array();
@@ -591,10 +603,11 @@ class M_auto extends CI_Model {
                     $this->db->insert('sales_entry', $med_arr);
                 }
             }
-        }// end if
+        } // end if
     }
 
-    private function _check_occupation($age = 0, $occupation = '') {
+    private function _check_occupation($age = 0, $occupation = '')
+    {
         $where = $child = '';
         if ($age > 30) {
             $where = " AND occupation !='STUDENT'";
@@ -607,7 +620,8 @@ class M_auto extends CI_Model {
         return $result_set['occupation'];
     }
 
-    private function _get_random_data($index = 0, $array = null) {
+    private function _get_random_data($index = 0, $array = null)
+    {
         if ($array) {
             if ($index >= count($array)) {
                 $index = 0;
@@ -620,12 +634,15 @@ class M_auto extends CI_Model {
         return null;
     }
 
-    private function _check_valid_index($index, $dept = '') {
-        if ($index >= count($this->femfirstname) ||
-                ($index >= count($this->femLastName)) ||
-                ($index >= count($this->femoccp)) || ( $index >= count($this->age)) ||
-                ($dept == 'BALAROGA' && $index >= count($this->childage)) ||
-                ($dept == 'PRASOOTI_&_STRIROGA' && $index >= count($this->Prasootiage))) {
+    private function _check_valid_index($index, $dept = '')
+    {
+        if (
+            $index >= count($this->femfirstname) ||
+            ($index >= count($this->femLastName)) ||
+            ($index >= count($this->femoccp)) || ($index >= count($this->age)) ||
+            ($dept == 'BALAROGA' && $index >= count($this->childage)) ||
+            ($dept == 'PRASOOTI_&_STRIROGA' && $index >= count($this->Prasootiage))
+        ) {
             $index = 0;
             $this->shuffle();
             return $index;
@@ -633,8 +650,9 @@ class M_auto extends CI_Model {
         return $index;
     }
 
-    private function _check_list_index($dept_arr, $index) {
-        if ((count($dept_arr) < $index ) || trim($dept_arr[$index]['diagnosis']) == "") {
+    private function _check_list_index($dept_arr, $index)
+    {
+        if ((count($dept_arr) < $index) || trim($dept_arr[$index]['diagnosis']) == "") {
             $index = 0;
             shuffle($dept_arr);
             return $index;
@@ -642,12 +660,14 @@ class M_auto extends CI_Model {
         return $index;
     }
 
-    private function _is_female_gender($gender = '') {
+    private function _is_female_gender($gender = '')
+    {
         $sex = strtoupper(trim($gender));
         return ($sex == 'FEMALE') ? true : false;
     }
 
-    private function add_old_patient_data($dept = NULL, $date = NULL) {
+    private function add_old_patient_data($dept = NULL, $date = NULL)
+    {
         $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='$dept' AND NOT (CameOn = '" . $date . "') ORDER BY RAND() LIMIT 1 ";
         $result = $this->db->query($query)->row_array();
         if (!empty($result)) {
@@ -691,11 +711,49 @@ class M_auto extends CI_Model {
         }
     }
 
-    function add_to_kriyaklpa($insert_data) {
+    function add_to_kriyaklpa($insert_data)
+    {
         return $this->db->insert('kriyakalpa', $insert_data);
     }
 
-    function enter_prasooti_patient_details($arr, $cdate) {
+    function insert_patient_with_uhid($date)
+    {
+        $hospital_code = $this->_college_id; // your code
+        $today = $date;
+        $today_short = date('ymd', strtotime($date));//date('ymd');
+
+        // Step 1: Get or insert sequence
+        $query = $this->db->get_where('uhid_sequence', [
+            'seq_date' => $today,
+            'hospital_code' => $hospital_code
+        ]);
+
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            $daily_seq = $row->daily_seq + 1;
+            $this->db->update('uhid_sequence', ['daily_seq' => $daily_seq], ['id' => $row->id]);
+        } else {
+            $daily_seq = 1;
+            $this->db->insert('uhid_sequence', [
+                'seq_date' => $today,
+                'hospital_code' => $hospital_code,
+                'daily_seq' => $daily_seq
+            ]);
+        }
+
+        // Step 2: Generate UHID
+        $uhid = 'VH-' . $hospital_code . '-' . $today_short . '-' . str_pad($daily_seq, 4, '0', STR_PAD_LEFT);
+
+        // Step 3: Add UHID to patient data
+        //$patient_data['UHID'] = $uhid;
+        //$this->db->insert('patientdata', $patient_data);
+
+        return $uhid;
+    }
+
+
+    function enter_prasooti_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'PRASOOTI_&_STRIROGA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -719,7 +777,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
 
                 $this->db->insert('patientdata', $data);
@@ -766,7 +825,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_balaroga_patient_details($arr, $cdate) {
+    function enter_balaroga_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'BALAROGA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -798,7 +858,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -841,7 +902,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_kayachikitsa_patient_details($arr, $cdate) {
+    function enter_kayachikitsa_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'KAYACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -876,7 +938,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -920,7 +983,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_shalakya_tantra_patient_details($arr, $cdate) {
+    function enter_shalakya_tantra_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'SHALAKYA_TANTRA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -960,7 +1024,8 @@ class M_auto extends CI_Model {
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
                     "sub_dept" => $treatment_details['sub_dept'],
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1010,7 +1075,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_shalya_tantra_patient_details($arr, $cdate) {
+    function enter_shalya_tantra_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'SHALYA_TANTRA';
 
@@ -1047,7 +1113,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
 
                 $this->db->insert('patientdata', $data);
@@ -1094,7 +1161,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_swasthavritta_patient_details($arr, $cdate) {
+    function enter_swasthavritta_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'SWASTHAVRITTA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -1129,7 +1197,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1171,7 +1240,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_panchakarma_patient_details($arr, $cdate) {
+    function enter_panchakarma_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'PANCHAKARMA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -1206,7 +1276,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1251,7 +1322,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_aatyayikachikitsa_patient_details($arr, $cdate) {
+    function enter_aatyayikachikitsa_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'AATYAYIKACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -1286,7 +1358,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1328,7 +1401,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function enter_agadatantra_patient_details($arr, $cdate) {
+    function enter_agadatantra_patient_details($arr, $cdate)
+    {
         $addemailid = $this->session->userdata('user_name');
         $dept_name = 'AGADATANTRA';
         if (strtolower($arr[0]) != strtolower('old')) {
@@ -1363,7 +1437,8 @@ class M_auto extends CI_Model {
                     "AddedBy" => $addemailid,
                     "entrydate" => $cdate,
                     "dept" => $dept_name,
-                    "sid" => $uid
+                    "sid" => $uid,
+                    'UHID' => $this->insert_patient_with_uhid($cdate)
                 );
                 $this->db->insert('patientdata', $data);
                 $last_id = $this->db->insert_id();
@@ -1408,7 +1483,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function shuffle() {
+    function shuffle()
+    {
         shuffle($this->firstname);
         shuffle($this->midname);
         shuffle($this->lastname);
@@ -1423,12 +1499,14 @@ class M_auto extends CI_Model {
         shuffle($this->childoccup);
     }
 
-    function calculate_department_entry_count($deptper, $targetforentry, $entereddata) {
+    function calculate_department_entry_count($deptper, $targetforentry, $entereddata)
+    {
         $count = round(((($deptper * $targetforentry) / 100) - $entereddata));
         return ($count > 0) ? $count : 0;
     }
 
-    function getDeptNoForNewPatient($deptString) {
+    function getDeptNoForNewPatient($deptString)
+    {
         try {
             $query = "SELECT deptOpdNo FROM treatmentdata WHERE LOWER(department)=LOWER('" . $deptString . "') ORDER BY deptOpdNo+0 DESC LIMIT 0,1";
             $query = $this->db->query($query);
@@ -1445,7 +1523,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+    function InsertLabRegistry($opdno, $treatid, $camedate, $labdisease, $docname)
+    {
         return true;
         if ($this->db->table_exists('lab_reference')) {
             $check_data = "select treatID from lab_reference where upper(trim(labdisease))='" . strtoupper(trim($labdisease)) . "' ORDER BY RAND() LIMIT 1";
@@ -1462,7 +1541,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function InsertXrayRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+    function InsertXrayRegistry($opdno, $treatid, $camedate, $labdisease, $docname)
+    {
         $query = "SELECT * FROM xray_ref WHERE diesease='" . $labdisease . "' ORDER BY RAND() LIMIT 1";
         $query = $this->db->query($query);
         $is_inserted = false;
@@ -1481,7 +1561,8 @@ class M_auto extends CI_Model {
         return $is_inserted;
     }
 
-    function InsertUSGRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+    function InsertUSGRegistry($opdno, $treatid, $camedate, $labdisease, $docname)
+    {
         $treatment_arr2 = array(
             "OpdNo" => $opdno,
             "refDocName" => $docname,
@@ -1492,7 +1573,8 @@ class M_auto extends CI_Model {
         $this->db->insert('usgregistery', $treatment_arr2);
     }
 
-    function InsertECGRegistry($opdno, $treatid, $camedate, $labdisease, $docname) {
+    function InsertECGRegistry($opdno, $treatid, $camedate, $labdisease, $docname)
+    {
         $treatment_arr2 = array(
             "OpdNo" => $opdno,
             "refDocName" => $docname,
@@ -1503,7 +1585,8 @@ class M_auto extends CI_Model {
         $this->db->insert('ecgregistery', $treatment_arr2);
     }
 
-    function InsertPanchaProcedure($opdno, $treatid, $camedate, $labdisease, $docname) {
+    function InsertPanchaProcedure($opdno, $treatid, $camedate, $labdisease, $docname)
+    {
         if ($this->db->table_exists('reference_panchakarma')) {
             $check_data = "select treatid,no_of_days from reference_panchakarma where upper(trim(disease))='UNMADA' ORDER BY RAND() LIMIT 1";
             $trement_details = $this->db->query($check_data)->row_array();
@@ -1519,7 +1602,8 @@ class M_auto extends CI_Model {
         }
     }
 
-    function get_day_doctor($date = "", $dept = "") {
+    function get_day_doctor($date = "", $dept = "")
+    {
         $query = "SELECT u.ID,user_name FROM users u 
             JOIN doctorsduty d ON u.ID=d.doc_id JOIN week_days wd ON d.day=wd.week_id 
             WHERE UPPER(u.user_department)=UPPER(replace('$dept',' ','_')) AND wd.week_day=DAYNAME(STR_TO_DATE('$date','%Y-%m-%d')) ORDER BY RAND() LIMIT 1;";
@@ -1527,11 +1611,30 @@ class M_auto extends CI_Model {
         return $result['user_name'];
     }
 
-    function get_data($conditions, $export_flag = false) {
+    function get_data($conditions, $export_flag = false)
+    {
         $return = array();
-        $columns = array('ID', 'FirstName', 'LastName', 'Age', 'gender', 'occupation', 'address',
-            'city', 'Mobileno', 'diagnosis', 'complaints', '(REPLACE((department),"_"," ")) department', 'procedures', 'Trtment', 'notes', 'AddedBy',
-            'entrydate', 'medicines', 'sub_dept');
+        $columns = array(
+            'ID',
+            'FirstName',
+            'LastName',
+            'Age',
+            'gender',
+            'occupation',
+            'address',
+            'city',
+            'Mobileno',
+            'diagnosis',
+            'complaints',
+            '(REPLACE((department),"_"," ")) department',
+            'procedures',
+            'Trtment',
+            'notes',
+            'AddedBy',
+            'entrydate',
+            'medicines',
+            'sub_dept'
+        );
 
         $where_cond = " WHERE 1=1";
 
@@ -1567,7 +1670,8 @@ class M_auto extends CI_Model {
         return $return;
     }
 
-    function update_patient_data($post_values) {
+    function update_patient_data($post_values)
+    {
         $this->db->where('ID', $post_values['ID']);
         return $this->db->update('oldtable', $post_values);
     }

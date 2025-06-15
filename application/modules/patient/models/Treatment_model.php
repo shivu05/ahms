@@ -5,9 +5,11 @@
  *
  * @author Shivaraj
  */
-class treatment_model extends CI_Model {
+class treatment_model extends CI_Model
+{
 
-    function add_patient_for_treatment($post_values) {
+    function add_patient_for_treatment($post_values)
+    {
         $user_id = $this->rbac->get_uid();
         $uid = $this->uuid->v5('AnSh');
         $this->db->trans_start();
@@ -22,7 +24,8 @@ class treatment_model extends CI_Model {
             'AddedBy' => $user_id,
             'entrydate' => $post_values['consultation_date'],
             'mob' => $post_values['mobile'],
-            'sid' => $uid
+            'sid' => $uid,
+            'UHID' => $this->insert_patient_with_uhid($post_values['consultation_date'])
         );
         $this->db->insert('patientdata', $form_data);
         $last_id = $this->db->insert_id();
@@ -33,7 +36,7 @@ class treatment_model extends CI_Model {
             'deptOpdNo' => $dept_opd_count,
             'PatType' => NEW_PATIENT,
             'department' => $post_values['department'],
-            'sub_department' => $post_values['sub_department'],
+            'sub_department' => @$post_values['sub_department'],
             'AddedBy' => $post_values['doctor'],
             'CameOn' => $post_values['consultation_date']
         );
@@ -46,12 +49,66 @@ class treatment_model extends CI_Model {
         }
     }
 
-    function get_patients($conditions, $export_flag = FALSE) {
+    function insert_patient_with_uhid($date)
+    {
+        $config = $this->db->get('config')->row(); // assuming only one row exists
+        $hospital_code = $config->college_id ?? 'VHMS';
+
+        $today = $date;
+        $today_short = date('ymd', strtotime($date)); //date('ymd');
+
+        // Step 1: Get or insert sequence
+        $query = $this->db->get_where('uhid_sequence', [
+            'seq_date' => $today,
+            'hospital_code' => $hospital_code
+        ]);
+
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            $daily_seq = $row->daily_seq + 1;
+            $this->db->update('uhid_sequence', ['daily_seq' => $daily_seq], ['id' => $row->id]);
+        } else {
+            $daily_seq = 1;
+            $this->db->insert('uhid_sequence', [
+                'seq_date' => $today,
+                'hospital_code' => $hospital_code,
+                'daily_seq' => $daily_seq
+            ]);
+        }
+
+        // Step 2: Generate UHID
+        $uhid = 'VH-' . $hospital_code . '-' . $today_short . '-' . str_pad($daily_seq, 4, '0', STR_PAD_LEFT);
+
+        // Step 3: Add UHID to patient data
+        //$patient_data['UHID'] = $uhid;
+        //$this->db->insert('patientdata', $patient_data);
+
+        return $uhid;
+    }
+
+    function get_patients($conditions, $export_flag = FALSE)
+    {
         $return = array();
         $display_all = FALSE;
         $columns = array(
-            't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
-            't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType', 'attndedon', 'InOrOutPat'
+            't.ID',
+            'p.OpdNo',
+            'p.FirstName',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'p.city',
+            'p.occupation',
+            'p.address',
+            't.PatType',
+            'd.department',
+            't.complaints',
+            't.Trtment',
+            't.diagnosis',
+            't.CameOn',
+            't.PatType',
+            'attndedon',
+            'InOrOutPat'
         );
 
         $user_dept_cond = '';
@@ -102,20 +159,22 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
+            . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond order by t.ID DESC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query("SELECT * FROM treatmentdata t "
-                        . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department WHERE 1=1 $user_dept_cond")->num_rows();
+            . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department WHERE 1=1 $user_dept_cond")->num_rows();
         return $return;
     }
 
-    function get_patient_basic_details($opd) {
+    function get_patient_basic_details($opd)
+    {
         return $this->db->get_where('patientdata', array('OpdNo' => $opd))->row_array();
     }
 
-    function get_ipd_patient_basic_details($opd, $ipd) {
+    function get_ipd_patient_basic_details($opd, $ipd)
+    {
         $this->db->from('patientdata p');
         $this->db->join('inpatientdetails i', 'p.OpdNo=i.OpdNo');
         $this->db->where('p.OpdNo', $opd);
@@ -123,7 +182,8 @@ class treatment_model extends CI_Model {
         return $this->db->get()->row_array();
     }
 
-    function get_treatment_history($opd) {
+    function get_treatment_history($opd)
+    {
         $where = array(
             'OpdNo' => $opd,
             'InOrOutPat !=' => NULL,
@@ -132,7 +192,8 @@ class treatment_model extends CI_Model {
         return $this->db->get_where('treatmentdata', $where)->result_array();
     }
 
-    function get_current_treatment_info($opd, $treat_id) {
+    function get_current_treatment_info($opd, $treat_id)
+    {
         $where = array(
             'OpdNo' => $opd,
             'InOrOutPat' => NULL,
@@ -145,19 +206,21 @@ class treatment_model extends CI_Model {
         return $return;
     }
 
-    function get_patient_treatment($opd, $treat_id) {
+    function get_patient_treatment($opd, $treat_id)
+    {
         $where = array(
             'it.OpdNo' => $opd,
             'it.ID' => $treat_id
         );
         return $this->db->from('patientdata p')
-                        ->join('treatmentdata it', 'p.OpdNo=it.OpdNo')
-                        ->where($where)
-                        ->get()
-                        ->row_array();
+            ->join('treatmentdata it', 'p.OpdNo=it.OpdNo')
+            ->where($where)
+            ->get()
+            ->row_array();
     }
 
-    public function getBedno($all_beds = false) {
+    public function getBedno($all_beds = false)
+    {
         $where = " and b.bedstatus='Available'";
         if ($all_beds) {
             $where = '';
@@ -168,48 +231,58 @@ class treatment_model extends CI_Model {
         return $this->db->query($query)->result_array();
     }
 
-    function store_treatment($post_values, $treat_id) {
+    function store_treatment($post_values, $treat_id)
+    {
         return $this->db->update('treatmentdata', $post_values, array('ID' => $treat_id));
     }
 
-    public function add_ecg_info($ecgdata) {
+    public function add_ecg_info($ecgdata)
+    {
         $this->db->insert('ecgregistery', $ecgdata);
     }
 
-    public function add_usg_info($usgdata) {
+    public function add_usg_info($usgdata)
+    {
         $this->db->insert('usgregistery', $usgdata);
     }
 
-    public function add_xray_info($xraydata) {
+    public function add_xray_info($xraydata)
+    {
         $this->db->insert('xrayregistery', $xraydata);
     }
 
-    public function add_kshara_info($ksharadata) {
+    public function add_kshara_info($ksharadata)
+    {
         $this->db->insert('ksharsutraregistery', $ksharadata);
     }
 
-    public function add_surgery_info($surgerydata) {
+    public function add_surgery_info($surgerydata)
+    {
         $this->db->insert('surgeryregistery', $surgerydata);
     }
 
-    public function add_lab_info($labdata) {
+    public function add_lab_info($labdata)
+    {
         $this->db->insert_batch('labregistery', $labdata);
     }
 
-    public function update_bed_info($beddata, $bed_no) {
+    public function update_bed_info($beddata, $bed_no)
+    {
         $this->db->where('bedno', $bed_no);
         return $this->db->update('bed_details', $beddata);
     }
 
-    public function add_patient_to_ipd($inpatientdata) {
+    public function add_patient_to_ipd($inpatientdata)
+    {
         $this->db->query("INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId) "
-                . " SELECT OpdNo,deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,'" . $inpatientdata['department'] . "','" . $inpatientdata['BedNo'] . "',
+            . " SELECT OpdNo,deptOpdNo,CONCAT(FirstName,' ',MidName,' ',LastName),Age,Gender,'" . $inpatientdata['department'] . "','" . $inpatientdata['BedNo'] . "',
                     '" . $inpatientdata['diagnosis'] . "','" . $inpatientdata['DoAdmission'] . "','" . $inpatientdata['Doctor'] . "','" . $inpatientdata['treatId'] . "' FROM patientdata WHERE OpdNo='" . $inpatientdata['OpdNo'] . "'");
         $insert_id = $this->db->insert_id();
         return $insert_id;
     }
 
-    public function admit_patient($inpatientdata) {
+    public function admit_patient($inpatientdata)
+    {
         if (!empty($inpatientdata)) {
             $query = "INSERT INTO inpatientdetails (OpdNo, deptOpdNo, FName, Age, Gender, department, BedNo, diagnosis, DoAdmission, Doctor,treatId,admit_time) 
                 SELECT T.OpdNo,T.deptOpdNo,CONCAT(FirstName,' ',LastName) as name,Age,Gender,T.department,'" . $inpatientdata['BedNo'] . "',T.diagnosis,'" . $inpatientdata['DoAdmission'] . "',T.AddedBy,'" . $inpatientdata['treatId'] . "' 
@@ -231,29 +304,34 @@ class treatment_model extends CI_Model {
         return false;
     }
 
-    public function add_ipd_treatment_data($post_data) {
+    public function add_ipd_treatment_data($post_data)
+    {
         return $this->db->insert('ipdtreatment', $post_data);
     }
 
-    public function get_opd_by_ipd($ipd_no) {
+    public function get_opd_by_ipd($ipd_no)
+    {
         //$this->db->select('OpdNo');
         return $this->db->get_where('inpatientdetails', array('IpNo' => $ipd_no))->row_array();
     }
 
-    function get_ipd_treatment_history($ipd) {
+    function get_ipd_treatment_history($ipd)
+    {
         $where = array(
             'ipdno' => $ipd
         );
         return $this->db->get_where('ipdtreatment', $where)->result_array();
     }
 
-    function store_ipd_treatment($post_values) {
+    function store_ipd_treatment($post_values)
+    {
         $this->db->insert('ipdtreatment', $post_values);
         $insert_id = $this->db->insert_id();
         return $insert_id;
     }
 
-    function store_birth_info($post_values) {
+    function store_birth_info($post_values)
+    {
         if ($post_values) {
             return $this->db->insert('birthregistery', $post_values);
         } else {
@@ -261,7 +339,8 @@ class treatment_model extends CI_Model {
         }
     }
 
-    public function update_bed_details($bed_no) {
+    public function update_bed_details($bed_no)
+    {
         $update_data = array(
             'OpdNo' => NULL,
             'bedstatus' => 'Available',
@@ -272,12 +351,14 @@ class treatment_model extends CI_Model {
         return $this->db->update('bed_details', $update_data);
     }
 
-    public function discharge_patient($ipd, $discharge) {
+    public function discharge_patient($ipd, $discharge)
+    {
         $this->db->where('IpNo', $ipd);
         return $this->db->update('inpatientdetails', $discharge);
     }
 
-    public function add_to_pharmacy($treat_id, $type) {
+    public function add_to_pharmacy($treat_id, $type)
+    {
         if (strtolower($type) == 'opd') {
             $this->db->where('ID', $treat_id);
             $this->db->where('department <>', 'Swasthavritta');
@@ -301,7 +382,7 @@ class treatment_model extends CI_Model {
                         $this->db->insert('sales_entry', $med_arr);
                     }
                 }
-            }// end if
+            } // end if
         } else if (strtolower($type) == 'ipd') {
             $treatment_data = $this->db->query("SELECT * FROM ipdtreatment i JOIN inpatientdetails ip On i.ipdno=ip.IpNo 
                 WHERE ip.department !='Swasthavritta' AND ID='" . $treat_id . "'")->row_array();
@@ -329,11 +410,26 @@ class treatment_model extends CI_Model {
         }
     }
 
-    public function get_all_opd_patients($conditions, $export_flag = FALSE) {
+    public function get_all_opd_patients($conditions, $export_flag = FALSE)
+    {
         $return = array();
         $columns = array(
-            't.ID', 'p.OpdNo', 'p.FirstName', 'p.LastName', 'p.Age', 'p.gender', 'p.city', 'p.occupation', 'p.address', 't.PatType', 'd.department',
-            't.complaints', 't.Trtment', 't.diagnosis', 't.CameOn', 't.PatType'
+            't.ID',
+            'p.OpdNo',
+            'p.FirstName',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'p.city',
+            'p.occupation',
+            'p.address',
+            't.PatType',
+            'd.department',
+            't.complaints',
+            't.Trtment',
+            't.diagnosis',
+            't.CameOn',
+            't.PatType'
         );
 
         $where_cond = "";
@@ -365,28 +461,31 @@ class treatment_model extends CI_Model {
         }
 
         $query = "SELECT " . join(',', $columns) . " FROM treatmentdata t "
-                . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond ORDER BY OpdNo DESC";
+            . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.dept_unique_code $where_cond ORDER BY OpdNo DESC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query("SELECT * FROM treatmentdata t "
-                        . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department ")->num_rows();
+            . " JOIN patientdata p ON t.OpdNo=p.OpdNo JOIN deptper d ON t.department=d.department ")->num_rows();
         return $return;
     }
 
-    public function get_treatment_information($where = NULL) {
+    public function get_treatment_information($where = NULL)
+    {
         $this->db->from('treatmentdata t');
         $this->db->join('patientdata p', 'p.OpdNo=t.OpdNo');
         $this->db->where($where);
         return $this->db->get()->row_array();
     }
 
-    private function _delete_pharmcay_data($treat_id) {
+    private function _delete_pharmcay_data($treat_id)
+    {
         $this->db->where('treat_id', $treat_id);
         return $this->db->delete('sales_entry');
     }
 
-    public function update_opd_treatment_data($post_values) {
+    public function update_opd_treatment_data($post_values)
+    {
         if ($post_values['treat_id']) {
             $update_array = array(
                 'Trtment' => $post_values['pat_treatment'],
@@ -415,22 +514,23 @@ class treatment_model extends CI_Model {
         }
     }
 
-    public function insert_kriyakalpa($post_data) {
+    public function insert_kriyakalpa($post_data)
+    {
         return $this->db->insert('kriyakalpa', $post_data);
     }
 
-    public function check_opdno_status($opd_no) {
+    public function check_opdno_status($opd_no)
+    {
         $this->db->select('IpNo');
         $this->db->from('inpatientdetails');
         $this->db->where('OpdNo', $opd_no);
         $this->db->where('status', 'stillin');
         $result = $this->db->get()->row_array();
-    
+
         if (!empty($result)) {
             return $result['IpNo'];
         } else {
             return false;
         }
     }
-
 }

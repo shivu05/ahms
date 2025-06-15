@@ -91,7 +91,7 @@ class Patient extends SHV_Controller
         if ($patient_data) {
             $config = $this->db->get('config');
             $config = $config->row_array();
-            
+
             //Html page design
             $header = '<table width="100%" style="margin-bottom: 2px; " border="0" cellspacing="0" cellpadding="0">'
                 . '<tr>'
@@ -137,21 +137,21 @@ class Patient extends SHV_Controller
     </div>
 </div>
 ';
-$qr = '
+            $qr = '
             <div style="text-align: right; margin-top: 2px;">
                 <barcode code="' . $patient_data['OpdNo'] . '" type="QR" size="1" error="M" />
             </div>';
-            $html = '<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px; height: 100%;">' 
-            . $header . '
+            $html = '<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px; height: 100%;">'
+                . $header . '
             <p style="margin: 2px 4px;"><b>Name:</b> ' . $patient_data['name'] . ' (' . $patient_data['gender'] . ')' . ' (' . $patient_data['Age'] . ') </p>'
-             . $opdBox . 
-             '<p style="margin: 2px 4px;font-size:12px"><b>Date:</b>'.$patient_data['entrydate'].'</p>'.
-             '<p style="margin: 2px 4px;font-size:10px"><b>Please bring this card for every visit.</b></p>'.
-             '</div>';
+                . $opdBox .
+                '<p style="margin: 2px 4px;font-size:12px"><b>Date:</b>' . $patient_data['entrydate'] . '</p>' .
+                '<p style="margin: 2px 4px;font-size:10px"><b>Please bring this card for every visit.</b></p>' .
+                '</div>';
 
             $mpdf->WriteHTML($html);
             $mpdf->AddPage();
-            
+
             // Page 2: Back Side – Instructions
             $back = '
 <div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px; height: 100%;">
@@ -162,7 +162,127 @@ $qr = '
         <li>Seek medical advice for treatment of disease and protection of heath</li>
         <li>Special ayurveda, Yoga and Naturopathy available</li>
     </ol>
-    '.$qr.'
+    ' . $qr . '
+</div>';
+
+
+            $mpdf->WriteHTML($back);
+
+            $mpdf->Output('opd_card.pdf', 'I'); // 'I' for inline display; use 'D' to force download
+
+            exit;
+        } else {
+            echo 'No patient data found for the given OPD ID.';
+        }
+    }
+
+    function print_opd_card()
+    {
+        require_once './vendor/autoload.php';
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => [210, 80], // Width x Height in mm, customize as per card size
+            'margin_top' => 5,
+            'margin_bottom' => 5,
+            'margin_left' => 5,
+            'margin_right' => 5,
+        ]);
+        ini_set("pcre.backtrack_limit", "10000000");
+
+        $this->load->model('patient/patient_model');
+        $opd_id = $this->input->get('opd_id');
+        if (empty($opd_id) || $opd_id == null) {
+            echo "Empty OPD please try again!";
+            exit;
+        }
+        $patient_data = $this->patient_model->get_patient_info($opd_id);
+        $patient_data = $patient_data['opd_data'][0];
+        if ($patient_data) {
+            $config = $this->db->get('config');
+            $config = $config->row_array();
+
+            //Html page design
+            $header = '<table width="100%" style="margin-bottom: 2px; " border="0" cellspacing="0" cellpadding="0">'
+                . '<tr>'
+                . '<td width="15%" style="text-align: center;" border="0" padding="1px">'
+                . '<img src="data:image/png;base64,' . base64_encode($config['logo_img']) . '" width="60px" height="60px" />'
+                . '</td>'
+                . '<td width="85%" style="text-align: left;" border="0">'
+                . '<h6 style="margin: 1pt; font-size: 10pt;">' . $config["college_name"] . '</h6>'
+                . '</td>'
+                . '</tr>'
+                . '</table>
+                <span style="font-size:6pt;text-align:justify;">(Permitted by Govt. of karnataka, Affiliated to Rajiv Ghandhi University of Heath Science (RGUHS) Karnataka
+                 Bangaluru, Recognized by National Commission for Indian System of Medicine(NCISM) New Delhi & Ministry of AYUSH New Delhi)</span>
+                <hr style="margin: 2px 0; border: none; border-top: 1px solid #000;" />';
+
+            $opdBox = '
+<div style="text-align: center; margin-bottom: 10px; margin-left:35px;">
+    <div style="
+        display: inline-block;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 8px;
+        width: 200px;
+        font-family: sans-serif;
+        text-align: center;
+    ">
+        <div style="
+            font-size: 10pt;
+            font-weight: bold;
+            background-color: #e6f2ff;
+            padding: 4px 0;
+            border-bottom: 1px solid #ccc;
+        ">
+            Out Patient Department
+        </div>
+        <div style="
+            font-size: 14pt;
+            margin-top: 8px;
+            font-weight: bold;
+        ">
+            ' . $patient_data['OpdNo'] . '
+        </div>
+    </div>
+</div>
+';
+            $qr = '
+            <div style="text-align: right; margin-top: 2px;">
+                <barcode code="' . $patient_data['UHID'] . '" type="QR" size="1" error="M" />
+            </div>';
+            $html = '<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 8px; font-size:12px;">'
+                . $header
+                . '<table width="100%" cellpadding="4" cellspacing="0" style="font-size:12px;">'
+                . '  <tr>'
+                . '    <td><b>UHID:</b> ' . $patient_data['UHID'] . '</td>'
+                . '    <td><b>Date:</b> ' . $patient_data['entrydate'] . '</td>'
+                . '  </tr>'
+                . '  <tr>'
+                . '    <td  colspan="2"><b>OPD No:</b> ' . $patient_data['OpdNo'] . '</td>'
+                . '  </tr>'
+                . '  <tr>'
+                . '    <td colspan="2"><b>Name:</b> ' . $patient_data['name'] . ' (' . $patient_data['gender'] . '), ' . $patient_data['Age'] . ' yrs</td>'
+                . '  </tr>'
+                . '  <tr>'
+                . '    <td colspan="2" style="font-size:10px;"><b>Note:</b> Please bring this card for every visit.</td>'
+                . '  </tr>'
+                . '</table>'
+                . '</div>';
+
+
+            $mpdf->WriteHTML($html);
+            $mpdf->AddPage();
+
+            // Page 2: Back Side – Instructions
+            $back = '
+<div style="background-color: #e6f2ff; border: 1px solid #000; border-radius: 8px; padding: 5px;">
+    <h3 style="text-align:center;">-: Information for Public :-</h3>
+    <ol style="font-size:10px">
+        <li>This hospital is a public run institution.</li>
+        <li>The services here is your right, their growth is your responsibility.</li>
+        <li>Seek medical advice for treatment of disease and protection of heath</li>
+        <li>Special ayurveda, Yoga and Naturopathy available</li>
+    </ol>
+    ' . $qr . '
 </div>';
 
 
@@ -287,12 +407,12 @@ $qr = '
             $dept_opd_count = 1;
         }
         $is_inserted = $this->treatment_model->add_patient_for_treatment($this->input->post());
-        //        if ($is_inserted) {
-        //            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
-        //        } else {
-        //            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
-        //        }
-        redirect('patient');
+        if ($is_inserted) {
+            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
+        } else {
+            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
+        }
+        //redirect('patient');
     }
 
     function export_pdf()
