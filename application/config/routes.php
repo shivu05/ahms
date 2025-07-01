@@ -244,6 +244,13 @@ $route['export-wound_dressing'] = 'reports/export_wound_dressing';
 
 $route['generate-opd-card/(:any)'] = 'patient/generate_opd_card/$1';
 
+$route['dispense'] = 'dispense/index';
+$route['dispense/get_batches_ajax'] = 'pharmacy/dispense/get_batches_ajax';
+$route['dispense/search_patient_ajax'] = 'pharmacy/dispense/search_patient_ajax';
+$route['dispense/get_patient_details_ajax'] = 'pharmacy/dispense/get_patient_details_ajax';
+$route['dispense/add_patient_ajax'] = 'pharmacy/dispense/add_patient_ajax';
+$route['dispense/process_dispense_ajax'] = 'pharmacy/dispense/process_dispense_ajax';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

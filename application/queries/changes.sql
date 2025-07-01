@@ -170,3 +170,15 @@ CREATE TABLE patient_vitals (
     weight DECIMAL(5,2),        -- in kg (or lbs, based on system)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO `deptper` (`department`, `dept_unique_code`, `bed_count`, `ref_room`) VALUES ('Specialized', 'SPECIALIZED', '0', '0');
+
+CREATE TABLE uhid_sequence (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    seq_date DATE NOT NULL,
+    hospital_code VARCHAR(10) NOT NULL,
+    daily_seq INT NOT NULL DEFAULT 1,
+    UNIQUE KEY unique_day_hospital (seq_date, hospital_code)
+);
+
+ALTER TABLE patientdata ADD COLUMN UHID VARCHAR(50) UNIQUE AFTER OpdNo;

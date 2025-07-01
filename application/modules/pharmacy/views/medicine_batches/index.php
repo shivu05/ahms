@@ -119,7 +119,7 @@
         save_method = 'add';
         $('#form')[0].reset();
         $('#modal_form').modal('show');
-        $('.modal-title').text('Add Batch');
+        $('.modal-title').text('Add stock');
     }
 
     function edit_batch(id) {
@@ -201,8 +201,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Batch Form</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Batch Form</h3>
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
@@ -257,13 +257,13 @@
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label class="control-label col-md-3">Quantity In Stock</label>
                             <div class="col-md-9">
                                 <input name="quantity_instock" placeholder="Quantity In Stock" class="form-control" type="text">
                                 <span class="help-block"></span>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label class="control-label col-md-3">Storage Location</label>
                             <div class="col-md-9">
