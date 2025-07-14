@@ -311,7 +311,8 @@ class treatment_model extends CI_Model
 
     public function get_opd_by_ipd($ipd_no)
     {
-        //$this->db->select('OpdNo');
+        $this->db->select('inpatientdetails.*, patientdata.UHID');
+        $this->db->join('patientdata', 'patientdata.OpdNo = inpatientdetails.OpdNo');
         return $this->db->get_where('inpatientdetails', array('IpNo' => $ipd_no))->row_array();
     }
 
