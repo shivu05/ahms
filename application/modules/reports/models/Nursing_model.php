@@ -108,7 +108,7 @@ class Nursing_model extends CI_Model {
 
     function update_sugery_info($post_valyes, $id) {
         if ($id) {
-            return $this->db->update('surgeryregistery', $post_valyes, array('ID' => $id));
+             return $this->db->update('surgeryregistery', $post_valyes, array('ID' => $id));
         }
         return false;
     }

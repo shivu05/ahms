@@ -98,6 +98,7 @@ $route['doctors_duty'] = "reports/Test/doctors_duty";
 
 $route['search-data'] = "auto/index";
 $route['analyse-data'] = "auto/move";
+$route['analyse-ipd-data'] = "auto/analyse_ipd_data";
 $route['show-ref'] = "auto/show_reference_data";
 $route['get_data'] = "auto/get_reference_data";
 $route['save-data'] = "auto/save_patient_details";

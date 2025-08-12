@@ -29,6 +29,7 @@
                         <input class="form-control required" id="surgName" name="surgName" type="text" 
                                aria-describedby="surgNameHelp" placeholder="Enter Surgeon">
                         <small class="form-text text-muted" id="surgNameHelp"></small>
+                        <input type="hidden" name="ID" id="ID" />
                     </div>
                     <div class="form-group">
                         <label for="asssurgeon">Asst. Surgeon:</label>
@@ -223,7 +224,7 @@
 
         $('#patient_table tbody').on('click', '.edit', function () {
             var data = patient_table.row($(this).closest('tr')).data();
-            $('#surgery_modal_box #surgery_form #ID').val(data.ID);
+            $('#surgery_modal_box #surgery_form #ID').val(data.id);
             $('#surgery_modal_box #surgery_form #surgName').val(data.surgName);
             $('#surgery_modal_box #surgery_form #asssurgeon').val(data.asssurgeon);
             $('#surgery_modal_box #surgery_form #anaesthetic').val(data.anaesthetic);

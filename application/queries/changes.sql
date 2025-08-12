@@ -182,3 +182,9 @@ CREATE TABLE uhid_sequence (
 );
 
 ALTER TABLE patientdata ADD COLUMN UHID VARCHAR(50) UNIQUE AFTER OpdNo;
+
+/* Create table for ipd archived data */
+CREATE TABLE archived_ipd_data
+select a.age,a.gender,a.department,a.diagnosis,a.DischargeNotes,a.NofDays,b.Trtment,b.procedures 
+from vhms_bamch_2024.inpatientdetails a 
+JOIN vhms_bamch_2024.ipdtreatment b ON a.IpNo=b.ipdno;
