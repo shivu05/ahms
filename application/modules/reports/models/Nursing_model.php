@@ -5,9 +5,11 @@
  *
  * @author Shivaraj
  */
-class Nursing_model extends CI_Model {
+class Nursing_model extends CI_Model
+{
 
-    function get_nursing_ipd_indent($start_date, $end_date, $department) {
+    function get_nursing_ipd_indent($start_date, $end_date, $department)
+    {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,i.ipdno,p.deptOpdNo,p.DoAdmission,p.DoDischarge,p.DischargeNotes,p.Doctor,p.BedNo,p.FName,p.IpNo,
@@ -31,7 +33,8 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_nursing_indent($start_date, $end_date, $department) {
+    function get_nursing_indent($start_date, $end_date, $department)
+    {
         $this->db->query("set session group_concat_max_len = 5000");
         if ($department == "1") {
             $query = "SELECT p.OpdNo,p.FName,p.IpNo,p.deptOpdNo,p.Age,p.Gender,(REPLACE((p.department),'_',' ')) department,p.Doctor,GROUP_CONCAT(i.product) as product,GROUP_CONCAT(i.indentdate order by i.indentdate asc) as indentdate,
@@ -52,13 +55,30 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_xray_data($conditions, $export_flag = false) {
+    function get_xray_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('x.ID', 'x.OpdNo', 'x.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo', '(REPLACE((t.department),"_"," ")) as department',
-            '(x.refDate) as refDate', '(x.xrayDate) as xrayDate', 'x.xrayNo', 'x.partOfXray', 'x.filmSize',
-            't.deptOpdNo', 't.diagnosis');
+        $columns = array(
+            'x.ID',
+            'x.OpdNo',
+            'x.refDocName',
+            'CONCAT(p.FirstName," ",p.LastName) as name',
+            'p.FirstName',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'CONCAT(p.address," ",p.city) address',
+            'p.deptOpdNo',
+            '(REPLACE((t.department),"_"," ")) as department',
+            '(x.refDate) as refDate',
+            '(x.xrayDate) as xrayDate',
+            'x.xrayNo',
+            'x.partOfXray',
+            'x.filmSize',
+            't.deptOpdNo',
+            't.diagnosis'
+        );
 
         $where_cond = " WHERE x.OpdNo = p.OpdNo AND x.treatID=t.ID AND x.xrayDate >='" . $conditions['start_date'] . "' AND x.xrayDate <='" . $conditions['end_date'] . "'";
 
@@ -99,33 +119,51 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function update_xray_info($post_valyes, $id) {
+    function update_xray_info($post_valyes, $id)
+    {
         if ($id) {
             return $this->db->update('xrayregistery', $post_valyes, array('ID' => $id));
         }
         return false;
     }
 
-    function update_sugery_info($post_valyes, $id) {
+    function update_sugery_info($post_valyes, $id)
+    {
         if ($id) {
-             return $this->db->update('surgeryregistery', $post_valyes, array('ID' => $id));
+            return $this->db->update('surgeryregistery', $post_valyes, array('ID' => $id));
         }
         return false;
     }
 
-    function update_ksharasutra_info($post_valyes, $id) {
+    function update_ksharasutra_info($post_valyes, $id)
+    {
         if ($id) {
             return $this->db->update('ksharsutraregistery', $post_valyes, array('ID' => $id));
         }
         return false;
     }
 
-    function get_usg_data($conditions, $export_flag = false) {
+    function get_usg_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('u.ID', 'u.OpdNo', 'u.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.MidName', 'p.LastName', 'p.Age',
-            'p.gender', 'CONCAT(p.address," ",p.city) address', 't.deptOpdNo', 'u.usgDate', 't.CameOn as entrydate',
-            '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
+        $columns = array(
+            'u.ID',
+            'u.OpdNo',
+            'u.refDocName',
+            'CONCAT(p.FirstName," ",p.LastName) as name',
+            'p.FirstName',
+            'p.MidName',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'CONCAT(p.address," ",p.city) address',
+            't.deptOpdNo',
+            'u.usgDate',
+            't.CameOn as entrydate',
+            '(REPLACE((t.department),"_"," ")) as department',
+            't.diagnosis'
+        );
 
         $where_cond = " WHERE u.OpdNo = p.OpdNo AND u.treatId=t.ID AND u.usgDate >='" . $conditions['start_date'] . "' AND u.usgDate <='" . $conditions['end_date'] . "'";
 
@@ -166,11 +204,26 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_ecg_data($conditions, $export_flag = false) {
+    function get_ecg_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('e.ID', 'e.OpdNo', 'e.refDocName', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 'p.LastName', 'p.Age',
-            'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo', 'refDate', 'e.ecgDate', '(REPLACE((t.department),"_"," ")) as department', 't.diagnosis');
+        $columns = array(
+            'e.ID',
+            'e.OpdNo',
+            'e.refDocName',
+            'CONCAT(p.FirstName," ",p.LastName) as name',
+            'p.FirstName',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'CONCAT(p.address," ",p.city) address',
+            'p.deptOpdNo',
+            'refDate',
+            'e.ecgDate',
+            '(REPLACE((t.department),"_"," ")) as department',
+            't.diagnosis'
+        );
 
         $where_cond = " WHERE e.OpdNo = p.OpdNo AND e.treatId=t.ID AND e.ecgDate >='" . $conditions['start_date'] . "' AND e.ecgDate <='" . $conditions['end_date'] . "'";
 
@@ -211,12 +264,25 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-//b.OpdNo,b.deliveryDetail,b.babyBirthDate,b.birthtime,b.treatby,b.babyWeight,b.deliverytype,i.IpNo,i.deptOpdNo,i.FName,i.Age,i.diagnosis
-    function get_children_birth_data($conditions, $export_flag = false) {
+    //b.OpdNo,b.deliveryDetail,b.babyBirthDate,b.birthtime,b.treatby,b.babyWeight,b.deliverytype,i.IpNo,i.deptOpdNo,i.FName,i.Age,i.diagnosis
+    function get_children_birth_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype', 'i.IpNo',
-            'i.deptOpdNo', 'i.FName', 'i.Age', 'i.diagnosis');
+        $columns = array(
+            'b.OpdNo',
+            'b.deliveryDetail',
+            'b.babyBirthDate',
+            'b.birthtime',
+            'b.treatby',
+            'b.babyWeight',
+            'b.deliverytype',
+            'i.IpNo',
+            'i.deptOpdNo',
+            'i.FName',
+            'i.Age',
+            'i.diagnosis'
+        );
 
         $where_cond = " WHERE b.OpdNo = i.OpdNo AND e.OpdNo=t.OpdNo AND b.babyBirthDate >='" . $conditions['start_date'] . "' AND b.babyBirthDate <='" . $conditions['end_date'] . "'";
 
@@ -257,11 +323,29 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_birth_data($conditions, $export_flag = false) {
+    function get_birth_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('b.ID', 'b.OpdNo', 'b.deliveryDetail', 'b.babyBirthDate', 'b.birthtime', 'b.treatby', 'b.babyWeight', 'b.deliverytype',
-            'i.IpNo', 'i.deptOpdNo', 'i.FName', 'i.Age', 'i.diagnosis', 'babygender', 'babyWeight', 'fatherName', 'DoAdmission');
+        $columns = array(
+            'b.ID',
+            'b.OpdNo',
+            'b.deliveryDetail',
+            'b.babyBirthDate',
+            'b.birthtime',
+            'b.treatby',
+            'b.babyWeight',
+            'b.deliverytype',
+            'i.IpNo',
+            'i.deptOpdNo',
+            'i.FName',
+            'i.Age',
+            'i.diagnosis',
+            'babygender',
+            'babyWeight',
+            'fatherName',
+            'DoAdmission'
+        );
 
         $where_cond = " WHERE DoAdmission >='" . $conditions['start_date'] . "' AND DoAdmission <='" . $conditions['end_date'] . "'";
 
@@ -302,7 +386,8 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_diet_data($conditions, $export_flag = false) {
+    function get_diet_data($conditions, $export_flag = false)
+    {
 
         $return = array();
         $columns = array('dt.ID', 'IpNo', 'OpdNo', 'FName', 'BedNo', 'diagnosis', 'DoAdmission', 'DoDischarge', '(REPLACE((department),"_"," ")) department', 'dt.morning', 'dt.after_noon', 'dt.evening');
@@ -348,17 +433,35 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function update_diet_register($input_data, $where) {
+    function update_diet_register($input_data, $where)
+    {
         $this->db->where($where);
         return $this->db->update('diet_register', $input_data);
     }
 
-    function get_ksharasutra_data($conditions, $export_flag = false) {
+    function get_ksharasutra_data($conditions, $export_flag = false)
+    {
 
         $return = array();
-        $columns = array('k.OpdNo', 'ip.IpNo', 'k.ID', 'k.surgeon', 'k.ksharsType', 'k.ksharsDate', 'k.ksharaname', 'k.asssurgeon',
-            'k.anaesthetic', 'CONCAT(coalesce(p.FirstName,"")," ",coalesce(p.LastName,"")) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address', 'p.deptOpdNo',
-            'p.dept', 't.diagnosis', 't.notes');
+        $columns = array(
+            'k.OpdNo',
+            'ip.IpNo',
+            'k.ID',
+            'k.surgeon',
+            'k.ksharsType',
+            'k.ksharsDate',
+            'k.ksharaname',
+            'k.asssurgeon',
+            'k.anaesthetic',
+            'CONCAT(coalesce(p.FirstName,"")," ",coalesce(p.LastName,"")) as name',
+            'p.Age',
+            'p.gender',
+            'CONCAT(p.address," ",p.city) address',
+            'p.deptOpdNo',
+            'p.dept',
+            't.diagnosis',
+            't.notes'
+        );
 
         $where_cond = " WHERE k.OpdNo = p.OpdNo AND k.OpdNo=t.OpdNo AND ksharsDate >='" . $conditions['start_date'] . "' AND ksharsDate <='" . $conditions['end_date'] . "'";
 
@@ -404,11 +507,30 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_surgery_data($conditions, $export_flag = false) {
+    function get_surgery_data($conditions, $export_flag = false)
+    {
         $return = array();
-        $columns = array('s.ID as id', 's.OpdNo', 'i.IpNo', 's.surgName', 's.surgType', 's.surgDate', 's.anaesthetic', 's.asssurgeon',
-            's.surgeryname', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.Age', 'p.gender', 'CONCAT(p.address," ",p.city) address',
-            't.deptOpdNo', 'p.dept', 's.surgType', 's.surgDate', 't.diagnosis', 't.notes');
+        $columns = array(
+            's.ID as id',
+            's.OpdNo',
+            'i.IpNo',
+            's.surgName',
+            's.surgType',
+            's.surgDate',
+            's.anaesthetic',
+            's.asssurgeon',
+            's.surgeryname',
+            'CONCAT(p.FirstName," ",p.LastName) as name',
+            'p.Age',
+            'p.gender',
+            'CONCAT(p.address," ",p.city) address',
+            't.deptOpdNo',
+            'p.dept',
+            's.surgType',
+            's.surgDate',
+            't.diagnosis',
+            't.notes'
+        );
 
         $where_cond = " WHERE surgDate >='" . $conditions['start_date'] . "' AND surgDate <='" . $conditions['end_date'] . "'";
 
@@ -456,14 +578,32 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_panchakarma_data($conditions, $export_flag = false) {
+    function get_panchakarma_data($conditions, $export_flag = false)
+    {
         $return = array();
-        $columns = array('l.treatid', 'l.id', 'l.opdno', 'CONCAT_WS(" ", p.FirstName, p.LastName) AS name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
-            't.deptOpdNo', '(REPLACE((t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
-            'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
+        $columns = array(
+            'l.treatid',
+            'l.id',
+            'l.opdno',
+            'CONCAT_WS(" ", p.FirstName, p.LastName) AS name',
+            'p.FirstName',
+            't.AddedBy',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'p.address',
+            't.deptOpdNo',
+            '(REPLACE((t.department),"_"," ")) dept',
+            't.diagnosis disease',
+            'GROUP_CONCAT(treatment) as treatment',
+            'GROUP_CONCAT(`procedure`) as `procedure`',
+            'GROUP_CONCAT(l.date) as `date`',
+            't.notes',
+            'docname',
             'GROUP_CONCAT(proc_end_date) as proc_end_date',
             '(CASE WHEN proc_end_date IS NOT NULL AND i.DoDischarge IS NOT NULL AND i.DoDischarge !="--" AND proc_end_date > i.DoDischarge THEN "" ELSE i.IpNo END) AS IpNo',
-            '"' . $conditions['end_date'] . '" as selected_date');
+            '"' . $conditions['end_date'] . '" as selected_date'
+        );
 
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>''
             AND (l.date <= '" . $conditions['start_date'] . "' AND l.proc_end_date >= '" . $conditions['end_date'] . "')  ";
@@ -495,22 +635,24 @@ class Nursing_model extends CI_Model {
             group by l.treatid ORDER BY l.date ASC";
         $main_query = "SELECT @a:=@a+1 serial_number,B.* FROM ( $query ) B,(SELECT @a:= 0) AS a order by serial_number ";
         $result = $this->db->query($main_query);
-    //   echo $this->db->last_query();
-    //    exit;
+        //   echo $this->db->last_query();
+        //    exit;
         $return['data'] = $result->result_array();
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM panchaprocedure l JOIN treatmentdata t ON l.treatid = t.ID JOIN patientdata p ON t.OpdNo = p.OpdNo')->num_rows();
         return $return;
     }
 
-    function get_pancharama_procedure_details($id = NULL) {
+    function get_pancharama_procedure_details($id = NULL)
+    {
         if ($id) {
             return $this->db->get_where('panchaprocedure', array('treatid' => $id))->result_array();
         }
         return null;
     }
 
-    function update_panchakarma_details($post_values = NULL, $where = NULL) {
+    function update_panchakarma_details($post_values = NULL, $where = NULL)
+    {
         if ($post_values) {
             //$this->db->where($where);
             return $this->db->update_batch('panchaprocedure', $post_values, 'id');
@@ -518,12 +660,31 @@ class Nursing_model extends CI_Model {
         return false;
     }
 
-    function get_panchakarma_complete_data() {
+    function get_panchakarma_complete_data()
+    {
         $return = array();
-        $columns = array('l.id', 'l.opdno', 'CONCAT(p.FirstName," ",p.LastName) as name', 'p.FirstName', 't.AddedBy', 'p.LastName', 'p.Age', 'p.gender', 'p.address',
-            't.deptOpdNo', '(REPLACE((t.department),"_"," ")) dept', 't.diagnosis disease', 'GROUP_CONCAT(treatment) as treatment',
-            'GROUP_CONCAT(`procedure`) as `procedure`', 'GROUP_CONCAT(l.date) as `date`', 't.notes', 'docname',
-            'GROUP_CONCAT(proc_end_date) as proc_end_date', 'i.IpNo', '"' . $conditions['end_date'] . '" as selected_date');
+        $columns = array(
+            'l.id',
+            'l.opdno',
+            'CONCAT(p.FirstName," ",p.LastName) as name',
+            'p.FirstName',
+            't.AddedBy',
+            'p.LastName',
+            'p.Age',
+            'p.gender',
+            'p.address',
+            't.deptOpdNo',
+            '(REPLACE((t.department),"_"," ")) dept',
+            't.diagnosis disease',
+            'GROUP_CONCAT(treatment) as treatment',
+            'GROUP_CONCAT(`procedure`) as `procedure`',
+            'GROUP_CONCAT(l.date) as `date`',
+            't.notes',
+            'docname',
+            'GROUP_CONCAT(proc_end_date) as proc_end_date',
+            'i.IpNo',
+            '"' . $conditions['end_date'] . '" as selected_date'
+        );
 
         $where_cond = " WHERE l.opdno = p.OpdNo AND l.treatid = t.ID AND trim(l.procedure) <>'' ";
 
@@ -540,7 +701,8 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function get_panchakarma_procedure_count($conditions, $export_flag = false) {
+    function get_panchakarma_procedure_count($conditions, $export_flag = false)
+    {
         /* $query = "select treatment,`procedure`, count(`procedure`) as procedure_count from panchaprocedure p
           WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`"; */
         $query = "SELECT treatment,`procedure`,days as procedure_count 
@@ -560,7 +722,8 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_surgery_count($conditions, $export_flag = false) {
+    function get_surgery_count($conditions, $export_flag = false)
+    {
         $query = "SELECT surgeryname,count(surgeryname) as count,surgType from surgeryregistery WHERE surgDate >= '" . $conditions['start_date'] . "'
             AND surgDate <= '" . $conditions['end_date'] . "' AND surgeryname !='' group by surgeryname";
         $query = $this->db->query($query);
@@ -571,12 +734,30 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_lab_report($conditions, $export_flag = false) {
+    function get_lab_report($conditions, $export_flag = false)
+    {
         //'GROUP_CONCAT(li.lab_test_reference) testrange',
-        $columns = array('l.treatID', 'l.OpdNo', 'ip.IpNo ipdno', 'CONCAT(p.FirstName," ", p.LastName) as name', 'p.Age', 'p.gender', 't.deptOpdNo',
-            't.diagnosis as labdisease', 't.department', 'l.refDocName', 'l.testDate',
-            ' GROUP_CONCAT(testrange SEPARATOR "#") testrange', 'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue', 'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
-            'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat', 'GROUP_CONCAT(li.lab_inv_name) testName', 'l.testDate', 'l.refDocName', 'l.tested_date');
+        $columns = array(
+            'l.treatID',
+            'l.OpdNo',
+            'ip.IpNo ipdno',
+            'CONCAT(p.FirstName," ", p.LastName) as name',
+            'p.Age',
+            'p.gender',
+            't.deptOpdNo',
+            't.diagnosis as labdisease',
+            't.department',
+            'l.refDocName',
+            'l.testDate',
+            ' GROUP_CONCAT(testrange SEPARATOR "#") testrange',
+            'GROUP_CONCAT(testvalue SEPARATOR "#") testvalue',
+            'GROUP_CONCAT(lt.lab_test_name) lab_test_type',
+            'GROUP_CONCAT(lc.lab_cat_name) lab_test_cat',
+            'GROUP_CONCAT(li.lab_inv_name) testName',
+            'l.testDate',
+            'l.refDocName',
+            'l.tested_date'
+        );
         $query = "SELECT @a:=@a+1 serial_number, " . implode(',', $columns) . "
                 FROM labregistery l
                 JOIN patientdata p ON l.OpdNo = p.OpdNo 
@@ -596,7 +777,8 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function get_lab_report_count($conditions, $export_flag = false) {
+    function get_lab_report_count($conditions, $export_flag = false)
+    {
         //$query = "SELECT * FROM labregistery WHERE testDate >= '" . $conditions['start_date'] . "' AND testDate<= '" . $conditions['end_date'] . "'";
         $query = "SELECT lab_inv_name, lab_cat_name,count(lab_inv_name) as ccount
             FROM labregistery l
@@ -614,15 +796,36 @@ class Nursing_model extends CI_Model {
         }
     }
 
-    function delete_record($table, $where) {
-         return $this->db->delete($table, $where);
+    function delete_record($table, $where)
+    {
+        return $this->db->delete($table, $where);
     }
 
-    function get_kriyakalp_data($conditions, $export_flag = FALSE) {
+    function get_kriyakalp_data($conditions, $export_flag = FALSE)
+    {
         $return = array();
-        $columns = array('t.OpdNo', 't.PatType', 't.deptOpdNo', 'CONCAT(FirstName," ",LastName) as name', 'FirstName', 'LastName', 'p.Age',
-            'p.gender', 't.AddedBy', 'p.city', 'Trtment', 't.diagnosis', 'CameOn', 'attndedby',
-            '(REPLACE((t.department),"_"," ")) department', 'k.kriya_procedures procedures', 'sub_department sub_dept', 'ip.IpNo', 'k.id as kid', 'kriya_date');
+        $columns = array(
+            't.OpdNo',
+            't.PatType',
+            't.deptOpdNo',
+            'CONCAT(FirstName," ",LastName) as name',
+            'FirstName',
+            'LastName',
+            'p.Age',
+            'p.gender',
+            't.AddedBy',
+            'p.city',
+            'Trtment',
+            't.diagnosis',
+            'CameOn',
+            'attndedby',
+            '(REPLACE((t.department),"_"," ")) department',
+            'k.kriya_procedures procedures',
+            'sub_department sub_dept',
+            'ip.IpNo',
+            'k.id as kid',
+            'kriya_date'
+        );
 
         $where_cond = " WHERE k.OpdNo=t.OpdNo AND k.treat_id=t.ID AND t.OpdNo=p.OpdNo
             AND LOWER(t.department)=LOWER('SHALAKYA_TANTRA') AND kriya_date >='" . $conditions['start_date'] . "'
@@ -674,7 +877,8 @@ class Nursing_model extends CI_Model {
         return $return;
     }
 
-    function update_kriyakalpa_info($post_values, $where) {
+    function update_kriyakalpa_info($post_values, $where)
+    {
         if ($post_values) {
             $this->db->where($where);
             return $this->db->update('kriyakalpa', $post_values);

@@ -188,3 +188,11 @@ CREATE TABLE archived_ipd_data
 select a.age,a.gender,a.department,a.diagnosis,a.DischargeNotes,a.NofDays,b.Trtment,b.procedures 
 from vhms_bamch_2024.inpatientdetails a 
 JOIN vhms_bamch_2024.ipdtreatment b ON a.IpNo=b.ipdno;
+
+ALTER TABLE `surgeryregistery` ADD INDEX(`ipdno`);
+ALTER TABLE `surgeryregistery` 
+ADD CONSTRAINT `surgeryregistery_ibfk_3`
+  FOREIGN KEY (`ipdno`)
+  REFERENCES `inpatientdetails` (`IpNo`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
