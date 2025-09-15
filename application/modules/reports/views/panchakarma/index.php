@@ -8,19 +8,27 @@
             <table class="table table-bordered table-striped table-hover dataTable">
                 <thead>
                     <tr>
-                        <th>Treatment</th>
                         <th>Procedure</th>
+                        <th>From OPD</th>
+                        <th>From IPD</th>
                         <th>Procedure Count</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $grand_total = 0; ?>
                     <?php foreach ($unique_procedures as $procedure): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($procedure['treatment']); ?></td>
-                            <td><?php echo htmlspecialchars($procedure['procedure']); ?></td>
-                            <td><?php echo htmlspecialchars($procedure['procedure_count']); ?></td>
+                            <td><?php echo htmlspecialchars($procedure['procedure_name']); ?></td>
+                            <td><?php echo htmlspecialchars($procedure['from_opd']); ?></td>
+                            <td><?php echo htmlspecialchars($procedure['from_ipd']); ?></td>
+                            <td><?php echo htmlspecialchars($procedure['total']); ?></td>
                         </tr>
+                        <?php $grand_total += (int) $procedure['total']; ?>
                     <?php endforeach; ?>
+                    <tr>
+                        <td colspan="3" style="text-align:right;"><strong>Total</strong></td>
+                        <td><strong><?php echo htmlspecialchars((string) $grand_total); ?></strong></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
