@@ -82,6 +82,50 @@ class Opd extends SHV_Controller
         echo json_encode(array('statistics' => $return));
     }
 
+    /**
+     * OPD screening report 
+     */
+    function opd_screening_report()
+    {
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "OPD patients";
+        $this->layout->navDescr = "Out Patient Department";
+        $this->scripts_include->includePlugins(array('datatables'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    function get_screening_patients_list()
+    {
+        $input_array = array();
+        foreach ($this->input->post('search_form') as $search_data) {
+            $input_array[$search_data['name']] = $search_data['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        $data = $this->opd_model->get_opd_screening_patients($input_array);
+        $print_subdept = '';
+        if (!empty($input_array['sub_department']) && ($input_array['sub_department'] != '' && $input_array['sub_department'] != 'both')) {
+            $print_subdept = $input_array['sub_department'];
+        } else if (!empty($input_array['sub_department']) && $input_array['sub_department'] == 'both') {
+            $print_subdept = '';
+        } else {
+            $print_subdept = '';
+        }
+
+        $return = array();//$this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . $print_subdept . "')")->result_array();
+        //mysqli_next_result($this->db->conn_id); //imp
+        //return $return;
+        $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data'], 'statistics' => $return);
+        echo json_encode($response);
+    }
+
+
     function update_monthly_no()
     {
         $count = $this->db->query("select count(*) as count from treatmentdata where monthly_sid=0 OR monthly_sid is NULL")->row_array();
@@ -131,6 +175,40 @@ class Opd extends SHV_Controller
         $title = array(
             'report_title' => 'OPD REGISTER',
             'department' => $print_dept . '<br/><small>' . $print_subdept . '</small>',
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+
+        $current_date = date('d_m_Y');
+        generate_pdf($html, 'L', $title, 'OPD_REPORT_' . $current_date, true, true, 'I');
+        exit;
+    }
+
+    function export_to_pdf_opd_screening()
+    {
+        $this->load->helper('mpdf');
+        $this->layout->title = 'OPD Screening Report';
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        ini_set("pcre.backtrack_limit", "5000000");
+        foreach ($this->input->post() as $search_data => $val) {
+            $input_array[$search_data] = $val;
+        }
+        //$print_subdept = ($input_array['sub_department'] == '' || $input_array['sub_department'] == 'both') ? "" : $input_array['sub_department'];
+        $result = $this->opd_model->get_opd_screening_patients($input_array, true);
+        //$return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . $print_subdept . "')")->result_array();
+        //mysqli_next_result($this->db->conn_id); //imp
+        $data['opd_patients'] = $result['data'];
+        $data['department'] = NULL;
+        $data['opd_stats'] = array();
+        $this->layout->data = $data;
+        $this->layout->headerFlag = false;
+        $html = $this->layout->render(array('view' => 'reports/opd/export_opd_screening'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+
+        //pma($html,1);
+        $title = array(
+            'report_title' => 'OPD SCREENING REPORT',
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])
         );

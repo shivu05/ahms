@@ -200,6 +200,66 @@ class Opd_model extends CI_Model
         return $return;
     }
 
+    function get_opd_screening_patients($conditions, $export_flag = FALSE)
+    {
+        $return = array();
+        $columns = array(
+            't.id',
+            't.opd_no',
+            't.date date_of_visit',
+            't.blood_pressure blood_pressure',
+            't.pulse_rate pulse_rate',
+            't.respiratory_rate respiratory_rate',
+            't.body_temperature body_temperature',
+            't.spo2 spo2',
+            't.weight weight',
+            't.created_at created_at',
+            'CONCAT(COALESCE(FirstName,"")," ",COALESCE(LastName,"")) as name',
+            'Age',
+            'gender',
+            'address',
+            'city'
+        );
+
+        $where_cond = " WHERE `date` >='" . $conditions['start_date'] . "' AND `date` <='" . $conditions['end_date'] . "' ";
+        $limit = '';
+        if (!$export_flag) {
+            $start = (isset($conditions['start'])) ? $conditions['start'] : 0;
+            $length = (isset($conditions['length'])) ? $conditions['length'] : 25;
+            $limit = ' LIMIT ' . $start . ',' . ($length);
+            unset($conditions['start'], $conditions['length'], $conditions['order']);
+        }
+
+        unset($conditions['start_date'], $conditions['end_date']);
+        foreach ($conditions as $col => $val) {
+            $val = trim($val);
+            if ($val !== '') {
+                switch ($col):
+                    case 'opd_no':
+                        $where_cond .= " AND opd_no='$val'";
+                        break;
+                    case 'name':
+                        $where_cond .= " AND CONCAT(FirstName,' ',LastName) LIKE '%$val%'";
+                        break;
+                    default:
+                        $where_cond .= " AND $col = '$val'";
+                endswitch;
+            }
+        }
+
+        //$query = "SELECT " . join(',', $columns) . " FROM patientdata $where_cond";
+
+        $query = "SELECT " . implode(',', $columns) . " 
+            FROM patient_vitals t 
+            JOIN patientdata p ON t.opd_no=p.OpdNo $where_cond ORDER BY t.ID ASC";
+        $result = $this->db->query($query . ' ' . $limit);
+        $return['data'] = $result->result_array();
+
+        $return['found_rows'] = $this->db->query($query)->num_rows();
+        $return['total_rows'] = $this->db->query('SELECT * FROM patient_vitals t JOIN patientdata p ON t.opd_no=p.OpdNo')->num_rows();
+        return $return;
+    }
+
     function get_opd_patients_excel($conditions, $export_flag = FALSE)
     {
         $return = array();

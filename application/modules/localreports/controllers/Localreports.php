@@ -59,7 +59,7 @@ class Localreports extends SHV_Controller {
                 (REPLACE((t.department),"_"," ")) department,CameOn,d.ref_room ref_dept 
                 FROM treatmentdata t JOIN patientdata p JOIN deptper d 
                 WHERE t.OpdNo=p.OpdNo AND t.department=d.dept_unique_code 
-                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" AND trim(CameOn) != "" ORDER BY t.ID LIMIT ' . $step . ',2000'; //LIMIT ' . $step . ',2000
+                AND CameOn >="' . $input_array['start_date'] . '" AND CameOn <="' . $input_array['end_date'] . '" AND trim(CameOn) != "" ORDER BY t.CameOn, t.ID LIMIT ' . $step . ',2000'; //LIMIT ' . $step . ',2000
 
                 $result['data'] = $this->db->query($query)->result_array();
                 $step = $step + 2000;

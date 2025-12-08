@@ -1,0 +1,472 @@
+================================================================================
+         PROFESSIONAL PHARMACY MANAGEMENT SYSTEM FOR AHMS
+================================================================================
+
+Project: AHMS (Ayush Hospital Management System)
+Module: Pharmacy Pro
+Framework: CodeIgniter 3
+Database: MySQL/MariaDB
+UI Framework: Bootstrap 3.x
+Date Created: October 6, 2025
+Architecture: MVC Pattern with HMVC Extension
+
+================================================================================
+                            SYSTEM OVERVIEW
+================================================================================
+
+This is a comprehensive pharmacy management system built specifically for AHMS,
+following professional standards like Apollo Pharmacy and MedPlus. The system
+integrates seamlessly with existing OPD/IPD patient management and provides
+complete pharmacy operations from inventory to sales.
+
+================================================================================
+                          CORE FEATURES & MODULES
+================================================================================
+
+1. POINT OF SALE (POS) SYSTEM
+   - Real-time medicine search with autocomplete
+   - Batch-wise stock selection (FIFO method)
+   - Multiple patient types (Walk-in, OPD, IPD)
+   - Automatic GST and discount calculations
+   - Multiple payment modes (Cash, Card, Online, Credit, Insurance)
+   - Professional invoice generation with barcode
+   - Medicine interaction warnings
+   - Prescription linking capability
+
+2. INVENTORY MANAGEMENT
+   - Batch-wise tracking with expiry monitoring
+   - Low stock alerts and reorder levels
+   - FIFO (First In, First Out) stock rotation
+   - Stock adjustments with audit trail
+   - Expired medicine tracking
+   - Medicine categorization and classification
+   - Therapeutic alternatives suggestion
+   - Barcode scanning support
+
+3. MEDICINE MASTER DATA
+   - Complete drug information database
+   - Generic and brand name mapping
+   - Therapeutic classification
+   - Dosage forms and strengths
+   - Manufacturer and supplier details
+   - Prescription requirements tracking
+   - Narcotic and controlled substance flagging
+   - Drug interaction database
+
+4. PURCHASE MANAGEMENT
+   - Purchase order creation and tracking
+   - Supplier management with credit terms
+   - Goods receipt processing
+   - Invoice matching and verification
+   - Purchase analytics and reporting
+   - Vendor performance tracking
+   - Price comparison tools
+
+5. PRESCRIPTION MANAGEMENT
+   - Digital prescription processing
+   - Dosage and frequency tracking
+   - Doctor prescription validation
+   - Patient medication history
+   - Drug interaction checking
+   - Prescription refill tracking
+   - Medication adherence monitoring
+
+6. COMPREHENSIVE REPORTING
+   - Daily/Monthly/Yearly sales reports
+   - Inventory valuation reports
+   - Expiry and near-expiry reports
+   - Low stock and reorder reports
+   - ABC analysis for inventory optimization
+   - Fast/slow moving drug analysis
+   - Patient medication history reports
+   - Supplier performance reports
+   - GST and tax reports
+   - Profit and loss analysis
+
+7. REGULATORY COMPLIANCE
+   - Drug scheduling compliance
+   - Narcotic substance tracking
+   - Prescription audit trail
+   - Batch recall capability
+   - Expiry date monitoring
+   - License and registration tracking
+   - GST compliance reporting
+
+================================================================================
+                          DATABASE ARCHITECTURE
+================================================================================
+
+CORE TABLES (15+ Tables):
+
+1. medicines - Medicine master data
+   - medicine_name, generic_name, medicine_code
+   - category_id, manufacturer_id, unit_id
+   - therapeutic_class, composition, strength
+   - prescription_required, narcotic, schedule
+   - reorder_level, status
+
+2. medicine_categories - Medicine categorization
+   - category_name, category_code, description
+
+3. medicine_manufacturers - Pharmaceutical companies
+   - company_name, license_number, gst_number
+   - contact_person, address, phone, email
+
+4. medicine_batches - Inventory batches
+   - medicine_id, batch_number, expiry_date
+   - mrp, purchase_price, selling_price
+   - current_stock, minimum_stock, gst_percentage
+   - rack_number, location, supplier_id
+
+5. medicine_sales - Sales transactions
+   - bill_number, patient_id, patient_type
+   - doctor_id, prescription_id, sale_date
+   - subtotal, discount_amount, tax_amount
+   - total_amount, payment_mode, cashier_id
+
+6. medicine_sale_items - Sale line items
+   - sale_id, medicine_id, batch_id
+   - quantity, unit_price, discount_amount
+   - gst_amount, total_amount
+
+7. medicine_purchases - Purchase transactions
+   - invoice_number, supplier_id, purchase_date
+   - subtotal, tax_amount, total_amount
+   - payment_status, created_by
+
+8. medicine_purchase_items - Purchase line items
+   - purchase_id, medicine_id, batch_number
+   - quantity, unit_purchase_price, mrp
+   - expiry_date, manufacturing_date
+
+9. purchase_orders - Purchase orders
+   - po_number, supplier_id, po_date
+   - expected_delivery_date, total_amount
+   - status, created_by
+
+10. medicine_suppliers - Supplier master
+    - supplier_name, supplier_code, drug_license
+    - gst_number, credit_limit, payment_terms
+
+11. prescriptions - Prescription master
+    - prescription_number, patient_id, doctor_id
+    - prescription_date, diagnosis, status
+
+12. prescription_items - Prescription items
+    - prescription_id, medicine_id, dosage
+    - frequency, duration, quantity, instructions
+
+13. medicine_stock_adjustments - Stock adjustments
+    - adjustment_number, adjustment_type
+    - total_value, reason, approved_by
+
+14. medicine_returns - Return transactions
+    - return_number, return_type, total_amount
+    - reason, status, processed_by
+
+15. daily_stock_summary - Performance optimization
+    - report_date, medicine_id, opening_stock
+    - purchases, sales, adjustments, closing_stock
+
+================================================================================
+                        TECHNICAL IMPLEMENTATION
+================================================================================
+
+CONTROLLER STRUCTURE:
+- Pharmacy.php (Main controller with 25+ methods)
+  * index() - Dashboard with key metrics
+  * pos() - Point of Sale interface
+  * medicines() - Medicine master management
+  * inventory() - Inventory management
+  * purchases() - Purchase management
+  * reports() - Comprehensive reporting
+  * settings() - System configuration
+
+MODEL STRUCTURE:
+- Pharmacy_model.php - Core pharmacy operations
+- Medicine_model.php - Medicine master management
+- Sales_model.php - Sales transaction processing
+- Inventory_model.php - Stock management
+- Purchase_model.php - Purchase operations
+
+VIEW STRUCTURE:
+- Dashboard with real-time metrics
+- Professional POS interface
+- Medicine management forms
+- Inventory tracking screens
+- Report generation interfaces
+
+JAVASCRIPT FEATURES:
+- Real-time medicine search
+- Batch selection interface
+- Automatic calculations
+- Form validation
+- AJAX operations
+- Print functionality
+
+================================================================================
+                         INTEGRATION POINTS
+================================================================================
+
+EXISTING SYSTEM INTEGRATION:
+1. Patient Data Integration
+   - OPD patients from 'treatmentdata' table
+   - IPD patients from 'treatmentdata' table
+   - Patient demographics and contact info
+
+2. User Management Integration
+   - Doctor list from 'users' table
+   - User authentication via RBAC
+   - Role-based access control
+
+3. Department Integration
+   - Hospital departments linking
+   - Bed management integration
+   - Treatment data correlation
+
+4. Layout System Integration
+   - Uses existing SHV_Controller base class
+   - Compatible with current layout system
+   - Bootstrap 3.x styling consistency
+
+================================================================================
+                          SECURITY FEATURES
+================================================================================
+
+1. DATA SECURITY
+   - SQL injection prevention
+   - XSS protection
+   - CSRF token validation
+   - Input sanitization
+   - Secure session management
+
+2. ACCESS CONTROL
+   - Role-based permissions
+   - User authentication required
+   - Module-level access control
+   - Function-level restrictions
+
+3. AUDIT TRAIL
+   - Complete transaction logging
+   - User activity tracking
+   - Data modification history
+   - System access logs
+
+4. DATA INTEGRITY
+   - Foreign key constraints
+   - Data validation rules
+   - Transaction management
+   - Backup and recovery
+
+================================================================================
+                        PROFESSIONAL FEATURES
+================================================================================
+
+APOLLO/MEDPLUS LEVEL FEATURES:
+1. Advanced POS System
+   - Barcode scanning
+   - Customer management
+   - Loyalty programs
+   - Multiple payment options
+   - Receipt printing
+
+2. Inventory Optimization
+   - ABC analysis
+   - Demand forecasting
+   - Automatic reordering
+   - Supplier performance
+   - Price optimization
+
+3. Regulatory Compliance
+   - Drug scheduling
+   - Prescription tracking
+   - Audit requirements
+   - Recall management
+   - License monitoring
+
+4. Business Intelligence
+   - Sales analytics
+   - Profit analysis
+   - Trend reporting
+   - Performance KPIs
+   - Decision support
+
+================================================================================
+                           REPORTS AVAILABLE
+================================================================================
+
+OPERATIONAL REPORTS:
+1. Daily Sales Summary
+2. Monthly Sales Analysis
+3. Inventory Valuation Report
+4. Low Stock Report
+5. Expiry Alert Report
+6. Fast Moving Items
+7. Slow Moving Items
+8. Dead Stock Report
+
+FINANCIAL REPORTS:
+1. Profit & Loss Statement
+2. GST Tax Report
+3. Payment Mode Analysis
+4. Credit Sales Report
+5. Cash Flow Analysis
+6. Supplier Payment Report
+
+REGULATORY REPORTS:
+1. Narcotic Drug Report
+2. Prescription Audit Report
+3. Batch Recall Report
+4. License Expiry Report
+5. Drug Interaction Report
+
+MANAGEMENT REPORTS:
+1. ABC Analysis Report
+2. Supplier Performance Report
+3. Doctor Prescription Analysis
+4. Patient Medication History
+5. Department-wise Sales
+6. Cashier Performance Report
+
+================================================================================
+                           FILE STRUCTURE
+================================================================================
+
+application/modules/pharmacy_pro/
+├── controllers/
+│   └── Pharmacy.php (Main controller)
+├── models/
+│   ├── Pharmacy_model.php
+│   ├── Medicine_model.php
+│   ├── Sales_model.php
+│   ├── Inventory_model.php
+│   └── Purchase_model.php
+├── views/
+│   └── pharmacy/
+│       ├── index.php (Dashboard)
+│       ├── pos.php (Point of Sale)
+│       ├── medicines.php
+│       ├── inventory.php
+│       ├── purchases.php
+│       └── reports/
+└── sql/
+    └── pharmacy_schema.sql (Complete database schema)
+
+================================================================================
+                        INSTALLATION STEPS
+================================================================================
+
+1. DATABASE SETUP
+   - Execute pharmacy_schema.sql
+   - Verify all tables created
+   - Check foreign key constraints
+   - Insert master data
+
+2. MODULE CONFIGURATION
+   - Place files in correct directories
+   - Update routes configuration
+   - Set up permissions in RBAC
+   - Configure menu items
+
+3. SYSTEM INTEGRATION
+   - Test patient data integration
+   - Verify user authentication
+   - Check layout compatibility
+   - Test all AJAX functions
+
+4. DATA MIGRATION (if needed)
+   - Import existing medicine data
+   - Migrate inventory records
+   - Transfer supplier information
+   - Update stock quantities
+
+================================================================================
+                         PERFORMANCE FEATURES
+================================================================================
+
+1. DATABASE OPTIMIZATION
+   - Proper indexing strategy
+   - Query optimization
+   - Data archiving capability
+   - Performance monitoring
+
+2. CACHING STRATEGY
+   - Medicine search caching
+   - Report result caching
+   - Session data management
+   - Static data caching
+
+3. USER EXPERIENCE
+   - Fast autocomplete search
+   - Real-time calculations
+   - Responsive interface
+   - Mobile compatibility
+
+================================================================================
+                           FUTURE ENHANCEMENTS
+================================================================================
+
+PLANNED FEATURES:
+1. Mobile App Integration
+2. Barcode Scanner Support
+3. Online Prescription Processing
+4. Telemedicine Integration
+5. AI-powered Demand Forecasting
+6. IoT Device Integration
+7. Cloud Backup Solutions
+8. Multi-location Support
+
+API INTEGRATION READY FOR:
+1. Government Drug Database
+2. Insurance Claim Processing
+3. Supplier EDI Systems
+4. Payment Gateway Integration
+5. SMS/Email Notifications
+6. Third-party Analytics Tools
+
+================================================================================
+                            SUPPORT & MAINTENANCE
+================================================================================
+
+MAINTENANCE TASKS:
+1. Regular database backup
+2. System performance monitoring
+3. Security updates
+4. User training and support
+5. Data cleanup and archiving
+6. Report customization
+7. Bug fixes and enhancements
+
+MONITORING POINTS:
+1. System response time
+2. Database performance
+3. User activity patterns
+4. Error logs and exceptions
+5. Security breach attempts
+6. Data integrity checks
+
+================================================================================
+                              CONCLUSION
+================================================================================
+
+This Professional Pharmacy Management System provides enterprise-level
+functionality comparable to major pharmacy chains while maintaining seamless
+integration with the existing AHMS infrastructure. The modular design ensures
+scalability, maintainability, and future enhancement capabilities.
+
+Key Benefits:
+- Reduced medication errors
+- Improved inventory control
+- Enhanced patient safety
+- Regulatory compliance
+- Operational efficiency
+- Cost optimization
+- Better decision making
+- Professional reporting
+
+The system is ready for production deployment and can be customized further
+based on specific hospital requirements and regulatory needs.
+
+================================================================================
+                          END OF DOCUMENTATION
+================================================================================
