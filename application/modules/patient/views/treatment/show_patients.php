@@ -1696,7 +1696,8 @@ if (!empty($other_proc_list)) {
                 title: "Action",
                 data: function (item) {
                     return '<i class="fa fa-edit  hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>' +
-                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>';
+                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>' +
+                        ' | <a href="' + base_url + 'billing/opd/' + item.OpdNo + '"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a>';
                 }
             },
             {

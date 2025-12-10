@@ -787,7 +787,8 @@ if (!empty($wards)) {
                     return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
                         ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>' +
                         ' | <i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i>' +
-                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-ipd="' + item.IpNo + '" data-tid="' + item.treatId + '" data-opd="' + item.OpdNo + '" data-name="' + item.FName + '" id="add_treatment_details"></i>';
+                        ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-ipd="' + item.IpNo + '" data-tid="' + item.treatId + '" data-opd="' + item.OpdNo + '" data-name="' + item.FName + '" id="add_treatment_details"></i>' +
+                        ' | <a href="' + base_url + 'billing/ipd/' + item.IpNo + '" title="Invoice details"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a>';;
 
                 }
             }

@@ -255,3 +255,15 @@ $route['dispense/process_dispense_ajax'] = 'pharmacy/dispense/process_dispense_a
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+// Billing module routes
+$route['billing/opd/(:num)']            = 'billing/opd/$1';
+$route['billing/ipd/(:num)']            = 'billing/ipd/$1';
+$route['billing/current-items']         = 'billing/current_items';
+$route['billing/add-item']              = 'billing/add_item';
+$route['billing/finalize']              = 'billing/finalize';
+$route['billing/invoice/(:num)']        = 'billing/invoice/$1';
+$route['billing/pay']                   = 'billing/record_payment';
+$route['billing/list']                  = 'billing/list_invoices';
+$route['api/services/by-group']         = 'Billing_api/services_by_group';
+$route['api/services/groups']           = 'Billing_api/service_groups';
