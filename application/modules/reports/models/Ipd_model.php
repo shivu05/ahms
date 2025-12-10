@@ -138,10 +138,12 @@ class Ipd_model extends CI_Model
         );
 
         //$where_cond = " WHERE 1 = 1 ";
-        $where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
+        /*$where_cond = " WHERE ((DoAdmission <= '" . $conditions['start_date'] . "' AND DoDischarge >= '" . $conditions['end_date'] . "')
           OR (DoAdmission <= '" . $conditions['start_date'] . "' AND status = 'stillin')) ";
-        /* $where_cond = " WHERE ((DoAdmission >= '" . $conditions['start_date'] . "' AND DoDischarge <= '" . $conditions['end_date'] . "') 
+         $where_cond = " WHERE ((DoAdmission >= '" . $conditions['start_date'] . "' AND DoDischarge <= '" . $conditions['end_date'] . "') 
           OR (DoAdmission >= '" . $conditions['start_date'] . "' AND status = 'stillin')) "; */
+		  $where_cond = " WHERE DoAdmission <= '" . $conditions['end_date'] . "' AND (DoDischarge >= '" . $conditions['start_date'] . "'
+          OR DoDischarge IS NULL OR status = 'stillin') ";
         $limit = '';
         if (!$export_flag) {
             $start = (isset($conditions['start'])) ? $conditions['start'] : 0;

@@ -252,6 +252,13 @@ $route['dispense/get_patient_details_ajax'] = 'pharmacy/dispense/get_patient_det
 $route['dispense/add_patient_ajax'] = 'pharmacy/dispense/add_patient_ajax';
 $route['dispense/process_dispense_ajax'] = 'pharmacy/dispense/process_dispense_ajax';
 
+$route['pharmacy-pro'] = 'pharmacy_pro/dashboard/index';
+$route['pharmacy-pro/catalogue'] = 'pharmacy_pro/dashboard/catalogue';
+$route['pharmacy-pro/inventory'] = 'pharmacy_pro/dashboard/inventory';
+$route['pharmacy-pro/prescriptions'] = 'pharmacy_pro/dashboard/prescriptions';
+$route['pharmacy-pro/dispensing'] = 'pharmacy_pro/dashboard/dispensing';
+$route['pharmacy-pro/reports'] = 'pharmacy_pro/dashboard/reports';
+
 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
