@@ -63,12 +63,13 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
                                         <label for="exampleInputFile">College logo:</label><br />
-                                        <input type="file" name="college_logo" class="span4" id="college_logo" value="abc.png" />
+                                        <!-- Allow only images; show size hint -->
+                                        <input type="file" name="college_logo" class="span4" id="college_logo" accept="image/png, image/jpeg" />
                                         <input type="hidden" name="logo_name" id="logo_name" value="<?php echo $settings['logo']; ?>" />
-
+                                        <small class="form-text text-muted">Allowed types: .jpg, .png — Max size: 2MB</small>
                                     </div>
-                                    <div class="col-md-4 mb-4">
-                                        <img src="<?php echo base_url('assets/' . $settings['logo']); ?>" width="90px" height="90px" />
+                                    <div class="col-md-4 mb-4 text-center">
+                                        <img id="logo_preview" src="<?php echo base_url('assets/' . $settings['logo']); ?>" width="90" height="90" alt="College logo" style="object-fit:contain;border:1px solid #ddd;padding:4px;background:#fff;" />
                                         <?php /*echo '<img src="data:image/png;base64,'.base64_encode($settings['logo_img']).'" width="90px" height="90px"/>'; */ ?>
                                     </div>
                                 </div>
@@ -127,6 +128,29 @@
             $('#user-settings').addClass('active');
             $('#profile-settings').removeClass('active');
             $('.nav-item > .active').next('li').find('a').trigger('click');
+        }
+
+        // logo preview
+        $('#college_logo').on('change', function (e) {
+            var file = this.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size exceeds 2MB. Please choose a smaller image.');
+                $(this).val('');
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                $('#logo_preview').attr('src', ev.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // lock college_id if edit_flag is 0
+        var editFlag = '<?php echo $settings['edit_flag']; ?>';
+        if (editFlag === '0') {
+            $('#college_id').prop('readonly', true).addClass('form-control-plaintext');
+            $('#college_idHelp').text('College ID is locked and cannot be changed.');
         }
 
     });

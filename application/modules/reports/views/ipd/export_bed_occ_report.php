@@ -18,6 +18,7 @@ if (empty($patient)) {
                 <th width="18%">Diagnosis</th>
                 <th width="8%">DoA</th>
                 <th width="8%">DoD</th>
+                <th width="4%">Days</th>
                 <th width="12%">Doctor</th>
                 <th width="15%">Department</th>
             </tr>
@@ -41,6 +42,7 @@ if (empty($patient)) {
             echo "<td>" . $row['diagnosis'] . "</td>";
             echo "<td><center>" . format_date($row['DoAdmission']) . "</center></td>";
             echo "<td><center>" . format_date($row['DoDischarge']) . "</center></td>";
+            echo "<td><center>" . $row['NofDays'] . "</center></td>";
             echo "<td>" . $row['Doctor'] . "</td>";
             echo "<td>" . prepare_dept_name($row['department']) . "</td>";
             echo "</tr>";

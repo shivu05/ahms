@@ -124,4 +124,38 @@ class Users extends SHV_Controller {
         }
     }
 
+    // Add AJAX delete endpoint for users
+    function delete() {
+        if ($this->input->is_ajax_request()) {
+            $id = $this->input->post('id', true);
+            if (!is_numeric($id) || intval($id) <= 0) {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'Invalid user id', 'p_class' => 'danger'));
+                return;
+            }
+            $id = intval($id);
+
+            // Protect primary super-admin
+            if ($id === 1) {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'Cannot delete super administrator', 'p_class' => 'danger'));
+                return;
+            }
+
+            // Prevent deleting currently logged in user
+            $sess = $this->session->userdata('user_data');
+            if (is_array($sess) && isset($sess['id']) && $sess['id'] == $id) {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'You cannot delete your own account', 'p_class' => 'danger'));
+                return;
+            }
+
+            $deleted = $this->users_model->delete_user($id);
+            if ($deleted) {
+                echo json_encode(array('status' => 'Success', 'msg' => 'User deleted successfully', 'p_class' => 'success'));
+            } else {
+                echo json_encode(array('status' => 'Failed', 'msg' => 'Failed to delete user', 'p_class' => 'danger'));
+            }
+        } else {
+            show_error('Invalid request', 400);
+        }
+    }
+
 }

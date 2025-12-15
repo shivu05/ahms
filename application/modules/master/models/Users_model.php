@@ -94,4 +94,49 @@ class Users_model extends CI_Model {
         //echo $this->db->last_query();
     }
 
+    /**
+     * Delete a user and its role mappings in a transaction
+     * @param int $id
+     * @return bool
+     */
+    function delete_user($id) {
+        if (!is_numeric($id) || intval($id) <= 0) {
+            return false;
+        }
+        $id = intval($id);
+
+        // Use transaction to ensure related records are removed atomically
+        $this->db->trans_start();
+
+        // If user has role_id = 4 (doctor) remove doctors duty entries first
+        $this->db->select('role_id');
+        $this->db->from('i_user_roles');
+        $this->db->where('user_id', $id);
+        $roles_q = $this->db->get();
+        if ($roles_q && $roles_q->num_rows() > 0) {
+            $roles = $roles_q->result_array();
+            foreach ($roles as $r) {
+                if (isset($r['role_id']) && intval($r['role_id']) === 4) {
+                    // delete related doctors duty records
+                    $this->db->where('doc_id', $id);
+                    $this->db->delete('doctorsduty');
+                    // no need to check further roles for this purpose
+                    break;
+                }
+            }
+        }
+
+        // Remove role mappings
+        $this->db->where('user_id', $id);
+        $this->db->delete('i_user_roles');
+
+        // Remove user record
+        $this->db->where('ID', $id);
+        $this->db->delete('users');
+
+        $this->db->trans_complete();
+
+        return (bool) $this->db->trans_status();
+    }
+
 }

@@ -31,7 +31,7 @@
                             <button type="button" class="btn btn-info btn-sm"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
                             <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
+                                <span class="sr-only">Toggle Dropdown
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a class="dropdown-item" href="#" id="export_to_pdf">.pdf</a></li>
@@ -97,12 +97,6 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<style type="text/css">
-    .status{
-        width: 50px !important;
-        text-align: center;
-    }
-</style>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#search_form').on('click', '#search', function () {
@@ -166,8 +160,9 @@
                 title: "Action",
                 class: "status",
                 data: function (item) {
-                    return '<i title="Edit user details" class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' + 
-                            ' | <i title="Reset password" class="fa fa-refresh hand_cursor text-warning" id="reset_pass_btn"></i>';
+                    return '<i title="Edit user details" class="fa fa-pencil-square-o hand_cursor edit-user text-primary" data-mobile="' + item.user_mobile + '" data-email="' + item.user_email + '" data-name="' + item.user_name + '" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' +
+                            ' | <i title="Reset password" class="fa fa-refresh hand_cursor text-warning reset-pass" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>' +
+                            ' | <i title="Delete user" class="fa fa-trash-o hand_cursor delete-user text-danger" data-id="' + item.ID + '" style="font-size:16px" aria-hidden="true"></i>';
                 }
             }
         ];
@@ -235,7 +230,7 @@
             }
         });
 
-        $('#users_table').on('click', '#reset_pass_btn', function () {
+        $('#users_table').on('click', '.reset-pass', function () {
             var data = user_table.row($(this).closest('tr')).data();
             BootstrapDialog.show({
                 title: 'Password reset confirmation',
@@ -266,7 +261,64 @@
                         label: 'No',
                         cssClass: 'btn-danger',
                         action: function (dialog) {
-                            //dialog.setTitle('Title 2');
+                            dialog.close();
+                        }
+                    }]
+            });
+        });
+
+        // Delete user handler
+        $('#users_table').on('click', '.delete-user', function () {
+            var data = user_table.row($(this).closest('tr')).data();
+            BootstrapDialog.show({
+                title: 'Delete confirmation',
+                message: 'Are you sure you want to delete user "' + (data.user_name || data.user_email) + '"? This action cannot be undone.',
+                buttons: [{
+                        label: 'Yes, Delete',
+                        cssClass: 'btn-danger',
+                        action: function (dialog) {
+                            $.ajax({
+                                url: base_url + 'master/users/delete',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {id: data.ID},
+                                success: function (response) {
+                                    if (response.status == 'Success') {
+                                        dialog.setMessage(response.msg);
+                                        user_table.clear();
+                                        user_table.draw();
+                                    } else {
+                                        dialog.setMessage(response.msg || 'Failed to delete user');
+                                    }
+                                    $.notify({
+                                        title: response.status,
+                                        message: response.msg,
+                                        icon: 'fa fa-trash'
+                                    }, {
+                                        type: response.p_class || 'danger'
+                                    });
+                                },
+                                error: function () {
+                                    dialog.setMessage('Failed to delete user. Please try again.');
+                                    $.notify({
+                                        title: 'Failed',
+                                        message: 'Failed to delete user. Please try again.',
+                                        icon: 'fa fa-trash'
+                                    }, {
+                                        type: 'danger'
+                                    });
+                                }
+                            });
+                            dialog.enableButtons(false);
+                            dialog.setClosable(false);
+                            setTimeout(function () {
+                                dialog.close();
+                            }, 2500);
+                        }
+                    }, {
+                        label: 'No',
+                        cssClass: 'btn-default',
+                        action: function (dialog) {
                             dialog.close();
                         }
                     }]
@@ -275,8 +327,18 @@
 
         var user_table = $('#users_table').DataTable({
             'columns': columns,
+            autoWidth: false,
             'columnDefs': [
-                {className: "", "targets": [2]}
+                { className: "dt-body-left", "targets": [1,2,3,4,5] },
+                { className: "dt-center", "targets": [0,6,7] },
+                { "width": "6%", "targets": 0 },
+                { "width": "18%", "targets": 1 },
+                { "width": "18%", "targets": 2 },
+                { "width": "12%", "targets": 3 },
+                { "width": "10%", "targets": 4 },
+                { "width": "14%", "targets": 5 },
+                { "width": "6%", "targets": 6 },
+                { "width": "10%", "targets": 7 }
             ],
             language: {
                 sZeroRecords: "<div class='no_records'>No users found</div>",
@@ -295,15 +357,14 @@
                 'type': 'POST',
                 'dataType': 'json',
                 'data': function (d) {
-                    return $.extend({}, d, {
-                        "search_form": $('#search_form').serializeArray()
-                    });
+                    return $.extend({}, d, { "search_form": $('#search_form').serializeArray() });
                 }
             },
             order: [[0, 'desc']],
             info: true,
             sScrollX: true,
-            ordering: false
+            ordering: false,
+            initComplete: function () { this.api().columns.adjust(); }
         });
     });
 </script>
