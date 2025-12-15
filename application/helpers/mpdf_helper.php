@@ -22,7 +22,7 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     <tr>
         <td width="33%"></td>
         <td width="33%" align="center">{PAGENO}/{nbpg}</td>
-        <td width="33%" style="text-align: right;">©Ayush softwares </td>
+        <td width="33%" style="text-align: right;">@Dharani Tech Solutions </td>
     </tr>
 </table>';
 

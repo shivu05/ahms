@@ -196,3 +196,25 @@ ADD CONSTRAINT `surgeryregistery_ibfk_3`
   REFERENCES `inpatientdetails` (`IpNo`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+CREATE TABLE `patient_vitals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `opd_no` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `blood_pressure` varchar(20) DEFAULT NULL,
+  `pulse_rate` int(11) DEFAULT NULL,
+  `respiratory_rate` int(11) DEFAULT NULL,
+  `body_temperature` decimal(5,2) DEFAULT NULL,
+  `spo2` int(11) DEFAULT NULL,
+  `weight` decimal(5,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+ALTER TABLE `oldtable` 
+	ADD `blood_pressure` VARCHAR(7) NULL DEFAULT NULL AFTER `sub_dept`, 
+	ADD `pulse_rate` INT(3) NULL DEFAULT NULL AFTER `blood_pressure`, 
+	ADD `respiratory_rate` INT(3) NULL DEFAULT NULL AFTER `pulse_rate`, 
+	ADD `body_temperature` DECIMAL(4,1) NULL DEFAULT NULL AFTER `respiratory_rate`, 
+	ADD `spo2` INT(3) NULL DEFAULT NULL AFTER `body_temperature`, 
+	ADD `weight` DECIMAL(3,1) NULL DEFAULT NULL AFTER `spo2`;

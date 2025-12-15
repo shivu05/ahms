@@ -38,30 +38,31 @@ class Panchaprocedure extends CI_Model
         return $this->db->delete($this->table_name);
     }
 
-    // Method to get unique procedures
+    // Method to get unique procedures with counts and summed inclusive days
     public function get_unique_procedures()
     {
-        /*$this->db->select('treatment, `procedure`, COUNT(*) as procedure_count');
-        $this->db->from($this->table_name);
-        $this->db->where('`procedure` !=', '');
-        $this->db->group_by(['treatment', '`procedure`']);
-        $this->db->order_by('treatment, `procedure`');*/
-        $query = "WITH pp_classified AS ( 
-            SELECT pp.treatment, CASE WHEN i.IpNo IS NULL THEN 'OPD' ELSE 'IPD' END AS kind 
-            FROM panchaprocedure pp 
-            LEFT JOIN inpatientdetails i ON i.treatId = CAST(pp.treatid AS CHAR)
-        )
-        SELECT 
-            m.id AS `S.No.`, 
-            m.proc_name AS `procedure_name`,
-            COALESCE(SUM(ppc.kind = 'OPD'), 0) AS `from_opd`, 
-            COALESCE(SUM(ppc.kind = 'IPD'), 0) AS `from_ipd`,
-            COALESCE(COUNT(ppc.kind), 0) AS `total`
-        FROM master_panchakarma_procedures m 
-        LEFT JOIN pp_classified ppc ON UPPER(ppc.treatment) = UPPER(m.proc_name) 
-        GROUP BY m.id, m.proc_name 
-        ORDER BY m.id";
-        $query = $this->db->query($query);
+        // For each panchaprocedure row calculate inclusive days: DATEDIFF(proc_end_date, date) + 1
+        // If proc_end_date is NULL or empty treat as 1 day. Aggregate counts (from_opd/from_ipd) and sum of days (total).
+        $sql = "
+            SELECT
+                m.id AS `S.No.`,
+                m.proc_name AS `procedure_name`,
+                COALESCE(SUM(CASE WHEN (UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) AND (i.IpNo IS NULL OR i.IpNo = '')) THEN 1 ELSE 0 END), 0) AS `from_opd`,
+                COALESCE(SUM(CASE WHEN (UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) AND (i.IpNo IS NOT NULL AND i.IpNo != '')) THEN 1 ELSE 0 END), 0) AS `from_ipd`,
+                COALESCE(SUM(CASE WHEN UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) THEN
+                    CASE
+                        WHEN pp.proc_end_date IS NULL OR pp.proc_end_date = '' THEN 1
+                        ELSE (DATEDIFF(pp.proc_end_date, pp.`date`) + 1)
+                    END
+                ELSE 0 END), 0) AS `total`
+            FROM master_panchakarma_procedures m
+            LEFT JOIN panchaprocedure pp ON UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name))
+            LEFT JOIN inpatientdetails i ON i.treatId = pp.treatid
+            GROUP BY m.id, m.proc_name
+            ORDER BY m.id
+        ";
+
+        $query = $this->db->query($sql);
         return $query->result_array();
     }
 }
