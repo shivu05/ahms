@@ -55,20 +55,22 @@ if (empty($patient)) {
 if (!empty($pat_count)) {
     ?>
     <br/>
-    <table class="table table-bordered dataTable" style="margin:1px auto; width:70%;">
+    <table class="table table-bordered dataTable" style="margin:1px auto; width:80%;">
         <thead>
             <tr>
                 <th>Department</th>
                 <th>Total</th>
                 <th>Discharged</th>
-                <th>BA</th>
+                <th>On Bed</th>
                 <th>Male</th>
                 <th>Female</th>
+                <th>Occupancy %</th>
             </tr>
         </thead>
         <tbody>
             <?php
             $tot_dis = $tot_ba = $tot_male = $tot_female = $total = 0;
+            $grand_total_occupancy = '';
             foreach ($pat_count as $count) {
                 echo "<tr>";
                 echo "<td>" . prepare_dept_name($count['department']) . "</td>";
@@ -77,22 +79,10 @@ if (!empty($pat_count)) {
                 echo "<td><center>" . $count['onbed'] . "</center></td>";
                 echo "<td><center>" . $count['Male'] . "</center></td>";
                 echo "<td><center>" . $count['Female'] . "</center></td>";
+                echo "<td><center>" . (isset($count['occupancy_percentage']) ? $count['occupancy_percentage'] : '0.00%') . "</center></td>";
                 echo "</tr>";
-                $total = $total + $count['total'];
-                $tot_dis = $tot_dis + $count['discharged'];
-                $tot_ba = $tot_ba + $count['onbed'];
-                $tot_male = $tot_male + $count['Male'];
-                $tot_female = $tot_female + $count['Female'];
             }
             ?>
-            <tr>
-                <td style="text-align:right;"><b>Total</b></td>
-                <td style="text-align: center;"><?php echo $total; ?></td>
-                <td style="text-align: center;"><?php echo $tot_dis; ?></td>
-                <td style="text-align: center;"><?php echo $tot_ba; ?></td>
-                <td style="text-align: center;"><?php echo $tot_male; ?></td>
-                <td style="text-align: center;"><?php echo $tot_female; ?></td>
-            </tr>
         </tbody>
     </table>
     <?php
