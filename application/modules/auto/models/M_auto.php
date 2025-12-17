@@ -352,6 +352,7 @@ class M_auto extends CI_Model
         $query = $this->db->query("SELECT * FROM oldtable ORDER BY RAND()");
         $insert_data = $query->result();
         foreach ($insert_data as $row) {
+            //pma($row,1);
             array_push($this->department, $row->department);
             // pma($insert_data, 1);
             if ($this->_is_female_gender($row->gender)) {
@@ -392,7 +393,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->kayaDoc = $this->get_day_doctor($this->input->post('cdate'), "KAYACHIKITSA");
                 array_push($this->kayamed, $row->medicines);
@@ -407,7 +414,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
 
                 $this->shalyaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALYA_TANTRA");
@@ -422,7 +435,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->shalkayaDoc = $this->get_day_doctor($this->input->post('cdate'), "SHALAKYA_TANTRA");
             }
@@ -436,7 +455,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->tantraDoc = $this->get_day_doctor($this->input->post('cdate'), "PRASOOTI_&_STRIROGA");
             }
@@ -450,7 +475,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->swasthaDoc = $this->get_day_doctor($this->input->post('cdate'), "SWASTHAVRITTA");
             }
@@ -464,7 +495,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->pkDoc = $this->get_day_doctor($this->input->post('cdate'), "PANCHAKARMA");
             }
@@ -478,7 +515,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->bcDoc = $this->get_day_doctor($this->input->post('cdate'), "BALAROGA");
             }
@@ -492,7 +535,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->akDoc = $this->get_day_doctor($this->input->post('cdate'), "AATYAYIKACHIKITSA");
             }
@@ -506,7 +555,13 @@ class M_auto extends CI_Model
                     'medicines' => $row->medicines,
                     'sub_dept' => $row->sub_dept,
                     'gender' => $row->gender,
-                    'age' => $row->Age
+                    'age' => $row->Age,
+                    "blood_pressure" => $row->blood_pressure,
+                    "pulse_rate" => $row->pulse_rate,
+                    "respiratory_rate" => $row->respiratory_rate,
+                    "body_temperature" => $row->body_temperature,
+                    "spo2" => $row->spo2,
+                    "weight" => $row->weight
                 );
                 $this->agadaDoc = $this->get_day_doctor($this->input->post('cdate'), "AGADATANTRA");
             }
@@ -587,7 +642,8 @@ class M_auto extends CI_Model
         if (!empty($treatment_data)) {
             $digits = 4;
             $four_digit_random_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
-            $products = explode(',', $treatment_data['medicines']);
+            $string_to_explode = $treatment_data['medicines'] ?? '';
+            $products = explode(',', $string_to_explode);
             $n = count($products);
             for ($i = 0; $i < $n; $i++) {
                 if (strlen(trim($products[$i])) > 0) {
@@ -666,10 +722,27 @@ class M_auto extends CI_Model
         return ($sex == 'FEMALE') ? true : false;
     }
 
+    private function _insert_vitals($opd_no, $date, $treatment_data = array())
+    {
+        $vitals_data = array(
+            'opd_no' => $opd_no,
+            'blood_pressure' => $treatment_data['blood_pressure'],
+            'date' => $date,
+            'pulse_rate' => $treatment_data['pulse_rate'],
+            'respiratory_rate' => $treatment_data['respiratory_rate'],
+            'body_temperature' => $treatment_data['body_temperature'],
+            'spo2' => $treatment_data['spo2'],
+            'weight' => $treatment_data['weight'],
+        );
+
+        $this->db->insert('patient_vitals', $vitals_data);
+    }
+
     private function add_old_patient_data($dept = NULL, $date = NULL)
     {
         $query = "SELECT * from treatmentdata WHERE InOrOutPat='FollowUp' AND department='$dept' AND NOT (CameOn = '" . $date . "') ORDER BY RAND() LIMIT 1 ";
         $result = $this->db->query($query)->row_array();
+        $treating_doctor = $this->get_day_doctor($date, $dept);
         if (!empty($result)) {
             $insert_data = array(
                 "deptOpdNo" => $result['deptOpdNo'],
@@ -684,18 +757,29 @@ class M_auto extends CI_Model
                 "CameOn" => $date,
                 "attndedon" => $date,
                 "sub_department" => $result['sub_department'],
-                "AddedBy" => $result['AddedBy'],
+                "AddedBy" => $treating_doctor,
                 "patType" => "Old Patient",
                 "medicines" => $result['medicines']
             );
             $this->db->insert('treatmentdata', $insert_data);
             $treatid = $this->db->insert_id();
 
+            $query_opd = "INSERT INTO patient_vitals 
+            (opd_no, blood_pressure, date, pulse_rate, respiratory_rate, body_temperature, spo2, weight)
+            SELECT opd_no,blood_pressure,'$date',pulse_rate,respiratory_rate,body_temperature,spo2,weight 
+            FROM patient_vitals 
+            WHERE opd_no = '" . $result['OpdNo'] . "' AND date = '" . $result['CameOn'] . "' 
+            UNION ALL 
+            SELECT '" . $result['OpdNo'] . "',NULL,'$date',NULL,NULL,NULL,NULL,NULL 
+            FROM DUAL WHERE NOT EXISTS ( SELECT 1 FROM patient_vitals WHERE opd_no = '" . $result['OpdNo'] . "' 
+            AND date = '" . $result['CameOn'] . "' )";
+            $this->db->query($query_opd);
+
             $this->add_to_pharmacy($treatid);
 
             $last_id = $result['OpdNo'];
             $labdisease = $result['diagnosis'];
-            $docname = $result['AddedBy'];
+            $docname = $treating_doctor;
             //insert_lexu
             $this->insert_lexu($last_id, $treatid, $date, $labdisease, $docname, $dept);
             if ($dept == 'SHALAKYA_TANTRA') {
@@ -811,6 +895,8 @@ class M_auto extends CI_Model
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
+
                 $this->add_to_pharmacy($treatid);
 
                 $labdisease = trim($diagnosis);
@@ -891,6 +977,8 @@ class M_auto extends CI_Model
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
+
                 $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
@@ -970,6 +1058,8 @@ class M_auto extends CI_Model
 
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
 
                 $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
@@ -1055,6 +1145,8 @@ class M_auto extends CI_Model
 
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
 
                 $this->add_to_pharmacy($treatid);
                 $labdisease = trim($diagnosis);
@@ -1147,6 +1239,8 @@ class M_auto extends CI_Model
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
+
                 $this->add_to_pharmacy($treatid);
 
                 $labdisease = trim($diagnosis);
@@ -1229,6 +1323,8 @@ class M_auto extends CI_Model
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
+
                 $labdisease = trim($diagnosis);
 
                 $this->insert_lexu($last_id, $treatid, $cdate, $labdisease, $docname, $dept_name);
@@ -1308,6 +1404,8 @@ class M_auto extends CI_Model
 
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
 
                 $this->add_to_pharmacy($treatid);
 
@@ -1391,6 +1489,8 @@ class M_auto extends CI_Model
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
 
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
+
                 $this->add_to_pharmacy($treatid);
 
                 $labdisease = trim($diagnosis);
@@ -1469,6 +1569,8 @@ class M_auto extends CI_Model
 
                 $this->db->where('OpdNo', $last_id);
                 $this->db->update('patientdata', array('Age' => $treatment_details['age']));
+
+                $this->_insert_vitals($last_id, $cdate, $treatment_details);
 
                 $this->add_to_pharmacy($treatid);
 
