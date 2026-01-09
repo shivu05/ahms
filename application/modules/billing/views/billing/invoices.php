@@ -1,11 +1,3 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="page-header">
-            <h1>Invoices List</h1>
-        </div>
-    </div>
-</div>
-
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -22,7 +14,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Filter & Search</h3>
+        <h3 class="panel-title">Invoices List - Filter & Search</h3>
     </div>
     <div class="panel-body">
         <form method="GET" class="form-inline">

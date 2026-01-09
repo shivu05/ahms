@@ -14,6 +14,13 @@ class Billing extends SHV_Controller {
         $this->load->model('billing/Payment_model');
         $this->load->model('billing/Insurance_model');
         $this->load->library('form_validation');
+        
+        // Load billing helper from module
+        $helper_path = APPPATH . 'modules/billing/helpers/Billing_helper.php';
+        if (file_exists($helper_path)) {
+            require_once($helper_path);
+        }
+        
         $this->layout->title = "Billing Management";
     }
 
@@ -602,10 +609,33 @@ class Billing extends SHV_Controller {
                 redirect('billing');
             }
             
+            // Normalize invoice keys for print view
+            $invoice['id'] = $invoice['invoice_id'] ?? $invoice['id'] ?? null;
+            
+            if (empty($invoice['patient_name'])) {
+                $first = $invoice['patient_first_name'] ?? '';
+                $last = $invoice['patient_last_name'] ?? '';
+                $invoice['patient_name'] = trim($first . ' ' . $last) ?: ($invoice['patient_uhid'] ?? 'N/A');
+            }
+            
+            // Ensure items have consistent fields
+            if (!empty($invoice['items']) && is_array($invoice['items'])) {
+                foreach ($invoice['items'] as &$item) {
+                    $item['line_total'] = $item['line_total'] ?? $item['item_amount'] ?? $item['total_amount'] ?? 0;
+                    $item['unit_price'] = $item['unit_price'] ?? 0;
+                    $item['quantity'] = $item['quantity'] ?? 0;
+                    $item['discount_amount'] = $item['discount_amount'] ?? 0;
+                    $item['discount_percentage'] = $item['discount_percentage'] ?? 0;
+                    $item['gst_rate'] = $item['gst_rate'] ?? 0;
+                    $item['description'] = $item['description'] ?? '';
+                }
+                unset($item);
+            }
+            
             $data['invoice'] = $invoice;
             
             // Load print view directly without layout
-            $this->load->view('invoices/print_invoice', $data);
+            $this->load->view('billing/invoices/print_invoice', $data);
         } catch (Exception $e) {
             log_message('error', 'Error printing invoice: ' . $e->getMessage());
             redirect('billing');
