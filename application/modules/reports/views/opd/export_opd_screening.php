@@ -1,3 +1,15 @@
+<?php
+$dept_room_array = array(
+    'KAYACHIKITSA' => 1,
+    'SHALYA_TANTRA' => 2,
+    'PANCHAKARMA' => 3,
+    'PRASOOTI_&_STRIROGA' => 4,
+    'BALAROGA' => 5,
+    'SHALAKYA_TANTRA' => 6,
+    'AATYAYIKACHIKITSA' => 7,
+    'SWASTHAVRITTA' => 8,
+);
+?>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -13,7 +25,7 @@
             <th width="8%">Temperature</th>
             <th width="6%">SpO2</th>
             <th width="6%">Weight</th>
-            <th width="8%">Date of Visit</th>
+            <th width="8%">Ref room</th>
         </tr>
     </thead>
     <tbody>
@@ -22,7 +34,7 @@
             echo '<tr><td colspan="15" class="center">No data</td></tr>';
         } else {
             $i = 0;
-//            pma($opd_patients, 1);
+            //            pma($opd_patients, 1);
             foreach ($opd_patients as $patients) {
                 $i++;
                 $id = isset($patients['id']) ? $patients['id'] : '';
@@ -54,7 +66,7 @@
                 echo '<td class="center">' . htmlspecialchars($temp) . '</td>';
                 echo '<td class="center">' . htmlspecialchars($spo2) . '</td>';
                 echo '<td class="center">' . htmlspecialchars($weight) . '</td>';
-                echo '<td>' . (!empty($date_of_visit) ? htmlspecialchars(date('Y-m-d', strtotime($date_of_visit))) : '') . '</td>';
+                echo '<td class="center">' . htmlspecialchars($patients['ref_room']) . '</td>';
                 echo '</tr>';
             }
         }

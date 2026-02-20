@@ -218,7 +218,8 @@ class Opd_model extends CI_Model
             'Age',
             'gender',
             'address',
-            'city'
+            'city',
+            'ref_room'
         );
 
         $where_cond = " WHERE `date` >='" . $conditions['start_date'] . "' AND `date` <='" . $conditions['end_date'] . "' ";
@@ -251,6 +252,8 @@ class Opd_model extends CI_Model
 
         $query = "SELECT " . implode(',', $columns) . " 
             FROM patient_vitals t 
+            JOIN treatmentdata tr ON t.opd_no=tr.OpdNo
+            JOIN deptper d ON tr.department=d.dept_unique_code
             JOIN patientdata p ON t.opd_no=p.OpdNo $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();

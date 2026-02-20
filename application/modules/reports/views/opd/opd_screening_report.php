@@ -139,7 +139,7 @@
             { title: "Body Temperature", data: function (item) { return item.body_temperature; } },
             { title: "SpO2", data: function (item) { return item.spo2; } },
             { title: "Weight", data: function (item) { return item.weight; } },
-            { title: "Created At", data: function (item) { return item.created_at; } },
+            { title: "Ref room", data: function (item) { return item.ref_room; } },
         ];
         var patient_table;
 
