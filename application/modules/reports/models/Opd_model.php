@@ -252,12 +252,12 @@ class Opd_model extends CI_Model
 
         $query = "SELECT " . implode(',', $columns) . " 
             FROM patient_vitals t 
-            JOIN treatmentdata tr ON t.opd_no=tr.OpdNo
+            JOIN treatmentdata tr ON t.opd_no=tr.OpdNo and `date`= tr.CameOn
             JOIN deptper d ON tr.department=d.dept_unique_code
             JOIN patientdata p ON t.opd_no=p.OpdNo $where_cond ORDER BY t.ID ASC";
         $result = $this->db->query($query . ' ' . $limit);
         $return['data'] = $result->result_array();
-
+        
         $return['found_rows'] = $this->db->query($query)->num_rows();
         $return['total_rows'] = $this->db->query('SELECT * FROM patient_vitals t JOIN patientdata p ON t.opd_no=p.OpdNo')->num_rows();
         return $return;

@@ -214,7 +214,7 @@ class Opd extends SHV_Controller
         );
 
         $current_date = date('d_m_Y');
-        generate_pdf($html, 'L', $title, 'OPD_REPORT_' . $current_date, true, true, 'I');
+        generate_pdf($html, 'L', $title, 'OPD_SCREENING_REPORT_' . $current_date, true, true, 'I');
         exit;
     }
 
