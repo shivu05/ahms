@@ -38,23 +38,20 @@ class Panchaprocedure extends CI_Model
         return $this->db->delete($this->table_name);
     }
 
-    // Method to get unique procedures with counts and summed inclusive days
+    // Method to get unique procedures with counts
     public function get_unique_procedures()
     {
-        // For each panchaprocedure row calculate inclusive days: DATEDIFF(proc_end_date, date) + 1
-        // If proc_end_date is NULL or empty treat as 1 day. Aggregate counts (from_opd/from_ipd) and sum of days (total).
+        // Count the number of procedure records for each procedure type
+        // from_opd: Count of procedures from OPD patients (no IpNo)
+        // from_ipd: Count of procedures from IPD patients (has IpNo)
+        // total: Total count of procedure records (from_opd + from_ipd)
         $sql = "
             SELECT
                 m.id AS `S.No.`,
                 m.proc_name AS `procedure_name`,
                 COALESCE(SUM(CASE WHEN (UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) AND (i.IpNo IS NULL OR i.IpNo = '')) THEN 1 ELSE 0 END), 0) AS `from_opd`,
                 COALESCE(SUM(CASE WHEN (UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) AND (i.IpNo IS NOT NULL AND i.IpNo != '')) THEN 1 ELSE 0 END), 0) AS `from_ipd`,
-                COALESCE(SUM(CASE WHEN UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) THEN
-                    CASE
-                        WHEN pp.proc_end_date IS NULL OR pp.proc_end_date = '' THEN 1
-                        ELSE (DATEDIFF(pp.proc_end_date, pp.`date`) + 1)
-                    END
-                ELSE 0 END), 0) AS `total`
+                COALESCE(COUNT(CASE WHEN UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name)) THEN 1 END), 0) AS `total`
             FROM master_panchakarma_procedures m
             LEFT JOIN panchaprocedure pp ON UPPER(TRIM(pp.treatment)) = UPPER(TRIM(m.proc_name))
             LEFT JOIN inpatientdetails i ON i.treatId = pp.treatid
