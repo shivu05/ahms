@@ -707,9 +707,21 @@ class Nursing_model extends CI_Model
           WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "' group by treatment,`procedure`"; */
         $query = "SELECT treatment,`procedure`,days as procedure_count 
                   FROM ( 
-                    SELECT p.*,SUM((DATEDIFF(proc_end_date,`date`) + 1)) days 
+                    SELECT p.*,SUM(
+                        CASE
+                            WHEN proc_end_date IS NULL OR proc_end_date = '' THEN 1
+                            ELSE (DATEDIFF(proc_end_date,`date`) + 1)
+                        END
+                    ) days 
                     FROM panchaprocedure p 
-                    WHERE p.date >='" . $conditions['start_date'] . "' AND p.proc_end_date <= '" . $conditions['end_date'] . "'
+                    WHERE p.date >='" . $conditions['start_date'] . "' 
+                        AND (p.proc_end_date <= '" . $conditions['end_date'] . "' 
+                            OR p.proc_end_date IS NULL 
+                            OR p.proc_end_date = '')
+                        AND p.treatment IS NOT NULL 
+                        AND TRIM(p.treatment) != ''
+                        AND p.procedure IS NOT NULL 
+                        AND TRIM(p.procedure) != ''
                     GROUP BY treatment,`procedure` 
                   ) A 
                  GROUP BY treatment,`procedure`";
