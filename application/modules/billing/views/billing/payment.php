@@ -104,8 +104,8 @@
                             <?php foreach ($payments as $payment): ?>
                                 <tr>
                                     <td><?php echo date('d-M-Y', strtotime($payment['payment_date'])); ?></td>
-                                    <td><?php echo $payment['payment_method']; ?></td>
-                                    <td class="text-right">₹<?php echo number_format($payment['amount'], 2); ?></td>
+                                    <td><?php echo $payment['method_name'] ?? $payment['payment_method'] ?? 'N/A'; ?></td>
+                                    <td class="text-right">₹<?php echo number_format((float) ($payment['payment_amount'] ?? $payment['amount'] ?? 0), 2); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -136,10 +136,10 @@
                         <label>Payment Amount <span class="text-danger">*</span></label>
                         <div class="input-group">
                             <span class="input-group-addon">₹</span>
-                            <input type="number" name="amount" class="form-control" 
+                            <input type="number" name="payment_amount" class="form-control" 
                                    step="0.01" min="0.01" 
                                    max="<?php echo $invoice['balance_amount'] ?? 0; ?>"
-                                   value="<?php echo $invoice['balance_amount'] ?? 0; ?>"
+                                   value="<?php echo set_value('payment_amount', $invoice['balance_amount'] ?? 0); ?>"
                                    required>
                         </div>
                         <small class="text-muted">
@@ -149,15 +149,17 @@
 
                     <div class="form-group">
                         <label>Payment Method <span class="text-danger">*</span></label>
-                        <select name="payment_method" class="form-control" required>
+                        <select name="payment_method_id" class="form-control" required>
                             <option value="">-- Select Method --</option>
-                            <option value="CASH">Cash</option>
-                            <option value="CARD">Credit/Debit Card</option>
-                            <option value="UPI">UPI</option>
-                            <option value="BANK_TRANSFER">Bank Transfer</option>
-                            <option value="CHEQUE">Cheque</option>
-                            <option value="INSURANCE">Insurance</option>
-                            <option value="OTHER">Other</option>
+                            <?php if (!empty($payment_methods)): ?>
+                                <?php foreach ($payment_methods as $method): ?>
+                                    <option value="<?php echo $method['method_id']; ?>"
+                                            data-requires-reference="<?php echo (int) ($method['requires_reference'] ?? 0); ?>"
+                                            <?php echo set_select('payment_method_id', $method['method_id']); ?>>
+                                        <?php echo $method['method_name']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                     </div>
 
@@ -209,17 +211,17 @@
 <script>
 $(document).ready(function() {
     // Update reference field requirement based on payment method
-    $('select[name="payment_method"]').on('change', function() {
-        var method = $(this).val();
+    $('select[name="payment_method_id"]').on('change', function() {
+        var requiresReference = parseInt($(this).find(':selected').data('requires-reference'), 10) === 1;
         var refField = $('input[name="reference_number"]');
         
-        if (method == 'CARD' || method == 'UPI' || method == 'BANK_TRANSFER' || method == 'CHEQUE') {
+        if (requiresReference) {
             refField.attr('required', true);
             refField.closest('.form-group').find('label').html('Reference Number <span class="text-danger">*</span>');
         } else {
             refField.removeAttr('required');
             refField.closest('.form-group').find('label').html('Reference Number');
         }
-    });
+    }).trigger('change');
 });
 </script>

@@ -198,9 +198,9 @@
                                 <?php foreach ($payments as $payment): ?>
                                     <tr>
                                         <td><?php echo date('d-M-Y', strtotime($payment['payment_date'])); ?></td>
-                                        <td><?php echo $payment['payment_method']; ?></td>
+                                        <td><?php echo $payment['method_name'] ?? $payment['payment_method'] ?? 'N/A'; ?></td>
                                         <td><?php echo $payment['reference_number'] ?? 'N/A'; ?></td>
-                                        <td class="text-right">₹<?php echo number_format($payment['amount'], 2); ?></td>
+                                        <td class="text-right">₹<?php echo number_format((float) ($payment['payment_amount'] ?? $payment['amount'] ?? 0), 2); ?></td>
                                         <td><?php echo $payment['received_by'] ?? 'N/A'; ?></td>
                                     </tr>
                                 <?php endforeach; ?>

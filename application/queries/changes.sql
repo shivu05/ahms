@@ -35,6 +35,25 @@ INSERT INTO `perm_master` (`perm_code`, `perm_desc`, `perm_order`, `perm_label`,
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '60', 'Active', '1', '2');
 INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`) VALUES ('1', '61', 'Active', '1', '2');
 
+-- Billing menu (parent: 4)
+INSERT INTO `perm_master`
+(`perm_code`, `perm_desc`, `perm_order`, `perm_label`, `perm_parent`, `perm_url`, `perm_status`, `perm_icon`, `last_updated_id`)
+SELECT 'BILLING', 'Billing', '9', '9', '4', 'billing', 'Active', 'fa fa-inr', '1'
+WHERE NOT EXISTS (
+  SELECT 1 FROM `perm_master` WHERE `perm_code` = 'BILLING'
+);
+
+INSERT INTO `role_perm` (`role_id`, `perm_id`, `status`, `last_updated_id`, `access_perm`)
+SELECT '1', pm.perm_id, 'Active', '1', '2'
+FROM `perm_master` pm
+WHERE pm.perm_code = 'BILLING'
+AND NOT EXISTS (
+  SELECT 1
+  FROM `role_perm` rp
+  WHERE rp.role_id = '1'
+    AND rp.perm_id = pm.perm_id
+);
+
 
 CREATE TABLE `fumigation_register` (
   `id` INT NOT NULL AUTO_INCREMENT,

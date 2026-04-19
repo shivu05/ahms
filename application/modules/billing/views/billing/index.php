@@ -152,9 +152,14 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="<?php echo site_url('billing/view_invoice/' . $inv['invoice_id']); ?>" class="btn btn-sm btn-primary">
-                                            <i class="fa fa-eye"></i> View
-                                        </a>
+                                        <?php $inv_id = $inv['invoice_id'] ?? $inv['id'] ?? null; ?>
+                                        <?php if (!empty($inv_id)): ?>
+                                            <a href="<?php echo site_url('billing/view_invoice/' . $inv_id); ?>" class="btn btn-sm btn-primary">
+                                                <i class="fa fa-eye"></i> View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted">N/A</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

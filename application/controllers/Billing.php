@@ -195,19 +195,28 @@ class Billing extends SHV_Controller
             show_404();
         }
 
+        $college = $this->db->select('college_name, place, logo')
+                            ->limit(1)
+                            ->get('config')
+                            ->row_array();
+
         $data = [
             'invoice' => $record['invoice'],
             'lines' => $record['lines'],
             'payments' => $record['payments'],
             'payment_modes' => ['CASH', 'CARD', 'UPI', 'NEFT', 'OTHER'],
+            'college' => $college,
         ];
 
         if ($this->input->get('format', true) === 'pdf') {
             $html = $this->load->view('billing/invoice_pdf', $data, true);
             $meta = $record['invoice'];
             $title = [
-                'report_title' => 'Invoice',
+                'report_title' => !empty($college['college_name']) ? $college['college_name'] : 'Invoice',
                 'extradata' => '<table width="100%" style="font-size:12px;">'
+                    . (!empty($college['place'])
+                        ? '<tr><td colspan="2"><strong>Address:</strong> ' . html_escape($college['place']) . '</td></tr>'
+                        : '')
                     . '<tr>'
                     . '<td><strong>Invoice No:</strong> ' . html_escape($meta['invoice_no']) . '</td>'
                     . '<td><strong>Date:</strong> ' . date('d-m-Y H:i', strtotime($meta['invoice_date'])) . '</td>'

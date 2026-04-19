@@ -78,7 +78,7 @@ class Billing extends SHV_Controller {
                 $data['overdue_invoices'] = count($this->Billing_model->get_overdue_invoices());
                 
                 // Recent invoices
-                $data['recent_invoices'] = $this->db->select('invoice_number, invoice_date, patient_name, total_amount, payment_status')
+                $data['recent_invoices'] = $this->db->select('invoice_id, invoice_number, invoice_date, patient_name, total_amount, payment_status')
                                                     ->order_by('invoice_date', 'DESC')
                                                     ->limit(10)
                                                     ->get('billing_invoices')
@@ -299,6 +299,10 @@ class Billing extends SHV_Controller {
             $data['payments'] = $payments;
             $data['can_edit'] = in_array($invoice['invoice_status'], ['DRAFT']);
             $data['can_finalize'] = $invoice['invoice_status'] == 'DRAFT' && !empty($invoice['items']);
+            $college = $this->get_college_details();
+            $data['hospital_name'] = $college['college_name'] ?? 'Hospital Name';
+            $data['hospital_address'] = $college['place'] ?? 'Hospital Address';
+            $data['hospital_logo'] = $college['logo'] ?? '';
 
             $this->scripts_include->includePlugins(array('datatables'), 'js');
             $this->scripts_include->includePlugins(array('datatables'), 'css');
@@ -376,6 +380,10 @@ class Billing extends SHV_Controller {
                     $data['errors'] = $this->form_validation->error_array();
                 } else {
                     $payment_amount = $this->input->post('payment_amount');
+                    $current_user_id = (int) ($this->rbac->is_login() ?: ($this->session->userdata('user_id') ?? 1));
+                    if ($current_user_id <= 0) {
+                        $current_user_id = 1;
+                    }
                     
                     // Validate payment amount
                     if ($payment_amount > $invoice['balance_due']) {
@@ -390,7 +398,7 @@ class Billing extends SHV_Controller {
                             'bank_name' => $this->input->post('bank_name'),
                             'cheque_number' => $this->input->post('cheque_number'),
                             'remarks' => $this->input->post('remarks'),
-                            'created_by' => $this->session->userdata('user_id') ?? 1
+                            'created_by' => $current_user_id
                         ];
                         
                         $payment_id = $this->Payment_model->record_payment($payment_data);
@@ -633,6 +641,10 @@ class Billing extends SHV_Controller {
             }
             
             $data['invoice'] = $invoice;
+            $college = $this->get_college_details();
+            $data['hospital_name'] = $college['college_name'] ?? 'Hospital Name';
+            $data['hospital_address'] = $college['place'] ?? 'Hospital Address';
+            $data['hospital_logo'] = $college['logo'] ?? '';
             
             // Load print view directly without layout
             $this->load->view('billing/invoices/print_invoice', $data);
@@ -640,6 +652,34 @@ class Billing extends SHV_Controller {
             log_message('error', 'Error printing invoice: ' . $e->getMessage());
             redirect('billing');
         }
+    }
+
+    /**
+     * Get college details from config table for headers/print
+     *
+     * @return array
+     */
+    private function get_college_details() {
+        $row = $this->db->select('college_name, place, logo')
+                        ->where("TRIM(IFNULL(college_name, '')) <> ''", null, false)
+                        ->limit(1)
+                        ->get('config')
+                        ->row_array();
+
+        if (empty($row)) {
+            $row = $this->db->select('college_name, place, logo')
+                            ->limit(1)
+                            ->get('config')
+                            ->row_array();
+        }
+
+        if (is_array($row)) {
+            $row['college_name'] = trim((string) ($row['college_name'] ?? ''));
+            $row['place'] = trim((string) ($row['place'] ?? ''));
+            $row['logo'] = trim((string) ($row['logo'] ?? ''));
+        }
+
+        return is_array($row) ? $row : [];
     }
 }
 ?>

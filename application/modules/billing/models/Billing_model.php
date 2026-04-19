@@ -224,9 +224,10 @@ class Billing_model extends CI_Model {
      * @return array Payments
      */
     public function get_invoice_payments($invoice_id) {
-        return $this->db->select('bp.*, bpm.method_name')
+        return $this->db->select('bp.*, bpm.method_name, COALESCE(u.user_name, "N/A") as received_by')
                         ->from('billing_payments bp')
                         ->join('billing_payment_methods bpm', 'bp.payment_method_id = bpm.method_id', 'left')
+                        ->join('users u', 'u.ID = bp.created_by', 'left')
                         ->where('bp.invoice_id', $invoice_id)
                         ->order_by('bp.payment_date', 'DESC')
                         ->get()

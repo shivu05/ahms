@@ -155,9 +155,15 @@ INSERT INTO `medicine_purchases` (`invoice_number`, `supplier_id`, `po_id`, `pur
 ('INV-AYU-001', 1, NULL, '2024-01-15', '2024-01-15', 2250.00, 270.00, 0.00, 0.00, 0.00, 2520.00, 'credit', 'paid', 'Initial stock for Triphala', 1),
 ('INV-AYU-002', 1, NULL, '2024-02-10', '2024-02-10', 4500.00, 540.00, 0.00, 0.00, 0.00, 5040.00, 'credit', 'paid', 'Initial stock for Chyawanprash', 1);
 
-INSERT INTO `medicine_purchase_items` (`purchase_id`, `medicine_id`, `batch_number`, `manufacturing_date`, `expiry_date`, `quantity`, `free_quantity`, `unit_purchase_price`, `unit_selling_price`, `mrp`, `discount_percentage`, `gst_percentage`, `total_amount`, `rack_number`) VALUES
-(LAST_INSERT_ID()-1, 1, 'TC2024001', '2024-01-15', '2026-01-14', 50, 0, 45.00, 65.00, 75.00, 0.00, 12.00, 2250.00, 'A1'),
-(LAST_INSERT_ID(), 2, 'CP2024001', '2024-02-10', '2026-02-09', 30, 0, 180.00, 250.00, 280.00, 0.00, 12.00, 5400.00, 'B2');
+INSERT INTO `medicine_purchase_items`
+(`purchase_id`, `medicine_id`, `batch_number`, `manufacturing_date`, `expiry_date`, `quantity`, `free_quantity`, `unit_purchase_price`, `unit_selling_price`, `mrp`, `discount_percentage`, `gst_percentage`, `total_amount`, `rack_number`)
+SELECT mp.id, 1, 'TC2024001', '2024-01-15', '2026-01-14', 50, 0, 45.00, 65.00, 75.00, 0.00, 12.00, 2250.00, 'A1'
+FROM medicine_purchases mp
+WHERE mp.invoice_number = 'INV-AYU-001' AND mp.supplier_id = 1
+UNION ALL
+SELECT mp.id, 2, 'CP2024001', '2024-02-10', '2026-02-09', 30, 0, 180.00, 250.00, 280.00, 0.00, 12.00, 5400.00, 'B2'
+FROM medicine_purchases mp
+WHERE mp.invoice_number = 'INV-AYU-002' AND mp.supplier_id = 1;
 
 -- 5) Summary query
 SELECT 'Sample Ayurveda data inserted successfully!' as Status,
