@@ -84,8 +84,8 @@ class Patient extends SHV_Controller
         $this->form_validation->set_rules('department', 'Department', 'trim|required');
         $this->form_validation->set_rules('doctor', 'Doctor', 'trim|required');
         $this->form_validation->set_rules('consultation_date', 'Consultation Date', 'trim|required|regex_match[/^\d{4}-\d{2}-\d{2}$/]');
-        $this->form_validation->set_rules('aadhaar_number', 'Aadhaar Number', 'trim|required|numeric|exact_length[12]|regex_match[/^[1-9][0-9]{11}$/]');
-        $this->form_validation->set_rules('abha_id', 'ABHA ID', 'trim|required|max_length[50]');
+        $this->form_validation->set_rules('aadhaar_number', 'Aadhaar Number', 'trim');
+        $this->form_validation->set_rules('abha_id', 'ABHA ID', 'trim|max_length[50]');
         $this->form_validation->set_message('required', 'The {field} field is required.');
         $this->form_validation->set_message('integer', 'The {field} field must be a whole number.');
         $this->form_validation->set_message('regex_match', 'The {field} format is invalid.');
@@ -101,16 +101,16 @@ class Patient extends SHV_Controller
         }
 
         $manual_errors = array();
-        if (!$this->validate_aadhaar($normalized_post['aadhaar_number'])) {
+        if ($normalized_post['aadhaar_number'] !== '' && !$this->validate_aadhaar($normalized_post['aadhaar_number'])) {
             $manual_errors['aadhaar_number'] = 'Aadhaar must be exactly 12 digits and cannot start with 0.';
         }
-        if (!$this->validate_abha_format($normalized_post['abha_id'])) {
+        if ($normalized_post['abha_id'] !== '' && !$this->validate_abha_format($normalized_post['abha_id'])) {
             $manual_errors['abha_id'] = 'The ABHA ID format is invalid. Use either 14 digits or username@abdm format.';
         }
         if (!$this->validate_consultation_date($normalized_post['consultation_date'])) {
             $manual_errors['consultation_date'] = 'Consultation Date must be in YYYY-MM-DD format.';
         }
-        if ($this->patient_model->has_aadhaar_column() && $this->patient_model->check_aadhaar_exists($normalized_post['aadhaar_number'])) {
+        if ($normalized_post['aadhaar_number'] !== '' && $this->patient_model->has_aadhaar_column() && $this->patient_model->check_aadhaar_exists($normalized_post['aadhaar_number'])) {
             $manual_errors['aadhaar_number'] = 'This Aadhaar number is already registered in the system.';
         }
         if (!empty($manual_errors)) {

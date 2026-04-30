@@ -92,10 +92,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-10">
-                                    <label for="aadhaar_number">Aadhaar Number: <span class="text-danger">*</span></label>
-                                    <input class="form-control required security-sensitive-field" id="aadhaar_number" name="aadhaar_number" type="text"
+                                    <label for="aadhaar_number">Aadhaar Number:</label>
+                                    <input class="form-control security-sensitive-field" id="aadhaar_number" name="aadhaar_number" type="text"
                                            placeholder="Enter 12-digit Aadhaar number"
-                                           data-rule-required="true"
                                            data-rule-digits="true"
                                            data-rule-minlength="12"
                                            data-rule-maxlength="12"
@@ -109,10 +108,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-10">
-                                    <label for="abha_id">ABHA ID: <span class="text-danger">*</span></label>
-                                    <input class="form-control required security-sensitive-field" id="abha_id" name="abha_id" type="text"
+                                    <label for="abha_id">ABHA ID:</label>
+                                    <input class="form-control security-sensitive-field" id="abha_id" name="abha_id" type="text"
                                            placeholder="14 digits OR username@abdm"
-                                           data-rule-required="true"
                                            data-rule-validate_abha="true"
                                            aria-describedby="abhaHelp">
                                     <small class="form-text text-muted" id="abhaHelp">14-digit ABHA code or ABHA address (username@abdm)</small>
