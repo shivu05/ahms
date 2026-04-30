@@ -1018,7 +1018,7 @@ class Treatment extends SHV_Controller {
         if ($this->patient_model->has_identity_columns()) {
             $aadhaar = preg_replace('/\D+/', '', (string) $post_values['aadhaar_number']);
             $abha_id = preg_replace('/\s+/u', '', trim((string) $post_values['abha_id']));
-            $masked_aadhaar = $aadhaar !== '' ? mask_aadhaar($aadhaar) : '';
+            $masked_aadhaar = $aadhaar !== '' ? mask_aadhaar($aadhaar) : null;
 
             if ($aadhaar !== '' && !validate_aadhaar_format($aadhaar)) {
                 echo json_encode(array(
@@ -1044,8 +1044,8 @@ class Treatment extends SHV_Controller {
                 return;
             }
 
-            $post_values['aadhaar_number'] = $aadhaar;
-            $post_values['abha_id'] = $abha_id;
+            $post_values['aadhaar_number'] = $aadhaar !== '' ? $aadhaar : null;
+            $post_values['abha_id'] = $abha_id !== '' ? $abha_id : null;
             $post_values['aadhaar_masked'] = $masked_aadhaar;
         }
 

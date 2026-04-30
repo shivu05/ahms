@@ -520,9 +520,9 @@ class treatment_model extends CI_Model
             );
 
             if ($this->has_patient_identity_columns()) {
-                $personal_details['aadhaar_number'] = $post_values['aadhaar_number'];
-                $personal_details['abha_id'] = $post_values['abha_id'];
-                $personal_details['aadhaar_masked'] = $post_values['aadhaar_masked'];
+                $personal_details['aadhaar_number'] = isset($post_values['aadhaar_number']) && $post_values['aadhaar_number'] !== '' ? $post_values['aadhaar_number'] : null;
+                $personal_details['abha_id'] = isset($post_values['abha_id']) && $post_values['abha_id'] !== '' ? $post_values['abha_id'] : null;
+                $personal_details['aadhaar_masked'] = isset($post_values['aadhaar_masked']) && $post_values['aadhaar_masked'] !== '' ? $post_values['aadhaar_masked'] : null;
             }
 
             $this->db->where('OpdNo', $post_values['opd']);
