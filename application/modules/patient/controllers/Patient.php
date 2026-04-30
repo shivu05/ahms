@@ -12,6 +12,7 @@ class Patient extends SHV_Controller
     {
         parent::__construct();
         $this->load->model('reports/opd_model');
+        $this->load->helper('aadhaar_abha');
         $this->layout->navIcon = 'fa fa-users';
         $this->layout->title = "OPD";
     }
@@ -47,29 +48,141 @@ class Patient extends SHV_Controller
     function store_patient_info()
     {
         $this->load->model('patient/patient_model');
-        $user_id = $this->rbac->get_uid();
-        $uid = $this->uuid->v5('AnSh');
-        $data = [
-            'FirstName' => $this->input->post('first_name'),
-            'LastName' => $this->input->post('last_name'),
-            'Age' => $this->input->post('age'),
-            'gender' => $this->input->post('gender'),
-            'mob' => $this->input->post('mobile'),
-            'city' => $this->input->post('place'),
-            'occupation' => $this->input->post('occupation'),
-            'address' => $this->input->post('address'),
-            'entrydate' => $this->input->post('consultation_date'),
-            'sid' => $uid,
-            'AddedBy' => $user_id
-        ];
+        $this->load->model('patient/treatment_model');
+        $this->load->library('form_validation');
+        $this->output->set_content_type('application/json');
 
-        $insert_id = $this->patient_model->insert_patient($data);
+        $raw_consultation_date = trim((string) $this->input->post('consultation_date'));
+        $normalized_consultation_date = preg_match('/^\d{4}-\d{2}-\d{2}/', $raw_consultation_date, $matches) ? $matches[0] : $raw_consultation_date;
+        $normalized_post = array(
+            'first_name' => trim((string) $this->input->post('first_name')),
+            'last_name' => trim((string) $this->input->post('last_name')),
+            'age' => trim((string) $this->input->post('age')),
+            'gender' => trim((string) $this->input->post('gender')),
+            'mobile' => preg_replace('/\D+/', '', (string) $this->input->post('mobile')),
+            'place' => trim((string) $this->input->post('place')),
+            'occupation' => trim((string) $this->input->post('occupation')),
+            'address' => trim((string) $this->input->post('address')),
+            'consultation_date' => $normalized_consultation_date,
+            'department' => trim((string) $this->input->post('department')),
+            'sub_department' => trim((string) $this->input->post('sub_department')),
+            'doctor' => trim((string) $this->input->post('doctor')),
+            'aadhaar_number' => preg_replace('/\D+/', '', (string) $this->input->post('aadhaar_number')),
+            'abha_id' => preg_replace('/\s+/u', '', trim((string) $this->input->post('abha_id')))
+        );
+        $normalized_post['aadhaar_masked'] = mask_aadhaar($normalized_post['aadhaar_number']);
 
-        if ($insert_id) {
-            echo json_encode(['status' => 'success', 'message' => 'Patient registered successfully!', 'opd_no' => $insert_id]);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Failed to register patient.']);
+        $this->form_validation->set_data($normalized_post);
+        $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|max_length[256]');
+        $this->form_validation->set_rules('last_name', 'Last Name', 'trim|max_length[256]');
+        $this->form_validation->set_rules('age', 'Age', 'trim|required|integer|greater_than[0]|less_than_equal_to[120]');
+        $this->form_validation->set_rules('gender', 'Gender', 'trim|required|in_list[Male,Female,others]');
+        $this->form_validation->set_rules('mobile', 'Mobile', 'trim|required|regex_match[/^[6-9][0-9]{9}$/]');
+        $this->form_validation->set_rules('place', 'Place', 'trim|required|max_length[256]');
+        $this->form_validation->set_rules('occupation', 'Occupation', 'trim|required|max_length[256]');
+        $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[1000]');
+        $this->form_validation->set_rules('department', 'Department', 'trim|required');
+        $this->form_validation->set_rules('doctor', 'Doctor', 'trim|required');
+        $this->form_validation->set_rules('consultation_date', 'Consultation Date', 'trim|required|regex_match[/^\d{4}-\d{2}-\d{2}$/]');
+        $this->form_validation->set_rules('aadhaar_number', 'Aadhaar Number', 'trim|required|numeric|exact_length[12]|regex_match[/^[1-9][0-9]{11}$/]');
+        $this->form_validation->set_rules('abha_id', 'ABHA ID', 'trim|required|max_length[50]');
+        $this->form_validation->set_message('required', 'The {field} field is required.');
+        $this->form_validation->set_message('integer', 'The {field} field must be a whole number.');
+        $this->form_validation->set_message('regex_match', 'The {field} format is invalid.');
+        $this->form_validation->set_message('in_list', 'The {field} field contains an invalid value.');
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array(
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $this->form_validation->error_array()
+            ));
+            return;
         }
+
+        $manual_errors = array();
+        if (!$this->validate_aadhaar($normalized_post['aadhaar_number'])) {
+            $manual_errors['aadhaar_number'] = 'Aadhaar must be exactly 12 digits and cannot start with 0.';
+        }
+        if (!$this->validate_abha_format($normalized_post['abha_id'])) {
+            $manual_errors['abha_id'] = 'The ABHA ID format is invalid. Use either 14 digits or username@abdm format.';
+        }
+        if (!$this->validate_consultation_date($normalized_post['consultation_date'])) {
+            $manual_errors['consultation_date'] = 'Consultation Date must be in YYYY-MM-DD format.';
+        }
+        if ($this->patient_model->has_aadhaar_column() && $this->patient_model->check_aadhaar_exists($normalized_post['aadhaar_number'])) {
+            $manual_errors['aadhaar_number'] = 'This Aadhaar number is already registered in the system.';
+        }
+        if (!empty($manual_errors)) {
+            echo json_encode(array(
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $manual_errors
+            ));
+            return;
+        }
+
+        $missing_columns = $this->patient_model->get_missing_identity_columns();
+        if (!empty($missing_columns)) {
+            echo json_encode(array(
+                'status' => 'error',
+                'message' => 'Patient identity columns are missing in the database.',
+                'errors' => array(
+                    'aadhaar_number' => 'Database schema is incomplete. Missing columns: ' . implode(', ', $missing_columns) . '. Run `database_migrations/add_aadhaar_abha_to_patient.sql` before saving Aadhaar and ABHA details.',
+                    'abha_id' => 'Database schema is incomplete. Missing columns: ' . implode(', ', $missing_columns) . '. Run `database_migrations/add_aadhaar_abha_to_patient.sql` before saving Aadhaar and ABHA details.'
+                )
+            ));
+            return;
+        }
+
+        $insert_result = $this->treatment_model->add_patient_for_treatment($normalized_post);
+        if (!empty($insert_result['status'])) {
+            $this->log_aadhaar_access($insert_result['opd_no'], $this->rbac->get_uid(), 'insert');
+            echo json_encode(array(
+                'status' => 'success',
+                'message' => 'Patient registered successfully!',
+                'opd_no' => $insert_result['opd_no']
+            ));
+            return;
+        }
+
+        echo json_encode(array(
+            'status' => 'error',
+            'message' => !empty($insert_result['message']) ? $insert_result['message'] : 'Failed to register patient. Please try again.'
+        ));
+    }
+
+    public function validate_aadhaar($aadhaar)
+    {
+        return validate_aadhaar_format($aadhaar);
+    }
+
+    public function validate_abha_format($abha_id)
+    {
+        return validate_abha_id_format($abha_id);
+    }
+
+    public function validate_consultation_date($consultation_date)
+    {
+        $consultation_date = trim((string) $consultation_date);
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $consultation_date)) {
+            return false;
+        }
+        list($year, $month, $day) = array_map('intval', explode('-', $consultation_date));
+        return checkdate($month, $day, $year);
+    }
+
+    private function log_aadhaar_access($opd_no, $user_id, $action)
+    {
+        if (!$this->patient_model->has_aadhaar_access_log_table()) {
+            return;
+        }
+
+        $this->db->insert('aadhaar_access_log', array(
+            'opd_no' => $opd_no,
+            'accessed_by' => $user_id,
+            'action' => $action
+        ));
     }
 
     function generate_opd_card()
@@ -399,20 +512,30 @@ class Patient extends SHV_Controller
 
     function save()
     {
-        $this->load->model('patient/treatment_model');
-        $max = $this->get_next_dept_opd($this->input->post('department'));
-        if ($max != NULL) {
-            $dept_opd_count = $max + 1;
-        } else {
-            $dept_opd_count = 1;
+        $this->store_patient_info();
+    }
+
+    public function check_aadhaar_duplicate()
+    {
+        $this->load->model('patient/patient_model');
+        $this->output->set_content_type('application/json');
+        $aadhaar = preg_replace('/\D+/', '', (string) $this->input->post('aadhaar_number'));
+
+        if (!$this->patient_model->has_aadhaar_column()) {
+            echo json_encode(array(
+                'exists' => false,
+                'schema_ready' => false,
+                'message' => 'Aadhaar column is missing in patientdata table.'
+            ));
+            return;
         }
-        $is_inserted = $this->treatment_model->add_patient_for_treatment($this->input->post());
-        if ($is_inserted) {
-            echo json_encode(array('status' => TRUE, 'msg' => 'Patient inserted successfully'));
-        } else {
-            echo json_encode(array('status' => FALSE, 'msg' => 'Failed to register patient. Try again'));
-        }
-        //redirect('patient');
+
+        $exists = $this->patient_model->check_aadhaar_exists($aadhaar);
+        echo json_encode(array(
+            'exists' => $exists,
+            'schema_ready' => true,
+            'message' => $exists ? 'Aadhaar already registered' : 'Aadhaar is available'
+        ));
     }
 
     function export_pdf()
@@ -760,6 +883,10 @@ class Patient extends SHV_Controller
             $pat_table .= "<td width='50%'><b>NAME:</b>  " . $patient_details['FirstName'] . "</td>";
             $pat_table .= "<td width='25%'><b>AGE:</b> " . $patient_details['Age'] . "</td>";
             $pat_table .= "<td width='25%'><b>SEX:</b> " . $patient_details['gender'] . "</td>";
+            $pat_table .= "</tr>";
+            $pat_table .= "<tr>";
+            $pat_table .= "<td width='50%'><b>ABHA ID:</b> " . (!empty($patient_details['abha_id']) ? $patient_details['abha_id'] : 'N/A') . "</td>";
+            $pat_table .= "<td width='50%' colspan='2'><b>AADHAAR:</b> " . (!empty($patient_details['aadhaar_masked']) ? $patient_details['aadhaar_masked'] : 'N/A') . "</td>";
             $pat_table .= "</tr>";
             $pat_table .= "<tr>";
             $pat_table .= "<td width='50%'><b>OCCUPATION:</b> " . $patient_details['occupation'] . "</td>";

@@ -7,6 +7,12 @@
  */
 class treatment_model extends CI_Model
 {
+    public function has_patient_identity_columns()
+    {
+        return $this->db->field_exists('aadhaar_number', 'patientdata')
+            && $this->db->field_exists('abha_id', 'patientdata')
+            && $this->db->field_exists('aadhaar_masked', 'patientdata');
+    }
 
     function add_patient_for_treatment($post_values)
     {
@@ -27,6 +33,13 @@ class treatment_model extends CI_Model
             'sid' => $uid,
             'UHID' => $this->insert_patient_with_uhid($post_values['consultation_date'])
         );
+
+        if ($this->has_patient_identity_columns()) {
+            $form_data['aadhaar_number'] = $post_values['aadhaar_number'];
+            $form_data['abha_id'] = $post_values['abha_id'];
+            $form_data['aadhaar_masked'] = $post_values['aadhaar_masked'];
+        }
+
         $this->db->insert('patientdata', $form_data);
         $last_id = $this->db->insert_id();
         $dept_max_id = $this->db->select_max('deptOpdNo')->where('department', $post_values['department'])->get('treatmentdata')->row()->deptOpdNo;
@@ -43,9 +56,9 @@ class treatment_model extends CI_Model
         $this->db->insert('treatmentdata', $treat_data);
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
-            return false;
+            return array('status' => false, 'message' => 'Failed to register patient.');
         } else {
-            return true;
+            return array('status' => true, 'opd_no' => $last_id);
         }
     }
 
@@ -110,6 +123,12 @@ class treatment_model extends CI_Model
             'attndedon',
             'InOrOutPat'
         );
+
+        if ($this->has_patient_identity_columns()) {
+            $columns[] = "CASE WHEN COALESCE(NULLIF(TRIM(p.aadhaar_masked), ''), NULLIF(TRIM(p.abha_id), '')) IS NULL THEN 0 ELSE 1 END AS has_identity_data";
+        } else {
+            $columns[] = "0 AS has_identity_data";
+        }
 
         $user_dept_cond = '';
         if ($this->rbac->is_doctor()) {
@@ -499,6 +518,13 @@ class treatment_model extends CI_Model
                 'Age' => $post_values['pat_age'],
                 'gender' => $post_values['pat_gender']
             );
+
+            if ($this->has_patient_identity_columns()) {
+                $personal_details['aadhaar_number'] = $post_values['aadhaar_number'];
+                $personal_details['abha_id'] = $post_values['abha_id'];
+                $personal_details['aadhaar_masked'] = $post_values['aadhaar_masked'];
+            }
+
             $this->db->where('OpdNo', $post_values['opd']);
             $is_pupdated = $this->db->update('patientdata', $personal_details);
 

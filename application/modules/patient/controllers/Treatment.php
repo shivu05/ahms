@@ -10,6 +10,8 @@ class Treatment extends SHV_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('patient/treatment_model');
+        $this->load->model('patient/patient_model');
+        $this->load->helper('aadhaar_abha');
         $this->layout->navIcon = "fa fa-user-md ";
         $this->layout->title = "OPD Treatment";
         $this->layout->navTitleFlag = false;
@@ -47,6 +49,86 @@ class Treatment extends SHV_Controller {
         $data = $this->treatment_model->get_patients($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    public function fetch_patient_identity()
+    {
+        $this->output->set_content_type('application/json');
+
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('status' => false, 'message' => 'Invalid request.'));
+            return;
+        }
+
+        $opd_no = (int) $this->input->post('opd');
+        if ($opd_no <= 0) {
+            echo json_encode(array('status' => false, 'message' => 'Invalid OPD number.'));
+            return;
+        }
+
+        if (!$this->patient_model->has_identity_columns()) {
+            echo json_encode(array('status' => false, 'message' => 'Aadhaar/ABHA columns are not available in the current database.'));
+            return;
+        }
+
+        $identity = $this->patient_model->get_patient_identity_summary($opd_no);
+        if (empty($identity)) {
+            echo json_encode(array('status' => false, 'message' => 'Patient identity details were not found.'));
+            return;
+        }
+
+        $has_aadhaar = !empty($identity['aadhaar_masked']);
+        $has_abha = !empty($identity['abha_id']);
+
+        echo json_encode(array(
+            'status' => true,
+            'data' => array(
+                'opd_no' => $identity['OpdNo'],
+                'name' => trim($identity['FirstName'] . ' ' . $identity['LastName']),
+                'aadhaar_masked' => $has_aadhaar ? $identity['aadhaar_masked'] : '',
+                'abha_id' => $has_abha ? $identity['abha_id'] : '',
+                'has_aadhaar' => $has_aadhaar,
+                'has_abha' => $has_abha,
+                'can_reveal_aadhaar' => $has_aadhaar && $this->can_reveal_patient_aadhaar()
+            )
+        ));
+    }
+
+    public function reveal_patient_aadhaar()
+    {
+        $this->output->set_content_type('application/json');
+
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('status' => false, 'message' => 'Invalid request.'));
+            return;
+        }
+
+        if (!$this->can_reveal_patient_aadhaar()) {
+            echo json_encode(array('status' => false, 'message' => 'You are not authorized to view Aadhaar details.'));
+            return;
+        }
+
+        $opd_no = (int) $this->input->post('opd');
+        if ($opd_no <= 0) {
+            echo json_encode(array('status' => false, 'message' => 'Invalid OPD number.'));
+            return;
+        }
+
+        $aadhaar = $this->patient_model->get_aadhaar_for_authorized_user($opd_no, $this->rbac->get_uid());
+        if (!$aadhaar) {
+            echo json_encode(array('status' => false, 'message' => 'Aadhaar number is not available for this patient.'));
+            return;
+        }
+
+        echo json_encode(array(
+            'status' => true,
+            'data' => array('aadhaar_number' => $aadhaar)
+        ));
+    }
+
+    private function can_reveal_patient_aadhaar()
+    {
+        return $this->rbac->is_admin() || $this->rbac->is_sadmin() || $this->rbac->is_doctor();
     }
 
     function add_treatment($opd = NULL, $treat_id = NULL) {
@@ -930,12 +1012,45 @@ class Treatment extends SHV_Controller {
     }
 
     function update_treatment_details() {
-        $is_updated = $this->treatment_model->update_opd_treatment_data($this->input->post());
-        if ($is_updated) {
-            echo json_encode(array('status' => true));
-        } else {
-            echo json_encode(array('status' => false));
+        $this->output->set_content_type('application/json');
+        $post_values = $this->input->post();
+
+        if ($this->patient_model->has_identity_columns()) {
+            $aadhaar = preg_replace('/\D+/', '', (string) $post_values['aadhaar_number']);
+            $abha_id = preg_replace('/\s+/u', '', trim((string) $post_values['abha_id']));
+            $masked_aadhaar = $aadhaar !== '' ? mask_aadhaar($aadhaar) : '';
+
+            if ($aadhaar !== '' && !validate_aadhaar_format($aadhaar)) {
+                echo json_encode(array(
+                    'status' => false,
+                    'message' => 'Aadhaar must be exactly 12 digits and cannot start with 0.'
+                ));
+                return;
+            }
+
+            if ($abha_id !== '' && !validate_abha_id_format($abha_id)) {
+                echo json_encode(array(
+                    'status' => false,
+                    'message' => 'The ABHA ID format is invalid. Use either 14 digits or username@abdm format.'
+                ));
+                return;
+            }
+
+            if ($aadhaar !== '' && $this->patient_model->check_aadhaar_exists_for_other_patient($aadhaar, $post_values['opd'])) {
+                echo json_encode(array(
+                    'status' => false,
+                    'message' => 'This Aadhaar number is already registered for another patient.'
+                ));
+                return;
+            }
+
+            $post_values['aadhaar_number'] = $aadhaar;
+            $post_values['abha_id'] = $abha_id;
+            $post_values['aadhaar_masked'] = $masked_aadhaar;
         }
+
+        $is_updated = $this->treatment_model->update_opd_treatment_data($post_values);
+        echo json_encode(array('status' => (bool) $is_updated));
     }
 
     function export() {

@@ -92,6 +92,39 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-10">
+                                    <label for="aadhaar_number">Aadhaar Number: <span class="text-danger">*</span></label>
+                                    <input class="form-control required security-sensitive-field" id="aadhaar_number" name="aadhaar_number" type="text"
+                                           placeholder="Enter 12-digit Aadhaar number"
+                                           data-rule-required="true"
+                                           data-rule-digits="true"
+                                           data-rule-minlength="12"
+                                           data-rule-maxlength="12"
+                                           data-rule-validate_aadhaar="true"
+                                           aria-describedby="aadhaarHelp">
+                                    <small class="form-text text-muted" id="aadhaarHelp">12-digit unique identification number</small>
+                                    <span class="error-message" id="aadhaar_number_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <label for="abha_id">ABHA ID: <span class="text-danger">*</span></label>
+                                    <input class="form-control required security-sensitive-field" id="abha_id" name="abha_id" type="text"
+                                           placeholder="14 digits OR username@abdm"
+                                           data-rule-required="true"
+                                           data-rule-validate_abha="true"
+                                           aria-describedby="abhaHelp">
+                                    <small class="form-text text-muted" id="abhaHelp">14-digit ABHA code or ABHA address (username@abdm)</small>
+                                    <span class="error-message" id="abha_id_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-10">
                                     <label for="department">Department: <span class="text-danger">*</span></label>
                                     <select class="form-control required" id="department" name="department">
                                         <option value="">Choose department</option>
@@ -154,30 +187,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        var validator = $('#patient_form').validate();
-        $('#save_button').on('click', function() {
-            if ($('#patient_form').valid()) {
-                //$('#patient_form').submit();
-                var forma_data = $('#patient_form').serializeArray();
-                $.ajax({
-                    url: base_url + 'patient/save',
-                    data: forma_data,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status) {
-                            alert(response.msg);
-                        }
-                        console.log(response.status);
-                    }
-                });
-            }
-        });
-        $('#reset_button').on('click', function() {
-            $('#patient_form')[0].reset();
-            validator.resetForm();
-        });
-
+        // Patient registration submit + validation is handled by assets/js/patient_registration_validation.js
         $('#patient_form').on('change', '#department', function() {
             var dept_id = $('#department').val();
             $.ajax({
@@ -221,3 +231,8 @@
         });
     });
 </script>
+<link rel="stylesheet" href="<?php echo base_url('assets/css/patient_registration_validation.css'); ?>">
+<script type="text/javascript">
+    var BASE_URL = "<?php echo base_url(); ?>";
+</script>
+<script src="<?php echo base_url('assets/js/patient_registration_validation.js'); ?>"></script>

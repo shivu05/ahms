@@ -230,6 +230,28 @@ if (!empty($other_proc_list)) {
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="aadhaar_number">Aadhaar Number:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="aadhaar_number" name="aadhaar_number"
+                                maxlength="12" placeholder="12-digit Aadhaar number" />
+                            <span class="help-block text-muted">Leave blank if Aadhaar is not available.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="abha_id">ABHA ID:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="abha_id" name="abha_id"
+                                maxlength="50" placeholder="14 digits or username@abdm" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="aadhaar_masked">Masked Aadhaar:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control" id="aadhaar_masked" name="aadhaar_masked"
+                                readonly="readonly" placeholder="XXXX-XXXX-1234" />
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="pat_treatment">Treatment:</label>
                         <span class="error">Note: Please separate each medicine with <b>,</b>(comma) </span>
                         <div class="controls">
@@ -1070,6 +1092,46 @@ if (!empty($other_proc_list)) {
         </form>
     </div>
 </div>
+<div class="modal fade" id="patient_identity_modal" tabindex="-1" role="dialog"
+    aria-labelledby="patient_identity_modal_title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="patient_identity_modal_title">Patient ID Details</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped" style="margin-bottom: 0;">
+                    <tr>
+                        <th style="width: 35%;">Patient</th>
+                        <td id="identity_patient_name">-</td>
+                    </tr>
+                    <tr>
+                        <th>OPD</th>
+                        <td id="identity_patient_opd">-</td>
+                    </tr>
+                    <tr>
+                        <th>ABHA ID</th>
+                        <td id="identity_abha">Not available</td>
+                    </tr>
+                    <tr>
+                        <th>Aadhaar</th>
+                        <td>
+                            <span id="identity_aadhaar">Not available</span>
+                            <button type="button" class="btn btn-xs btn-default pull-right" id="reveal_aadhaar_btn" style="display:none;">Reveal Aadhaar</button>
+                        </td>
+                    </tr>
+                </table>
+                <p class="text-muted" id="identity_helper_text" style="margin-top: 10px; margin-bottom: 0;">Aadhaar is masked by default for privacy.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs',
         'kriya_inputs', 'swarnaprashana_inputs', 'agnikarma_inputs', 'cupping_inputs', 'jaloukavacharana_inputs', 'siravyadana_inputs', 'wound_dressing_inputs'
@@ -1695,9 +1757,13 @@ if (!empty($other_proc_list)) {
             {
                 title: "Action",
                 data: function (item) {
+                    var identityClass = parseInt(item.has_identity_data, 10) === 1 ? 'text-info' : 'text-muted';
+                    var identityTitle = parseInt(item.has_identity_data, 10) === 1 ? 'View Aadhaar / ABHA' : 'Aadhaar / ABHA not available';
+                    var identityAction = ' | <i class="fa fa-id-card hand_cursor ' + identityClass + ' view_patient_identity" data-opd="' + item.OpdNo + '" title="' + identityTitle + '"></i>';
                     return '<i class="fa fa-edit  hand_cursor edit_treatment_data" data-opd="' + item.OpdNo + '" data-treat_id="' + item.ID + '"></i>' +
                         ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-tid="' + item.ID + '" data-opd="' + item.OpdNo + '" data-name="' + item.FirstName + '" id="add_treatment_details"></i>' +
-                        ' | <a href="' + base_url + 'billing/opd/' + item.OpdNo + '"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a>';
+                        ' | <a href="' + base_url + 'billing/opd/' + item.OpdNo + '"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a>' +
+                        identityAction;
                 }
             },
             {
@@ -1776,6 +1842,9 @@ if (!empty($other_proc_list)) {
                 backdrop: 'static'
             }, 'show');
             $('#treatment_modal #treatment_modal_opdno').html('[' + opd + ' - ' + name + ']');
+        });
+        $('#patient_table tbody').on('click', '.view_patient_identity', function () {
+            openIdentityModal($(this).data('opd'));
         });
         $('#patient_table').on('change', '#selectAll', function () {
             var checked = $(this).prop('checked');
@@ -1861,6 +1930,18 @@ if (!empty($other_proc_list)) {
             });
         });
         $('#treatment_edit_form').validate();
+        $('#treatment_edit_form').on('input', '#aadhaar_number', function () {
+            var digits = ($(this).val() || '').replace(/\D+/g, '').slice(0, 12);
+            $(this).val(digits);
+            if (digits.length === 12) {
+                $('#treatment_edit_form #aadhaar_masked').val('XXXX-XXXX-' + digits.slice(-4));
+            } else {
+                $('#treatment_edit_form #aadhaar_masked').val('');
+            }
+        });
+        $('#treatment_edit_form').on('blur', '#abha_id', function () {
+            $(this).val($.trim($(this).val()));
+        });
         $('#patient_table tbody').on('click', '.edit_treatment_data', function () {
             $('#treatment_edit_form .control-group').removeClass('error');
             var opd = $(this).data('opd');
@@ -1883,6 +1964,9 @@ if (!empty($other_proc_list)) {
                     $('#treatment_edit_form #opd').val(response.data.OpdNo);
                     $('#treatment_edit_form #pat_diagnosis').val(response.data.diagnosis);
                     $('#treatment_edit_form #pat_procedure').val(response.data.procedures);
+                    $('#treatment_edit_form #aadhaar_number').val(response.data.aadhaar_number || '');
+                    $('#treatment_edit_form #abha_id').val(response.data.abha_id || '');
+                    $('#treatment_edit_form #aadhaar_masked').val(response.data.aadhaar_masked || '');
                     $('#treatment_edit_form #AddedBy').val(response.data.AddedBy);
                     var option = '';
                     $.each(response.doctors_list, function (i) {
@@ -1921,7 +2005,7 @@ if (!empty($other_proc_list)) {
                         } else {
                             $.notify({
                                 title: "Treatment:",
-                                message: "Failed to update",
+                                message: response.message ? response.message : "Failed to update",
                                 icon: 'fa fa-check',
                             }, {
                                 type: "danger"
@@ -1984,6 +2068,33 @@ if (!empty($other_proc_list)) {
             });
         });
 
+        $('#reveal_aadhaar_btn').on('click', function () {
+            var opd = $(this).data('opd');
+            var $btn = $(this);
+            $btn.prop('disabled', true).text('Revealing...');
+
+            $.ajax({
+                url: base_url + 'patient/treatment/reveal_patient_aadhaar',
+                type: 'POST',
+                dataType: 'json',
+                data: { opd: opd },
+                success: function (response) {
+                    $btn.prop('disabled', false).text('Reveal Aadhaar');
+                    if (response.status) {
+                        $('#identity_aadhaar').text(response.data.aadhaar_number);
+                        $('#identity_helper_text').text('Aadhaar was revealed for an authorized user and logged for audit.');
+                        $btn.hide();
+                    } else {
+                        showAlert(response.message || 'Unable to reveal Aadhaar.', 'warning');
+                    }
+                },
+                error: function () {
+                    $btn.prop('disabled', false).text('Reveal Aadhaar');
+                    showAlert('Unable to reveal Aadhaar.', 'danger');
+                }
+            });
+        });
+
         // --- Show Bootstrap alert/toast ---
         function showAlert(msg, type) {
             var $alert = $('<div class="alert alert-' + type + ' alert-dismissible" role="alert" style="position:fixed;top:20px;right:20px;z-index:9999;">'
@@ -1991,6 +2102,50 @@ if (!empty($other_proc_list)) {
                 + msg + '</div>');
             $('body').append($alert);
             setTimeout(function () { $alert.fadeOut(500, function () { $(this).remove(); }); }, 3500);
+        }
+
+        function openIdentityModal(opd) {
+            resetIdentityModal(opd);
+            $.ajax({
+                url: base_url + 'patient/treatment/fetch_patient_identity',
+                type: 'POST',
+                dataType: 'json',
+                data: { opd: opd },
+                success: function (response) {
+                    if (!response.status) {
+                        $('#identity_abha').text('Not available');
+                        $('#identity_aadhaar').text('Not available');
+                        $('#identity_helper_text').text(response.message || 'Patient identity details are not available.');
+                        return;
+                    }
+
+                    $('#identity_patient_name').text(response.data.name || '-');
+                    $('#identity_patient_opd').text(response.data.opd_no || opd);
+                    $('#identity_abha').text(response.data.has_abha ? response.data.abha_id : 'Not available');
+                    $('#identity_aadhaar').text(response.data.has_aadhaar ? response.data.aadhaar_masked : 'Not available');
+                    if (response.data.can_reveal_aadhaar) {
+                        $('#reveal_aadhaar_btn').data('opd', opd).show();
+                    }
+                    if (!response.data.has_aadhaar && !response.data.has_abha) {
+                        $('#identity_helper_text').text('No Aadhaar or ABHA details are available for this patient.');
+                    }
+                },
+                error: function () {
+                    $('#identity_abha').text('Not available');
+                    $('#identity_aadhaar').text('Not available');
+                    $('#identity_helper_text').text('Unable to load patient identity details.');
+                }
+            });
+        }
+
+        function resetIdentityModal(opd) {
+            $('#identity_patient_name').text('Loading...');
+            $('#identity_patient_opd').text(opd);
+            $('#identity_abha').text('Loading...');
+            $('#identity_aadhaar').text('Loading...');
+            $('#identity_helper_text').text('Aadhaar is masked by default for privacy.');
+            $('#reveal_aadhaar_btn').hide().data('opd', opd).prop('disabled', false).text('Reveal Aadhaar');
+            $('#patient_identity_modal').modal('show');
         }
 
     });//document ready
