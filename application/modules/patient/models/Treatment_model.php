@@ -35,9 +35,9 @@ class treatment_model extends CI_Model
         );
 
         if ($this->has_patient_identity_columns()) {
-            $form_data['aadhaar_number'] = $post_values['aadhaar_number'];
-            $form_data['abha_id'] = $post_values['abha_id'];
-            $form_data['aadhaar_masked'] = $post_values['aadhaar_masked'];
+            $form_data['aadhaar_number'] = !empty($post_values['aadhaar_number']) ? $post_values['aadhaar_number'] : null;
+            $form_data['abha_id'] = !empty($post_values['abha_id']) ? $post_values['abha_id'] : null;
+            $form_data['aadhaar_masked'] = !empty($post_values['aadhaar_masked']) ? $post_values['aadhaar_masked'] : null;
         }
 
         $this->db->insert('patientdata', $form_data);

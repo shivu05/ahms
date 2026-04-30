@@ -70,14 +70,14 @@ class Patient extends SHV_Controller
             'aadhaar_number' => preg_replace('/\D+/', '', (string) $this->input->post('aadhaar_number')),
             'abha_id' => preg_replace('/\s+/u', '', trim((string) $this->input->post('abha_id')))
         );
-        $normalized_post['aadhaar_masked'] = mask_aadhaar($normalized_post['aadhaar_number']);
+        $normalized_post['aadhaar_masked'] = $normalized_post['aadhaar_number'] !== '' ? mask_aadhaar($normalized_post['aadhaar_number']) : null;
 
         $this->form_validation->set_data($normalized_post);
         $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|max_length[256]');
         $this->form_validation->set_rules('last_name', 'Last Name', 'trim|max_length[256]');
         $this->form_validation->set_rules('age', 'Age', 'trim|required|integer|greater_than[0]|less_than_equal_to[120]');
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required|in_list[Male,Female,others]');
-        $this->form_validation->set_rules('mobile', 'Mobile', 'trim|required|regex_match[/^[6-9][0-9]{9}$/]');
+        $this->form_validation->set_rules('mobile', 'Mobile', 'trim');
         $this->form_validation->set_rules('place', 'Place', 'trim|required|max_length[256]');
         $this->form_validation->set_rules('occupation', 'Occupation', 'trim|required|max_length[256]');
         $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[1000]');
@@ -104,6 +104,9 @@ class Patient extends SHV_Controller
         if ($normalized_post['aadhaar_number'] !== '' && !$this->validate_aadhaar($normalized_post['aadhaar_number'])) {
             $manual_errors['aadhaar_number'] = 'Aadhaar must be exactly 12 digits and cannot start with 0.';
         }
+        if ($normalized_post['mobile'] !== '' && !preg_match('/^[6-9][0-9]{9}$/', $normalized_post['mobile'])) {
+            $manual_errors['mobile'] = 'Please enter a valid 10-digit mobile number.';
+        }
         if ($normalized_post['abha_id'] !== '' && !$this->validate_abha_format($normalized_post['abha_id'])) {
             $manual_errors['abha_id'] = 'The ABHA ID format is invalid. Use either 14 digits or username@abdm format.';
         }
@@ -122,8 +125,9 @@ class Patient extends SHV_Controller
             return;
         }
 
+        $has_identity_input = ($normalized_post['aadhaar_number'] !== '' || $normalized_post['abha_id'] !== '');
         $missing_columns = $this->patient_model->get_missing_identity_columns();
-        if (!empty($missing_columns)) {
+        if ($has_identity_input && !empty($missing_columns)) {
             echo json_encode(array(
                 'status' => 'error',
                 'message' => 'Patient identity columns are missing in the database.',

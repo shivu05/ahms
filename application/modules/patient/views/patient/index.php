@@ -52,7 +52,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="col-md-10">
-                                    <label for="mobile">Mobile: <span class="text-danger">*</span></label>
+                                    <label for="mobile">Mobile:</label>
                                     <input class="form-control" id="mobile" name="mobile" type="text" aria-describedby="ageHelp" placeholder="Enter your mobile number">
                                     <small class="form-text text-muted" id="ageeHelp"></small>
                                 </div>
