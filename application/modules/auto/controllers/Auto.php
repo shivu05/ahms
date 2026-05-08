@@ -419,6 +419,11 @@ class Auto extends SHV_Controller
             $merged_data['aadhaar_masked'] = $aadhaar !== '' ? mask_aadhaar($aadhaar) : null;
         }
 
+        if ($merged_data['medicines'] === '' && $merged_data['Trtment'] !== '') {
+            $merged_data['medicines'] = $merged_data['Trtment'];
+            $warnings[] = 'Medicines was empty, so it was copied from Treatment.';
+        }
+
         $treatment_result = $this->_normalize_reference_list_field($merged_data['Trtment'], 'Treatment');
         $medicine_result = $this->_normalize_reference_list_field($merged_data['medicines'], 'Medicines');
         $merged_data['Trtment'] = $treatment_result['value'];
