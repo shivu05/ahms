@@ -244,7 +244,8 @@ class treatment_model extends CI_Model
         if ($all_beds) {
             $where = '';
         }
-        $query = "SELECT id,department,wardno,group_concat(bedno ORDER BY id) as beds,group_concat(lower(concat(bedno,'#',bedstatus)) order by id) bedstatus
+        $query = "SELECT id,department,wardno,group_concat(bedno ORDER BY id) as beds,
+            group_concat(lower(concat_ws('#', bedno, bedstatus, ifnull(bed_category, ''))) order by id) bedstatus
             FROM bed_details b where bedno !='0' $where
             group by department order by bedno";
         return $this->db->query($query)->result_array();
@@ -507,12 +508,27 @@ class treatment_model extends CI_Model
     public function update_opd_treatment_data($post_values)
     {
         if ($post_values['treat_id']) {
+            $existing_treatment = $this->db->get_where('treatmentdata', array(
+                'OpdNo' => $post_values['opd'],
+                'ID' => $post_values['treat_id']
+            ))->row_array();
+
+            if (empty($existing_treatment)) {
+                return false;
+            }
+
             $update_array = array(
                 'Trtment' => $post_values['pat_treatment'],
                 'diagnosis' => $post_values['pat_diagnosis'],
                 'procedures' => $post_values['pat_procedure'],
                 'AddedBy' => $post_values['AddedBy'],
+                'CameOn' => $post_values['consultation_date'],
             );
+
+            if (!empty($existing_treatment['attndedon'])) {
+                $update_array['attndedon'] = $post_values['consultation_date'];
+            }
+
             $personal_details = array(
                 'FirstName' => $post_values['pat_name'],
                 'Age' => $post_values['pat_age'],

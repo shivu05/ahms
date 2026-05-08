@@ -230,6 +230,13 @@ if (!empty($other_proc_list)) {
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="consultation_date">Consultation Date:</label>
+                        <div class="controls">
+                            <input type="text" class="form-control date_picker required" id="consultation_date"
+                                name="consultation_date" autocomplete="off" placeholder="YYYY-MM-DD" />
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="aadhaar_number">Aadhaar Number:</label>
                         <div class="controls">
                             <input type="text" class="form-control" id="aadhaar_number" name="aadhaar_number"
@@ -1930,6 +1937,11 @@ if (!empty($other_proc_list)) {
             });
         });
         $('#treatment_edit_form').validate();
+        $('#treatment_edit_form #consultation_date').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayHighlight: true
+        });
         $('#treatment_edit_form').on('input', '#aadhaar_number', function () {
             var digits = ($(this).val() || '').replace(/\D+/g, '').slice(0, 12);
             $(this).val(digits);
@@ -1963,6 +1975,7 @@ if (!empty($other_proc_list)) {
                     $('#treatment_edit_form #treat_id').val(response.data.ID);
                     $('#treatment_edit_form #opd').val(response.data.OpdNo);
                     $('#treatment_edit_form #pat_diagnosis').val(response.data.diagnosis);
+                    $('#treatment_edit_form #consultation_date').datepicker('update', response.data.CameOn || '');
                     $('#treatment_edit_form #pat_procedure').val(response.data.procedures);
                     $('#treatment_edit_form #aadhaar_number').val(response.data.aadhaar_number || '');
                     $('#treatment_edit_form #abha_id').val(response.data.abha_id || '');

@@ -100,8 +100,13 @@ $route['search-data'] = "auto/index";
 $route['analyse-data'] = "auto/move";
 $route['analyse-ipd-data'] = "auto/analyse_ipd_data";
 $route['show-ref'] = "auto/show_reference_data";
+$route['show-ref/add'] = "auto/add_reference_data";
+$route['show-ref/store'] = "auto/store_reference_data";
+$route['show-ref/import'] = "auto/import_reference_data";
+$route['show-ref/template'] = "auto/download_reference_template";
 $route['get_data'] = "auto/get_reference_data";
 $route['save-data'] = "auto/save_patient_details";
+$route['delete-ref-data'] = "auto/delete_reference_data";
 
 // Purchase
 $route['show-purchase-type'] = "pharmacy/purchase/purchase_items";

@@ -834,20 +834,28 @@ if (!empty($other_proc_list)) {
                                 $bed_select = '';
                                 if (!empty($wards)) {
                                     foreach ($wards as $ward) {
-                                        $bed_select .= '<optgroup label="' . $ward['department'] . '"></optgroup>';
-                                        $beds = explode(',', $ward['beds']);
+                                        $bed_select .= '<optgroup label="' . html_escape($ward['department']) . '">';
                                         $bedstatus = explode(',', $ward['bedstatus']);
-                                        //asort($beds);
                                         if (!empty($bedstatus)) {
-                                            $i = 0;
-                                            //asort($beds);
                                             foreach ($bedstatus as $bed) {
-                                                //$is_disabled = ()
-                                                $bed_stat = explode('#', $bed);
-                                                $is_disabled = ($bed_stat[1] == 'not available') ? 'disabled="disabled" style="color:red;"' : '';
-                                                $bed_select .= '<option value="' . $bed_stat[0] . '" ' . $is_disabled . '>' . $bed_stat[0] . '</option>';
+                                                $bed_stat = array_pad(explode('#', $bed, 3), 3, '');
+                                                $bed_no = trim($bed_stat[0]);
+                                                if ($bed_no === '') {
+                                                    continue;
+                                                }
+
+                                                $bed_status = strtolower(trim($bed_stat[1]));
+                                                $bed_category = trim($bed_stat[2]);
+                                                $bed_label = $bed_no;
+                                                if ($bed_category !== '') {
+                                                    $bed_label .= ' (' . ucwords(str_replace('_', ' ', $bed_category)) . ')';
+                                                }
+
+                                                $is_disabled = ($bed_status === 'not available') ? 'disabled="disabled" style="color:red;"' : '';
+                                                $bed_select .= '<option value="' . html_escape($bed_no) . '" ' . $is_disabled . '>' . html_escape($bed_label) . '</option>';
                                             }
                                         }
+                                        $bed_select .= '</optgroup>';
                                     }
                                 }
                                 ?>

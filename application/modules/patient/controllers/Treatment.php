@@ -1014,6 +1014,18 @@ class Treatment extends SHV_Controller {
     function update_treatment_details() {
         $this->output->set_content_type('application/json');
         $post_values = $this->input->post();
+        $consultation_date = trim((string) $this->input->post('consultation_date'));
+        $consultation_date = preg_match('/^\d{4}-\d{2}-\d{2}/', $consultation_date, $matches) ? $matches[0] : $consultation_date;
+
+        if (!$this->validate_consultation_date($consultation_date)) {
+            echo json_encode(array(
+                'status' => false,
+                'message' => 'Consultation Date must be in YYYY-MM-DD format.'
+            ));
+            return;
+        }
+
+        $post_values['consultation_date'] = $consultation_date;
 
         if ($this->patient_model->has_identity_columns()) {
             $aadhaar = preg_replace('/\D+/', '', (string) $post_values['aadhaar_number']);
@@ -1051,6 +1063,17 @@ class Treatment extends SHV_Controller {
 
         $is_updated = $this->treatment_model->update_opd_treatment_data($post_values);
         echo json_encode(array('status' => (bool) $is_updated));
+    }
+
+    private function validate_consultation_date($consultation_date)
+    {
+        $consultation_date = trim((string) $consultation_date);
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $consultation_date)) {
+            return false;
+        }
+
+        list($year, $month, $day) = array_map('intval', explode('-', $consultation_date));
+        return checkdate($month, $day, $year);
     }
 
     function export() {
