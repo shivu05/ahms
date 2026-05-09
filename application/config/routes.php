@@ -104,6 +104,7 @@ $route['show-ref/add'] = "auto/add_reference_data";
 $route['show-ref/store'] = "auto/store_reference_data";
 $route['show-ref/import'] = "auto/import_reference_data";
 $route['show-ref/template'] = "auto/download_reference_template";
+$route['show-ref/departments'] = "auto/download_reference_departments";
 $route['get_data'] = "auto/get_reference_data";
 $route['save-data'] = "auto/save_patient_details";
 $route['delete-ref-data'] = "auto/delete_reference_data";

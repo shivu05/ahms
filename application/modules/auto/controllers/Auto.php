@@ -311,6 +311,32 @@ class Auto extends SHV_Controller
         force_download('reference_import_template.csv', $csv_content);
     }
 
+    function download_reference_departments()
+    {
+        $this->load->helper('download');
+        $departments = $this->get_department_list('array');
+        $rows = array();
+        $rows[] = array('Department Code', 'Department Name');
+        foreach ($departments as $department) {
+            $rows[] = array(
+                $department['dept_unique_code'],
+                $department['department']
+            );
+        }
+
+        $csv_content = '';
+        foreach ($rows as $row) {
+            $escaped_row = array_map(function ($value) {
+                $value = (string) $value;
+                $value = str_replace('"', '""', $value);
+                return '"' . $value . '"';
+            }, $row);
+            $csv_content .= implode(',', $escaped_row) . PHP_EOL;
+        }
+
+        force_download('reference_department_master.csv', $csv_content);
+    }
+
     function delete_reference_data()
     {
         if (!$this->input->is_ajax_request()) {
@@ -432,6 +458,9 @@ class Auto extends SHV_Controller
         $errors = array_merge($errors, $treatment_result['errors'], $medicine_result['errors']);
 
         $merged_data['department'] = strtoupper(str_replace(' ', '_', preg_replace('/\s+/', ' ', $merged_data['department'])));
+        if (!$this->_is_valid_reference_department($merged_data['department'])) {
+            $errors[] = 'Department "' . $merged_data['department'] . '" is invalid. Use a valid dept_unique_code from deptper.';
+        }
         $merged_data['sub_dept'] = preg_replace('/\s+/', ' ', $merged_data['sub_dept']);
         if ($merged_data['department'] === 'SHALAKYA_TANTRA') {
             if ($merged_data['sub_dept'] === '') {
@@ -546,6 +575,18 @@ class Auto extends SHV_Controller
             }
         }
         return true;
+    }
+
+    private function _is_valid_reference_department($department_code)
+    {
+        static $valid_department_codes = null;
+
+        if ($valid_department_codes === null) {
+            $department_rows = $this->get_department_list('array');
+            $valid_department_codes = array_map('strtoupper', array_column($department_rows, 'dept_unique_code'));
+        }
+
+        return in_array(strtoupper((string) $department_code), $valid_department_codes, true);
     }
 }
 

@@ -6,6 +6,7 @@
                 <div class="pull-right">
                     <a class="btn btn-primary btn-sm" href="<?= base_url('show-ref/add') ?>"><i class="fa fa-plus-square"></i> Add record</a>
                     <a class="btn btn-default btn-sm" href="<?= base_url('show-ref/template') ?>"><i class="fa fa-download"></i> Download CSV template</a>
+                    <a class="btn btn-default btn-sm" href="<?= base_url('show-ref/departments') ?>"><i class="fa fa-download"></i> Download department master</a>
                 </div>
             </div>
             <div class="box-body">
