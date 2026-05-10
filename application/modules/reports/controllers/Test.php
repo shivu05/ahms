@@ -10,7 +10,7 @@ class Test extends SHV_Controller {
         parent::__construct();
         $this->layout->navIcon = 'fa fa-users';
         $this->load->model('reports/nursing_model');
-        $this->_is_admin = $this->rbac->is_admin();
+        $this->_is_admin = $this->rbac->is_admin() || $this->rbac->is_sadmin();
     }
 
     function xray() {
@@ -197,6 +197,7 @@ class Test extends SHV_Controller {
         $data = array();
         $data['top_form'] = modules::run('common_methods/common_methods/date_dept_selection_form', 'reports/Test/export_birth_to_pdf');
         $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -212,6 +213,99 @@ class Test extends SHV_Controller {
         $data = $this->nursing_model->get_birth_data($input_array);
         $response = array("recordsTotal" => $data['total_rows'], "recordsFiltered" => $data['found_rows'], 'data' => $data['data']);
         echo json_encode($response);
+    }
+
+    function update_birth() {
+        $this->output->set_content_type('application/json');
+
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('msg' => 'Invalid request', 'status' => 'nok'));
+            return;
+        }
+
+        if (!$this->_is_admin) {
+            echo json_encode(array('msg' => 'You are not authorized to update birth records', 'status' => 'nok'));
+            return;
+        }
+
+        $this->form_validation->set_rules('ID', 'Record ID', 'trim|required|integer|greater_than[0]');
+        $this->form_validation->set_rules('deliveryDetail', 'Delivery details', 'trim|required|max_length[255]');
+        $this->form_validation->set_rules('babyBirthDate', 'Birth date', 'trim|required');
+        $this->form_validation->set_rules('birthtime', 'Birth time', 'trim|required');
+        $this->form_validation->set_rules('babyWeight', 'Baby weight', 'trim|required|numeric|greater_than[0]|less_than[10]');
+        $this->form_validation->set_rules('babygender', 'Baby gender', 'trim|required|in_list[Male,Female,others,Other]');
+        $this->form_validation->set_rules('deliverytype', 'Delivery type', 'trim|required|max_length[100]');
+        $this->form_validation->set_rules('treatby', 'Doctor', 'trim|required|max_length[100]');
+
+        if (!$this->form_validation->run()) {
+            echo json_encode(array('msg' => strip_tags(validation_errors(' ', ' ')), 'status' => 'nok'));
+            return;
+        }
+
+        if (!$this->is_valid_report_date($this->input->post('babyBirthDate', true))) {
+            echo json_encode(array('msg' => 'Birth date must be a valid date in YYYY-MM-DD format.', 'status' => 'nok'));
+            return;
+        }
+
+        if (!$this->is_valid_report_time($this->input->post('birthtime', true))) {
+            echo json_encode(array('msg' => 'Birth time must be in HH:MM format.', 'status' => 'nok'));
+            return;
+        }
+
+        $id = (int) $this->input->post('ID');
+        $baby_weight = rtrim(rtrim($this->input->post('babyWeight', true), '0'), '.');
+        $update = array(
+            'deliveryDetail' => $this->input->post('deliveryDetail', true),
+            'babyBirthDate' => $this->input->post('babyBirthDate', true),
+            'birthtime' => $this->input->post('birthtime', true),
+            'babyWeight' => $baby_weight . ' KG',
+            'babygender' => $this->input->post('babygender', true),
+            'deliverytype' => $this->input->post('deliverytype', true),
+            'treatby' => $this->input->post('treatby', true)
+        );
+
+        $is_updated = $this->nursing_model->update_birth_register($update, array('ID' => $id));
+        if ($is_updated) {
+            echo json_encode(array('msg' => 'Updated Successfully', 'status' => 'ok'));
+        } else {
+            echo json_encode(array('msg' => 'Failed to update', 'status' => 'nok'));
+        }
+    }
+
+    function delete_birth() {
+        $this->output->set_content_type('application/json');
+
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('msg' => 'Invalid request', 'status' => 'nok'));
+            return;
+        }
+
+        if (!$this->_is_admin) {
+            echo json_encode(array('msg' => 'You are not authorized to delete birth records', 'status' => 'nok'));
+            return;
+        }
+
+        $this->form_validation->set_rules('ID', 'Record ID', 'trim|required|integer|greater_than[0]');
+        if (!$this->form_validation->run()) {
+            echo json_encode(array('msg' => strip_tags(validation_errors(' ', ' ')), 'status' => 'nok'));
+            return;
+        }
+
+        $is_deleted = $this->nursing_model->delete_record('birthregistery', array('ID' => (int) $this->input->post('ID')));
+        if ($is_deleted) {
+            echo json_encode(array('msg' => 'Deleted successfully', 'status' => 'ok'));
+        } else {
+            echo json_encode(array('msg' => 'Failed to delete', 'status' => 'nok'));
+        }
+    }
+
+    private function is_valid_report_date($date) {
+        $date_obj = DateTime::createFromFormat('Y-m-d', $date);
+        return $date_obj && $date_obj->format('Y-m-d') === $date;
+    }
+
+    private function is_valid_report_time($time) {
+        return preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $time) === 1;
     }
 
     function export_birth_to_pdf() {

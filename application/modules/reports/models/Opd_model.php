@@ -133,6 +133,8 @@ class Opd_model extends CI_Model
     function get_opd_patients($conditions, $export_flag = FALSE)
     {
         $return = array();
+        $include_aadhaar = !empty($conditions['include_aadhaar']) && $this->db->field_exists('aadhaar_number', 'patientdata');
+        unset($conditions['include_aadhaar']);
         $columns = array(
             't.ID',
             't.monthly_sid as msd',
@@ -153,6 +155,9 @@ class Opd_model extends CI_Model
             't.sequence',
             'COALESCE(t.sub_department,"") sub_department'
         );
+        if ($include_aadhaar) {
+            $columns[] = 'p.aadhaar_number';
+        }
 
         $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';
@@ -266,6 +271,8 @@ class Opd_model extends CI_Model
     function get_opd_patients_excel($conditions, $export_flag = FALSE)
     {
         $return = array();
+        $include_aadhaar = !empty($conditions['include_aadhaar']) && $this->db->field_exists('aadhaar_number', 'patientdata');
+        unset($conditions['include_aadhaar']);
         $columns = array(
             't.sequence',
             't.monthly_sid as msd',
@@ -284,6 +291,13 @@ class Opd_model extends CI_Model
             'CameOn',
             'd.ref_room ref_dept'
         );
+        if ($include_aadhaar) {
+            $columns = array_merge(
+                array_slice($columns, 0, 4),
+                array('p.aadhaar_number'),
+                array_slice($columns, 4)
+            );
+        }
 
         $where_cond = " WHERE CameOn >='" . $conditions['start_date'] . "' AND CameOn <='" . $conditions['end_date'] . "' ";
         $limit = '';

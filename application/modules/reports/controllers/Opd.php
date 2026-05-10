@@ -31,6 +31,7 @@ class Opd extends SHV_Controller
         $data = array();
         $data['dept_list'] = $this->get_department_list('array');
         $data['is_admin'] = $this->_is_admin;
+        $data['can_export_aadhaar'] = $this->can_export_aadhaar();
         $this->layout->data = $data;
         $this->layout->render();
     }
@@ -42,6 +43,7 @@ class Opd extends SHV_Controller
         foreach ($this->input->post('search_form') as $search_data) {
             $input_array[$search_data['name']] = $search_data['value'];
         }
+        unset($input_array['include_aadhaar']);
         $input_array['start'] = $this->input->post('start');
         $input_array['length'] = $this->input->post('length');
         $input_array['order'] = $this->input->post('order');
@@ -69,6 +71,7 @@ class Opd extends SHV_Controller
         $input_array['end_date'] = $this->input->post('end_date');
         $input_array['department'] = $this->input->post('department');
         $input_array['sub_department'] = $this->input->post('sub_department');
+        unset($input_array['include_aadhaar']);
         //pma($input_array['sub_department'], 1);
         $print_subdept = '';
         if (!empty($input_array['sub_department']) && ($input_array['sub_department'] != '' && $input_array['sub_department'] != 'both')) {
@@ -159,13 +162,18 @@ class Opd extends SHV_Controller
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
+        $include_aadhaar = $this->should_include_aadhaar($input_array);
+        unset($input_array['include_aadhaar']);
         $print_subdept = ($input_array['sub_department'] == '' || $input_array['sub_department'] == 'both') ? "" : $input_array['sub_department'];
+        $input_array['include_aadhaar'] = $include_aadhaar;
         $result = $this->opd_model->get_opd_patients($input_array, true);
+        unset($input_array['include_aadhaar']);
         $return = $this->db->query("call get_opd_patients_count('" . $input_array['department'] . "','" . $input_array['start_date'] . "','" . $input_array['end_date'] . "','" . $print_subdept . "')")->result_array();
         mysqli_next_result($this->db->conn_id); //imp
         $data['opd_patients'] = $result['data'];
         $data['department'] = $input_array['department'];
         $data['opd_stats'] = $return;
+        $data['include_aadhaar'] = $include_aadhaar;
         $this->layout->data = $data;
         $this->layout->headerFlag = false;
         $html = $this->layout->render(array('view' => 'reports/opd/export_opd'), true);
@@ -335,9 +343,27 @@ class Opd extends SHV_Controller
         foreach ($this->input->post() as $search_data => $val) {
             $input_array[$search_data] = $val;
         }
+        $include_aadhaar = $this->should_include_aadhaar($input_array);
+        unset($input_array['include_aadhaar']);
+        $input_array['include_aadhaar'] = $include_aadhaar;
         $export_array = $this->opd_model->get_opd_patients_excel($input_array, true);
+        if ($include_aadhaar) {
+            $headings = array_slice($headings, 0, 4, true)
+                + array('aadhaar_number' => 'Aadhaar')
+                + array_slice($headings, 4, null, true);
+        }
         $file_name = 'vhms_opd_report_' . $input_array['start_date'] . '.xlsx';
         download_excel($export_array['data'], $file_name, $headings);
         exit;
+    }
+
+    private function should_include_aadhaar($input_array)
+    {
+        return !empty($input_array['include_aadhaar']) && $this->can_export_aadhaar();
+    }
+
+    private function can_export_aadhaar()
+    {
+        return $this->rbac->is_admin() || $this->rbac->is_sadmin() || $this->rbac->is_doctor();
     }
 }

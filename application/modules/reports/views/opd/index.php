@@ -37,6 +37,11 @@
                         </select>
                     </div>
                     <div class="form-group col-md-4 col-sm-12 align-self-end">
+                        <?php if (!empty($can_export_aadhaar)) { ?>
+                            <label class="checkbox-inline" style="margin-right: 10px;">
+                                <input type="checkbox" name="include_aadhaar" id="include_aadhaar" value="1"> Include Aadhaar
+                            </label>
+                        <?php } ?>
                         <button class="btn btn-primary btn-sm" type="button" id="search"><i class="fa fa-fw fa-lg fa-check-circle"></i>Search</button>
                         <div class="btn-group" role="group" id="export">
                             <button class="btn btn-info btn-sm" type="button"><i class="fa fa-fw fa-lg fa-upload"></i> Export</button>
@@ -51,13 +56,6 @@
                                 </ul>
                             </div>
                         </div>
-                        <?php
-                        if ($is_admin) {
-                        ?>
-                            <a href="<?php echo base_url('full-year-report'); ?>" target="_blank"><button class="btn btn-primary btn-sm" type="button" id="full_report"><i class="fa fa-fw fa-lg fa-download"></i>Full OPD Report</button></a>
-                        <?php
-                        }
-                        ?>
                     </div>
                 </form>
                 <div id="patient_details">

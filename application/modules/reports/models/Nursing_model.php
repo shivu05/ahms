@@ -386,6 +386,12 @@ class Nursing_model extends CI_Model
         return $return;
     }
 
+    function update_birth_register($input_data, $where)
+    {
+        $this->db->where($where);
+        return $this->db->update('birthregistery', $input_data);
+    }
+
     function get_diet_data($conditions, $export_flag = false)
     {
 

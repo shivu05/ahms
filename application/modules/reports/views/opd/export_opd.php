@@ -9,35 +9,39 @@ $dept_room_array = array(
     'AATYAYIKACHIKITSA' => 7,
     'SWASTHAVRITTA' => 8,
 );
+$include_aadhaar = !empty($include_aadhaar);
 ?>
-<table width="100%" class="table">
+<table width="100%" class="table" <?php echo $include_aadhaar ? 'style="font-size: 9px; table-layout: fixed;"' : ''; ?>>
     <thead>
         <tr>
             <th width="3%">Sl No.</th>
-            <th width="5%">Yr.No.</th>
-            <th width="5%">M.No.</th>
-            <th width="6%">C.OPD</th>
+            <th width="<?php echo $include_aadhaar ? '4%' : '5%'; ?>">Yr.No.</th>
+            <th width="<?php echo $include_aadhaar ? '4%' : '5%'; ?>">M.No.</th>
+            <th width="<?php echo $include_aadhaar ? '5%' : '6%'; ?>">C.OPD</th>
             <?php if ($department != 1) { ?>
-                <th width="6%">D.OPD</th>
+                <th width="<?php echo $include_aadhaar ? '5%' : '6%'; ?>">D.OPD</th>
             <?php } ?>	
             <th width="3%">Type</th>
-            <th width="20%">Name</th>
+            <?php if ($include_aadhaar) { ?>
+                <th width="8%">Aadhaar</th>
+            <?php } ?>
+            <th width="<?php echo $include_aadhaar ? '13%' : '20%'; ?>">Name</th>
             <th width="3%">Age</th>
-            <th width="5%">Gender</th>
-            <th width="10%">Place</th>
+            <th width="<?php echo $include_aadhaar ? '4%' : '5%'; ?>">Gender</th>
+            <th width="<?php echo $include_aadhaar ? '8%' : '10%'; ?>">Place</th>
             <?php if ($department != 1) { ?>
-                <th width="10%">Diagnosis</th>
-                <th width="20%">Treatment</th>
-                <th width="10%">Doctor</th>
+                <th width="<?php echo $include_aadhaar ? '8%' : '10%'; ?>">Diagnosis</th>
+                <th width="<?php echo $include_aadhaar ? '14%' : '20%'; ?>">Treatment</th>
+                <th width="<?php echo $include_aadhaar ? '8%' : '10%'; ?>">Doctor</th>
             <?php } else {
                 ?>
                 <!--<th width="17%">Complaints</th>-->
             <?php } ?>
-            <th width="13%">Department</th>
+            <th width="<?php echo $include_aadhaar ? '10%' : '13%'; ?>">Department</th>
             <?php if ($department == 1) { ?>
                 <th width="3%">Ref.<br/>Room No.</th>
             <?php } ?>
-            <th width="7%">Date</th>
+            <th width="<?php echo $include_aadhaar ? '6%' : '7%'; ?>">Date</th>
         </tr>   
     </thead>
     <tbody>
@@ -58,6 +62,9 @@ $dept_room_array = array(
                     echo "<td><center>" . $patients['deptOpdNo'] . "</center></td>";
                 }
                 echo "<td><center>" . $patType . "</center></td>";
+                if ($include_aadhaar) {
+                    echo "<td><center>" . (!empty($patients['aadhaar_number']) ? $patients['aadhaar_number'] : '-') . "</center></td>";
+                }
                 echo "<td>" . $patients['name'] . "</td>";
                 echo "<td><center>" . $patients['Age'] . "</center></td>";
                 echo "<td>" . $patients['gender'] . "</td>";
