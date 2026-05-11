@@ -12,7 +12,7 @@ $dept_room_array = array(
 $include_aadhaar = !empty($include_aadhaar);
 $is_central_report = ($department == 1);
 ?>
-<table width="100%" class="table" <?php echo $include_aadhaar ? 'style="table-layout: fixed;"' : ''; ?>>
+<table width="100%" class="table" style="table-layout: fixed;">
     <thead>
         <tr>
             <th width="3%">Sl No.</th>
