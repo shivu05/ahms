@@ -24,9 +24,9 @@ $is_central_report = ($department == 1);
             <?php } ?>	
             <th width="3%">Type</th>
             <?php if ($include_aadhaar) { ?>
-                <th width="<?php echo $is_central_report ? '9%' : '8%'; ?>">Aadhaar</th>
+                <th width="<?php echo $is_central_report ? '10%' : '9%'; ?>">Aadhaar</th>
             <?php } ?>
-            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '19%' : ($include_aadhaar ? '13%' : '20%'); ?>">Name</th>
+            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '20%' : ($include_aadhaar ? '13%' : '20%'); ?>">Name</th>
             <th width="<?php echo ($include_aadhaar && $is_central_report) ? '4%' : '3%'; ?>">Age</th>
             <th width="<?php echo ($include_aadhaar && $is_central_report) ? '5%' : ($include_aadhaar ? '4%' : '5%'); ?>">Gender</th>
             <th width="<?php echo ($include_aadhaar && $is_central_report) ? '10%' : ($include_aadhaar ? '8%' : '10%'); ?>">Place</th>
@@ -38,11 +38,11 @@ $is_central_report = ($department == 1);
                 ?>
                 <!--<th width="17%">Complaints</th>-->
             <?php } ?>
-            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '19%' : ($include_aadhaar ? '10%' : '13%'); ?>">Department</th>
+            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '17%' : ($include_aadhaar ? '10%' : '13%'); ?>">Department</th>
             <?php if ($department == 1) { ?>
                 <th width="<?php echo $include_aadhaar ? '4%' : '3%'; ?>">Ref.<br/>Room No.</th>
             <?php } ?>
-            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '9%' : ($include_aadhaar ? '6%' : '7%'); ?>">Date</th>
+            <th width="<?php echo ($include_aadhaar && $is_central_report) ? '7%' : ($include_aadhaar ? '6%' : '7%'); ?>">Date</th>
         </tr>   
     </thead>
     <tbody>
@@ -64,7 +64,11 @@ $is_central_report = ($department == 1);
                 }
                 echo "<td><center>" . $patType . "</center></td>";
                 if ($include_aadhaar) {
-                    echo "<td><center>" . (!empty($patients['aadhaar_number']) ? $patients['aadhaar_number'] : '-') . "</center></td>";
+                    $aadhaar_number = !empty($patients['aadhaar_number']) ? trim($patients['aadhaar_number']) : '';
+                    $aadhaar_display = ctype_digit($aadhaar_number) && strlen($aadhaar_number) === 12
+                        ? trim(chunk_split($aadhaar_number, 4, ' '))
+                        : ($aadhaar_number !== '' ? $aadhaar_number : '-');
+                    echo "<td style='white-space: nowrap;'><center>" . $aadhaar_display . "</center></td>";
                 }
                 echo "<td>" . $patients['name'] . "</td>";
                 echo "<td><center>" . $patients['Age'] . "</center></td>";
