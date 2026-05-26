@@ -189,7 +189,7 @@ class Ipd extends SHV_Controller
         $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
 
         $title = array(
-            'report_title' => 'IPD REGISTER',
+            'report_title' => 'BED OCCUPIED REGISTER',
             'department' => $print_dept,
             'start_date' => format_date($input_array['start_date']),
             'end_date' => format_date($input_array['end_date'])

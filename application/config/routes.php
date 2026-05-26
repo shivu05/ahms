@@ -200,6 +200,7 @@ $route['print-fumigation-list'] = 'register/fumigation/export_data';
 $route['store-fumigation-info'] = 'register/fumigation/store_data';
 
 $route['manage-beds'] = 'master/beds';
+$route['manage-beds/export-pdf'] = 'master/beds/export_pdf';
 $route['update-bed'] = 'master/beds/update';
 $route['refresh-beds'] = 'master/beds/refresh_beds';
 
