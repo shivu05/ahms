@@ -829,7 +829,7 @@ class M_auto extends CI_Model
         $dept_name = 'BALAROGA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
                 $sex = $patient['gender'];
@@ -902,7 +902,7 @@ class M_auto extends CI_Model
         $dept_name = 'KAYACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
                 $sex = $patient['gender'];
@@ -977,7 +977,7 @@ class M_auto extends CI_Model
         $dept_name = 'SHALAKYA_TANTRA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1065,7 +1065,7 @@ class M_auto extends CI_Model
 
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1144,7 +1144,7 @@ class M_auto extends CI_Model
         $dept_name = 'SWASTHAVRITTA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient('SWASTHAVRITTA');
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1218,7 +1218,7 @@ class M_auto extends CI_Model
         $dept_name = 'PANCHAKARMA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1295,7 +1295,7 @@ class M_auto extends CI_Model
         $dept_name = 'AATYAYIKACHIKITSA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1369,7 +1369,7 @@ class M_auto extends CI_Model
         $dept_name = 'AGADATANTRA';
         if (strtolower($arr[0]) != strtolower('old')) {
             $getDeptNum = $this->m_auto->getDeptNoForNewPatient($dept_name);
-            $preferredGender = $this->gender[$this->_index] ?? '';
+            $preferredGender = $this->_get_preferred_gender($dept_name);
             $patient = $this->_get_new_patient_record($dept_name, $preferredGender);
 
             if (($getDeptNum != "" || strlen($getDeptNum) > 0) && !empty($patient)) {
@@ -1472,11 +1472,18 @@ class M_auto extends CI_Model
         }
 
         if ($dept_name === 'BALAROGA') {
+            if (trim((string) $preferredGender) === '') {
+                return $this->_get_patient_record_from_pool($this->_pick_random_pool(array('childFemalePatients', 'childMalePatients')), array('childPatients'));
+            }
             if ($this->_is_female_gender($preferredGender)) {
                 return $this->_get_patient_record_from_pool('childFemalePatients', array('childPatients'));
             }
 
             return $this->_get_patient_record_from_pool('childMalePatients', array('childPatients'));
+        }
+
+        if (trim((string) $preferredGender) === '') {
+            return $this->_get_patient_record_from_pool($this->_pick_random_pool(array('femaleAdultPatients', 'maleAdultPatients')), array('allPatients'));
         }
 
         if ($this->_is_female_gender($preferredGender)) {
@@ -1509,6 +1516,53 @@ class M_auto extends CI_Model
         }
 
         return null;
+    }
+
+    private function _get_preferred_gender($dept_name = '')
+    {
+        if (!empty($this->gender)) {
+            if ($this->_index >= count($this->gender)) {
+                $this->_index = 0;
+                $this->shuffle();
+            }
+
+            $gender = trim((string) ($this->gender[$this->_index] ?? ''));
+            if ($gender !== '') {
+                return $gender;
+            }
+        }
+
+        if ($dept_name === 'PRASOOTI_&_STRIROGA') {
+            return 'Female';
+        }
+
+        return $this->_pick_random_gender($dept_name);
+    }
+
+    private function _pick_random_gender($dept_name = '')
+    {
+        $pool_names = ($dept_name === 'BALAROGA')
+            ? array('childFemalePatients', 'childMalePatients')
+            : array('femaleAdultPatients', 'maleAdultPatients');
+
+        $selected_pool = $this->_pick_random_pool($pool_names);
+        return ($selected_pool === 'femaleAdultPatients' || $selected_pool === 'childFemalePatients') ? 'Female' : 'Male';
+    }
+
+    private function _pick_random_pool($pool_names = array())
+    {
+        $available_pools = array();
+        foreach ($pool_names as $pool_name) {
+            if (!empty($this->$pool_name)) {
+                $available_pools[] = $pool_name;
+            }
+        }
+
+        if (empty($available_pools)) {
+            return $pool_names[0] ?? '';
+        }
+
+        return $available_pools[array_rand($available_pools)];
     }
 
     private function _append_patient_identity_fields($data, $patient = array())
