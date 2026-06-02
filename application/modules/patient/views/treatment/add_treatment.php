@@ -127,6 +127,20 @@
         line-height: 1.35;
     }
 
+    .history-modal-table {
+        font-size: 13px;
+    }
+
+    .history-modal-table td {
+        vertical-align: top !important;
+    }
+
+    .history-treatment-cell {
+        max-width: 420px;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
     .clinical-entry .form-control {
         min-height: 42px;
     }
@@ -246,7 +260,7 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                         <div class="box-header with-border">
                                             <h3 class="box-title section-title">Recent Visits</h3>
                                             <div class="box-tools pull-right">
-                                                <a class="btn btn-default btn-xs" href="<?php echo base_url('patient/treatment/show_patients'); ?>">View full history</a>
+                                                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#full_history_modal" <?php echo empty($treatment_details) ? 'disabled="disabled"' : ''; ?>>View full history</button>
                                             </div>
                                         </div>
                                         <div class="box-body">
@@ -1034,6 +1048,54 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
         </div>
     </div>
 </div>
+</div>
+<div class="modal fade" id="full_history_modal" tabindex="-1" role="dialog" aria-labelledby="full_history_modal_label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="full_history_modal_label">Visit History - <?php echo html_escape(trim($patient_details['FirstName'] . ' ' . $patient_details['LastName'])); ?></h4>
+            </div>
+            <div class="modal-body">
+                <?php if (!empty($treatment_details)): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped history-modal-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 110px;">Visit Date</th>
+                                    <th>Diagnosis</th>
+                                    <th>Treatment</th>
+                                    <th style="width: 140px;">Doctor</th>
+                                    <th style="width: 140px;">Department</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($treatment_details as $history_visit): ?>
+                                    <?php
+                                    $history_date = !empty($history_visit['attndedon']) ? $history_visit['attndedon'] : $history_visit['CameOn'];
+                                    $history_doctor = !empty($history_visit['attndedby']) ? $history_visit['attndedby'] : $history_visit['AddedBy'];
+                                    $history_department = !empty($history_visit['department']) ? ucfirst(strtolower(str_replace('_', ' ', $history_visit['department']))) : '-';
+                                    ?>
+                                    <tr>
+                                        <td><?php echo html_escape($history_date ?: '-'); ?></td>
+                                        <td><?php echo html_escape($history_visit['diagnosis'] ?: '-'); ?></td>
+                                        <td class="history-treatment-cell"><?php echo html_escape($history_visit['Trtment'] ?: '-'); ?></td>
+                                        <td><?php echo html_escape($history_doctor ?: '-'); ?></td>
+                                        <td><?php echo html_escape($history_department); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted">No previous visits recorded.</p>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $(function() {
