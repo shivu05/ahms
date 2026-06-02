@@ -1,14 +1,14 @@
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('success'); ?>
+        <?php echo html_escape($this->session->flashdata('success')); ?>
     </div>
 <?php endif; ?>
 
 <?php if ($this->session->flashdata('error')): ?>
     <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('error'); ?>
+        <?php echo html_escape($this->session->flashdata('error')); ?>
     </div>
 <?php endif; ?>
 
@@ -25,6 +25,7 @@
     </div>
     <div class="panel-body">
         <form method="POST" action="<?php echo base_url('billing/create_invoice'); ?>" id="invoice-form">
+            <input type="hidden" name="<?php echo html_escape($this->security->get_csrf_token_name()); ?>" value="<?php echo html_escape($this->security->get_csrf_hash()); ?>">
             
             <!-- Invoice Type and Patient Selection -->
             <div class="row">
@@ -35,7 +36,7 @@
                             <option value="">-- Select Type --</option>
                             <?php if (isset($invoice_types) && !empty($invoice_types)): ?>
                                 <?php foreach ($invoice_types as $key => $value): ?>
-                                    <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                    <option value="<?php echo html_escape($key); ?>"><?php echo html_escape($value); ?></option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
@@ -71,8 +72,8 @@
                                         <option value="">-- Select Category --</option>
                                         <?php if (isset($service_categories) && !empty($service_categories)): ?>
                                             <?php foreach ($service_categories as $category): ?>
-                                                <option value="<?php echo $category['category_id']; ?>">
-                                                    <?php echo $category['category_name']; ?>
+                                                <option value="<?php echo (int) $category['category_id']; ?>">
+                                                    <?php echo html_escape($category['category_name']); ?>
                                                 </option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
@@ -185,6 +186,8 @@
 
 <script>
 $(document).ready(function() {
+    var csrfTokenName = <?php echo json_encode($this->security->get_csrf_token_name()); ?>;
+    var csrfTokenValue = <?php echo json_encode($this->security->get_csrf_hash()); ?>;
     
     // Load services when category is selected
     $(document).on('change', '.category-select', function() {
@@ -193,22 +196,25 @@ $(document).ready(function() {
         var $serviceSelect = $row.find('.service-select');
         
         if (categoryId) {
+            var requestData = { category_id: categoryId };
+            requestData[csrfTokenName] = csrfTokenValue;
             $.ajax({
                 url: '<?php echo base_url('billing/get_services_by_category'); ?>',
                 method: 'POST',
-                data: { category_id: categoryId },
+                data: requestData,
                 dataType: 'json',
                 success: function(response) {
                     $serviceSelect.html('<option value="">-- Select Service --</option>');
                     if (response.success && response.services.length > 0) {
                         $.each(response.services, function(i, service) {
-                            $serviceSelect.append(
-                                '<option value="' + service.service_id + '" ' +
-                                'data-price="' + service.unit_price + '" ' +
-                                'data-gst="' + service.gst_rate + '">' +
-                                service.service_name + ' (₹' + service.unit_price + ')' +
-                                '</option>'
-                            );
+                            var price = parseFloat(service.unit_price || 0).toFixed(2);
+                            var gstRate = parseFloat(service.gst_rate || 0).toFixed(2);
+                            $('<option/>')
+                                .val(service.service_id)
+                                .attr('data-price', price)
+                                .attr('data-gst', gstRate)
+                                .text((service.service_name || 'Service') + ' (INR ' + price + ')')
+                                .appendTo($serviceSelect);
                         });
                         $serviceSelect.prop('disabled', false);
                     } else {

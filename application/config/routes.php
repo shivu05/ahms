@@ -59,6 +59,7 @@ $route['set-default-usr-data'] = 'master/users/update_default_password';
 $route['dashboard'] = "home/Dashboard/index";
 
 $route['admin-dashboard'] = "home/dashboard/admin";
+$route['analytics/executive-dashboard'] = "analytics/executive_dashboard/index";
 $route['home/doctor'] = "home/dashboard/doctors_dashboard";
 $route['home/user'] = "home/dashboard/blank_dashboard";
 $route['home/xray'] = "home/dashboard/xray_dashabord";

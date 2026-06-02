@@ -1,14 +1,14 @@
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('success'); ?>
+        <?php echo html_escape($this->session->flashdata('success')); ?>
     </div>
 <?php endif; ?>
 
 <?php if ($this->session->flashdata('error')): ?>
     <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('error'); ?>
+        <?php echo html_escape($this->session->flashdata('error')); ?>
     </div>
 <?php endif; ?>
 
@@ -23,9 +23,9 @@
                 <select name="invoice_status" class="form-control">
                     <option value="">-- All --</option>
                     <?php foreach ($statuses as $status): ?>
-                        <option value="<?php echo $status; ?>" 
+                        <option value="<?php echo html_escape($status); ?>" 
                             <?php echo ($status == $this->input->get('invoice_status')) ? 'selected' : ''; ?>>
-                            <?php echo $status; ?>
+                            <?php echo html_escape($status); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -79,10 +79,10 @@
                     <?php if (!empty($invoices)): ?>
                         <?php foreach ($invoices as $inv): ?>
                             <tr>
-                                <td><strong><?php echo $inv['invoice_number']; ?></strong></td>
+                                <td><strong><?php echo html_escape($inv['invoice_number']); ?></strong></td>
                                 <td><?php echo date('d-m-Y', strtotime($inv['invoice_date'])); ?></td>
-                                <td><?php echo $inv['patient_name'] ?? 'N/A'; ?></td>
-                                <td><span class="label label-info"><?php echo $inv['invoice_type']; ?></span></td>
+                                <td><?php echo html_escape($inv['patient_name'] ?? 'N/A'); ?></td>
+                                <td><span class="label label-info"><?php echo html_escape($inv['invoice_type']); ?></span></td>
                                 <td class="text-right">₹<?php echo number_format($inv['total_amount'], 2); ?></td>
                                 <td class="text-right">₹<?php echo number_format($inv['amount_paid'], 2); ?></td>
                                 <td class="text-right">₹<?php echo number_format($inv['balance_due'], 2); ?></td>

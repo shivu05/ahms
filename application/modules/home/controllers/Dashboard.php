@@ -54,6 +54,14 @@ class Dashboard extends SHV_Controller
             $data['gender_count'] = $this->dashboard_model->get_gender_wise_patients();
             $data['dept_wise_data'] = $this->dashboard_model->get_departmentwise_patient_count();
             $data['ipd_data'] = $this->dashboard_model->get_ipd_patients_count();
+            $data['today_opd_count'] = $this->dashboard_model->get_today_opd_count();
+            $data['today_ipd_admissions'] = $this->dashboard_model->get_today_ipd_admissions();
+            $data['today_discharges'] = $this->dashboard_model->get_today_discharges();
+            $data['today_revenue'] = $this->dashboard_model->get_today_revenue();
+            $data['bed_occupancy_percentage'] = $this->dashboard_model->get_bed_occupancy_percentage();
+            $data['month_opd_count'] = $this->dashboard_model->get_month_opd_count();
+            $data['month_ipd_count'] = $this->dashboard_model->get_month_ipd_count();
+            $data['current_year_total_patients'] = $this->dashboard_model->get_current_year_total_patients();
 
             $this->layout->data = $data;
             $this->layout->render();

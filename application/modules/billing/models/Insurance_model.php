@@ -378,6 +378,10 @@ class Insurance_model extends CI_Model {
      * @return array Documents
      */
     public function get_claim_documents($claim_id) {
+        if (!$this->db->table_exists('billing_claim_documents')) {
+            return [];
+        }
+
         return $this->db->where('claim_id', $claim_id)
                         ->order_by('uploaded_date', 'DESC')
                         ->get('billing_claim_documents')
@@ -408,6 +412,10 @@ class Insurance_model extends CI_Model {
      * @return array Follow-ups
      */
     public function get_claim_followups($claim_id) {
+        if (!$this->db->table_exists('billing_claim_followups')) {
+            return [];
+        }
+
         return $this->db->where('claim_id', $claim_id)
                         ->order_by('followup_date', 'DESC')
                         ->get('billing_claim_followups')

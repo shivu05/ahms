@@ -19,7 +19,7 @@
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('success'); ?>
+        <?php echo html_escape($this->session->flashdata('success')); ?>
     </div>
 <?php endif; ?>
 
@@ -31,17 +31,17 @@
             <!-- Invoice Header -->
             <div class="row">
                 <div class="col-md-6">
-                    <h3><?php echo $hospital_name ?? 'Hospital Name'; ?></h3>
+                    <h3><?php echo html_escape($hospital_name ?? 'Hospital Name'); ?></h3>
                     <p>
-                        <?php echo $hospital_address ?? 'Hospital Address'; ?><br>
-                        Phone: <?php echo $hospital_phone ?? 'N/A'; ?><br>
-                        Email: <?php echo $hospital_email ?? 'N/A'; ?>
+                        <?php echo html_escape($hospital_address ?? 'Hospital Address'); ?><br>
+                        Phone: <?php echo html_escape($hospital_phone ?? 'N/A'); ?><br>
+                        Email: <?php echo html_escape($hospital_email ?? 'N/A'); ?>
                     </p>
                 </div>
                 <div class="col-md-6 text-right">
                     <h2>INVOICE</h2>
                     <p>
-                        <strong>Invoice #:</strong> <?php echo $invoice['invoice_number']; ?><br>
+                        <strong>Invoice #:</strong> <?php echo html_escape($invoice['invoice_number']); ?><br>
                         <strong>Date:</strong> <?php echo date('d-M-Y', strtotime($invoice['invoice_date'])); ?><br>
                         <strong>Due Date:</strong> <?php echo date('d-M-Y', strtotime($invoice['due_date'])); ?>
                     </p>
@@ -49,7 +49,7 @@
                         echo ($invoice['payment_status'] == 'PAID') ? 'success' : 
                              (($invoice['payment_status'] == 'PARTIAL') ? 'warning' : 'danger'); 
                     ?>">
-                        <?php echo $invoice['payment_status']; ?>
+                        <?php echo html_escape($invoice['payment_status']); ?>
                     </span>
                 </div>
             </div>
@@ -61,13 +61,13 @@
                 <div class="col-md-6">
                     <h4>Bill To:</h4>
                     <p>
-                        <strong><?php echo $invoice['patient_name'] ?? 'N/A'; ?></strong><br>
-                        Patient ID: <?php echo $invoice['patient_id'] ?? 'N/A'; ?><br>
+                        <strong><?php echo html_escape($invoice['patient_name'] ?? 'N/A'); ?></strong><br>
+                        Patient ID: <?php echo html_escape($invoice['patient_id'] ?? 'N/A'); ?><br>
                         <?php if (!empty($invoice['patient_phone'])): ?>
-                            Phone: <?php echo $invoice['patient_phone']; ?><br>
+                            Phone: <?php echo html_escape($invoice['patient_phone']); ?><br>
                         <?php endif; ?>
                         <?php if (!empty($invoice['patient_email'])): ?>
-                            Email: <?php echo $invoice['patient_email']; ?>
+                            Email: <?php echo html_escape($invoice['patient_email']); ?>
                         <?php endif; ?>
                     </p>
                 </div>
@@ -75,9 +75,9 @@
                     <?php if (!empty($invoice['insurance_company'])): ?>
                         <h4>Insurance Details:</h4>
                         <p>
-                            <strong><?php echo $invoice['insurance_company']; ?></strong><br>
-                            Policy #: <?php echo $invoice['policy_number'] ?? 'N/A'; ?><br>
-                            Coverage: <?php echo $invoice['coverage_percentage'] ?? 0; ?>%
+                            <strong><?php echo html_escape($invoice['insurance_company']); ?></strong><br>
+                            Policy #: <?php echo html_escape($invoice['policy_number'] ?? 'N/A'); ?><br>
+                            Coverage: <?php echo (float) ($invoice['coverage_percentage'] ?? 0); ?>%
                         </p>
                     <?php endif; ?>
                 </div>
@@ -106,12 +106,12 @@
                                     <tr>
                                         <td><?php echo $i++; ?></td>
                                         <td>
-                                            <?php echo $item['service_name']; ?>
+                                            <?php echo html_escape($item['service_name']); ?>
                                             <?php if (!empty($item['description'])): ?>
-                                                <br><small class="text-muted"><?php echo $item['description']; ?></small>
+                                                <br><small class="text-muted"><?php echo html_escape($item['description']); ?></small>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="text-center"><?php echo $item['quantity']; ?></td>
+                                        <td class="text-center"><?php echo number_format((float) $item['quantity'], 2); ?></td>
                                         <td class="text-right">₹<?php echo number_format($item['unit_price'], 2); ?></td>
                                         <td class="text-right">
                                             <?php 
@@ -139,7 +139,7 @@
                 <div class="col-md-6">
                     <?php if (!empty($invoice['notes'])): ?>
                         <h4>Notes:</h4>
-                        <p><?php echo nl2br($invoice['notes']); ?></p>
+                        <p><?php echo nl2br(html_escape($invoice['notes'])); ?></p>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-6">
@@ -153,7 +153,7 @@
                             <td class="text-right">- ₹<?php echo number_format($invoice['discount_amount'] ?? 0, 2); ?></td>
                         </tr>
                         <tr>
-                            <th>Tax (<?php echo $invoice['tax_percentage'] ?? 0; ?>%):</th>
+                            <th>Tax (<?php echo (float) ($invoice['tax_percentage'] ?? 0); ?>%):</th>
                             <td class="text-right">₹<?php echo number_format($invoice['tax_amount'] ?? 0, 2); ?></td>
                         </tr>
                         <?php if (!empty($invoice['insurance_claim_amount'])): ?>
@@ -198,10 +198,10 @@
                                 <?php foreach ($payments as $payment): ?>
                                     <tr>
                                         <td><?php echo date('d-M-Y', strtotime($payment['payment_date'])); ?></td>
-                                        <td><?php echo $payment['method_name'] ?? $payment['payment_method'] ?? 'N/A'; ?></td>
-                                        <td><?php echo $payment['reference_number'] ?? 'N/A'; ?></td>
+                                        <td><?php echo html_escape($payment['method_name'] ?? $payment['payment_method'] ?? 'N/A'); ?></td>
+                                        <td><?php echo html_escape($payment['reference_number'] ?? 'N/A'); ?></td>
                                         <td class="text-right">₹<?php echo number_format((float) ($payment['payment_amount'] ?? $payment['amount'] ?? 0), 2); ?></td>
-                                        <td><?php echo $payment['received_by'] ?? 'N/A'; ?></td>
+                                        <td><?php echo html_escape($payment['received_by'] ?? 'N/A'); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -211,17 +211,23 @@
             <?php endif; ?>
 
             <!-- Action Buttons -->
-            <?php if ($invoice['balance_amount'] > 0): ?>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12 text-center">
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <?php if (!empty($invoice['id'])): ?>
+                        <a href="<?php echo base_url('billing/insurance/create_claim/' . (int) $invoice['id']); ?>" 
+                           class="btn btn-warning btn-lg">
+                            <i class="fa fa-file-text"></i> Create Insurance Claim
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($invoice['balance_amount'] > 0): ?>
                         <a href="<?php echo base_url('billing/payment/' . $invoice['id']); ?>" 
                            class="btn btn-success btn-lg">
                             <i class="fa fa-money"></i> Record Payment
                         </a>
-                    </div>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
+            </div>
 
         </div>
     </div>

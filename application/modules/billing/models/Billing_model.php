@@ -21,11 +21,90 @@ class Billing_model extends CI_Model {
      */
     public function create_invoice($invoice_data) {
         try {
+            if (empty($invoice_data['invoice_number'])) {
+                $invoice_data['invoice_number'] = $this->generate_invoice_number();
+            }
             $this->db->insert($this->table, $invoice_data);
-            return $this->db->insert_id();
+            $invoice_id = $this->db->insert_id();
+            if ($invoice_id) {
+                $this->log_audit_trail('billing_invoices', $invoice_id, 'CREATE', [
+                    'invoice_number' => $invoice_data['invoice_number']
+                ]);
+            }
+            return $invoice_id;
         } catch (Exception $e) {
             log_message('error', 'Error creating invoice: ' . $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Create invoice and line items atomically.
+     *
+     * @param array $invoice_data
+     * @param array $items
+     * @return array|false
+     */
+    public function create_invoice_with_items($invoice_data, array $items) {
+        if (empty($items)) {
+            return false;
+        }
+
+        $lock_acquired = false;
+        $transaction_started = false;
+
+        try {
+            $lock = $this->db->query("SELECT GET_LOCK('ahms_billing_invoice_number', 10) AS lock_status")->row_array();
+            $lock_acquired = !empty($lock) && (int) $lock['lock_status'] === 1;
+            if (!$lock_acquired) {
+                throw new Exception('Could not reserve invoice number.');
+            }
+
+            $this->db->trans_begin();
+            $transaction_started = true;
+
+            $invoice_data['invoice_number'] = $this->generate_invoice_number();
+            $this->db->insert($this->table, $invoice_data);
+            $invoice_id = $this->db->insert_id();
+
+            if (!$invoice_id) {
+                throw new Exception('Invoice insert failed.');
+            }
+
+            foreach ($items as $item) {
+                $item['invoice_id'] = $invoice_id;
+                $this->db->insert('billing_invoice_items', $item);
+                if (!$this->db->insert_id()) {
+                    throw new Exception('Invoice item insert failed.');
+                }
+            }
+
+            $this->log_audit_trail('billing_invoices', $invoice_id, 'CREATE', [
+                'invoice_number' => $invoice_data['invoice_number'],
+                'item_count' => count($items),
+                'total_amount' => $invoice_data['total_amount'] ?? 0
+            ]);
+
+            if ($this->db->trans_status() === FALSE) {
+                throw new Exception('Invoice transaction failed.');
+            }
+
+            $this->db->trans_commit();
+
+            return [
+                'invoice_id' => $invoice_id,
+                'invoice_number' => $invoice_data['invoice_number']
+            ];
+        } catch (Exception $e) {
+            if ($transaction_started) {
+                $this->db->trans_rollback();
+            }
+            log_message('error', 'Error creating invoice with items: ' . $e->getMessage());
+            return false;
+        } finally {
+            if ($lock_acquired) {
+                $this->db->query("SELECT RELEASE_LOCK('ahms_billing_invoice_number')");
+            }
         }
     }
 
@@ -197,6 +276,10 @@ class Billing_model extends CI_Model {
      * @return mixed Config value
      */
     public function get_config($key, $default = null) {
+        if (!$this->db->table_exists('billing_configurations')) {
+            return $default;
+        }
+
         $config = $this->db->where('config_key', $key)
                           ->get('billing_configurations')
                           ->row();
@@ -242,6 +325,10 @@ class Billing_model extends CI_Model {
      * @param array $changes
      */
     protected function log_audit_trail($entity_type, $entity_id, $action, $changes = []) {
+        if (!$this->db->table_exists('billing_audit_logs')) {
+            return;
+        }
+
         $log_data = [
             'entity_type' => $entity_type,
             'entity_id' => $entity_id,
@@ -266,9 +353,9 @@ class Billing_model extends CI_Model {
                             SUM(total_amount) as total_revenue,
                             SUM(amount_paid) as total_collected,
                             SUM(balance_due) as total_pending,
-                            SUM(CASE WHEN invoice_status = "PAID" THEN 1 ELSE 0 END) as paid_invoices,
-                            SUM(CASE WHEN invoice_status = "UNPAID" THEN 1 ELSE 0 END) as unpaid_invoices,
-                            SUM(CASE WHEN invoice_status = "PARTIALLY_PAID" THEN 1 ELSE 0 END) as partial_invoices
+                            SUM(CASE WHEN payment_status = "PAID" THEN 1 ELSE 0 END) as paid_invoices,
+                            SUM(CASE WHEN payment_status = "UNPAID" THEN 1 ELSE 0 END) as unpaid_invoices,
+                            SUM(CASE WHEN payment_status = "PARTIAL" THEN 1 ELSE 0 END) as partial_invoices
                           ')
                           ->from($this->table);
         

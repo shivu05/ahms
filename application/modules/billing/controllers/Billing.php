@@ -6,14 +6,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Handles invoice creation, payment processing, and administrative functions
  */
 class Billing extends SHV_Controller {
+    protected $billing_settings = [];
 
     public function __construct() {
         parent::__construct();
+        $this->ensure_authenticated();
         $this->load->model('billing/Billing_model');
         $this->load->model('billing/Service_model');
         $this->load->model('billing/Payment_model');
         $this->load->model('billing/Insurance_model');
         $this->load->library('form_validation');
+        $this->load->helper(['form', 'url', 'security']);
+        $this->billing_settings = $this->load_billing_settings();
         
         // Load billing helper from module
         $helper_path = APPPATH . 'modules/billing/helpers/Billing_helper.php';
@@ -101,26 +105,37 @@ class Billing extends SHV_Controller {
         try {
             if ($this->input->post()) {
                 // Validation rules
-                $this->form_validation->set_rules('invoice_type', 'Invoice Type', 'required|in_list[OPD,IPD,EMERGENCY,PHARMACY]');
+                $invoice_type_keys = array_keys($this->billing_settings['invoice_types'] ?? [
+                    'OPD' => 'OPD Invoice',
+                    'IPD' => 'IPD Invoice',
+                    'EMERGENCY' => 'Emergency',
+                    'PHARMACY' => 'Pharmacy'
+                ]);
+                $this->form_validation->set_rules('invoice_type', 'Invoice Type', 'required|in_list[' . implode(',', $invoice_type_keys) . ']');
                 $this->form_validation->set_rules('patient_id', 'Patient ID', 'required');
                 $this->form_validation->set_rules('invoice_date', 'Invoice Date', 'required');
                 $this->form_validation->set_rules('service_id[]', 'Service', 'required');
-                $this->form_validation->set_rules('quantity[]', 'Quantity', 'required|numeric');
+                $this->form_validation->set_rules('quantity[]', 'Quantity', 'required|numeric|greater_than[0]');
+                $this->form_validation->set_rules('discount[]', 'Discount', 'numeric|greater_than_equal_to[0]|less_than_equal_to[100]');
                 
                 if ($this->form_validation->run() == FALSE) {
                     $this->session->set_flashdata('error', validation_errors());
                 } else {
                     // Get form data
-                    $invoice_type = $this->input->post('invoice_type');
-                    $patient_id = $this->input->post('patient_id');
-                    $invoice_date = $this->input->post('invoice_date');
-                    $notes = $this->input->post('notes');
+                    $invoice_type = strtoupper(trim((string) $this->input->post('invoice_type', true)));
+                    $patient_id = trim((string) $this->input->post('patient_id', true));
+                    $invoice_date = trim((string) $this->input->post('invoice_date', true));
+                    $notes = trim((string) $this->input->post('notes', true));
                     
-                    $service_ids = $this->input->post('service_id');
-                    $quantities = $this->input->post('quantity');
-                    $unit_prices = $this->input->post('unit_price');
-                    $discounts = $this->input->post('discount');
-                    $gst_rates = $this->input->post('gst_rate');
+                    $date_obj = DateTime::createFromFormat('Y-m-d', $invoice_date);
+                    if (!$date_obj || $date_obj->format('Y-m-d') !== $invoice_date) {
+                        $this->session->set_flashdata('error', 'Invalid invoice date. Use YYYY-MM-DD.');
+                        redirect('billing/create_invoice');
+                    }
+                    
+                    $service_ids = (array) $this->input->post('service_id', true);
+                    $quantities = (array) $this->input->post('quantity', true);
+                    $discounts = (array) $this->input->post('discount', true);
                     
                     // Calculate totals
                     $subtotal = 0;
@@ -130,13 +145,32 @@ class Billing extends SHV_Controller {
                     
                     for ($i = 0; $i < count($service_ids); $i++) {
                         if (!empty($service_ids[$i])) {
-                            $qty = floatval($quantities[$i]);
-                            $price = floatval($unit_prices[$i]);
-                            $discount_pct = floatval($discounts[$i]);
-                            $gst_pct = floatval($gst_rates[$i]);
+                            $service_id = (int) $service_ids[$i];
+                            $qty = isset($quantities[$i]) ? round((float) $quantities[$i], 2) : 0;
+                            $discount_pct = isset($discounts[$i]) ? round((float) $discounts[$i], 2) : 0;
+                            
+                            if ($qty <= 0) {
+                                $this->session->set_flashdata('error', 'Quantity must be greater than zero.');
+                                redirect('billing/create_invoice');
+                            }
+                            if ($discount_pct < 0 || $discount_pct > 100) {
+                                $this->session->set_flashdata('error', 'Discount must be between 0 and 100%.');
+                                redirect('billing/create_invoice');
+                            }
                             
                             // Get service details
-                            $service = $this->Service_model->get_service($service_ids[$i]);
+                            if (!$this->Service_model->is_service_available($service_id, $invoice_type === 'EMERGENCY' ? 'OPD' : $invoice_type)) {
+                                $this->session->set_flashdata('error', 'Selected service is not available for this invoice type.');
+                                redirect('billing/create_invoice');
+                            }
+                            $service = $this->Service_model->get_service_pricing($service_id);
+                            if (!$service) {
+                                $this->session->set_flashdata('error', 'Selected service could not be found.');
+                                redirect('billing/create_invoice');
+                            }
+                            
+                            $price = round((float) $service['unit_price'], 2);
+                            $gst_pct = !empty($service['gst_applicable']) ? round((float) $service['gst_rate'], 2) : 0;
                             
                             $item_total = $qty * $price;
                             $item_discount = ($item_total * $discount_pct) / 100;
@@ -149,31 +183,36 @@ class Billing extends SHV_Controller {
                             $total_gst += $item_gst;
                             
                             $items[] = [
-                                'service_id' => $service_ids[$i],
+                                'service_id' => $service_id,
                                 'service_code' => $service['service_code'] ?? '',
                                 'service_name' => $service['service_name'] ?? 'Service',
                                 'quantity' => $qty,
                                 'unit_price' => $price,
                                 'discount_percentage' => $discount_pct,
-                                'discount_amount' => $item_discount,
+                                'discount_amount' => round($item_discount, 2),
+                                'gst_applicable' => $gst_pct > 0 ? 1 : 0,
                                 'gst_rate' => $gst_pct,
-                                'gst_amount' => $item_gst,
-                                'item_amount' => $item_total,
-                                'line_total' => $line_total
+                                'gst_amount' => round($item_gst, 2),
+                                'item_amount' => round($item_total, 2),
+                                'line_total' => round($line_total, 2)
                             ];
                         }
                     }
                     
-                    $grand_total = $subtotal - $total_discount + $total_gst;
+                    if (empty($items)) {
+                        $this->session->set_flashdata('error', 'Please select at least one active service.');
+                        redirect('billing/create_invoice');
+                    }
+                    
+                    $grand_total = round($subtotal - $total_discount + $total_gst, 2);
                     
                     // Prepare invoice data
                     $invoice_data = [
-                        'invoice_number' => $this->Billing_model->generate_invoice_number(),
                         'invoice_date' => $invoice_date,
                         'invoice_type' => $invoice_type,
-                        'subtotal_amount' => $subtotal,
-                        'discount_amount' => $total_discount,
-                        'gst_amount' => $total_gst,
+                        'subtotal_amount' => round($subtotal, 2),
+                        'discount_amount' => round($total_discount, 2),
+                        'gst_amount' => round($total_gst, 2),
                         'total_amount' => $grand_total,
                         'amount_paid' => 0,
                         'balance_due' => $grand_total,
@@ -191,30 +230,12 @@ class Billing extends SHV_Controller {
                         $invoice_data['ipd_no'] = $patient_id;
                     }
                     
-                    // Start transaction
-                    $this->db->trans_start();
+                    $created = $this->Billing_model->create_invoice_with_items($invoice_data, $items);
                     
-                    // Create invoice
-                    $invoice_id = $this->Billing_model->create_invoice($invoice_data);
-                    
-                    if ($invoice_id) {
-                        // Add invoice items
-                        foreach ($items as $item) {
-                            $item['invoice_id'] = $invoice_id;
-                            $this->db->insert('billing_invoice_items', $item);
-                        }
-                        
-                        $this->db->trans_complete();
-                        
-                        if ($this->db->trans_status() === FALSE) {
-                            $this->session->set_flashdata('error', 'Failed to create invoice');
-                            redirect('billing/create_invoice');
-                        } else {
-                            $this->session->set_flashdata('success', 'Invoice created successfully! Invoice #' . $invoice_data['invoice_number']);
-                            redirect('billing/view_invoice/' . $invoice_id);
-                        }
+                    if ($created) {
+                        $this->session->set_flashdata('success', 'Invoice created successfully! Invoice #' . $created['invoice_number']);
+                        redirect('billing/view_invoice/' . $created['invoice_id']);
                     } else {
-                        $this->db->trans_rollback();
                         $this->session->set_flashdata('error', 'Failed to create invoice');
                         redirect('billing/create_invoice');
                     }
@@ -222,7 +243,12 @@ class Billing extends SHV_Controller {
             }
             
             // Load form data
-            $data['invoice_types'] = ['OPD' => 'OPD', 'IPD' => 'IPD', 'EMERGENCY' => 'Emergency', 'PHARMACY' => 'Pharmacy'];
+            $data['invoice_types'] = $this->billing_settings['invoice_types'] ?? [
+                'OPD' => 'OPD Invoice',
+                'IPD' => 'IPD Invoice',
+                'EMERGENCY' => 'Emergency',
+                'PHARMACY' => 'Pharmacy'
+            ];
             $data['service_categories'] = $this->Service_model->get_categories();
             
             $this->scripts_include->includePlugins(array('chosen', 'jq_validation'), 'js');
@@ -322,14 +348,19 @@ class Billing extends SHV_Controller {
         try {
             $filters = [];
             $data['filter_applied'] = false;
+            $allowed_invoice_statuses = ['DRAFT', 'ISSUED', 'PARTIALLY_PAID', 'PAID', 'CANCELLED', 'CREDITED'];
+            $allowed_payment_statuses = ['UNPAID', 'PARTIAL', 'PAID'];
             
-            if ($this->input->get('invoice_status')) {
-                $filters['invoice_status'] = $this->input->get('invoice_status');
+            $invoice_status = strtoupper(trim((string) $this->input->get('invoice_status', true)));
+            $payment_status = strtoupper(trim((string) $this->input->get('payment_status', true)));
+
+            if ($invoice_status !== '' && in_array($invoice_status, $allowed_invoice_statuses, true)) {
+                $filters['invoice_status'] = $invoice_status;
                 $data['filter_applied'] = true;
             }
             
-            if ($this->input->get('payment_status')) {
-                $filters['payment_status'] = $this->input->get('payment_status');
+            if ($payment_status !== '' && in_array($payment_status, $allowed_payment_statuses, true)) {
+                $filters['payment_status'] = $payment_status;
                 $data['filter_applied'] = true;
             }
             
@@ -347,7 +378,7 @@ class Billing extends SHV_Controller {
                                      ->get()
                                      ->result_array();
             
-            $data['statuses'] = ['DRAFT', 'ISSUED', 'PARTIALLY_PAID', 'PAID', 'CANCELLED'];
+            $data['statuses'] = $allowed_invoice_statuses;
             
             $this->scripts_include->includePlugins(array('datatables'), 'js');
             $this->scripts_include->includePlugins(array('datatables'), 'css');
@@ -565,6 +596,33 @@ class Billing extends SHV_Controller {
             log_message('error', 'Error fetching services: ' . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Error fetching services']);
         }
+    }
+
+    private function ensure_authenticated()
+    {
+        if (isset($this->rbac) && !$this->rbac->is_login()) {
+            if ($this->input->is_ajax_request()) {
+                $this->output
+                    ->set_status_header(401)
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode(['success' => false, 'message' => 'Authentication required']));
+                exit;
+            }
+
+            redirect('login');
+            exit;
+        }
+    }
+
+    private function load_billing_settings()
+    {
+        $config = [];
+        $path = APPPATH . 'modules/billing/config.php';
+        if (file_exists($path)) {
+            include $path;
+        }
+
+        return isset($config['billing']) && is_array($config['billing']) ? $config['billing'] : [];
     }
 
     /**

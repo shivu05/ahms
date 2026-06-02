@@ -12,7 +12,7 @@ $this->layout->setLayout('admin_layout');
 
 <?php if (isset($setup_required) && $setup_required): ?>
 <div class="alert alert-warning">
-    <strong>Setup Required:</strong> <?php echo $message ?? 'Billing module needs to be configured'; ?>
+    <strong>Setup Required:</strong> <?php echo html_escape($message ?? 'Billing module needs to be configured'); ?>
 </div>
 <?php else: ?>
 
@@ -24,7 +24,7 @@ $this->layout->setLayout('admin_layout');
                 <h3 class="panel-title">Today's Invoices</h3>
             </div>
             <div class="panel-body text-center">
-                <h2><?php echo $today_invoices ?? 0; ?></h2>
+                <h2><?php echo (int) ($today_invoices ?? 0); ?></h2>
                 <p class="text-muted">Invoices Created</p>
             </div>
         </div>
@@ -37,7 +37,7 @@ $this->layout->setLayout('admin_layout');
             </div>
             <div class="panel-body text-center">
                 <h2>₹<?php echo number_format($today_collection ?? 0, 2); ?></h2>
-                <p class="text-muted"><?php echo $today_payments ?? 0; ?> Payments</p>
+                <p class="text-muted"><?php echo (int) ($today_payments ?? 0); ?> Payments</p>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@ $this->layout->setLayout('admin_layout');
                 <h3 class="panel-title">Overdue Invoices</h3>
             </div>
             <div class="panel-body text-center">
-                <h2><?php echo $overdue_invoices ?? 0; ?></h2>
+                <h2><?php echo (int) ($overdue_invoices ?? 0); ?></h2>
                 <p class="text-muted">Pending Payment</p>
             </div>
         </div>
@@ -60,7 +60,7 @@ $this->layout->setLayout('admin_layout');
                 <h3 class="panel-title">Pending Claims</h3>
             </div>
             <div class="panel-body text-center">
-                <h2><?php echo $pending_claims ?? 0; ?></h2>
+                <h2><?php echo (int) ($pending_claims ?? 0); ?></h2>
                 <p class="text-muted">Insurance Claims</p>
             </div>
         </div>
@@ -78,7 +78,7 @@ $this->layout->setLayout('admin_layout');
                 <table class="table table-condensed">
                     <tr>
                         <td><strong>Total Invoices:</strong></td>
-                        <td><?php echo $month_summary['total_invoices'] ?? 0; ?></td>
+                        <td><?php echo (int) ($month_summary['total_invoices'] ?? 0); ?></td>
                     </tr>
                     <tr>
                         <td><strong>Total Revenue:</strong></td>
@@ -107,15 +107,15 @@ $this->layout->setLayout('admin_layout');
                 <table class="table table-condensed">
                     <tr>
                         <td><strong>Paid Invoices:</strong></td>
-                        <td><?php echo $month_summary['paid_invoices'] ?? 0; ?></td>
+                        <td><?php echo (int) ($month_summary['paid_invoices'] ?? 0); ?></td>
                     </tr>
                     <tr>
                         <td><strong>Unpaid Invoices:</strong></td>
-                        <td><?php echo $month_summary['unpaid_invoices'] ?? 0; ?></td>
+                        <td><?php echo (int) ($month_summary['unpaid_invoices'] ?? 0); ?></td>
                     </tr>
                     <tr>
                         <td><strong>Partially Paid:</strong></td>
-                        <td><?php echo $month_summary['partial_invoices'] ?? 0; ?></td>
+                        <td><?php echo (int) ($month_summary['partial_invoices'] ?? 0); ?></td>
                     </tr>
                 </table>
             </div>
@@ -146,13 +146,13 @@ $this->layout->setLayout('admin_layout');
                         <?php if (!empty($recent_invoices)): ?>
                             <?php foreach ($recent_invoices as $inv): ?>
                                 <tr>
-                                    <td><?php echo $inv['invoice_number']; ?></td>
+                                    <td><?php echo html_escape($inv['invoice_number']); ?></td>
                                     <td><?php echo date('d-m-Y', strtotime($inv['invoice_date'])); ?></td>
-                                    <td><?php echo $inv['patient_name'] ?? 'N/A'; ?></td>
+                                    <td><?php echo html_escape($inv['patient_name'] ?? 'N/A'); ?></td>
                                     <td>₹<?php echo number_format($inv['total_amount'], 2); ?></td>
                                     <td>
                                         <span class="label label-<?php echo get_invoice_status_class($inv['payment_status']); ?>">
-                                            <?php echo $inv['payment_status']; ?>
+                                            <?php echo html_escape($inv['payment_status']); ?>
                                         </span>
                                     </td>
                                     <td>
