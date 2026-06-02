@@ -201,14 +201,34 @@ class treatment_model extends CI_Model
         return $this->db->get()->row_array();
     }
 
-    function get_treatment_history($opd)
+    function get_treatment_history($opd, $limit = NULL)
     {
         $where = array(
             'OpdNo' => $opd,
             'InOrOutPat !=' => NULL,
             'attndedon !=' => NULL,
         );
-        return $this->db->get_where('treatmentdata', $where)->result_array();
+        $this->db->where($where);
+        if ($limit !== NULL) {
+            $this->db->order_by('attndedon', 'DESC');
+            $this->db->order_by('ID', 'DESC');
+            $this->db->limit((int) $limit);
+        }
+        return $this->db->get('treatmentdata')->result_array();
+    }
+
+    function get_visit_summary($opd)
+    {
+        $this->db->select('COUNT(*) AS total_visits, MAX(attndedon) AS last_visit_date');
+        $this->db->where('OpdNo', $opd);
+        $this->db->where('InOrOutPat !=', NULL);
+        $this->db->where('attndedon !=', NULL);
+        $summary = $this->db->get('treatmentdata')->row_array();
+
+        return array(
+            'total_visits' => isset($summary['total_visits']) ? (int) $summary['total_visits'] : 0,
+            'last_visit_date' => isset($summary['last_visit_date']) ? $summary['last_visit_date'] : NULL
+        );
     }
 
     function get_current_treatment_info($opd, $treat_id)
@@ -254,6 +274,45 @@ class treatment_model extends CI_Model
     function store_treatment($post_values, $treat_id)
     {
         return $this->db->update('treatmentdata', $post_values, array('ID' => $treat_id));
+    }
+
+    public function search_diagnosis($term = '', $limit = 20)
+    {
+        $term = trim((string) $term);
+        $this->db->select('id, diagnosis_name');
+        $this->db->from('diagnosis');
+        $this->db->where('InActive', 0);
+        if ($term !== '') {
+            $this->db->like('diagnosis_name', $term);
+        }
+        $this->db->order_by('diagnosis_name', 'ASC');
+        $this->db->limit((int) $limit);
+        return $this->db->get()->result_array();
+    }
+
+    public function get_active_treatment_templates($department = NULL, $diagnosis_id = NULL)
+    {
+        if (!$this->db->table_exists('treatment_templates')) {
+            return array();
+        }
+
+        $this->db->select('id, name, department_id, diagnosis_id, treatment_text');
+        $this->db->from('treatment_templates');
+        $this->db->where('status', 'ACTIVE');
+        if ($department !== NULL && $department !== '') {
+            $this->db->group_start();
+            $this->db->where('department_id', NULL);
+            $this->db->or_where('department_id', $department);
+            $this->db->group_end();
+        }
+        if ($diagnosis_id !== NULL && $diagnosis_id !== '') {
+            $this->db->group_start();
+            $this->db->where('diagnosis_id', NULL);
+            $this->db->or_where('diagnosis_id', $diagnosis_id);
+            $this->db->group_end();
+        }
+        $this->db->order_by('name', 'ASC');
+        return $this->db->get()->result_array();
     }
 
     public function add_ecg_info($ecgdata)

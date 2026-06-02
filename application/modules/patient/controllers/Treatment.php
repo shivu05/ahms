@@ -146,6 +146,8 @@ class Treatment extends SHV_Controller {
         $data['treat_id'] = $treat_id;
         $data['patient_details'] = $this->treatment_model->get_patient_basic_details($opd);
         $data['treatment_details'] = $this->treatment_model->get_treatment_history($opd);
+        $data['recent_visits'] = $this->treatment_model->get_treatment_history($opd, 5);
+        $data['visit_summary'] = $this->treatment_model->get_visit_summary($opd);
         $data['wards'] = $this->treatment_model->getBedno(true);
         $treatment_details = $this->treatment_model->get_current_treatment_info($opd, $treat_id);
         $data['med_freqs'] = $this->get_medicine_frequency();
@@ -159,8 +161,47 @@ class Treatment extends SHV_Controller {
         $data['physic_list'] = $this->master_physiotheraphy->all();
         $data['other_proc_list'] = $this->master_other_procedures->all();
         $data['medicines'] = $this->purchase_variables->filter(array('name'), array('type' => 'product'));
+        $template_department = isset($treatment_details['treatment_data']['department']) ? $treatment_details['treatment_data']['department'] : NULL;
+        $data['treatment_templates'] = $this->treatment_model->get_active_treatment_templates($template_department);
         $this->layout->data = $data;
         $this->layout->render();
+    }
+
+    public function search_diagnosis()
+    {
+        $this->output->set_content_type('application/json');
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('results' => array()));
+            return;
+        }
+
+        $term = $this->input->get('term');
+        $items = $this->treatment_model->search_diagnosis($term);
+        $results = array();
+        foreach ($items as $item) {
+            $results[] = array(
+                'id' => $item['diagnosis_name'],
+                'text' => $item['diagnosis_name'],
+                'diagnosis_id' => $item['id']
+            );
+        }
+        echo json_encode(array('results' => $results));
+    }
+
+    public function fetch_treatment_templates()
+    {
+        $this->output->set_content_type('application/json');
+        if (!$this->input->is_ajax_request()) {
+            echo json_encode(array('status' => false, 'data' => array()));
+            return;
+        }
+
+        $department = $this->input->get('department');
+        $diagnosis_id = $this->input->get('diagnosis_id');
+        echo json_encode(array(
+            'status' => true,
+            'data' => $this->treatment_model->get_active_treatment_templates($department, $diagnosis_id)
+        ));
     }
 
     function add_pharmcy($treat_id, $type = 'opd') {
