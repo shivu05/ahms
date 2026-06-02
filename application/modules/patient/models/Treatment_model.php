@@ -281,7 +281,9 @@ class treatment_model extends CI_Model
         $term = trim((string) $term);
         $this->db->select('id, diagnosis_name');
         $this->db->from('diagnosis');
-        $this->db->where('InActive', 0);
+        if ($this->db->field_exists('InActive', 'diagnosis')) {
+            $this->db->where('(InActive = 0 OR InActive IS NULL)', NULL, FALSE);
+        }
         if ($term !== '') {
             $this->db->like('diagnosis_name', $term);
         }

@@ -157,6 +157,7 @@ class Treatment extends SHV_Controller {
         $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
         $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
         $data['diagnosis'] = $this->diagnosis->all();
+        $data['diagnosis_suggestions'] = $this->treatment_model->search_diagnosis('', 500);
         $data['complaints'] = $this->complaints->all();
         $data['physic_list'] = $this->master_physiotheraphy->all();
         $data['other_proc_list'] = $this->master_other_procedures->all();

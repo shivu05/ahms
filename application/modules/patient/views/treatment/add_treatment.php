@@ -308,7 +308,14 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                     ?>
                                     </select>-->
                                     <input type="hidden" name="diagnosis_master_id" id="diagnosis_master_id" value="" />
-                                    <select class="form-control prescription_inputs" name="diagnosis" id="diagnosis" style="width:100%;"></select>
+                                    <input type="text" class="form-control prescription_inputs" name="diagnosis" id="diagnosis" list="diagnosis_suggestions" autocomplete="off" placeholder="Search or type diagnosis" onkeyup="this.value = this.value.toUpperCase();" />
+                                    <datalist id="diagnosis_suggestions">
+                                        <?php if (!empty($diagnosis_suggestions)): ?>
+                                            <?php foreach ($diagnosis_suggestions as $row): ?>
+                                                <option value="<?php echo html_escape($row['diagnosis_name']); ?>"></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </datalist>
                                 </div>
                             </div>
                             <hr />
@@ -1040,44 +1047,52 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function() {
-        var diagnosisSearchUrl = '<?php echo base_url('patient/treatment/search_diagnosis'); ?>';
         var templateFetchUrl = '<?php echo base_url('patient/treatment/fetch_treatment_templates'); ?>';
         var currentDepartment = '<?php echo html_escape($curr_dept); ?>';
-
-        $('#diagnosis').select2({
-            ajax: {
-                url: diagnosisSearchUrl,
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        term: params.term || ''
-                    };
-                },
-                processResults: function(data) {
-                    return data;
-                }
-            },
-            tags: true,
-            placeholder: 'Search or type diagnosis',
-            minimumInputLength: 1,
-            width: '100%',
-            createTag: function(params) {
-                var term = $.trim(params.term || '').toUpperCase();
-                if (term === '') {
-                    return null;
-                }
-                return {
-                    id: term,
-                    text: term,
-                    newTag: true
-                };
+        var diagnosisSuggestions = <?php
+        $diagnosis_autocomplete = array();
+        if (!empty($diagnosis_suggestions)) {
+            foreach ($diagnosis_suggestions as $row) {
+                $diagnosis_autocomplete[] = array(
+                    'label' => $row['diagnosis_name'],
+                    'value' => $row['diagnosis_name'],
+                    'id' => $row['id']
+                );
             }
-        }).on('select2:select', function(e) {
-            var data = e.params.data || {};
-            $('#diagnosis_master_id').val(data.diagnosis_id || '');
-            refreshTreatmentTemplates(data.diagnosis_id || '');
-        });
+        }
+        echo json_encode($diagnosis_autocomplete);
+        ?>;
+
+        function syncDiagnosisMasterId() {
+            var typedDiagnosis = $.trim($('#diagnosis').val()).toUpperCase();
+            var diagnosisId = '';
+            $.each(diagnosisSuggestions, function(i, item) {
+                if ($.trim(item.value).toUpperCase() === typedDiagnosis) {
+                    diagnosisId = item.id;
+                    return false;
+                }
+            });
+            $('#diagnosis_master_id').val(diagnosisId);
+            refreshTreatmentTemplates(diagnosisId);
+        }
+
+        if ($.fn.autocomplete) {
+            $('#diagnosis').autocomplete({
+                minLength: 1,
+                source: function(request, response) {
+                    var term = $.trim(request.term).toUpperCase();
+                    response($.grep(diagnosisSuggestions, function(item) {
+                        return item.value.toUpperCase().indexOf(term) !== -1;
+                    }).slice(0, 20));
+                },
+                select: function(event, ui) {
+                    $('#diagnosis_master_id').val(ui.item.id || '');
+                    refreshTreatmentTemplates(ui.item.id || '');
+                }
+            });
+        }
+
+        $('#diagnosis').on('change blur', syncDiagnosisMasterId);
 
         function refreshTreatmentTemplates(diagnosisId) {
             $.ajax({
@@ -1142,11 +1157,11 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
         $('#add_prescription').click(function() {
             if ($(this).is(":checked")) {
                 $('.prescription_inputs').removeAttr('disabled');
-                $('#diagnosis').prop('disabled', false).trigger('change.select2');
+                $('#diagnosis').prop('disabled', false);
                 $('#treatment_template, #apply_template').prop('disabled', $('#treatment_template option').length <= 1);
             } else if ($(this).is(":not(:checked)")) {
                 $('.prescription_inputs').attr('disabled', 'disabled');
-                $('#diagnosis').prop('disabled', true).trigger('change.select2');
+                $('#diagnosis').prop('disabled', true);
                 $('#treatment_template, #apply_template').prop('disabled', true);
             }
         });
