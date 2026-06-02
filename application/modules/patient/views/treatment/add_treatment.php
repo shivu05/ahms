@@ -1076,22 +1076,6 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
             refreshTreatmentTemplates(diagnosisId);
         }
 
-        if ($.fn.autocomplete) {
-            $('#diagnosis').autocomplete({
-                minLength: 1,
-                source: function(request, response) {
-                    var term = $.trim(request.term).toUpperCase();
-                    response($.grep(diagnosisSuggestions, function(item) {
-                        return item.value.toUpperCase().indexOf(term) !== -1;
-                    }).slice(0, 20));
-                },
-                select: function(event, ui) {
-                    $('#diagnosis_master_id').val(ui.item.id || '');
-                    refreshTreatmentTemplates(ui.item.id || '');
-                }
-            });
-        }
-
         $('#diagnosis').on('change blur', syncDiagnosisMasterId);
 
         function refreshTreatmentTemplates(diagnosisId) {
