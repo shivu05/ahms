@@ -36,6 +36,124 @@
         border-bottom-right-radius: 7px;
         display: block;
     }
+
+    .treatment-screen .box {
+        border-radius: 6px;
+    }
+
+    .patient-summary {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .patient-summary img {
+        width: 58px;
+        height: 58px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #d7dde3;
+    }
+
+    .patient-summary-name {
+        min-width: 180px;
+    }
+
+    .patient-summary-name h3 {
+        margin: 0 0 4px;
+        font-size: 20px;
+        line-height: 1.2;
+    }
+
+    .patient-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 10px 18px;
+        flex: 1;
+        min-width: 320px;
+    }
+
+    .summary-label,
+    .visit-label {
+        display: block;
+        color: #6b7280;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .02em;
+    }
+
+    .summary-value,
+    .visit-value {
+        font-weight: 600;
+        color: #263238;
+        word-break: break-word;
+    }
+
+    .section-title {
+        margin: 0 0 12px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #263238;
+    }
+
+    .visit-history-panel .box-body {
+        max-height: 430px;
+        overflow: auto;
+    }
+
+    .visit-item {
+        border-bottom: 1px solid #eef1f4;
+        padding: 10px 0;
+    }
+
+    .visit-item:first-child {
+        padding-top: 0;
+    }
+
+    .visit-item:last-child {
+        border-bottom: 0;
+    }
+
+    .visit-diagnosis {
+        margin: 4px 0;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .visit-treatment {
+        color: #4b5563;
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .clinical-entry .form-control {
+        min-height: 42px;
+    }
+
+    .template-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .template-toolbar select {
+        flex: 1;
+    }
+
+    .action-bar {
+        border-top: 1px solid #edf0f2;
+        padding: 15px;
+        text-align: right;
+        background: #fbfcfd;
+    }
+
+    @media (max-width: 991px) {
+        .patient-summary-grid {
+            grid-template-columns: repeat(2, minmax(120px, 1fr));
+        }
+    }
 </style>
 <?php
 $panchakarma_markup = "";
@@ -64,31 +182,28 @@ if (!empty($other_proc_list)) {
         $other_proc_markup .= '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
     }
 }
+$curr_dept = (isset($current_treatment['department']) && $current_treatment['department'] != '') ? $current_treatment['department'] : '';
+$selected_doc = '';
+if (!empty($doctors)) {
+    $latest_data = NULL;
+    if (!empty($treatment_details)) {
+        end($treatment_details);
+        $latest_data = key($treatment_details);
+    }
+    $selected_doc = (isset($current_treatment['AddedBy']) && $current_treatment['AddedBy'] != "") ? $current_treatment['AddedBy'] : '';
+    if ($selected_doc === '' && $latest_data !== NULL && isset($treatment_details[$latest_data]['AddedBy'])) {
+        $selected_doc = $treatment_details[$latest_data]['AddedBy'];
+    }
+}
+$current_visit_date = isset($current_treatment['CameOn']) ? $current_treatment['CameOn'] : '';
+$last_visit_date = isset($visit_summary['last_visit_date']) ? $visit_summary['last_visit_date'] : '';
+$total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_visits'] : 0;
 ?>
+<div class="treatment-screen">
 <div class="row">
-    <div class="col-md-3 col-sm-12">
-        <div class="box box-primary" style="border-top: 5px solid #009688;">
-            <div class="box-body">
-                <div class="text-center" style="margin: auto;text-align: center;">
-                    <img class="img-responsive rounded" style="text-align: center;margin: auto" src="<?php echo base_url('assets/img/user_icon.png') ?>" width="100" height="100" />
-                </div>
-                <h4 style="margin-top: 2%;" class="text-center"><?php echo $patient_details['FirstName'] . ' ' . $patient_details['LastName']; ?></h4>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">OPD: <span class="pull-right"><?php echo $patient_details['OpdNo']; ?></span></li>
-                    <li class="list-group-item">Age: <span class="pull-right"><?php echo $patient_details['Age']; ?></span></li>
-                    <li class="list-group-item">Gender: <span class="pull-right"><?php echo $patient_details['gender']; ?></span></li>
-                    <li class="list-group-item">Place: <span class="pull-right"><?php echo $patient_details['city']; ?></span></li>
-                    <li class="list-group-item">Blood group: <span class="pull-right"></span></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-9 col-sm-12">
+    <div class="col-md-12 col-sm-12">
         <div class="">
             <div class="">
-                <?php
-                $curr_dept = (isset($current_treatment['department']) && $current_treatment['department'] != '') ? $current_treatment['department'] : '';
-                ?>
                 <form name="add_treatment_form" id="add_treatment_form" action="<?php echo base_url('patient/treatment/save'); ?>" method="POST">
                     <!--hiddden fields-->
                     <input type="hidden" name="treat_id" id="treat_id" value="<?php echo $treat_id; ?>" />
@@ -96,65 +211,69 @@ if (!empty($other_proc_list)) {
                     <input type="hidden" name="department" id="department" value="<?php echo $curr_dept; ?>" />
                     <div class="box box-primary">
                         <div class="box-body">
-                            <h6>
-                                <?php if ($curr_dept): ?>
-                                    Department: <span class="text-warning"> <?php echo ucfirst(strtolower(str_replace('_', ' ', $curr_dept))); ?></span>
-                                <?php endif; ?>
-                                <?php if (isset($current_treatment['CameOn']) && trim($current_treatment['CameOn']) != ''): ?>
-                                    <span class="pull-right">Follow up date: <span class="text-warning"> <?php echo $current_treatment['CameOn']; ?></span>
-                                    <?php endif; ?>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a class="btn btn-info btn-sm pull-right" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
-                                    </span>
-                            </h6>
-                            <hr />
-                            <?php if (!empty($treatment_details)): ?>
-                                <div class="box-group" id="accordion">
-                                    <?php
-                                    $i = 0;
-                                    foreach ($treatment_details as $treatment) {
-                                        $i++;
-                                    ?>
-                                        <div class="panel box box-primary">
-                                            <div class="box-header with-border">
-                                                <h4 class="box-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $i ?>" aria-expanded="true" class="">
-                                                        <i class="fa fa-user-md main"></i><i class="fa fa-angle-double-right mr-3"></i>
-                                                        Visited date: <?php echo $treatment['CameOn']; ?>
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapse<?= $i ?>" class="collapse" aria-labelledby="heading<?= $i ?>" data-parent="#accordionExample">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-md-3 border-info">
-                                                            <h6>Diagnosis:</h6>
-                                                            <p><?php echo $treatment['diagnosis']; ?></p>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <h6>Treatment:</h6>
-                                                            <p><?php echo $treatment['Trtment']; ?></p>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <h6>Department:</h6>
-                                                            <p><?php echo $treatment['department']; ?></p>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <h6>Procedure:</h6>
-                                                            <p><?php echo $treatment['procedures']; ?></p>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <h6>Doctor:</h6>
-                                                            <p><?php echo $treatment['attndedby']; ?></p>
-                                                        </div>
-                                                    </div>
+                            <div class="clearfix" style="margin-bottom: 12px;">
+                                <a class="btn btn-info btn-sm pull-right" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 col-sm-12">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title section-title">Patient Summary</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="patient-summary">
+                                                <img class="img-responsive" src="<?php echo base_url('assets/img/user_icon.png') ?>" alt="Patient photo" />
+                                                <div class="patient-summary-name">
+                                                    <h3><?php echo html_escape(trim($patient_details['FirstName'] . ' ' . $patient_details['LastName'])); ?></h3>
+                                                    <span class="label label-primary">OPD <?php echo html_escape($patient_details['OpdNo']); ?></span>
+                                                </div>
+                                                <div class="patient-summary-grid">
+                                                    <div><span class="summary-label">Age</span><span class="summary-value"><?php echo html_escape($patient_details['Age']); ?></span></div>
+                                                    <div><span class="summary-label">Gender</span><span class="summary-value"><?php echo html_escape($patient_details['gender']); ?></span></div>
+                                                    <div><span class="summary-label">Place</span><span class="summary-value"><?php echo html_escape($patient_details['city']); ?></span></div>
+                                                    <div><span class="summary-label">Department</span><span class="summary-value"><?php echo $curr_dept ? html_escape(ucfirst(strtolower(str_replace('_', ' ', $curr_dept)))) : '-'; ?></span></div>
+                                                    <div><span class="summary-label">Doctor</span><span class="summary-value"><?php echo $selected_doc ? html_escape($selected_doc) : '-'; ?></span></div>
+                                                    <div><span class="summary-label">Current Visit</span><span class="summary-value"><?php echo $current_visit_date ? html_escape($current_visit_date) : '-'; ?></span></div>
+                                                    <div><span class="summary-label">Last Visit</span><span class="summary-value"><?php echo $last_visit_date ? html_escape($last_visit_date) : '-'; ?></span></div>
+                                                    <div><span class="summary-label">Total Visits</span><span class="summary-value"><?php echo html_escape($total_visits); ?></span></div>
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php } ?>
+                                    </div>
                                 </div>
-                            <?php endif; ?>
-                            <hr />
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="box box-solid visit-history-panel">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title section-title">Recent Visits</h3>
+                                            <div class="box-tools pull-right">
+                                                <a class="btn btn-default btn-xs" href="<?php echo base_url('patient/treatment/show_patients'); ?>">View full history</a>
+                                            </div>
+                                        </div>
+                                        <div class="box-body">
+                                            <?php if (!empty($recent_visits)): ?>
+                                                <?php foreach ($recent_visits as $visit): ?>
+                                                    <div class="visit-item">
+                                                        <span class="visit-label"><?php echo html_escape($visit['attndedon'] ?: $visit['CameOn']); ?></span>
+                                                        <div class="visit-diagnosis"><?php echo html_escape($visit['diagnosis'] ?: '-'); ?></div>
+                                                        <div class="visit-treatment"><?php echo html_escape(strlen($visit['Trtment']) > 120 ? substr($visit['Trtment'], 0, 120) . '...' : $visit['Trtment']); ?></div>
+                                                        <div class="text-muted" style="font-size: 12px; margin-top: 4px;">
+                                                            <?php echo html_escape($visit['attndedby'] ?: $visit['AddedBy']); ?> &middot;
+                                                            <?php echo html_escape(ucfirst(strtolower(str_replace('_', ' ', $visit['department'])))); ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p class="text-muted">No previous visits recorded.</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box box-solid clinical-entry">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title section-title">Clinical Entry</h3>
+                                </div>
+                                <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <input type="checkbox" name="add_prescription" id="add_prescription" style="margin-top: 7px;" />
@@ -188,13 +307,29 @@ if (!empty($other_proc_list)) {
                                     }
                                     ?>
                                     </select>-->
-                                    <textarea class="form-control prescription_inputs" onkeyup="this.value = this.value.toUpperCase();" name="diagnosis" id="diagnosis"></textarea>
+                                    <input type="hidden" name="diagnosis_master_id" id="diagnosis_master_id" value="" />
+                                    <select class="form-control prescription_inputs" name="diagnosis" id="diagnosis" style="width:100%;"></select>
                                 </div>
                             </div>
                             <hr />
                             <div class="row">
                                 <div class="col-md-6 col-sm-12">
                                     <label>Treatment: <span class="text-danger">*</span></label>
+                                    <div class="template-toolbar">
+                                        <select class="form-control prescription_inputs" id="treatment_template" <?php echo empty($treatment_templates) ? 'disabled="disabled"' : ''; ?>>
+                                            <option value="">Use Template</option>
+                                            <?php if (!empty($treatment_templates)): ?>
+                                                <?php foreach ($treatment_templates as $template): ?>
+                                                    <option value="<?php echo html_escape($template['id']); ?>" data-treatment="<?php echo html_escape($template['treatment_text']); ?>">
+                                                        <?php echo html_escape($template['name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-default btn-sm prescription_inputs" id="apply_template" <?php echo empty($treatment_templates) ? 'disabled="disabled"' : ''; ?>>
+                                            <i class="fa fa-magic"></i> Apply
+                                        </button>
+                                    </div>
                                     <!-- <select class="form-control select2 prescription_inputs" name="treatment[]" id="treatment" multiple="multiple" data-placeholder="Choose Medicines">
                                         <option value="">choose medicine</option>
                                     <?php
@@ -259,10 +394,6 @@ if (!empty($other_proc_list)) {
                                  </div>
                              </div>
                              <hr/>-->
-                            <?php
-                            end($treatment_details);
-                            $latest_data = key($treatment_details);
-                            ?>
                             <div class="row">
                                 <div class="col-md-3 col-sm-12">
                                     <label>Doctor: </label>
@@ -271,8 +402,6 @@ if (!empty($other_proc_list)) {
                                         <option value="">Choose doctor</option>
                                         <?php
                                         if (!empty($doctors)) {
-                                            $selected_doc = ($current_treatment['AddedBy'] == "") ? $treatment_details[$latest_data]['AddedBy'] : $current_treatment['AddedBy'];
-
                                             foreach ($doctors as $doctor) {
                                                 $selected = (strtolower($selected_doc) == strtolower($doctor['user_name'])) ? 'selected="selected"' : '';
                                                 echo '<option value="' . $doctor['user_name'] . '" ' . $selected . '>' . $doctor['user_name'] . '</option>';
@@ -286,6 +415,8 @@ if (!empty($other_proc_list)) {
                                     <input type="text" name="attened_date" id="attened_date" class="form-control date_picker prescription_inputs" value="<?php echo date('Y-m-d') ?>" />
                                 </div>
                             </div><!-- end of trearment div-->
+                                </div>
+                            </div>
 
                             <!-- Tests -->
                             <hr />
@@ -881,19 +1012,21 @@ if (!empty($other_proc_list)) {
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 text-center">
-                                <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> Save</button>
-                                <button class="btn btn-danger"><i class="fa fa-refresh"></i> Reset</button>
-                            </div>
+                        <div class="action-bar">
+                            <button class="btn btn-primary" type="submit" name="save_action" value="save"><i class="fa fa-save"></i> Save</button>
+                            <!-- TODO Phase 2: wire Save & Print after save flow supports post-save redirect to print_case_sheet. -->
+                            <button class="btn btn-default" type="button" disabled="disabled"><i class="fa fa-print"></i> Save &amp; Print</button>
+                            <!-- TODO Phase 2: enable after WhatsApp integration is available. -->
+                            <button class="btn btn-default" type="button" disabled="disabled"><i class="fa fa-whatsapp"></i> Save &amp; WhatsApp</button>
+                            <button class="btn btn-danger" type="reset"><i class="fa fa-refresh"></i> Reset</button>
                         </div>
-                        <br />
                     </div>
 
                 </form>
             </div>
         </div>
-    </div><!-- col-9 -->
+    </div>
+</div>
 </div>
 <script type="text/javascript">
     $(function() {
@@ -907,6 +1040,79 @@ if (!empty($other_proc_list)) {
     var procedure_div_ids = ['prescription_inputs', 'birth_input', 'ecg_inputs', 'usg_inputs', 'xray_inputs', 'kshara_inputs', 'surgery_inputs', 'lab_inputs', 'physic_inputs', 'pancha_input', 'othr_proc_inputs', 'kriya_inputs'];
     var panchakarma_markup = "<?= $panchakarma_markup ?>";
     $(document).ready(function() {
+        var diagnosisSearchUrl = '<?php echo base_url('patient/treatment/search_diagnosis'); ?>';
+        var templateFetchUrl = '<?php echo base_url('patient/treatment/fetch_treatment_templates'); ?>';
+        var currentDepartment = '<?php echo html_escape($curr_dept); ?>';
+
+        $('#diagnosis').select2({
+            ajax: {
+                url: diagnosisSearchUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        term: params.term || ''
+                    };
+                },
+                processResults: function(data) {
+                    return data;
+                }
+            },
+            tags: true,
+            placeholder: 'Search or type diagnosis',
+            minimumInputLength: 1,
+            width: '100%',
+            createTag: function(params) {
+                var term = $.trim(params.term || '').toUpperCase();
+                if (term === '') {
+                    return null;
+                }
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                };
+            }
+        }).on('select2:select', function(e) {
+            var data = e.params.data || {};
+            $('#diagnosis_master_id').val(data.diagnosis_id || '');
+            refreshTreatmentTemplates(data.diagnosis_id || '');
+        });
+
+        function refreshTreatmentTemplates(diagnosisId) {
+            $.ajax({
+                url: templateFetchUrl,
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    department: currentDepartment,
+                    diagnosis_id: diagnosisId
+                },
+                success: function(response) {
+                    var list = response.status ? response.data : [];
+                    var options = '<option value="">Use Template</option>';
+                    $.each(list, function(i, item) {
+                        options += '<option value="' + item.id + '" data-treatment="' + $('<div/>').text(item.treatment_text || '').html() + '">' + $('<div/>').text(item.name || '').html() + '</option>';
+                    });
+                    $('#treatment_template').html(options);
+                    $('#treatment_template, #apply_template').prop('disabled', list.length === 0 || $('#add_prescription').is(':not(:checked)'));
+                }
+            });
+        }
+
+        $('#apply_template').on('click', function() {
+            var templateText = $('#treatment_template option:selected').data('treatment') || '';
+            var currentText = $('#treatment').val();
+            if (!templateText) {
+                return;
+            }
+            if (currentText && !confirm('Treatment already has text. Replace it with the selected template? Choose Cancel to append.')) {
+                $('#treatment').val(currentText + "\n" + templateText.toUpperCase());
+            } else {
+                $('#treatment').val(templateText.toUpperCase());
+            }
+            $('#treatment').focus();
+        });
 
         var ipd_status = '<?php echo  $ipd_status; ?>';
         if (ipd_status) {
@@ -936,8 +1142,12 @@ if (!empty($other_proc_list)) {
         $('#add_prescription').click(function() {
             if ($(this).is(":checked")) {
                 $('.prescription_inputs').removeAttr('disabled');
+                $('#diagnosis').prop('disabled', false).trigger('change.select2');
+                $('#treatment_template, #apply_template').prop('disabled', $('#treatment_template option').length <= 1);
             } else if ($(this).is(":not(:checked)")) {
                 $('.prescription_inputs').attr('disabled', 'disabled');
+                $('#diagnosis').prop('disabled', true).trigger('change.select2');
+                $('#treatment_template, #apply_template').prop('disabled', true);
             }
         });
 
