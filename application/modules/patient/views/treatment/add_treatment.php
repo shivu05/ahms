@@ -141,6 +141,49 @@
         word-break: break-word;
     }
 
+    .diagnosis-autocomplete {
+        position: relative;
+    }
+
+    .diagnosis-suggestion-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1060;
+        max-height: 230px;
+        overflow-y: auto;
+        margin-top: 2px;
+        padding: 4px 0;
+        background: #ffffff;
+        border: 1px solid #cfd8dc;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
+    }
+
+    .diagnosis-suggestion-item {
+        display: block;
+        width: 100%;
+        padding: 8px 12px;
+        color: #263238;
+        text-align: left;
+        background: #ffffff;
+        border: 0;
+    }
+
+    .diagnosis-suggestion-item:hover,
+    .diagnosis-suggestion-item.is-active {
+        background: #eef6fb;
+        color: #1565c0;
+    }
+
+    .diagnosis-entry-help {
+        display: block;
+        margin-top: 4px;
+        color: #6b7280;
+        font-size: 11px;
+    }
+
     .clinical-entry .form-control {
         min-height: 42px;
     }
@@ -322,14 +365,11 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                     ?>
                                     </select>-->
                                     <input type="hidden" name="diagnosis_master_id" id="diagnosis_master_id" value="" />
-                                    <input type="text" class="form-control prescription_inputs" name="diagnosis" id="diagnosis" list="diagnosis_suggestions" autocomplete="off" placeholder="Search or type diagnosis" onkeyup="this.value = this.value.toUpperCase();" />
-                                    <datalist id="diagnosis_suggestions">
-                                        <?php if (!empty($diagnosis_suggestions)): ?>
-                                            <?php foreach ($diagnosis_suggestions as $row): ?>
-                                                <option value="<?php echo html_escape($row['diagnosis_name']); ?>"></option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </datalist>
+                                    <div class="diagnosis-autocomplete">
+                                        <input type="text" class="form-control prescription_inputs" name="diagnosis" id="diagnosis" autocomplete="off" placeholder="Type diagnoses separated by commas" aria-autocomplete="list" aria-controls="diagnosis_suggestion_menu" />
+                                        <div class="diagnosis-suggestion-menu" id="diagnosis_suggestion_menu" role="listbox"></div>
+                                    </div>
+                                    <small class="diagnosis-entry-help">Enter multiple diagnoses separated by commas. Custom diagnoses are allowed.</small>
                                 </div>
                             </div>
                             <hr />
@@ -1124,9 +1164,15 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
         }
         echo json_encode($diagnosis_autocomplete);
         ?>;
+        var activeDiagnosisSuggestionIndex = -1;
+
+        function getCurrentDiagnosisToken() {
+            var diagnosisParts = $('#diagnosis').val().split(',');
+            return $.trim(diagnosisParts[diagnosisParts.length - 1]).toUpperCase();
+        }
 
         function syncDiagnosisMasterId() {
-            var typedDiagnosis = $.trim($('#diagnosis').val()).toUpperCase();
+            var typedDiagnosis = getCurrentDiagnosisToken();
             var diagnosisId = '';
             $.each(diagnosisSuggestions, function(i, item) {
                 if ($.trim(item.value).toUpperCase() === typedDiagnosis) {
@@ -1138,7 +1184,111 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
             refreshTreatmentTemplates(diagnosisId);
         }
 
-        $('#diagnosis').on('change blur', syncDiagnosisMasterId);
+        function hideDiagnosisSuggestions() {
+            activeDiagnosisSuggestionIndex = -1;
+            $('#diagnosis_suggestion_menu').hide().empty();
+            $('#diagnosis').attr('aria-expanded', 'false');
+        }
+
+        function setActiveDiagnosisSuggestion(index) {
+            var suggestionItems = $('#diagnosis_suggestion_menu .diagnosis-suggestion-item');
+            if (!suggestionItems.length) {
+                return;
+            }
+            activeDiagnosisSuggestionIndex = (index + suggestionItems.length) % suggestionItems.length;
+            suggestionItems.removeClass('is-active').eq(activeDiagnosisSuggestionIndex).addClass('is-active');
+        }
+
+        function applyDiagnosisSuggestion(item) {
+            var diagnosisParts = $('#diagnosis').val().split(',');
+            diagnosisParts[diagnosisParts.length - 1] = item.value;
+            diagnosisParts = $.grep($.map(diagnosisParts, function(part) {
+                return $.trim(part);
+            }), function(part) {
+                return part !== '';
+            });
+
+            $('#diagnosis').val(diagnosisParts.join(', '));
+            $('#diagnosis_master_id').val(item.id || '');
+            refreshTreatmentTemplates(item.id || '');
+            hideDiagnosisSuggestions();
+            $('#diagnosis').focus();
+        }
+
+        function renderDiagnosisSuggestions() {
+            var currentToken = getCurrentDiagnosisToken();
+            var menu = $('#diagnosis_suggestion_menu');
+
+            if (!currentToken || $('#diagnosis').is(':disabled')) {
+                hideDiagnosisSuggestions();
+                return;
+            }
+
+            var matches = $.grep(diagnosisSuggestions, function(item) {
+                return item.value.toUpperCase().indexOf(currentToken) !== -1;
+            }).slice(0, 10);
+
+            menu.empty();
+            if (!matches.length) {
+                hideDiagnosisSuggestions();
+                return;
+            }
+
+            $.each(matches, function(index, item) {
+                $('<button type="button" class="diagnosis-suggestion-item" role="option"></button>')
+                    .text(item.value)
+                    .data('diagnosis-item', item)
+                    .on('mousedown', function(event) {
+                        event.preventDefault();
+                        applyDiagnosisSuggestion($(this).data('diagnosis-item'));
+                    })
+                    .appendTo(menu);
+            });
+
+            menu.show();
+            $('#diagnosis').attr('aria-expanded', 'true');
+            setActiveDiagnosisSuggestion(0);
+        }
+
+        $('#diagnosis')
+            .on('input focus', function() {
+                var caretPosition = this.selectionStart;
+                this.value = this.value.toUpperCase();
+                if (typeof caretPosition === 'number' && this.setSelectionRange) {
+                    this.setSelectionRange(caretPosition, caretPosition);
+                }
+                renderDiagnosisSuggestions();
+            })
+            .on('keydown', function(event) {
+                var suggestionItems = $('#diagnosis_suggestion_menu .diagnosis-suggestion-item');
+                if (!suggestionItems.length) {
+                    return;
+                }
+                if (event.which === 40) {
+                    event.preventDefault();
+                    setActiveDiagnosisSuggestion(activeDiagnosisSuggestionIndex + 1);
+                } else if (event.which === 38) {
+                    event.preventDefault();
+                    setActiveDiagnosisSuggestion(activeDiagnosisSuggestionIndex - 1);
+                } else if (event.which === 13 && activeDiagnosisSuggestionIndex >= 0) {
+                    event.preventDefault();
+                    applyDiagnosisSuggestion(suggestionItems.eq(activeDiagnosisSuggestionIndex).data('diagnosis-item'));
+                } else if (event.which === 27) {
+                    hideDiagnosisSuggestions();
+                }
+            })
+            .on('change blur', function() {
+                window.setTimeout(function() {
+                    syncDiagnosisMasterId();
+                    hideDiagnosisSuggestions();
+                }, 150);
+            });
+
+        $(document).on('mousedown', function(event) {
+            if (!$(event.target).closest('.diagnosis-autocomplete').length) {
+                hideDiagnosisSuggestions();
+            }
+        });
 
         function refreshTreatmentTemplates(diagnosisId) {
             $.ajax({
