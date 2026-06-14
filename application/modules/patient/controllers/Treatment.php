@@ -148,12 +148,16 @@ class Treatment extends SHV_Controller {
         $data['treatment_details'] = $this->treatment_model->get_treatment_history($opd);
         $data['recent_visits'] = $this->treatment_model->get_treatment_history($opd, 5);
         $data['visit_summary'] = $this->treatment_model->get_visit_summary($opd);
+        $data['procedure_timeline'] = $this->treatment_model->get_patient_procedure_timeline($opd, NULL, $treat_id);
         $data['wards'] = $this->treatment_model->getBedno(true);
         $treatment_details = $this->treatment_model->get_current_treatment_info($opd, $treat_id);
         $data['med_freqs'] = $this->get_medicine_frequency();
         $data['medicines'] = $this->get_product_list();
         $data['lab_categories'] = $this->lab_model->get_lab_categories();
         $data['current_treatment'] = $treatment_details['treatment_data'];
+        $vitals_date = isset($treatment_details['treatment_data']['CameOn']) ? $treatment_details['treatment_data']['CameOn'] : NULL;
+        $data['current_vitals'] = $this->treatment_model->get_patient_vitals($opd, $vitals_date);
+        $data['clinical_timeline'] = $this->treatment_model->get_patient_clinical_timeline($opd);
         $data['pancha_procedures'] = $this->fetch_panchakarma_procedures();
         $data['doctors'] = $treatment_details['doctors']; //$this->get_doctors($treatment_details['treatment_data']['department']);
         $data['diagnosis'] = $this->diagnosis->all();
@@ -218,6 +222,10 @@ class Treatment extends SHV_Controller {
         $diagnosis = $this->input->post('diagnosis');
         $complaints = $this->input->post('complaints');
         $treatment = $this->input->post('treatment');
+        $this->_store_treatment_vitals(
+            $this->input->post('opd_no'),
+            $this->input->post('attened_date') ?: date('Y-m-d')
+        );
 
         $dept = $this->input->post('department');
 
@@ -455,6 +463,47 @@ class Treatment extends SHV_Controller {
           $this->treatment_model->insert_kriyakalpa($insert_data);
           } */
         redirect('patient/treatment/show_patients', 'refresh');
+    }
+
+    private function _store_treatment_vitals($opd_no, $visit_date)
+    {
+        $posted = array(
+            'blood_pressure' => trim((string) $this->input->post('vital_bp')),
+            'pulse_rate' => trim((string) $this->input->post('vital_pulse')),
+            'weight' => trim((string) $this->input->post('vital_weight')),
+            'height' => trim((string) $this->input->post('vital_height')),
+            'bmi' => trim((string) $this->input->post('vital_bmi')),
+            'body_temperature' => trim((string) $this->input->post('vital_temperature')),
+            'spo2' => trim((string) $this->input->post('vital_spo2'))
+        );
+
+        $has_value = false;
+        foreach ($posted as $value) {
+            if ($value !== '') {
+                $has_value = true;
+                break;
+            }
+        }
+        if (!$has_value) {
+            return;
+        }
+
+        foreach (array('pulse_rate', 'weight', 'height', 'bmi', 'body_temperature', 'spo2') as $numeric_field) {
+            if ($posted[$numeric_field] !== '' && !is_numeric($posted[$numeric_field])) {
+                $posted[$numeric_field] = '';
+            }
+        }
+        if ($posted['spo2'] !== '' && ((float) $posted['spo2'] < 0 || (float) $posted['spo2'] > 100)) {
+            $posted['spo2'] = '';
+        }
+        if ($posted['height'] !== '' && $posted['weight'] !== '') {
+            $height_metres = (float) $posted['height'] / 100;
+            if ($height_metres > 0) {
+                $posted['bmi'] = round((float) $posted['weight'] / ($height_metres * $height_metres), 2);
+            }
+        }
+
+        $this->treatment_model->store_patient_vitals($opd_no, $visit_date, $posted);
     }
 
     /*

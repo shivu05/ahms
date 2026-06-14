@@ -41,6 +41,86 @@
         border-radius: 6px;
     }
 
+    .treatment-screen .box-primary > .box-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .treatment-back-row {
+        order: 1;
+    }
+
+    .patient-overview-row {
+        order: 2;
+    }
+
+    .vitals-panel {
+        order: 3;
+        margin-bottom: 10px;
+    }
+
+    .clinical-entry {
+        order: 4;
+        margin-bottom: 10px;
+    }
+
+    .patient-timeline-panel {
+        order: 5;
+    }
+
+    .procedure-timeline-panel {
+        order: 6;
+    }
+
+    .procedure-cards-row {
+        order: 8;
+    }
+
+    .procedure-cards-divider {
+        order: 7;
+    }
+
+    .admin_div {
+        order: 9;
+    }
+
+    .action-bar {
+        order: 10;
+    }
+
+    .sticky-patient-header {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        padding: 8px 18px;
+        background: #ffffff;
+        border-bottom: 1px solid #dfe5e8;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    }
+
+    .sticky-patient-header.is-visible {
+        display: block;
+    }
+
+    .sticky-patient-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        color: #263238;
+        font-size: 13px;
+    }
+
+    .sticky-patient-name {
+        font-size: 15px;
+        font-weight: 700;
+    }
+
     .patient-summary {
         display: flex;
         align-items: center;
@@ -62,8 +142,14 @@
 
     .patient-summary-name h3 {
         margin: 0 0 4px;
-        font-size: 20px;
+        font-size: 22px;
         line-height: 1.2;
+    }
+
+    .patient-summary .label-primary {
+        background-color: #0b79b7;
+        font-size: 12px;
+        padding: 5px 8px;
     }
 
     .patient-summary-grid {
@@ -88,6 +174,17 @@
         font-weight: 600;
         color: #263238;
         word-break: break-word;
+    }
+
+    .diagnosis-chip {
+        display: inline-block;
+        max-width: 100%;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #e8f4fd;
+        color: #0b5f8f;
+        font-weight: 700;
+        line-height: 1.3;
     }
 
     .section-title {
@@ -184,8 +281,212 @@
         font-size: 11px;
     }
 
+    .procedure-timeline-panel .box-body {
+        max-height: 320px;
+        overflow: auto;
+    }
+
+    .procedure-filter-group {
+        margin-bottom: 10px;
+    }
+
+    .procedure-timeline-item {
+        border: 1px solid #e6ebef;
+        border-left: 4px solid #90a4ae;
+        border-radius: 4px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        background: #ffffff;
+    }
+
+    .procedure-timeline-item.status-completed {
+        border-left-color: #00a65a;
+    }
+
+    .procedure-timeline-item.status-pending {
+        border-left-color: #f39c12;
+    }
+
+    .procedure-timeline-item.status-cancelled {
+        border-left-color: #dd4b39;
+    }
+
+    .procedure-timeline-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+    }
+
+    .procedure-timeline-name {
+        font-weight: 700;
+        color: #263238;
+    }
+
+    .procedure-timeline-meta {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        color: #607d8b;
+        font-size: 12px;
+    }
+
+    .procedure-timeline-remarks {
+        margin-top: 6px;
+        color: #4b5563;
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .vitals-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(90px, 1fr));
+        gap: 10px;
+    }
+
+    .vitals-grid label {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+
+    .vitals-grid .form-control {
+        min-height: 36px;
+    }
+
+    .patient-timeline-panel .box-body {
+        max-height: 240px;
+        overflow: auto;
+    }
+
+    .clinical-timeline-item {
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        gap: 8px;
+        border-left: 3px solid #90a4ae;
+        padding: 5px 8px;
+        margin-bottom: 4px;
+        background: #fbfcfd;
+    }
+
+    .clinical-timeline-item.timeline-procedures {
+        border-left-color: #00c0ef;
+    }
+
+    .clinical-timeline-item.timeline-vitals {
+        border-left-color: #00a65a;
+    }
+
+    .clinical-timeline-item.timeline-ipd {
+        border-left-color: #dd4b39;
+    }
+
+    .clinical-timeline-heading {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .clinical-timeline-date {
+        color: #607d8b;
+        font-size: 12px;
+        line-height: 22px;
+    }
+
+    .clinical-timeline-title {
+        font-weight: 700;
+        color: #263238;
+    }
+
+    .clinical-timeline-description {
+        margin-top: 2px;
+        color: #4b5563;
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .clinical-timeline-meta {
+        color: #78909c;
+        font-size: 11px;
+        margin-top: 1px;
+    }
+
+    .bmi-badge {
+        display: inline-block;
+        margin-top: 4px;
+        padding: 3px 7px;
+        border-radius: 4px;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .bmi-underweight {
+        background: #3c8dbc;
+    }
+
+    .bmi-normal {
+        background: #00a65a;
+    }
+
+    .bmi-overweight {
+        background: #f39c12;
+    }
+
+    .bmi-obese {
+        background: #dd4b39;
+    }
+
+    .procedure-card-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .procedure-card {
+        position: relative;
+        min-height: 116px;
+        padding: 12px;
+        border: 1px solid #dfe5e8;
+        border-radius: 6px;
+        background: #ffffff;
+    }
+
+    .procedure-card-icon {
+        color: #1684b8;
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .procedure-card h4 {
+        margin: 0 0 4px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .procedure-card p {
+        min-height: 30px;
+        margin: 0 0 8px;
+        color: #6b7280;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    .procedure-card-counts {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
     .clinical-entry .form-control {
         min-height: 42px;
+    }
+
+    .clinical-entry .box-body {
+        padding-top: 10px;
     }
 
     .template-toolbar {
@@ -207,8 +508,38 @@
     }
 
     @media (max-width: 991px) {
+        .sticky-patient-header {
+            top: 50px;
+            padding: 7px 12px;
+        }
+
+        .sticky-patient-inner {
+            gap: 8px;
+        }
+
         .patient-summary-grid {
             grid-template-columns: repeat(2, minmax(120px, 1fr));
+        }
+
+        .vitals-grid,
+        .procedure-card-grid {
+            grid-template-columns: repeat(2, minmax(130px, 1fr));
+        }
+    }
+
+    @media (max-width: 600px) {
+        .sticky-patient-header {
+            position: static;
+            display: none !important;
+        }
+
+        .clinical-timeline-item {
+            grid-template-columns: 1fr;
+        }
+
+        .vitals-grid,
+        .procedure-card-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -255,7 +586,60 @@ if (!empty($doctors)) {
 $current_visit_date = isset($current_treatment['CameOn']) ? $current_treatment['CameOn'] : '';
 $last_visit_date = isset($visit_summary['last_visit_date']) ? $visit_summary['last_visit_date'] : '';
 $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_visits'] : 0;
+$current_diagnosis = '';
+if (!empty($current_treatment['diagnosis'])) {
+    $current_diagnosis = $current_treatment['diagnosis'];
+} elseif (!empty($recent_visits)) {
+    foreach ($recent_visits as $visit) {
+        if (!empty($visit['diagnosis'])) {
+            $current_diagnosis = $visit['diagnosis'];
+            break;
+        }
+    }
+} elseif (!empty($treatment_details)) {
+    foreach (array_reverse($treatment_details) as $visit) {
+        if (!empty($visit['diagnosis'])) {
+            $current_diagnosis = $visit['diagnosis'];
+            break;
+        }
+    }
+}
+$current_diagnosis_label = $current_diagnosis !== '' ? $current_diagnosis : 'Not Recorded';
+$patient_full_name = trim($patient_details['FirstName'] . ' ' . $patient_details['LastName']);
+$display_department = $curr_dept ? ucfirst(strtolower(str_replace('_', ' ', $curr_dept))) : '-';
+$current_vitals = !empty($current_vitals) ? $current_vitals : array();
+$procedure_status_counts = array();
+if (!empty($procedure_timeline)) {
+    foreach ($procedure_timeline as $procedure_item) {
+        $type_key = strtolower($procedure_item['procedure_type']);
+        if (!isset($procedure_status_counts[$type_key])) {
+            $procedure_status_counts[$type_key] = array('pending' => 0, 'completed' => 0);
+        }
+        $count_key = ($procedure_item['status_group'] === 'completed') ? 'completed' : 'pending';
+        $procedure_status_counts[$type_key][$count_key]++;
+    }
+}
+$procedure_cards = array(
+    array('type' => 'birth', 'name' => 'Birth', 'target' => '#birth', 'icon' => 'fa-child', 'description' => 'Delivery and birth register'),
+    array('type' => 'ecg', 'name' => 'ECG', 'target' => '#ecg', 'icon' => 'fa-heartbeat', 'description' => 'Refer for ECG'),
+    array('type' => 'usg', 'name' => 'USG', 'target' => '#usg', 'icon' => 'fa-stethoscope', 'description' => 'Refer for ultrasound'),
+    array('type' => 'x-ray', 'name' => 'X-Ray', 'target' => '#xray', 'icon' => 'fa-picture-o', 'description' => 'Refer for radiology'),
+    array('type' => 'ksharasutra', 'name' => 'Ksharasutra', 'target' => '#kshara', 'icon' => 'fa-medkit', 'description' => 'Refer for Ksharasutra'),
+    array('type' => 'surgery', 'name' => 'Surgery', 'target' => '#surgery', 'icon' => 'fa-user-md', 'description' => 'Register surgery details'),
+    array('type' => 'lab', 'name' => 'Laboratory', 'target' => '#lab', 'icon' => 'fa-flask', 'description' => 'Refer lab investigations'),
+    array('type' => 'panchakarma', 'name' => 'Panchakarma', 'target' => '#panchakarma_treatment', 'icon' => 'fa-leaf', 'description' => 'Refer Panchakarma procedures'),
+    array('type' => 'physiotherapy', 'name' => 'Physiotherapy', 'target' => '#physiotherapy', 'icon' => 'fa-wheelchair', 'description' => 'Refer physiotherapy'),
+    array('type' => 'other procedure', 'name' => 'Other Procedures', 'target' => '#othertherapy', 'icon' => 'fa-plus-square', 'description' => 'Refer other procedures'),
+    array('type' => 'kriyakalpa', 'name' => 'Kriyakalpa', 'target' => '#kriyakalpa', 'icon' => 'fa-eye', 'description' => 'Refer Kriyakalpa')
+);
 ?>
+<div class="sticky-patient-header" id="sticky_patient_header">
+    <div class="sticky-patient-inner">
+        <span class="sticky-patient-name"><?php echo html_escape($patient_full_name); ?> | OPD <?php echo html_escape($patient_details['OpdNo']); ?></span>
+        <span><?php echo html_escape($patient_details['gender']); ?> | <?php echo html_escape($patient_details['Age']); ?>Y | <?php echo html_escape($display_department); ?></span>
+        <span>Diagnosis: <span class="diagnosis-chip"><?php echo html_escape($current_diagnosis_label); ?></span></span>
+    </div>
+</div>
 <div class="treatment-screen">
 <div class="row">
     <div class="col-md-12 col-sm-12">
@@ -268,10 +652,10 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                     <input type="hidden" name="department" id="department" value="<?php echo $curr_dept; ?>" />
                     <div class="box box-primary">
                         <div class="box-body">
-                            <div class="clearfix" style="margin-bottom: 12px;">
+                            <div class="clearfix treatment-back-row" style="margin-bottom: 12px;">
                                 <a class="btn btn-info btn-sm pull-right" style="color:white;" href="<?php echo base_url('patient/treatment/show_patients'); ?>"><i class="fa fa-backward"></i> Back</a>
                             </div>
-                            <div class="row">
+                            <div class="row patient-overview-row" id="patient_overview_row">
                                 <div class="col-md-8 col-sm-12">
                                     <div class="box box-solid">
                                         <div class="box-header with-border">
@@ -281,18 +665,19 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                             <div class="patient-summary">
                                                 <img class="img-responsive" src="<?php echo base_url('assets/img/user_icon.png') ?>" alt="Patient photo" />
                                                 <div class="patient-summary-name">
-                                                    <h3><?php echo html_escape(trim($patient_details['FirstName'] . ' ' . $patient_details['LastName'])); ?></h3>
+                                                    <h3><?php echo html_escape($patient_full_name); ?></h3>
                                                     <span class="label label-primary">OPD <?php echo html_escape($patient_details['OpdNo']); ?></span>
                                                 </div>
                                                 <div class="patient-summary-grid">
                                                     <div><span class="summary-label">Age</span><span class="summary-value"><?php echo html_escape($patient_details['Age']); ?></span></div>
                                                     <div><span class="summary-label">Gender</span><span class="summary-value"><?php echo html_escape($patient_details['gender']); ?></span></div>
                                                     <div><span class="summary-label">Place</span><span class="summary-value"><?php echo html_escape($patient_details['city']); ?></span></div>
-                                                    <div><span class="summary-label">Department</span><span class="summary-value"><?php echo $curr_dept ? html_escape(ucfirst(strtolower(str_replace('_', ' ', $curr_dept)))) : '-'; ?></span></div>
+                                                    <div><span class="summary-label">Department</span><span class="summary-value"><?php echo html_escape($display_department); ?></span></div>
                                                     <div><span class="summary-label">Doctor</span><span class="summary-value"><?php echo $selected_doc ? html_escape($selected_doc) : '-'; ?></span></div>
                                                     <div><span class="summary-label">Current Visit</span><span class="summary-value"><?php echo $current_visit_date ? html_escape($current_visit_date) : '-'; ?></span></div>
                                                     <div><span class="summary-label">Last Visit</span><span class="summary-value"><?php echo $last_visit_date ? html_escape($last_visit_date) : '-'; ?></span></div>
                                                     <div><span class="summary-label">Total Visits</span><span class="summary-value"><?php echo html_escape($total_visits); ?></span></div>
+                                                    <div><span class="summary-label">Current Diagnosis</span><span class="summary-value diagnosis-chip"><?php echo html_escape($current_diagnosis_label); ?></span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -324,6 +709,140 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                             <?php endif; ?>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="box box-solid procedure-timeline-panel">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title section-title">Procedure Timeline</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="btn-group btn-group-xs procedure-filter-group" role="group" aria-label="Procedure timeline filters">
+                                        <button type="button" class="btn btn-primary procedure-filter active" data-filter="all">All</button>
+                                        <button type="button" class="btn btn-default procedure-filter" data-filter="pending">Pending/Referred</button>
+                                        <button type="button" class="btn btn-default procedure-filter" data-filter="completed">Completed</button>
+                                        <button type="button" class="btn btn-default procedure-filter" data-filter="panchakarma">Panchakarma</button>
+                                        <button type="button" class="btn btn-default procedure-filter" data-filter="lab">Lab/Investigation</button>
+                                    </div>
+
+                                    <?php if (!empty($procedure_timeline)): ?>
+                                        <div id="procedure_timeline_list">
+                                            <?php foreach ($procedure_timeline as $procedure): ?>
+                                                <?php
+                                                $status_group = isset($procedure['status_group']) ? $procedure['status_group'] : 'pending';
+                                                $status_class = ($status_group === 'completed') ? 'success' : (($status_group === 'cancelled') ? 'danger' : 'warning');
+                                                $department_name = !empty($procedure['department_name']) ? ucfirst(strtolower(str_replace('_', ' ', $procedure['department_name']))) : '';
+                                                ?>
+                                                <div class="procedure-timeline-item status-<?php echo html_escape($status_group); ?>" data-status-group="<?php echo html_escape($status_group); ?>" data-category="<?php echo html_escape($procedure['category']); ?>">
+                                                    <div class="procedure-timeline-title">
+                                                        <span class="label label-info"><?php echo html_escape($procedure['procedure_type']); ?></span>
+                                                        <span class="procedure-timeline-name"><?php echo html_escape($procedure['procedure_name']); ?></span>
+                                                        <span class="label label-<?php echo html_escape($status_class); ?>"><?php echo html_escape($procedure['status']); ?></span>
+                                                    </div>
+                                                    <div class="procedure-timeline-meta">
+                                                        <span><strong>Referred:</strong> <?php echo $procedure['referred_date'] ? html_escape($procedure['referred_date']) : '-'; ?></span>
+                                                        <?php if (!empty($procedure['completed_date'])): ?>
+                                                            <span><strong>Completed:</strong> <?php echo html_escape($procedure['completed_date']); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if (!empty($procedure['doctor_name'])): ?>
+                                                            <span><strong>Doctor:</strong> <?php echo html_escape($procedure['doctor_name']); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ($department_name !== ''): ?>
+                                                            <span><strong>Department:</strong> <?php echo html_escape($department_name); ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <?php if (!empty($procedure['remarks'])): ?>
+                                                        <div class="procedure-timeline-remarks"><?php echo html_escape($procedure['remarks']); ?></div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <p class="text-muted" id="procedure_timeline_filter_empty" style="display: none;">No procedures match this filter.</p>
+                                    <?php else: ?>
+                                        <p class="text-muted">No procedures referred yet for this patient.</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="box box-solid vitals-panel">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title section-title">Vitals</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="vitals-grid">
+                                        <div>
+                                            <label for="vital_bp">BP</label>
+                                            <input type="text" class="form-control" name="vital_bp" id="vital_bp" maxlength="20" placeholder="120/80" value="<?php echo html_escape(isset($current_vitals['blood_pressure']) ? $current_vitals['blood_pressure'] : ''); ?>" />
+                                        </div>
+                                        <div>
+                                            <label for="vital_pulse">Pulse</label>
+                                            <input type="number" class="form-control" name="vital_pulse" id="vital_pulse" min="0" step="1" value="<?php echo html_escape(isset($current_vitals['pulse_rate']) ? $current_vitals['pulse_rate'] : ''); ?>" />
+                                        </div>
+                                        <div>
+                                            <label for="vital_weight">Weight (kg)</label>
+                                            <input type="number" class="form-control vital-bmi-source" name="vital_weight" id="vital_weight" min="0" step="0.01" value="<?php echo html_escape(isset($current_vitals['weight']) ? $current_vitals['weight'] : ''); ?>" />
+                                        </div>
+                                        <div>
+                                            <label for="vital_height">Height (cm)</label>
+                                            <input type="number" class="form-control vital-bmi-source" name="vital_height" id="vital_height" min="0" step="0.01" value="<?php echo html_escape(isset($current_vitals['height']) ? $current_vitals['height'] : ''); ?>" />
+                                        </div>
+                                        <div>
+                                            <label for="vital_bmi">BMI</label>
+                                            <input type="number" class="form-control" name="vital_bmi" id="vital_bmi" step="0.01" readonly="readonly" value="<?php echo html_escape(isset($current_vitals['bmi']) ? $current_vitals['bmi'] : ''); ?>" />
+                                            <span class="bmi-badge" id="vital_bmi_badge" style="display: none;"></span>
+                                        </div>
+                                        <div>
+                                            <label for="vital_temperature">Temperature</label>
+                                            <input type="number" class="form-control" name="vital_temperature" id="vital_temperature" step="0.01" value="<?php echo html_escape(isset($current_vitals['body_temperature']) ? $current_vitals['body_temperature'] : ''); ?>" />
+                                        </div>
+                                        <div>
+                                            <label for="vital_spo2">SpO2 (%)</label>
+                                            <input type="number" class="form-control" name="vital_spo2" id="vital_spo2" min="0" max="100" step="1" value="<?php echo html_escape(isset($current_vitals['spo2']) ? $current_vitals['spo2'] : ''); ?>" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box box-solid patient-timeline-panel">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title section-title">Patient Timeline</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="btn-group btn-group-xs procedure-filter-group" role="group" aria-label="Patient timeline filters">
+                                        <button type="button" class="btn btn-primary clinical-timeline-filter active" data-filter="all">All</button>
+                                        <button type="button" class="btn btn-default clinical-timeline-filter" data-filter="visits">Visits</button>
+                                        <button type="button" class="btn btn-default clinical-timeline-filter" data-filter="vitals">Vitals</button>
+                                        <button type="button" class="btn btn-default clinical-timeline-filter" data-filter="prescriptions">Prescriptions</button>
+                                        <button type="button" class="btn btn-default clinical-timeline-filter" data-filter="procedures">Procedures</button>
+                                        <button type="button" class="btn btn-default clinical-timeline-filter" data-filter="ipd">IPD</button>
+                                    </div>
+                                    <?php if (!empty($clinical_timeline)): ?>
+                                        <div id="clinical_timeline_list">
+                                            <?php foreach ($clinical_timeline as $event): ?>
+                                                <?php $event_department = !empty($event['department_name']) ? ucfirst(strtolower(str_replace('_', ' ', $event['department_name']))) : ''; ?>
+                                                <div class="clinical-timeline-item timeline-<?php echo html_escape($event['category']); ?>" data-category="<?php echo html_escape($event['category']); ?>">
+                                                    <div class="clinical-timeline-date"><?php echo $event['event_date'] ? html_escape($event['event_date']) : '-'; ?></div>
+                                                    <div>
+                                                        <div class="clinical-timeline-heading">
+                                                            <span class="label label-info"><?php echo html_escape($event['event_type']); ?></span>
+                                                            <span class="clinical-timeline-title"><?php echo html_escape($event['event_title']); ?></span>
+                                                            <span class="label label-default"><?php echo html_escape($event['status']); ?></span>
+                                                        </div>
+                                                        <?php if (!empty($event['description'])): ?>
+                                                            <div class="clinical-timeline-description"><?php echo html_escape(strlen($event['description']) > 120 ? substr($event['description'], 0, 120) . '...' : $event['description']); ?></div>
+                                                        <?php endif; ?>
+                                                        <?php if (!empty($event['doctor_name']) || $event_department !== ''): ?>
+                                                            <div class="clinical-timeline-meta">
+                                                                <?php echo html_escape($event['doctor_name']); ?>
+                                                                <?php echo (!empty($event['doctor_name']) && $event_department !== '') ? ' &middot; ' : ''; ?>
+                                                                <?php echo html_escape($event_department); ?>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <p class="text-muted" id="clinical_timeline_filter_empty" style="display: none;">No timeline records match this filter.</p>
+                                    <?php else: ?>
+                                        <p class="text-muted">No timeline records found for this patient.</p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="box box-solid clinical-entry">
@@ -480,10 +999,33 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                             </div>
 
                             <!-- Tests -->
-                            <hr />
-                            <div class="row" style="margin-bottom: 2rem;">
+                            <hr class="procedure-cards-divider" />
+                            <div class="row procedure-cards-row" style="margin-bottom: 2rem;">
                                 <div class="col-md-12">
                                     <h3>Procedures:</h3>
+                                    <div class="procedure-card-grid">
+                                        <?php foreach ($procedure_cards as $card): ?>
+                                            <?php
+                                            $card_counts = isset($procedure_status_counts[$card['type']]) ? $procedure_status_counts[$card['type']] : array('pending' => 0, 'completed' => 0);
+                                            ?>
+                                            <div class="procedure-card">
+                                                <div class="procedure-card-icon"><i class="fa <?php echo html_escape($card['icon']); ?>"></i></div>
+                                                <h4><?php echo html_escape($card['name']); ?></h4>
+                                                <p><?php echo html_escape($card['description']); ?></p>
+                                                <div class="procedure-card-counts">
+                                                    <span class="label label-warning">Pending <?php echo (int) $card_counts['pending']; ?></span>
+                                                    <span class="label label-success">Completed <?php echo (int) $card_counts['completed']; ?></span>
+                                                </div>
+                                                <button type="button" class="btn btn-default btn-xs procedure-card-open" data-target="<?php echo html_escape($card['target']); ?>">
+                                                    <i class="fa fa-folder-open"></i> Open
+                                                </button>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <button type="button" class="btn btn-default btn-sm" data-toggle="collapse" data-target="#classic_procedure_forms" aria-expanded="false" aria-controls="classic_procedure_forms">
+                                        <i class="fa fa-list"></i> Classic Procedure Forms
+                                    </button>
+                                    <div class="collapse" id="classic_procedure_forms" style="margin-top: 12px;">
                                     <div class="bs-component">
                                         <ul class="nav nav-tabs">
                                             <li class="nav-item"><a class="nav-link disabled" data-toggle="tab" href="#birth" title="disabled">Birth</a></li>
@@ -1008,6 +1550,7 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
                             <!--end of tests-->
@@ -1288,6 +1831,110 @@ $total_visits = isset($visit_summary['total_visits']) ? $visit_summary['total_vi
             if (!$(event.target).closest('.diagnosis-autocomplete').length) {
                 hideDiagnosisSuggestions();
             }
+        });
+
+        $('.procedure-filter').on('click', function() {
+            var filter = $(this).data('filter');
+            var visibleCount = 0;
+
+            $('.procedure-filter').removeClass('btn-primary active').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-primary active');
+
+            $('.procedure-timeline-item').each(function() {
+                var item = $(this);
+                var statusGroup = item.data('status-group');
+                var category = item.data('category');
+                var shouldShow = filter === 'all' ||
+                    (filter === 'pending' && statusGroup === 'pending') ||
+                    (filter === 'completed' && statusGroup === 'completed') ||
+                    (filter === 'panchakarma' && category === 'panchakarma') ||
+                    (filter === 'lab' && (category === 'lab' || category === 'investigation'));
+
+                item.toggle(shouldShow);
+                if (shouldShow) {
+                    visibleCount++;
+                }
+            });
+
+            $('#procedure_timeline_filter_empty').toggle(visibleCount === 0 && $('.procedure-timeline-item').length > 0);
+        });
+
+        function updateBmiBadge(bmiValue) {
+            var bmi = parseFloat(bmiValue);
+            var badge = $('#vital_bmi_badge');
+            badge.removeClass('bmi-underweight bmi-normal bmi-overweight bmi-obese').hide().text('');
+            if (isNaN(bmi) || bmi <= 0) {
+                return;
+            }
+            if (bmi < 18.5) {
+                badge.addClass('bmi-underweight').text('Underweight').show();
+            } else if (bmi < 25) {
+                badge.addClass('bmi-normal').text('Normal').show();
+            } else if (bmi < 30) {
+                badge.addClass('bmi-overweight').text('Overweight').show();
+            } else {
+                badge.addClass('bmi-obese').text('Obese').show();
+            }
+        }
+
+        function calculateBmi() {
+            var weight = parseFloat($('#vital_weight').val());
+            var heightCm = parseFloat($('#vital_height').val());
+            if (!isNaN(weight) && !isNaN(heightCm) && heightCm > 0) {
+                var heightMetres = heightCm / 100;
+                var bmi = (weight / (heightMetres * heightMetres)).toFixed(2);
+                $('#vital_bmi').val(bmi);
+                updateBmiBadge(bmi);
+            } else {
+                $('#vital_bmi').val('');
+                updateBmiBadge('');
+            }
+        }
+
+        $('.vital-bmi-source').on('input change', calculateBmi);
+        updateBmiBadge($('#vital_bmi').val());
+
+        function toggleStickyPatientHeader() {
+            var overview = $('#patient_overview_row');
+            if (!overview.length) {
+                return;
+            }
+            var threshold = overview.offset().top + overview.outerHeight() - 70;
+            $('#sticky_patient_header').toggleClass('is-visible', $(window).scrollTop() > threshold);
+        }
+
+        $(window).on('scroll resize', toggleStickyPatientHeader);
+        toggleStickyPatientHeader();
+
+        $('.clinical-timeline-filter').on('click', function() {
+            var filter = $(this).data('filter');
+            var visibleCount = 0;
+
+            $('.clinical-timeline-filter').removeClass('btn-primary active').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-primary active');
+
+            $('.clinical-timeline-item').each(function() {
+                var item = $(this);
+                var shouldShow = filter === 'all' || item.data('category') === filter;
+                item.toggle(shouldShow);
+                if (shouldShow) {
+                    visibleCount++;
+                }
+            });
+
+            $('#clinical_timeline_filter_empty').toggle(visibleCount === 0 && $('.clinical-timeline-item').length > 0);
+        });
+
+        $('.procedure-card-open').on('click', function() {
+            var target = $(this).data('target');
+            $('#classic_procedure_forms').collapse('show');
+            $('a[data-toggle="tab"][href="' + target + '"]').tab('show');
+            window.setTimeout(function() {
+                var forms = $('#classic_procedure_forms');
+                if (forms.length) {
+                    $('html, body').animate({ scrollTop: forms.offset().top - 70 }, 250);
+                }
+            }, 200);
         });
 
         function refreshTreatmentTemplates(diagnosisId) {

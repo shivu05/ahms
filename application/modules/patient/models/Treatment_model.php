@@ -231,6 +231,53 @@ class treatment_model extends CI_Model
         );
     }
 
+    public function get_patient_vitals($opd_no, $visit_date = NULL)
+    {
+        if (!$this->db->table_exists('patient_vitals')) {
+            return array();
+        }
+        $this->db->where('opd_no', $opd_no);
+        if ($visit_date) {
+            $this->db->where('date', $visit_date);
+        }
+        $this->db->order_by('date', 'DESC');
+        $this->db->order_by('id', 'DESC');
+        return $this->db->get('patient_vitals')->row_array();
+    }
+
+    public function store_patient_vitals($opd_no, $visit_date, $vitals)
+    {
+        if (!$this->db->table_exists('patient_vitals') || !$opd_no || !$visit_date || empty($vitals)) {
+            return false;
+        }
+
+        $allowed_fields = array('blood_pressure', 'pulse_rate', 'body_temperature', 'spo2', 'weight', 'height', 'bmi');
+        $data = array();
+        foreach ($allowed_fields as $field) {
+            if ($this->db->field_exists($field, 'patient_vitals') && array_key_exists($field, $vitals)) {
+                $data[$field] = ($vitals[$field] === '') ? NULL : $vitals[$field];
+            }
+        }
+        if (empty($data)) {
+            return false;
+        }
+
+        $existing = $this->db->select('id')
+            ->where('opd_no', $opd_no)
+            ->where('date', $visit_date)
+            ->order_by('id', 'DESC')
+            ->get('patient_vitals')
+            ->row_array();
+
+        if (!empty($existing)) {
+            return $this->db->where('id', $existing['id'])->update('patient_vitals', $data);
+        }
+
+        $data['opd_no'] = $opd_no;
+        $data['date'] = $visit_date;
+        return $this->db->insert('patient_vitals', $data);
+    }
+
     function get_current_treatment_info($opd, $treat_id)
     {
         $where = array(
@@ -315,6 +362,483 @@ class treatment_model extends CI_Model
         }
         $this->db->order_by('name', 'ASC');
         return $this->db->get()->result_array();
+    }
+
+    public function get_patient_procedure_timeline($patient_id, $opd_id = NULL, $visit_id = NULL, $limit = 20)
+    {
+        $opd_no = $opd_id ? $opd_id : $patient_id;
+        if (!$opd_no) {
+            return array();
+        }
+
+        $timeline = array();
+        $timeline = array_merge($timeline, $this->_fetch_ecg_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_xray_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_usg_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_lab_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_surgery_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_ksharasutra_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_birth_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_panchakarma_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_kriyakalpa_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_physiotherapy_timeline($opd_no, $visit_id));
+        $timeline = array_merge($timeline, $this->_fetch_other_procedure_timeline($opd_no, $visit_id));
+
+        usort($timeline, array($this, '_sort_procedure_timeline'));
+        return array_slice($timeline, 0, (int) $limit);
+    }
+
+    public function get_patient_clinical_timeline($patient_id, $opd_id = NULL, $visit_id = NULL, $limit = 30)
+    {
+        $opd_no = $opd_id ? $opd_id : $patient_id;
+        if (!$opd_no) {
+            return array();
+        }
+
+        $timeline = array();
+        $this->db->select('ID, CameOn, attndedon, diagnosis, Trtment, complaints, notes, AddedBy, attndedby, department, InOrOutPat');
+        $this->db->from('treatmentdata');
+        $this->db->where('OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('ID', $visit_id);
+        }
+        $this->db->order_by('ID', 'DESC');
+        $this->db->limit(20);
+        $visits = $this->db->get()->result_array();
+
+        foreach ($visits as $visit) {
+            $event_date = $visit['attndedon'] ?: $visit['CameOn'];
+            $doctor = $visit['attndedby'] ?: $visit['AddedBy'];
+            $timeline[] = $this->_clinical_timeline_item('Visit', 'OPD Visit', $event_date, 'Recorded', 'Visit', $visit['complaints'], $doctor, $visit['department'], 'visits', $visit['ID']);
+            if (trim((string) $visit['diagnosis']) !== '') {
+                $timeline[] = $this->_clinical_timeline_item('Diagnosis', 'Diagnosis Added', $event_date, 'Recorded', 'Diagnosis', $visit['diagnosis'], $doctor, $visit['department'], 'visits', $visit['ID']);
+            }
+            if (trim((string) $visit['Trtment']) !== '') {
+                $description = trim($visit['Trtment'] . ($visit['notes'] ? ' - ' . $visit['notes'] : ''));
+                $timeline[] = $this->_clinical_timeline_item('Prescription', 'Treatment / Prescription Added', $event_date, 'Recorded', 'Prescription', $description, $doctor, $visit['department'], 'prescriptions', $visit['ID']);
+            }
+        }
+
+        if ($this->db->table_exists('patient_vitals')) {
+            $this->db->where('opd_no', $opd_no);
+            $this->db->order_by('date', 'DESC');
+            $this->db->order_by('id', 'DESC');
+            $this->db->limit(20);
+            $vitals_rows = $this->db->get('patient_vitals')->result_array();
+            foreach ($vitals_rows as $vitals) {
+                $parts = array();
+                $vital_labels = array(
+                    'blood_pressure' => 'BP',
+                    'pulse_rate' => 'Pulse',
+                    'weight' => 'Weight',
+                    'height' => 'Height',
+                    'bmi' => 'BMI',
+                    'body_temperature' => 'Temperature',
+                    'spo2' => 'SpO2'
+                );
+                foreach ($vital_labels as $field => $label) {
+                    if (isset($vitals[$field]) && $vitals[$field] !== NULL && $vitals[$field] !== '') {
+                        $parts[] = $label . ' ' . $vitals[$field];
+                    }
+                }
+                $timeline[] = $this->_clinical_timeline_item('Vitals', 'Vitals Recorded', $vitals['date'] ?: $vitals['created_at'], 'Completed', 'Vitals', implode(', ', $parts), '', '', 'vitals', $vitals['id']);
+            }
+        }
+
+        $procedures = $this->get_patient_procedure_timeline($opd_no, NULL, $visit_id, 30);
+        foreach ($procedures as $procedure) {
+            $description = $procedure['procedure_name'];
+            if ($procedure['remarks'] !== '') {
+                $description .= ' - ' . $procedure['remarks'];
+            }
+            $timeline[] = $this->_clinical_timeline_item(
+                $procedure['procedure_type'],
+                $procedure['procedure_type'] . ': ' . $procedure['procedure_name'],
+                $procedure['completed_date'] ?: $procedure['referred_date'],
+                $procedure['status'],
+                $procedure['procedure_type'],
+                $description,
+                $procedure['doctor_name'],
+                $procedure['department_name'],
+                'procedures',
+                $procedure['source_id']
+            );
+        }
+
+        if ($this->db->table_exists('inpatientdetails')) {
+            $this->db->where('OpdNo', $opd_no);
+            $this->db->order_by('IpNo', 'DESC');
+            $this->db->limit(10);
+            $admissions = $this->db->get('inpatientdetails')->result_array();
+            foreach ($admissions as $admission) {
+                $timeline[] = $this->_clinical_timeline_item('IPD', 'Patient Admitted', $admission['DoAdmission'], 'Recorded', 'IPD', 'Bed ' . $admission['BedNo'], $admission['Doctor'], $admission['department'], 'ipd', $admission['IpNo']);
+                if (!empty($admission['DoDischarge']) && $admission['DoDischarge'] !== '--') {
+                    $timeline[] = $this->_clinical_timeline_item('IPD', 'Patient Discharged', $admission['DoDischarge'], 'Completed', 'IPD', $admission['DischargeNotes'], $admission['DischBy'], $admission['department'], 'ipd', $admission['IpNo']);
+                }
+            }
+        }
+
+        usort($timeline, array($this, '_sort_clinical_timeline'));
+        return array_slice($timeline, 0, (int) $limit);
+    }
+
+    private function _clinical_timeline_item($type, $title, $date, $status, $source, $description, $doctor, $department, $category, $source_id)
+    {
+        $date = $this->_clean_timeline_value($date);
+        return array(
+            'event_type' => $this->_clean_timeline_value($type),
+            'event_title' => $this->_clean_timeline_value($title),
+            'event_date' => $date,
+            'status' => $this->_clean_timeline_value($status) ?: 'Recorded',
+            'source_module' => $this->_clean_timeline_value($source),
+            'description' => $this->_clean_timeline_value($description),
+            'doctor_name' => $this->_clean_timeline_value($doctor),
+            'department_name' => $this->_clean_timeline_value($department),
+            'category' => $category,
+            'source_id' => (int) $source_id,
+            'sort_ts' => $this->_timeline_sort_value($date, $source_id)
+        );
+    }
+
+    private function _sort_clinical_timeline($a, $b)
+    {
+        if ($a['sort_ts'] == $b['sort_ts']) {
+            return 0;
+        }
+        return ($a['sort_ts'] < $b['sort_ts']) ? 1 : -1;
+    }
+
+    private function _fetch_ecg_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('ecgregistery')) {
+            return array();
+        }
+        $this->db->select('e.ID AS source_id, e.refDocName, e.refDate, e.ecgDate, t.department');
+        $this->db->from('ecgregistery e');
+        $this->db->join('treatmentdata t', 't.ID=e.treatId', 'left');
+        $this->db->where('e.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('e.treatId', $visit_id);
+        }
+        $this->db->order_by('e.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $items[] = $this->_procedure_timeline_item('ECG', 'ECG', $row['refDate'], $row['ecgDate'], '', $row['refDocName'], $row['department'], '', $row['source_id'], 'investigation');
+        }
+        return $items;
+    }
+
+    private function _fetch_xray_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('xrayregistery')) {
+            return array();
+        }
+        $this->db->select('x.ID AS source_id, x.partOfXray, x.filmSize, x.xrayNo, x.refDocName, x.refDate, x.xrayDate, t.department');
+        $this->db->from('xrayregistery x');
+        $this->db->join('treatmentdata t', 't.ID=x.treatID', 'left');
+        $this->db->where('x.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('x.treatID', $visit_id);
+        }
+        $this->db->order_by('x.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $remarks = trim('No: ' . $row['xrayNo'] . ' Film: ' . $row['filmSize']);
+            $items[] = $this->_procedure_timeline_item('X-Ray', $row['partOfXray'] ?: 'X-Ray', $row['refDate'], $row['xrayDate'], '', $row['refDocName'], $row['department'], $remarks, $row['source_id'], 'investigation');
+        }
+        return $items;
+    }
+
+    private function _fetch_usg_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('usgregistery')) {
+            return array();
+        }
+        $this->db->select('u.ID AS source_id, u.refDocName, u.refDate, u.usgDate, t.department');
+        $this->db->from('usgregistery u');
+        $this->db->join('treatmentdata t', 't.ID=u.treatId', 'left');
+        $this->db->where('u.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('u.treatId', $visit_id);
+        }
+        $this->db->order_by('u.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $items[] = $this->_procedure_timeline_item('USG', 'USG', $row['refDate'], $row['usgDate'], '', $row['refDocName'], $row['department'], '', $row['source_id'], 'investigation');
+        }
+        return $items;
+    }
+
+    private function _fetch_lab_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('labregistery')) {
+            return array();
+        }
+        $this->db->select('l.ID AS source_id, l.refDocName, l.testDate, l.tested_date, l.testName, l.testrange, l.testvalue, l.labdisease, li.lab_inv_name, t.department');
+        $this->db->from('labregistery l');
+        $this->db->join('lab_investigations li', 'li.lab_inv_id=l.testName', 'left');
+        $this->db->join('treatmentdata t', 't.ID=l.treatID', 'left');
+        $this->db->where('l.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('l.treatID', $visit_id);
+        }
+        $this->db->order_by('l.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $name = $row['lab_inv_name'] ?: ($row['labdisease'] ?: 'Lab Investigation');
+            $remarks = trim('Range: ' . $row['testrange'] . ' Value: ' . $row['testvalue']);
+            $items[] = $this->_procedure_timeline_item('Lab', $name, $row['testDate'], $row['tested_date'], '', $row['refDocName'], $row['department'], $remarks, $row['source_id'], 'lab');
+        }
+        return $items;
+    }
+
+    private function _fetch_surgery_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('surgeryregistery')) {
+            return array();
+        }
+        $this->db->select('s.ID AS source_id, s.surgType, s.surgName, s.surgDate, s.anaesthetic, s.asssurgeon, s.surgeryname, t.department');
+        $this->db->from('surgeryregistery s');
+        $this->db->join('treatmentdata t', 't.ID=s.treatId', 'left');
+        $this->db->where('s.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('s.treatId', $visit_id);
+        }
+        $this->db->order_by('s.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $name = $row['surgeryname'] ?: ($row['surgType'] ?: 'Surgery');
+            $remarks = trim('Anaesthetic: ' . $row['anaesthetic'] . ' Assistant: ' . $row['asssurgeon']);
+            $items[] = $this->_procedure_timeline_item('Surgery', $name, $row['surgDate'], '', '', $row['surgName'], $row['department'], $remarks, $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _fetch_ksharasutra_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('ksharsutraregistery')) {
+            return array();
+        }
+        $this->db->select('k.ID AS source_id, k.ksharsType, k.ksharsDate, k.ksharaname, k.surgeon, k.asssurgeon, k.anaesthetic, t.department');
+        $this->db->from('ksharsutraregistery k');
+        $this->db->join('treatmentdata t', 't.ID=k.treatId', 'left');
+        $this->db->where('k.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('k.treatId', $visit_id);
+        }
+        $this->db->order_by('k.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $name = $row['ksharaname'] ?: ($row['ksharsType'] ?: 'Ksharasutra');
+            $remarks = trim('Anaesthetic: ' . $row['anaesthetic'] . ' Assistant: ' . $row['asssurgeon']);
+            $items[] = $this->_procedure_timeline_item('Ksharasutra', $name, $row['ksharsDate'], '', '', $row['surgeon'], $row['department'], $remarks, $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _fetch_birth_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('birthregistery')) {
+            return array();
+        }
+        $this->db->select('b.ID AS source_id, b.deliveryDetail, b.babyBirthDate, b.babyWeight, b.treatby, b.babygender, b.deliverytype, t.department');
+        $this->db->from('birthregistery b');
+        $this->db->join('treatmentdata t', 't.ID=b.treatId', 'left');
+        $this->db->where('b.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('b.treatId', $visit_id);
+        }
+        $this->db->order_by('b.ID', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $name = $row['deliverytype'] ?: ($row['deliveryDetail'] ?: 'Birth');
+            $remarks = trim('Baby: ' . $row['babygender'] . ' Weight: ' . $row['babyWeight']);
+            $items[] = $this->_procedure_timeline_item('Birth', $name, $row['babyBirthDate'], $row['babyBirthDate'], '', $row['treatby'], $row['department'], $remarks, $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _fetch_panchakarma_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('panchaprocedure')) {
+            return array();
+        }
+        $this->db->select('p.id AS source_id, p.disease, p.treatment, p.procedure, p.date, p.proc_end_date, p.docname, t.department');
+        $this->db->from('panchaprocedure p');
+        $this->db->join('treatmentdata t', 't.ID=p.treatid', 'left');
+        $this->db->where('p.opdno', $opd_no);
+        if ($visit_id) {
+            $this->db->where('p.treatid', $visit_id);
+        }
+        $this->db->order_by('p.id', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $name = $row['procedure'] ?: ($row['treatment'] ?: 'Panchakarma');
+            $items[] = $this->_procedure_timeline_item('Panchakarma', $name, $row['date'], $row['proc_end_date'], '', $row['docname'], $row['department'], $row['disease'], $row['source_id'], 'panchakarma');
+        }
+        return $items;
+    }
+
+    private function _fetch_kriyakalpa_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('kriyakalpa')) {
+            return array();
+        }
+        $this->db->select('k.id AS source_id, k.kriya_procedures, k.kriya_date, t.AddedBy, t.department');
+        $this->db->from('kriyakalpa k');
+        $this->db->join('treatmentdata t', 't.ID=k.treat_id', 'left');
+        $this->db->where('k.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('k.treat_id', $visit_id);
+        }
+        $this->db->order_by('k.id', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $items[] = $this->_procedure_timeline_item('Kriyakalpa', $row['kriya_procedures'] ?: 'Kriyakalpa', $row['kriya_date'], '', '', $row['AddedBy'], $row['department'], '', $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _fetch_physiotherapy_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('physiotherapy_treatments')) {
+            return array();
+        }
+        $this->db->select('p.id AS source_id, p.therapy_name, p.physician, p.start_date, p.end_date, t.department');
+        $this->db->from('physiotherapy_treatments p');
+        $this->db->join('treatmentdata t', 't.ID=p.treat_id', 'left');
+        $this->db->where('p.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('p.treat_id', $visit_id);
+        }
+        $this->db->order_by('p.id', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $items[] = $this->_procedure_timeline_item('Physiotherapy', $row['therapy_name'] ?: 'Physiotherapy', $row['start_date'], $row['end_date'], '', $row['physician'], $row['department'], '', $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _fetch_other_procedure_timeline($opd_no, $visit_id)
+    {
+        if (!$this->db->table_exists('other_procedures_treatments')) {
+            return array();
+        }
+        $this->db->select('o.id AS source_id, o.therapy_name, o.physician, o.start_date, o.end_date, t.department');
+        $this->db->from('other_procedures_treatments o');
+        $this->db->join('treatmentdata t', 't.ID=o.treat_id', 'left');
+        $this->db->where('o.OpdNo', $opd_no);
+        if ($visit_id) {
+            $this->db->where('o.treat_id', $visit_id);
+        }
+        $this->db->order_by('o.id', 'DESC');
+        $this->db->limit(20);
+        $rows = $this->db->get()->result_array();
+
+        $items = array();
+        foreach ($rows as $row) {
+            $items[] = $this->_procedure_timeline_item('Other Procedure', $row['therapy_name'] ?: 'Other Procedure', $row['start_date'], $row['end_date'], '', $row['physician'], $row['department'], '', $row['source_id'], 'procedure');
+        }
+        return $items;
+    }
+
+    private function _procedure_timeline_item($type, $name, $referred_date, $completed_date, $status, $doctor, $department, $remarks, $source_id, $category)
+    {
+        $referred_date = $this->_clean_timeline_value($referred_date);
+        $completed_date = $this->_clean_timeline_value($completed_date);
+        $status = $this->_resolve_procedure_status($status, $completed_date, $referred_date);
+        $sort_date = $completed_date ? $completed_date : $referred_date;
+
+        return array(
+            'procedure_type' => $this->_clean_timeline_value($type),
+            'procedure_name' => $this->_clean_timeline_value($name) ?: $this->_clean_timeline_value($type),
+            'referred_date' => $referred_date,
+            'completed_date' => $completed_date,
+            'status' => $status,
+            'status_group' => ($status === 'Completed') ? 'completed' : (($status === 'Cancelled') ? 'cancelled' : 'pending'),
+            'doctor_name' => $this->_clean_timeline_value($doctor),
+            'department_name' => $this->_clean_timeline_value($department),
+            'remarks' => $this->_clean_timeline_value($remarks),
+            'category' => $category,
+            'source_id' => (int) $source_id,
+            'sort_ts' => $this->_timeline_sort_value($sort_date, $source_id)
+        );
+    }
+
+    private function _clean_timeline_value($value)
+    {
+        $value = trim((string) $value);
+        if ($value === '' || $value === '0000-00-00' || $value === '0000-00-00 00:00:00') {
+            return '';
+        }
+        return $value;
+    }
+
+    private function _resolve_procedure_status($status, $completed_date, $referred_date)
+    {
+        $status = strtolower(trim((string) $status));
+        if ($status !== '') {
+            if (strpos($status, 'cancel') !== FALSE || strpos($status, 'reject') !== FALSE) {
+                return 'Cancelled';
+            }
+            if (strpos($status, 'complete') !== FALSE || strpos($status, 'done') !== FALSE || strpos($status, 'report') !== FALSE) {
+                return 'Completed';
+            }
+            if (strpos($status, 'pending') !== FALSE || strpos($status, 'refer') !== FALSE) {
+                return 'Referred';
+            }
+        }
+        if ($completed_date !== '') {
+            return 'Completed';
+        }
+        return $referred_date !== '' ? 'Referred' : 'Referred';
+    }
+
+    private function _timeline_sort_value($date, $source_id)
+    {
+        $timestamp = strtotime($date);
+        if (!$timestamp) {
+            $timestamp = 0;
+        }
+        return $timestamp . '.' . str_pad((int) $source_id, 8, '0', STR_PAD_LEFT);
+    }
+
+    private function _sort_procedure_timeline($a, $b)
+    {
+        if ($a['sort_ts'] == $b['sort_ts']) {
+            return 0;
+        }
+        return ($a['sort_ts'] < $b['sort_ts']) ? 1 : -1;
     }
 
     public function add_ecg_info($ecgdata)
