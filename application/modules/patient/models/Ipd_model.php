@@ -114,4 +114,41 @@ class Ipd_model extends CI_Model {
         $return['total_rows'] = $this->db->count_all('inpatientdetails');
         return $return;
     }
+
+    public function get_discharge_sheet_data($ipd_id) {
+        $this->db->select('ip.*, p.FirstName, p.LastName, p.Age AS patient_age, p.gender AS patient_gender');
+        $this->db->from('inpatientdetails ip');
+        $this->db->join('patientdata p', 'p.OpdNo = ip.OpdNo', 'left');
+        $this->db->where('ip.IpNo', $ipd_id);
+        $patient = $this->db->get()->row_array();
+
+        if (empty($patient)) {
+            return false;
+        }
+
+        $result = array(
+            'patient' => $patient,
+            'treatments' => array(),
+            'vitals' => array()
+        );
+
+        if ($this->db->table_exists('ipdtreatment')) {
+            $result['treatments'] = $this->db
+                ->where('ipdno', $ipd_id)
+                ->order_by('attndedon', 'ASC')
+                ->order_by('ID', 'ASC')
+                ->get('ipdtreatment')
+                ->result_array();
+        }
+
+        if ($this->db->table_exists('patient_vitals') && $this->db->field_exists('opd_no', 'patient_vitals')) {
+            $this->db->where('opd_no', $patient['OpdNo']);
+            if ($this->db->field_exists('date', 'patient_vitals')) {
+                $this->db->order_by('date', 'ASC');
+            }
+            $result['vitals'] = $this->db->get('patient_vitals')->result_array();
+        }
+
+        return $result;
+    }
 }

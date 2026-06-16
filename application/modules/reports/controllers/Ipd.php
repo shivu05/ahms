@@ -616,4 +616,180 @@ class Ipd extends SHV_Controller
         download_excel($export_array['data'], $file_name, $headings);
         exit;
     }
+
+    public function death_register()
+    {
+        $this->layout->title = "Death Register";
+        $this->layout->navTitleFlag = false;
+        $this->layout->navTitle = "Death Register";
+        $this->layout->navDescr = "IPD mortality register";
+        $this->layout->navIcon = 'fa fa-book';
+        $this->scripts_include->includePlugins(array('datatables', 'jq_validation'), 'js');
+        $this->scripts_include->includePlugins(array('datatables'), 'css');
+        $data = array();
+        $data['dept_list'] = $this->get_department_list('array');
+        $data['is_admin'] = $this->_is_admin;
+        $this->layout->data = $data;
+        $this->layout->render();
+    }
+
+    public function get_death_register_list()
+    {
+        $this->load->model('patient/death_register_model');
+        $input_array = $this->death_register_filters_from_request();
+        $data = $this->death_register_model->get_records($input_array);
+        $response = array(
+            "recordsTotal" => $data['total_rows'],
+            "recordsFiltered" => $data['found_rows'],
+            'data' => $data['data']
+        );
+        echo json_encode($response);
+    }
+
+    public function get_death_register_statistics()
+    {
+        $this->load->model('patient/death_register_model');
+        $input_array = $this->death_register_filters_from_request();
+        echo json_encode(array('statistics' => $this->death_register_model->get_statistics($input_array)));
+    }
+
+    public function export_death_register_pdf()
+    {
+        $this->load->helper('mpdf');
+        $this->load->model('patient/death_register_model');
+        ini_set("memory_limit", "-1");
+        set_time_limit(0);
+        ini_set("pcre.backtrack_limit", "5000000");
+
+        $input_array = $this->input->post();
+        $result = $this->death_register_model->get_records($input_array, true);
+        $data['records'] = $result['data'];
+        $data['statistics'] = $this->death_register_model->get_statistics($input_array);
+
+        $this->layout->data = $data;
+        $this->layout->headerFlag = false;
+        $html = $this->layout->render(array('view' => 'reports/ipd/export_death_register'), true);
+        $print_dept = ($input_array['department'] == 1) ? "CENTRAL" : strtoupper($input_array['department']);
+        $title = array(
+            'report_title' => 'DEATH REGISTER',
+            'department' => $print_dept,
+            'start_date' => format_date($input_array['start_date']),
+            'end_date' => format_date($input_array['end_date'])
+        );
+        generate_pdf($html, 'L', $title, 'vhms_death_register_' . $input_array['start_date'], true, true, 'I');
+        exit;
+    }
+
+    public function export_death_register_excel()
+    {
+        $this->load->helper('to_excel');
+        $this->load->model('patient/death_register_model');
+        $input_array = $this->input->post();
+        $result = $this->death_register_model->get_records($input_array, true);
+        $records = $this->format_death_register_export_rows($result['data']);
+
+        $headings = array(
+            'Sl No',
+            'Death Register No',
+            'UHID',
+            'C.OPD',
+            'C.IPD',
+            'Name',
+            'Age',
+            'Sex',
+            'Department',
+            'Ward',
+            'Bed',
+            'Admission Date',
+            'Death Date',
+            'Death Time',
+            'Treating Doctor',
+            'Certifying Doctor',
+            'Diagnosis',
+            'Final Diagnosis',
+            'Immediate Cause',
+            'Antecedent Cause',
+            'Underlying Cause',
+            'Other Significant Conditions',
+            'MCCD Form 4 Issued',
+            'MLC',
+            'Police Informed',
+            'CRS Registration No',
+            'Body Handed Over To',
+            'Informant',
+            'Informant Relation',
+            'Informant Mobile',
+            'Remarks'
+        );
+
+        if (empty($records)) {
+            echo json_encode(array('op' => 'error', 'message' => 'No records found.'));
+            return;
+        }
+
+        download_excel($records, 'vhms_death_register_' . $input_array['start_date'] . '.xlsx', $headings);
+        exit;
+    }
+
+    private function death_register_filters_from_request()
+    {
+        $input_array = array();
+        $search_form = $this->input->post('search_form');
+        if (is_array($search_form)) {
+            foreach ($search_form as $search_data) {
+                $input_array[$search_data['name']] = $search_data['value'];
+            }
+        }
+
+        $search_key = $this->input->post('search');
+        if (is_array($search_key) && isset($search_key['value'])) {
+            $input_array['keyword'] = $search_key['value'];
+        }
+        $input_array['start'] = $this->input->post('start');
+        $input_array['length'] = $this->input->post('length');
+        $input_array['order'] = $this->input->post('order');
+        return $input_array;
+    }
+
+    private function format_death_register_export_rows($records)
+    {
+        $rows = array();
+        $serial = 1;
+        foreach ($records as $record) {
+            $rows[] = array(
+                'serial_number' => $serial++,
+                'death_register_no' => $record['death_register_no'],
+                'uhid' => $record['uhid'],
+                'opd_no' => $record['opd_no'],
+                'ipd_no' => $record['ipd_no'],
+                'patient_name' => $record['patient_name'],
+                'age' => $record['age'],
+                'gender' => $record['gender'],
+                'department' => prepare_dept_name($record['department']),
+                'ward_no' => $record['ward_no'],
+                'bed_no' => $record['bed_no'],
+                'admission_date' => format_date($record['admission_date']) . ' ' . $record['admission_time'],
+                'death_date' => format_date($record['death_date']),
+                'death_time' => $record['death_time'],
+                'treating_doctor' => $record['treating_doctor'],
+                'certifying_doctor' => $record['certifying_doctor'],
+                'diagnosis_at_admission' => $record['diagnosis_at_admission'],
+                'final_diagnosis' => $record['final_diagnosis'],
+                'immediate_cause' => $record['immediate_cause'],
+                'antecedent_cause' => $record['antecedent_cause'],
+                'underlying_cause' => $record['underlying_cause'],
+                'other_significant_conditions' => $record['other_significant_conditions'],
+                'mccd_form4_issued' => $record['mccd_form4_issued'] ? 'Yes' : 'No',
+                'mlc_case' => $record['mlc_case'] ? 'Yes' : 'No',
+                'police_informed' => $record['police_informed'] ? 'Yes' : 'No',
+                'crs_registration_no' => $record['crs_registration_no'],
+                'body_handed_over_to' => $record['body_handed_over_to'],
+                'informant_name' => $record['informant_name'],
+                'informant_relation' => $record['informant_relation'],
+                'informant_mobile' => $record['informant_mobile'],
+                'remarks' => $record['remarks']
+            );
+        }
+        return $rows;
+    }
 }

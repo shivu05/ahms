@@ -70,6 +70,7 @@ $route['home/opdscr_dashboard'] = "home/dashboard/opdscr_dashboard";
 
 $route['opd-registration'] = "patient/opd_registration";
 $route['opd-screening-list'] = "patient/opd_screening_list";
+$route['patient/patient/download_discharge_sheet/(:num)'] = 'patient/patient/download_discharge_sheet/$1';
 
 $route['xray-info'] = "patient/xray";
 $route['ecg-info'] = "patient/ecg";
@@ -78,6 +79,10 @@ $route['lab-info'] = "patient/lab";
 
 $route['monthwise-ipd-report'] = "reports/Ipd/monthly_ipd_report";
 $route['monthwise-opd-ipd-report'] = "reports/Ipd/monthly_io_report";
+$route['death-register'] = "reports/Ipd/death_register";
+$route['fetch-death-register'] = "reports/Ipd/get_death_register_list";
+$route['print-death-register'] = "reports/Ipd/export_death_register_pdf";
+$route['export-death-register'] = "reports/Ipd/export_death_register_excel";
 /* Test reports */
 $route['x-ray'] = "reports/Test/xray";
 $route['ecg'] = "reports/Test/ecg";
@@ -252,6 +257,7 @@ $route['fetch-wound-dressing'] = 'reports/get_wound_dressing_patients_list';
 $route['export-wound_dressing'] = 'reports/export_wound_dressing';
 
 $route['generate-opd-card/(:any)'] = 'patient/generate_opd_card/$1';
+$route['register-ipd-death'] = 'patient/patient/register_death';
 
 $route['dispense'] = 'dispense/index';
 $route['dispense/get_batches_ajax'] = 'pharmacy/dispense/get_batches_ajax';

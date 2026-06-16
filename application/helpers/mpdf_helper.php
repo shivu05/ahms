@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 require_once './vendor/autoload.php';
 
-function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D") {
+function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename = 'ahms_report', $header_flag = true, $footer_flag = true, $output = "D", $options = array()) {
     $CI = & get_instance();
     ini_set("pcre.backtrack_limit", "10000000");
     $config = $CI->db->get('config');
@@ -25,6 +25,12 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
         <td width="33%" style="text-align: right;">@Dharani Tech Solutions </td>
     </tr>
 </table>';
+    if (!empty($options['header_html'])) {
+        $header = $options['header_html'];
+    }
+    if (!empty($options['footer_html'])) {
+        $footer = $options['footer_html'];
+    }
 
     $top_heading = "";
     if (!empty($title)) {
@@ -55,7 +61,10 @@ function generate_pdf($html, $page_orientation = 'L', $title = NULL, $filename =
     $configs = array(
         'mode' => 'utf-8',
         'orientation' => $page_orientation,
-        'margin_top' => $mt
+        'margin_top' => isset($options['margin_top']) ? $options['margin_top'] : $mt,
+        'margin_bottom' => isset($options['margin_bottom']) ? $options['margin_bottom'] : 15,
+        'margin_left' => isset($options['margin_left']) ? $options['margin_left'] : 10,
+        'margin_right' => isset($options['margin_right']) ? $options['margin_right'] : 10
     );
     ob_clean();
     $mpdf = new \Mpdf\Mpdf($configs);

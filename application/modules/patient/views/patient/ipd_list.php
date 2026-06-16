@@ -5,6 +5,21 @@
         cursor: pointer;
     }
 
+    .ipd-actions {
+        white-space: nowrap;
+        min-width: 175px;
+    }
+
+    .ipd-actions .disabled-action {
+        color: #b8b8b8;
+        cursor: not-allowed;
+    }
+
+    #death_modal_box label.error {
+        display: block;
+        margin: 4px 0 0;
+    }
+
 
     /*  bhoechie tab */
     div.bhoechie-tab-container {
@@ -177,6 +192,95 @@
             <div class="modal-footer">
                 <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary" id="btn-ok">Discharge</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="death_modal_box" tabindex="-1" role="dialog" aria-labelledby="deathModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="deathModalLabel">Death register entry</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="death_form">
+                    <input type="hidden" name="death_ipd" id="death_ipd">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>IPD:</td>
+                                <td><input type="text" id="death_ipd_display" class="form-control" readonly="readonly"></td>
+                                <td>Admission Date:</td>
+                                <td><input type="text" id="death_admission_date" class="form-control" readonly="readonly"></td>
+                            </tr>
+                            <tr>
+                                <td>Death Date:<span class="err_msg">*</span></td>
+                                <td><input type="text" name="death_date" id="death_date" class="form-control date_picker required" required="required" autocomplete="off"></td>
+                                <td>Death Time:<span class="err_msg">*</span></td>
+                                <td><input type="text" name="death_time" id="death_time" class="form-control required" required="required" placeholder="HH:MM" pattern="^([01][0-9]|2[0-3]):[0-5][0-9]$" maxlength="5" autocomplete="off"></td>
+                            </tr>
+                            <tr>
+                                <td>Certifying Doctor:<span class="err_msg">*</span></td>
+                                <td><input type="text" name="certifying_doctor" id="certifying_doctor" class="form-control required" required="required" autocomplete="off"></td>
+                                <td>Verified By:</td>
+                                <td><input type="text" name="verified_by" id="verified_by" class="form-control" autocomplete="off"></td>
+                            </tr>
+                            <tr>
+                                <td>Final Diagnosis:</td>
+                                <td colspan="3"><textarea name="final_diagnosis" id="final_diagnosis" class="form-control" rows="2"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Immediate Cause:<span class="err_msg">*</span></td>
+                                <td colspan="3"><textarea name="immediate_cause" id="immediate_cause" class="form-control required" rows="2" required="required"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Antecedent Cause:</td>
+                                <td colspan="3"><textarea name="antecedent_cause" id="antecedent_cause" class="form-control" rows="2"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Underlying Cause:</td>
+                                <td colspan="3"><textarea name="underlying_cause" id="underlying_cause" class="form-control" rows="2"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Other Significant Conditions:</td>
+                                <td colspan="3"><textarea name="other_significant_conditions" id="other_significant_conditions" class="form-control" rows="2"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>Audit Flags:</td>
+                                <td colspan="3">
+                                    <label class="checkbox-inline"><input type="checkbox" name="mccd_form4_issued" value="1"> MCCD Form 4 issued</label>
+                                    <label class="checkbox-inline"><input type="checkbox" name="mlc_case" value="1"> MLC case</label>
+                                    <label class="checkbox-inline"><input type="checkbox" name="police_informed" value="1"> Police informed</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CRS Registration No:</td>
+                                <td><input type="text" name="crs_registration_no" id="crs_registration_no" class="form-control" autocomplete="off"></td>
+                                <td>Body Handed Over To:</td>
+                                <td><input type="text" name="body_handed_over_to" id="body_handed_over_to" class="form-control" autocomplete="off"></td>
+                            </tr>
+                            <tr>
+                                <td>Informant Name:</td>
+                                <td><input type="text" name="informant_name" id="informant_name" class="form-control" autocomplete="off"></td>
+                                <td>Relation:</td>
+                                <td><input type="text" name="informant_relation" id="informant_relation" class="form-control" autocomplete="off"></td>
+                            </tr>
+                            <tr>
+                                <td>Informant Mobile:</td>
+                                <td><input type="text" name="informant_mobile" id="informant_mobile" class="form-control" autocomplete="off"></td>
+                                <td>Remarks:</td>
+                                <td><textarea name="remarks" id="death_remarks" class="form-control" rows="2"></textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="btn-save-death">Save Death Register</button>
             </div>
         </div>
     </div>
@@ -777,6 +881,8 @@ if (!empty($wards)) {
                 data: function(item) {
                     if (item.status == 'stillin') {
                         return '<button class="btn btn-danger btn-sm discharge" data-doctor_name="' + item.Doctor + '" data-doa="' + item.DoAdmission + '" data-ipd_id=' + item.IpNo + '>Discharge</button>';
+                    } else if ((item.status || '').toString().toLowerCase().trim() == 'death') {
+                        return '<button class="btn btn-danger btn-sm disabled" disabled="disabled" >Death</button>';
                     } else {
                         return '<button class="btn btn-primary btn-sm disabled" disabled="disabled" >Discharged</button>';
                     }
@@ -792,11 +898,34 @@ if (!empty($wards)) {
                      ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>';
                      
                      }*/
-                    return '<i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
+                    var status = (item.status || '').toString().toLowerCase().trim();
+                    var dischargeDate = (item.DoDischarge || '').toString().trim();
+                    var isDischarged = status === 'discharge' || status === 'discharged' ||
+                        (dischargeDate !== '' && dischargeDate !== '--' && dischargeDate !== '0000-00-00');
+                    var isAdmitted = status === 'stillin';
+                    var isDeath = status === 'death' || status === 'deceased';
+                    var dischargeSheet = isDischarged ?
+                        '<a href="' + base_url + 'patient/patient/download_discharge_sheet/' + item.IpNo + '" target="_blank"' +
+                        ' title="Download discharge sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left">' +
+                        '<i class="fa fa-file-pdf-o hand_cursor text-danger"></i></a>' :
+                        '<span class="disabled-action" aria-disabled="true"' +
+                        ' title="Discharge sheet is available only after discharge" data-toggle="tooltip" data-placement="left">' +
+                        '<i class="fa fa-file-pdf-o"></i></span>';
+                    var deathRegister = isAdmitted ?
+                        ' | <i title="Death register for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
+                        ' class="fa fa-heartbeat hand_cursor text-danger register_death" data-ipd="' + item.IpNo + '"' +
+                        ' data-doa="' + item.DoAdmission + '" data-doctor_name="' + encodeURIComponent(item.Doctor || '') + '"' +
+                        ' data-diagnosis="' + encodeURIComponent(item.diagnosis || '') + '"></i>' :
+                        ' | <span class="disabled-action" aria-disabled="true" title="Death register is available only for admitted patients" data-toggle="tooltip" data-placement="left">' +
+                        '<i class="fa fa-heartbeat"></i></span>';
+
+                    return '<div class="ipd-actions">' + dischargeSheet +
+                        ' | <i title="Download case sheet for IPD :' + item.IpNo + '" data-toggle="tooltip" data-placement="left"' +
                         ' class="fa fa-download hand_cursor text-primary download_case_sheet" data-ipd="' + item.IpNo + '"></i>' +
                         ' | <i class="fa fa-edit text-primary edit_patient" style="cursor:pointer;" data-opd="' + item.OpdNo + '" data-ipd="' + item.IpNo + '"></i>' +
                         ' | <i class="fa fa-plus hand_cursor add_treatment_details" style="color:#5A55A3" data-ipd="' + item.IpNo + '" data-tid="' + item.treatId + '" data-opd="' + item.OpdNo + '" data-name="' + item.FName + '" id="add_treatment_details"></i>' +
-                        ' | <a href="' + base_url + 'billing/ipd/' + item.IpNo + '" title="Invoice details"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a>';;
+                        deathRegister +
+                        ' | <a href="' + base_url + 'billing/ipd/' + item.IpNo + '" title="Invoice details"><i class="fa fa-file-text-o hand_cursor" style="color:#5A55A3" id="add_invoice_details"></i></a></div>';
 
                 }
             }
@@ -884,6 +1013,25 @@ if (!empty($wards)) {
             });
         });
 
+        $('#patient_table tbody').on('click', '.register_death', function() {
+            $('#death_form')[0].reset();
+            var ipd = $(this).data('ipd');
+            $('#death_form #death_ipd').val(ipd);
+            $('#death_form #death_ipd_display').val(ipd);
+            $('#death_form #death_admission_date').val($(this).data('doa'));
+            $('#death_form #certifying_doctor').val(decodeURIComponent($(this).data('doctor_name') || ''));
+            $('#death_form #final_diagnosis').val(decodeURIComponent($(this).data('diagnosis') || ''));
+            $('#death_modal_box').modal({
+                backdrop: 'static',
+                keyboard: false
+            }, 'show');
+            $('.date_picker').datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
+
         $('#discharge_form').validate();
         $('#discharge_modal_box').on('click', '#btn-ok', function() {
             if ($('#discharge_form').valid()) {
@@ -903,6 +1051,51 @@ if (!empty($wards)) {
                                 icon: 'fa fa-check'
                             }, {
                                 type: "success"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#death_form').validate();
+        $('#death_form #death_time').on('input', function() {
+            var value = $(this).val().replace(/[^0-9]/g, '').substring(0, 4);
+            if (value.length > 2) {
+                value = value.substring(0, 2) + ':' + value.substring(2);
+            }
+            $(this).val(value);
+        });
+
+        $('#death_modal_box').on('click', '#btn-save-death', function() {
+            if ($('#death_form').valid()) {
+                $.ajax({
+                    url: base_url + 'register-ipd-death',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: $('#death_form').serializeArray(),
+                    beforeSend: function() {
+                        $('.loading-box').show();
+                    },
+                    success: function(response) {
+                        $('.loading-box').hide();
+                        if (response.status) {
+                            patient_table.draw();
+                            $('#death_modal_box').modal('hide');
+                            $.notify({
+                                title: "Death register: ",
+                                message: response.message + " Register No: " + response.death_register_no,
+                                icon: 'fa fa-check'
+                            }, {
+                                type: "success"
+                            });
+                        } else {
+                            $.notify({
+                                title: "Death register: ",
+                                message: response.message || "Failed to save death register",
+                                icon: 'fa fa-cross'
+                            }, {
+                                type: "danger"
                             });
                         }
                     }
